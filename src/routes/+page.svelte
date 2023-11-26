@@ -45,7 +45,7 @@
 			}
 
 			const data = await response.json();
-			// console.log(data)
+			
 			translationHistory = [...translationHistory, data];
 			// Clear input text
 			inputText = '';
@@ -57,14 +57,37 @@
 	}
 </script>
 
-<!-- <ApiKeyInput bind:value={userApiKey} /> -->
-<!-- <h1>{using_api_key.slice(0,8)}</h1> -->
 
 <form on:submit|preventDefault={handleSubmit}>
-	<label for="inputText">Enter Text:</label>
-	<textarea bind:value={inputText} id="inputText" rows="4" />
 	<button type="submit" disabled={isLoading}>Translate</button>
+	<input type="text" bind:value={inputText} id="inputText" />
 </form>
 
 <h2>Translation History:</h2>
 <TranslationList {translationHistory} />
+
+<style>
+  form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  input[type="text"] {
+    flex-grow: 1;
+  }
+  button {
+    padding: 0.5rem 1rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+</style>

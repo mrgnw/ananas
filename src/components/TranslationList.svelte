@@ -1,8 +1,11 @@
 <script>
   export let translationHistory =  [];
   
-	// languages is the keys of the first translation object
 	export let languages = ['en', 'es', 'ru', 'it'];
+	$: if (translationHistory.length > 0) {
+		languages = Object.keys(translationHistory[0]);
+	}
+
 	$: console.log(translationHistory);
 
 </script>
