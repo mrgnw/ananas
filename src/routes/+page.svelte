@@ -1,6 +1,6 @@
 <script>
+	import TranslationList from '$components/TranslationList.svelte';
 	
-	// import ApiKeyInput from '$components/ApiKeyInput.svelte';
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 	let userApiKey = '';
@@ -18,11 +18,11 @@
 	$: using_default = using_api_key === OPENAI_API_KEY;
 
 	let inputText = '';
-	// translationHistory is a list of translation objects
-	/**
-	 * @type {Array<{}>}
-	 */
-	let translationHistory = [];
+
+	let translationHistory = [
+    {en: "hiya", es: "hola", ru: "привет", it: "ciao"},
+    {en: "Let's grab a coffee sometime", es: "Tomemos un café en algún momento", ru: "Давайте выпьем кофе когда-нибудь", it: "Prendiamo un caffè qualche volta"},
+  ];
 	let isLoading = false; // Track loading state
 
 	async function handleSubmit() {
@@ -45,6 +45,7 @@
 			}
 
 			const data = await response.json();
+			// console.log(data)
 			translationHistory = [...translationHistory, data];
 			// Clear input text
 			inputText = '';
@@ -66,11 +67,4 @@
 </form>
 
 <h2>Translation History:</h2>
-<ul>
-	{#each translationHistory as translation, index (index)}
-		<li>
-			<strong>Translation {index + 1}:</strong>
-			<pre>{JSON.stringify(translation, null, 2)}</pre>
-		</li>
-	{/each}
-</ul>
+<TranslationList {translationHistory} />
