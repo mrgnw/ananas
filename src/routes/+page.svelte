@@ -57,9 +57,8 @@
 </script>
 
 <!-- <ApiKeyInput bind:value={userApiKey} /> -->
-
-
 <!-- <h1>{using_api_key.slice(0,8)}</h1> -->
+
 <form on:submit|preventDefault={handleSubmit}>
 	<label for="inputText">Enter Text:</label>
 	<textarea bind:value={inputText} id="inputText" rows="4" />
