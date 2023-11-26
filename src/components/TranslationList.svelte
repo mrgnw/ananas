@@ -11,27 +11,32 @@
 </script>
 
 <table>
-	<tbody>
-		{#each languages as language (language)}
-			<tr>
-				<th>{language}</th>
-				{#each translationHistory as translation (translation)}
-					<td>{translation[language]}</td>
-				{/each}
-			</tr>
-		{/each}
-	</tbody>
+  <thead>
+    <tr>
+      {#each languages as language (language)}
+        <th>{language}</th>
+      {/each}
+    </tr>
+  </thead>
+  <tbody>
+    {#each translationHistory as translation (translation)}
+      <tr>
+        {#each languages as language (language)}
+          <td>{translation[language]}</td>
+        {/each}
+      </tr>
+    {/each}
+  </tbody>
 </table>
 
 <style>
-	table {
-		width: 100%;
-		border-collapse: collapse;
-	}
-	th,
-	td {
-		border: 1px solid #ddd;
-		padding: 8px;
-		text-align: left;
-	}
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
 </style>

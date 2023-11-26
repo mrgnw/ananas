@@ -1,29 +1,21 @@
 <script>
 	import TranslationList from '$components/TranslationList.svelte';
-	
+
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-
-	let userApiKey = '';
-	let using_api_key;
-	function apiKeyIsValid(key) {
-		console.log(key);
-    return key.startsWith('sk-') && key.length === 51;
-  }
-	
-	$: using_api_key = apiKeyIsValid(userApiKey) ? userApiKey : OPENAI_API_KEY;
-
-	function obscureKey(){
-		return `${OPENAI_API_KEY.substring(0, 7)}…`;
-	}
-	$: using_default = using_api_key === OPENAI_API_KEY;
 
 	let inputText = '';
 
 	let translationHistory = [
-    {en: "hiya", es: "hola", ru: "привет", it: "ciao"},
-    {en: "Let's grab a coffee sometime", es: "Tomemos un café en algún momento", ru: "Давайте выпьем кофе когда-нибудь", it: "Prendiamo un caffè qualche volta"},
-  ];
-	let isLoading = false; // Track loading state
+		{ en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao' },
+		{
+			en: "You can't have your cake and eat it too",
+			es: 'No se puede tener el pastel y comérselo también',
+			ru: 'Раз и навсегда: нельзя и на торте сесть, и съесть',
+			it: 'Non puoi avere la botte piena e la moglie ubriaca'
+		},
+		{en: "Excuse me sir, can you tell me the time?", es: "Disculpe señor, ¿puede decirme la hora?", ru: "Извините, господин, можете ли вы сказать мне время?", it: "Scusi signore, può dirmi l'ora?"}
+	];
+	let isLoading = false;
 
 	async function handleSubmit() {
 		isLoading = true; // Start loading
@@ -35,7 +27,7 @@
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					api_key: using_api_key
+					api_key: OPENAI_API_KEY
 				},
 				body: JSON.stringify({ text })
 			});
@@ -45,7 +37,7 @@
 			}
 
 			const data = await response.json();
-			
+
 			translationHistory = [...translationHistory, data];
 			// Clear input text
 			inputText = '';
@@ -57,37 +49,40 @@
 	}
 </script>
 
-
 <form on:submit|preventDefault={handleSubmit}>
 	<button type="submit" disabled={isLoading}>Translate</button>
 	<input type="text" bind:value={inputText} id="inputText" />
 </form>
 
-<h2>Translation History:</h2>
 <TranslationList {translationHistory} />
 
 <style>
-  form {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 2rem;
+	:root {
+    font-size: 24px; /* Adjust this value to your preference */
   }
-  input[type="text"] {
-    flex-grow: 1;
-  }
-  button {
-    padding: 0.5rem 1rem;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
+	form {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 1rem;
+		align-items: center;
+		margin-bottom: 2rem;
+	}
+	input[type='text'] {
+		flex-grow: 1;
+		font-size: 1rem;
+	}
+	button {
+		padding: 0.5rem 1rem;
+		background-color: #007bff;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 1rem;
+	}
+	button:disabled {
+		background-color: #ccc;
+		cursor: not-allowed;
+	}
 </style>
