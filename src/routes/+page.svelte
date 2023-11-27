@@ -13,9 +13,17 @@
 			ru: 'Раз и навсегда: нельзя и на торте сесть, и съесть',
 			it: 'Non puoi avere la botte piena e la moglie ubriaca'
 		},
-		{en: "Excuse me sir, can you tell me the time?", es: "Disculpe señor, ¿puede decirme la hora?", ru: "Извините, господин, можете ли вы сказать мне время?", it: "Scusi signore, può dirmi l'ora?"}
+		{
+			en: 'Excuse me sir, can you tell me the time?',
+			es: 'Disculpe señor, ¿puede decirme la hora?',
+			ru: 'Извините, господин, можете ли вы сказать мне время?',
+			it: "Scusi signore, può dirmi l'ora?"
+		}
 	];
+	let is_ready;
+
 	let isLoading = false;
+	$: is_ready = inputText.length > 0 && !isLoading;
 
 	async function handleSubmit() {
 		isLoading = true; // Start loading
@@ -50,7 +58,7 @@
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
-	<button type="submit" disabled={isLoading}>Translate</button>
+	<button type="submit" disabled={!is_ready}>Translate</button>
 	<input type="text" bind:value={inputText} id="inputText" />
 </form>
 
@@ -58,8 +66,8 @@
 
 <style>
 	:root {
-    font-size: 24px; /* Adjust this value to your preference */
-  }
+		font-size: 24px; /* Adjust this value to your preference */
+	}
 	form {
 		display: flex;
 		flex-direction: row;
