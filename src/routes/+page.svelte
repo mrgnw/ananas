@@ -3,7 +3,7 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
-	let inputText = '';
+	let input_text = '';
 
 	let translationHistory = [
 		{ en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao' },
@@ -20,14 +20,12 @@
 			it: "Scusi signore, può dirmi l'ora?"
 		}
 	];
-	let is_ready;
-
-	let isLoading = false;
-	$: is_ready = inputText.length > 0 && !isLoading;
+	let is_loading = false;
+	$: is_ready = input_text.length > 0 && !is_loading;
 
 	async function handleSubmit() {
-		isLoading = true; // Start loading
-		const text = inputText;
+		is_loading = true; // Start loading
+		const text = input_text;
 		const apiUrl = 'https://translate.xces.workers.dev';
 
 		try {
@@ -48,18 +46,18 @@
 
 			translationHistory = [...translationHistory, data];
 			// Clear input text
-			inputText = '';
+			input_text = '';
 		} catch (error) {
 			console.error('Error fetching translation:', error);
 		} finally {
-			isLoading = false;
+			is_loading = false;
 		} // Done loading
 	}
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
 	<button type="submit" disabled={!is_ready}>Translate</button>
-	<input type="text" bind:value={inputText} id="inputText" />
+	<input type="text" bind:value={input_text} id="input_text" />
 </form>
 
 <TranslationList {translationHistory} />
