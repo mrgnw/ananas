@@ -44,14 +44,15 @@
 </script>
 
 <form>
+	<button type="button" on:click={handleSubmit} disabled={!is_ready}>
+		{is_loading ? 'Loading...' : 'Translate'}
+	</button>
 	<input
 		type="text"
 		bind:value={input_text}
 		placeholder="Enter text to translate"
 	/>
-	<button type="button" on:click={handleSubmit} disabled={!is_ready}>
-		{is_loading ? 'Loading...' : 'Translate'}
-	</button>
+
 </form>
 <TranslationList {translationHistory} />
 
