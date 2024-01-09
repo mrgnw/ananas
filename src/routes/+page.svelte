@@ -7,18 +7,6 @@
 
 	let translationHistory = [
 		{ en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao' },
-		// {
-		// 	en: "You can't have your cake and eat it too",
-		// 	es: 'No se puede tener el pastel y comérselo también',
-		// 	ru: 'Раз и навсегда: нельзя и на торте сесть, и съесть',
-		// 	it: 'Non puoi avere la botte piena e la moglie ubriaca'
-		// },
-		// {
-		// 	en: 'Excuse me sir, can you tell me the time?',
-		// 	es: 'Disculpe señor, ¿puede decirme la hora?',
-		// 	ru: 'Извините, господин, можете ли вы сказать мне время?',
-		// 	it: "Scusi signore, può dirmi l'ora?"
-		// }
 	];
 	let is_loading = false;
 	$: is_ready = input_text.length > 0 && !is_loading;
