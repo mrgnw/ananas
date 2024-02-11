@@ -6,7 +6,7 @@
 	let input_text = '';
 
 	let translationHistory = [
-		{ en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao' },
+		{ en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao', ca: 'hola', de: 'hallo' },
 	];
 	let is_loading = false;
 	$: is_ready = input_text.length > 0 && !is_loading;
