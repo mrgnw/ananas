@@ -13,7 +13,6 @@
 		languages = Object.keys(translationHistory[0]);
 	}
 
-	$: console.log(translationHistory);
 	const table = createTable(readable(translationHistory));
 	const columns = table.createColumns(
 		languages.map(lang => (table.column({ accessor: lang, header: lang })))
@@ -57,24 +56,6 @@
     </Table.Body>
   </Table.Root>
 </div>
-<!-- <table>
-  <thead>
-    <tr>
-      {#each languages as language (language)}
-        <th>{language}</th>
-      {/each}
-    </tr>
-  </thead>
-  <tbody>
-    {#each translationHistory as translation (translation)}
-      <tr>
-        {#each languages as language (language)}
-          <td>{translation[language]}</td>
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table> -->
 
 <style>
   table {

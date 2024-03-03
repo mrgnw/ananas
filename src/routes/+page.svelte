@@ -47,11 +47,15 @@
 <div>
 <form>
 
-	<div class="grid w-full gap-2">
-		<Textarea bind:value={input_text} placeholder="Enter text to translate" />
-		<Button on:click={handleSubmit} disabled={!is_ready}>
-  		{is_loading ? 'Translating...' : 'Translate'}
-		</Button>
+	<div class="grid ">
+		<div>
+			<Textarea bind:value={input_text} placeholder="Enter text to translate" />
+		</div>
+		<div>
+			<Button on:click={handleSubmit} disabled={!is_ready}>
+				{is_loading ? 'Translating...' : 'Translate'}
+			</Button>
+		</div>
 	</div>
 
 </form>
@@ -60,11 +64,16 @@
 
 <style>
 	:root {
-		font-size: 24px; /* Adjust this value to your preference */
-	}
-	form {
+		font-size: 1.5em;
 		padding: .8rem;
 	}
+
+	form {
+		padding-bottom: 1em;
+	}
+	Button {
+    width: auto;
+  }
 	/* on mobile, put form on bottom */
 	@media (max-width: 640px) {
 		form {
@@ -74,12 +83,13 @@
 			right: 0;
 			background-color: white;
 			box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+			padding: 0.4em;
 			
 		}
-		/* pin TranslationList to the top when the keyboard comes up  */
-		TranslationList {
-			padding-bottom: 4rem;
-		}
-
+		Button {
+      width: 90%;
+			margin-top: .5em;
+			margin-left: 5%;
+    }
 	}
 </style>
