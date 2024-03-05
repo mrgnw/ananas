@@ -1,5 +1,7 @@
 <script>
 	import TranslationList from '$components/TranslationList.svelte';
+	import { Textarea } from "$components/ui/textarea";
+	import { Button } from "$components/ui/button";
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -42,47 +44,52 @@
 		} // Done loading
 	}
 </script>
-
+<div>
 <form>
-	<button type="button" on:click={handleSubmit} disabled={!is_ready}>
-		{is_loading ? 'Loading...' : 'Translate'}
-	</button>
-	<input
-		type="text"
-		bind:value={input_text}
-		placeholder="Enter text to translate"
-	/>
+
+	<div class="grid ">
+		<div>
+			<Textarea bind:value={input_text} placeholder="Enter text to translate" />
+		</div>
+		<div>
+			<Button on:click={handleSubmit} disabled={!is_ready}>
+				{is_loading ? 'Translating...' : 'Translate'}
+			</Button>
+		</div>
+	</div>
 
 </form>
+</div>
 <TranslationList {translationHistory} />
 
 <style>
 	:root {
-		font-size: 24px; /* Adjust this value to your preference */
+		font-size: 1.5em;
+		padding: .8rem;
 	}
+
 	form {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		gap: 1rem;
-		align-items: center;
-		margin-bottom: 2rem;
+		padding-bottom: 1em;
 	}
-	input[type='text'] {
-		flex-grow: 1;
-		font-size: 1rem;
-	}
-	button {
-		padding: 0.5rem 1rem;
-		background-color: #007bff;
-		color: white;
-		border: none;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 1rem;
-	}
-	button:disabled {
-		background-color: #ccc;
-		cursor: not-allowed;
+	Button {
+    width: auto;
+  }
+	/* on mobile, put form on bottom */
+	@media (max-width: 640px) {
+		form {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: white;
+			box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+			padding: 0.4em;
+			
+		}
+		Button {
+      width: 90%;
+			margin-top: .5em;
+			margin-left: 5%;
+    }
 	}
 </style>
