@@ -1,6 +1,4 @@
 <script>
-	import { createTable, Render, Subscribe } from "svelte-headless-table";
-  import { readable } from "svelte/store";
 
   /**
 	 * @type {string[]}
@@ -11,13 +9,6 @@
 	$: if (translationHistory.length > 0) {
 		languages = Object.keys(translationHistory[0]);
 	}
-
-	const table = createTable(readable(translationHistory));
-	const columns = table.createColumns(
-		languages.map(lang => (table.column({ accessor: lang, header: lang })))
-	);
-	const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
-    table.createViewModel(columns);
 
 </script>
 
