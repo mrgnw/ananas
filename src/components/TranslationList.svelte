@@ -1,46 +1,45 @@
 <script>
+	  import { Badge } from "$components/ui/badge";
 
-  /**
-	 * @type {string[]}
-	 */
-   export let translationHistory =  [];
-  
-	export let languages = ['en', 'es', 'ru', 'it', 'ca', 'de'];
-	$: if (translationHistory.length > 0) {
-		languages = Object.keys(translationHistory[0]);
-	}
+  export let translationHistory =  [];
+  export let languages = ['en', 'es', 'ru', 'it', 'ca', 'de'];
 
+  $: if (translationHistory.length > 0) {
+    languages = Object.keys(translationHistory[0]);
+  }
 </script>
 
-<div class="rounded-md border" style="overflow-x: auto;">
-  <table>
-		<thead>
-			<tr>
-				{#each languages as language (language)}
-					<th>{language}</th>
-				{/each}
-			</tr>
-		</thead>
-		<tbody>
-			{#each translationHistory as translation (translation)}
-				<tr>
-					{#each languages as language (language)}
-						<td>{translation[language]}</td>
-					{/each}
-				</tr>
-			{/each}
-		</tbody>
-	</table>
+<div class="grid">
+  {#each translationHistory as translation (translation)}
+    <div class="card">
+      {#each languages as language (language)}
+        <div class="translation">
+					<Badge variant="outline" ><span class="language">{language}</span>
+					</Badge>
+					 {translation[language]}
+        </div>
+      {/each}
+    </div>
+  {/each}
 </div>
 
 <style>
-  table {
-    width: 100%;
-    border-collapse: collapse;
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
-  th, td {
+  .card {
     border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    flex: 1 1 auto;
+		max-width: fit-content;
+  }
+  .translation {
+    margin-bottom: 1rem;
+  }
+  .language {
+    font-family: monospace;
   }
 </style>
