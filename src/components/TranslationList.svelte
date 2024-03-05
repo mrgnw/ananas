@@ -36,9 +36,7 @@
     flex: 1 1 auto;
 		max-width: fit-content;
   }
-  .translation {
-    margin-bottom: 1rem;
-  }
+
   .language {
     font-family: monospace;
   }
