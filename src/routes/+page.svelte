@@ -44,9 +44,8 @@
 		} // Done loading
 	}
 </script>
-<div>
+<div class="container">
 <form>
-
 	<div class="grid ">
 		<div>
 			<Textarea bind:value={input_text} placeholder="Enter text to translate" />
@@ -59,37 +58,54 @@
 	</div>
 
 </form>
+<div class="card-list">
+<TranslationList {translationHistory}/>
 </div>
-<TranslationList {translationHistory} />
+</div>
 
 <style>
 	:root {
-		font-size: 1.5em;
-		padding: .8rem;
+	font-size: 1.5em;
+	padding: .8rem;
 	}
+	.grid {
+    display: grid;
+    gap: .5em; /* Add space between grid items */
+  }
 
 	form {
-		padding-bottom: 1em;
+	padding-bottom: 1em;
 	}
-	Button {
-    width: auto;
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
   }
-	/* on mobile, put form on bottom */
-	@media (max-width: 640px) {
-		form {
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			background-color: white;
-			box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-			padding: 0.4em;
-			
-		}
-		Button {
-      width: 90%;
-			margin-top: .5em;
-			margin-left: 5%;
+  form {
+    order: 1;
+    position: sticky;
+    bottom: 0;
+  }
+  .card-list {
+    order: 2;
+    flex-grow: 1;
+    overflow: auto;
+  }
+
+  @media (max-width: 640px) {
+    form {
+      order: 2;
+      width: 100%;
     }
-	}
+    .card-list {
+      order: 1;
+      width: 100%;
+    }
+    .grid div {
+      width: 100%;
+    }
+    Button {
+      width: 100%;
+    }
+  }
 </style>
