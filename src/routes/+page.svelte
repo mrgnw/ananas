@@ -65,8 +65,7 @@
 
 <style>
 	:root {
-	font-size: 1.5em;
-	padding: .8rem;
+		font-size: 1.5em;
 	}
 	.grid {
     display: grid;
@@ -74,7 +73,7 @@
   }
 
 	form {
-	padding-bottom: 1em;
+	`padding`-bottom: 1em;
 	}
 .container {
     display: flex;
@@ -92,6 +91,9 @@
     overflow: auto;
   }
 
+	.container {
+		padding: .5em;
+	}
   @media (max-width: 640px) {
     form {
       order: 2;
