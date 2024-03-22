@@ -78,7 +78,6 @@
 	</form>
 
 	<LanguagePicker bind:languages />
-	<p>{languages}</p>
 	<div class="card-list">
 		<TranslationList {translationHistory} bind:languages/>
 	</div>

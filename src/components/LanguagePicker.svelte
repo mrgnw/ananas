@@ -11,10 +11,10 @@
 	function toggle_language(lang_code){
 		if (languages.includes(lang_code)) {
 			languages = languages.filter(l => l !== lang_code);
-			console.log(`Removed ${lang_code}`)
+			console.log(`- ${lang_code}`)
 		} else {
 			languages = [...languages, lang_code];
-			console.log(`Added ${lang_code}`)
+			console.log(`+ ${lang_code}`)
 		}	
 	}
 
