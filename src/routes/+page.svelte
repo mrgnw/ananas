@@ -1,6 +1,6 @@
 <script>
 	import TranslationList from '$components/TranslationList.svelte';
-	import { Textarea } from "$components/ui/textarea";
+	import { Input } from "$components/ui/input";
 	import { Button } from "$components/ui/button";
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -45,10 +45,10 @@
 	}
 </script>
 <div class="container">
-<form>
+<form on:submit|preventDefault={handleSubmit}>
 	<div class="grid ">
 		<div>
-			<Textarea bind:value={input_text} placeholder="Enter text to translate" />
+			<Input bind:value={input_text} placeholder="Enter text to translate" />
 		</div>
 		<div>
 			<Button on:click={handleSubmit} disabled={!is_ready}>
