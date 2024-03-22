@@ -8,7 +8,7 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
-	let languages = ['en', 'es', 'ca', 'ru'];
+	let languages = ['en', 'es', 'ca'];
 
 	let input_text = '';
 
