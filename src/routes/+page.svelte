@@ -89,6 +89,7 @@
     order: 2;
     flex-grow: 1;
     overflow: auto;
+		margin-top: 1em;
   }
 
 	.container {
@@ -102,6 +103,7 @@
     .card-list {
       order: 1;
       width: 100%;
+			margin-top: 0em;
     }
     .grid div {
       width: 100%;
