@@ -1,6 +1,6 @@
 <script>
 	import { Badge } from "$components/ui/badge";
-	import { fly } from "svelte/transition";
+	import { fly, fade } from "svelte/transition";
 	let { languages, translationHistory } = $props();
 
 	let lang_order = ['en', 'es', 'ca', 'it', 'ru', 'de'];
@@ -15,7 +15,7 @@
 	{#each translationHistory as translation, i (translation)}
 	<div class="card" in:fly={{ y: 200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
 		{#each sorted_languages as language (language)}
-		<div class="translation">
+		<div class="translation" transition:fade={{ duration: 200 }}>
 			<Badge variant="outline"><span class="language">{language}</span>
 			</Badge>
 			{translation[language]}
