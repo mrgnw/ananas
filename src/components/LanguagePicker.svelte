@@ -4,8 +4,19 @@
 	import * as Collapsible from "$components/ui/collapsible";
 
 	let { languages } = $props();
-	languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
+	let language_options = ['en', 'es', 'ca', 'it', 'ru', 'de'];
+	// languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 	const cataloniaFlagEmoji = String.fromCodePoint(0x1F3F4, 0xE0065, 0xE0073, 0xE0063, 0xE0074, 0xE007F);
+
+	function toggle_language(lang_code){
+		if (languages.includes(lang_code)) {
+			languages = languages.filter(l => l !== lang_code);
+			console.log(`Removed ${lang_code}`)
+		} else {
+			languages = [...languages, lang_code];
+			console.log(`Added ${lang_code}`)
+		}	
+	}
 
 	let flags = {
 		en: '🇺🇸',
@@ -19,15 +30,12 @@
 	let language_selections = $state({});
 	languages.forEach(language => language_selections[language] = true);
 
-	let selected_languages = $derived(
-		Object.keys(language_selections).filter(language => language_selections[language])
-	);
+	
 </script>
 
 <div class="language-picker">
-	{#each languages as language}
-	<span class="flag {language_selections[language] ? 'selected' : ''}" on:click={()=> language_selections[language] =
-		!language_selections[language]}
+	{#each language_options as language}
+	<span class="flag {languages.includes(language) ? 'selected' : ''}" on:click={() => toggle_language(language)}
 		>
 		{flags[language]}
 	</span>

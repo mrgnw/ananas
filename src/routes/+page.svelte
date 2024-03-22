@@ -2,12 +2,12 @@
 	import { onMount } from 'svelte';
 	import TranslationList from '$components/TranslationList.svelte';
 	import LanguagePicker from '$components/LanguagePicker.svelte';
+		
 	import { Input } from "$components/ui/input";
 	import { Button } from "$components/ui/button";
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-	let languages = ['en', 'es', 'ru', 'it', 'ca', 'de'];
-	// import {selected_languages} from '$components/LanguagePicker.svelte';
+	let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 
 	let input_text = '';
 
@@ -77,9 +77,10 @@
 		</div>
 	</form>
 
-	<LanguagePicker {languages} />
+	<LanguagePicker bind:languages />
+	<p>{languages}</p>
 	<div class="card-list">
-		<TranslationList {translationHistory} />
+		<TranslationList {translationHistory} bind:languages/>
 	</div>
 
 </div>

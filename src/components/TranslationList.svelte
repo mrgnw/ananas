@@ -2,16 +2,16 @@
 	import { Badge } from "$components/ui/badge";
 	import { fly } from "svelte/transition";
 	export let translationHistory = [];
-	export let lang_opts = ['en', 'es', 'ru', 'it', 'ca', 'de'];
+	export let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 	$: if (translationHistory.length > 0) {
-		lang_opts = Object.keys(translationHistory[0]);
+		languages = Object.keys(translationHistory[0]);
 	}
 </script>
 
 <div class="grid">
 	{#each translationHistory as translation, i (translation)}
 	<div class="card" in:fly={{ y: 200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
-		{#each lang_opts as language (language)}
+		{#each languages as language (language)}
 		<div class="translation">
 			<Badge variant="outline"><span class="language">{language}</span>
 			</Badge>
