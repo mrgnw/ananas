@@ -1,10 +1,12 @@
 <script>
 	import { onMount } from 'svelte';
 	import TranslationList from '$components/TranslationList.svelte';
+	import LanguagePicker from '$components/LanguagePicker.svelte';
 	import { Input } from "$components/ui/input";
 	import { Button } from "$components/ui/button";
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+	let languages = ['en', 'es', 'ru', 'it', 'ca', 'de'];
 
 	let input_text = '';
 
@@ -57,6 +59,7 @@
 		} // Done loading
 	}
 
+
 </script>
 
 <div class="container">
@@ -71,12 +74,13 @@
 				</Button>
 			</div>
 		</div>
-
 	</form>
-	<!-- <button on:click={() => localStorage.clear()}>Clear Local Storage</button> -->
+
+	<LanguagePicker {languages} />
 	<div class="card-list">
 		<TranslationList {translationHistory} />
 	</div>
+
 </div>
 
 <style>
@@ -87,7 +91,6 @@
 	.grid {
 		display: grid;
 		gap: .5em;
-		/* Add space between grid items */
 	}
 
 	form {

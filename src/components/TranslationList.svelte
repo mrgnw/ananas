@@ -7,6 +7,7 @@
 		languages = Object.keys(translationHistory[0]);
 	}
 </script>
+
 <div class="grid">
 	{#each translationHistory as translation, i (translation)}
 	<div class="card" in:fly={{ y: 200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
@@ -20,6 +21,7 @@
 	</div>
 	{/each}
 </div>
+
 <style>
 	.grid {
 		display: flex;
