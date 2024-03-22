@@ -15,7 +15,7 @@
 		ca: cataloniaFlagEmoji,
 		de: '🇩🇪'
 	};
-	
+
 	let language_selections = {};
 	languages.forEach(language => language_selections[language] = false);
 	$: selected_languages = Object.keys(language_selections).filter(language => language_selections[language]);
@@ -25,17 +25,16 @@
 	<Collapsible.Root>
 		<Collapsible.Trigger>
 			{#each languages as language}
-				{flags[language]}
+			{flags[language]}
 			{/each}
 		</Collapsible.Trigger>
 		<Collapsible.Content>
-		{#each languages as language}
-		<div>
-			<Checkbox bind:checked={language_selections[language]}>{language}</Checkbox>
-			<Label for={language}>{flags[language]} {language}</Label>
-		</div>
-		{/each}
-	</Collapsible.Content>
+			{#each languages as language}
+			<div>
+				<Checkbox bind:checked={language_selections[language]}>{language}</Checkbox>
+				<Label for={language}>{flags[language]} {language}</Label>
+			</div>
+			{/each}
+		</Collapsible.Content>
 	</Collapsible.Root>
-	</div>
-
+</div>
