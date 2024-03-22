@@ -1,49 +1,59 @@
 <script>
-	import TranslationList from '$components/TranslationList.svelte';
-	import { Input } from "$components/ui/input";
-	import { Button } from "$components/ui/button";
+  import { onMount } from 'svelte';
+  import TranslationList from '$components/TranslationList.svelte';
+  import { Input } from "$components/ui/input";
+  import { Button } from "$components/ui/button";
 
-	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+  const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
-	let input_text = '';
+  let input_text = '';
 
-	let translationHistory = [
-		{ en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao', ca: 'hola', de: 'hallo' },
-	];
-	let is_loading = false;
-	$: is_ready = input_text.length > 0 && !is_loading;
+  let example = { en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao', ca: 'hola', de: 'hallo' };
+  let is_loading = false;
+  let translationHistory = typeof localStorage !== 'undefined' ? JSON.parse(localStorage.getItem('translations')) || [example] : [example];
+  $: is_ready = input_text.length > 0 && !is_loading;
 
-	async function handleSubmit() {
-		is_loading = true; // Start loading
-		const text = input_text;
-		const apiUrl = 'https://translate.xces.workers.dev';
+  async function handleSubmit() {
+    is_loading = true; // Start loading
+    const text = input_text;
+    const apiUrl = 'https://translate.xces.workers.dev';
 
-		try {
-			const response = await fetch(apiUrl, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					api_key: OPENAI_API_KEY
-				},
-				body: JSON.stringify({ text })
-			});
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          api_key: OPENAI_API_KEY
+        },
+        body: JSON.stringify({ text })
+      });
 
-			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
-			}
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-			const data = await response.json();
+      const data = await response.json();
 
-			translationHistory = [...translationHistory, data];
-			// Clear input text
-			input_text = '';
-		} catch (error) {
-			console.error('Error fetching translation:', error);
-		} finally {
-			is_loading = false;
-		} // Done loading
-	}
+      translationHistory = [...translationHistory, data];
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('translations', JSON.stringify(translationHistory));
+      }
+      // Clear input text
+      input_text = '';
+    } catch (error) {
+      console.error('Error fetching translation:', error);
+    } finally {
+      is_loading = false;
+    } // Done loading
+  }
+
+  if (typeof window !== 'undefined') {
+    onMount(() => {
+      translationHistory = JSON.parse(localStorage.getItem('translations')) || [example];
+    });
+  }
 </script>
+
 <div class="container">
 <form on:submit|preventDefault={handleSubmit}>
 	<div class="grid ">
