@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import TranslationList from '$components/TranslationList.svelte';
 	import LanguagePicker from '$components/LanguagePicker.svelte';
-		
+
 	import { Input } from "$components/ui/input";
 	import { Button } from "$components/ui/button";
 
@@ -80,7 +80,7 @@
 
 	<LanguagePicker bind:languages />
 	<div class="card-list">
-		<TranslationList {translationHistory} bind:languages/>
+		<TranslationList {translationHistory} bind:languages />
 	</div>
 
 </div>
@@ -115,7 +115,6 @@
 		order: 2;
 		flex-grow: 1;
 		overflow: auto;
-		margin-top: 1em;
 	}
 
 	.container {
@@ -131,7 +130,7 @@
 		.card-list {
 			order: 1;
 			width: 100%;
-			margin-top: 0em;
+
 		}
 
 		.grid div {
