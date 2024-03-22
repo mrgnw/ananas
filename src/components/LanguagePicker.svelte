@@ -8,14 +8,14 @@
 	// languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 	const cataloniaFlagEmoji = String.fromCodePoint(0x1F3F4, 0xE0065, 0xE0073, 0xE0063, 0xE0074, 0xE007F);
 
-	function toggle_language(lang_code){
+	function toggle_language(lang_code) {
 		if (languages.includes(lang_code)) {
 			languages = languages.filter(l => l !== lang_code);
 			console.log(`- ${lang_code}`)
 		} else {
 			languages = [...languages, lang_code];
 			console.log(`+ ${lang_code}`)
-		}	
+		}
 	}
 
 	let flags = {
@@ -30,12 +30,12 @@
 	let language_selections = $state({});
 	languages.forEach(language => language_selections[language] = true);
 
-	
+
 </script>
 
 <div class="language-picker">
 	{#each language_options as language}
-	<span class="flag {languages.includes(language) ? 'selected' : ''}" on:click={() => toggle_language(language)}
+	<span class="flag {languages.includes(language) ? 'selected' : ''}" on:click={()=> toggle_language(language)}
 		>
 		{flags[language]}
 	</span>
