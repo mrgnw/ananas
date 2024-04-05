@@ -2,6 +2,7 @@
 	"short_name": "Ananas",
  	"name": "Ananas multi-language translator",
 	"start_url": "/",
+	"scope": "/",
 	"display": "standalone",
 	"theme_color": "#35b899", 
 	"background_color": "#35b899",
