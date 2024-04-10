@@ -13,7 +13,7 @@
 
 <div class="grid">
 	{#each translationHistory as translation, i (translation)}
-	<div class="card" in:fly={{ y: 200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
+	<div class="card" in:fly={{ y: -200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
 		{#each sorted_languages as language (language)}
 		<div class="translation" transition:fade={{ duration: 200 }}>
 			<Badge variant="outline"><span class="language">{language}</span>
