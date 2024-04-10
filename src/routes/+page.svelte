@@ -48,7 +48,7 @@
 
 			const data = await response.json();
 
-			translationHistory = [...translationHistory, data];
+			translationHistory = [data, ...translationHistory];
 			if (typeof localStorage !== 'undefined') {
 				localStorage.setItem('translations', JSON.stringify(translationHistory));
 			}
@@ -60,7 +60,6 @@
 			is_loading = false;
 		} // Done loading
 	}
-
 
 </script>
 
