@@ -21,8 +21,6 @@
 		{#each sorted_languages as language (language)}
 		<div class={rtl_languages.includes(language) ? 'translation rtl' : 'translation' } transition:fade={{ duration: 200
 			}}>
-			<Badge variant="outline"><span class="language">{language}</span>
-			</Badge>
 			{translation[language]}
 		</div>
 		{/each}
