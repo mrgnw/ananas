@@ -1,5 +1,4 @@
 <script>
-	import { Badge } from "$components/ui/badge";
 	import { fly, fade } from "svelte/transition";
 	let { languages, translationHistory } = $props();
 
