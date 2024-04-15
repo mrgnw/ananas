@@ -12,7 +12,7 @@
 
 	let input_text = '';
 
-	let example = { en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao', ca: 'hola', de: 'hallo' };
+	let example = { en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao', ca: 'hola', de: 'hallo', ar: 'مرحبا' };
 	let translationHistory = [];
 
 	onMount(() => {
