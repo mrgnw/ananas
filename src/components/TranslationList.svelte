@@ -3,9 +3,13 @@
 	import { fly, fade } from "svelte/transition";
 	let { languages, translationHistory } = $props();
 
-	let lang_order = ['en', 'es', 'ca', 'it', 'ru', 'de'];
+	let lang_order = ['en', 'es', 'ca', 'ru'];
+	let rtl_languages = ['ar'];
 	function sort_languages(languages) {
-		return languages.sort((a, b) => lang_order.indexOf(a) - lang_order.indexOf(b));
+		return languages.sort((a, b) => {
+			return (lang_order.indexOf(a) === -1 ? Infinity : lang_order.indexOf(a)) -
+				(lang_order.indexOf(b) === -1 ? Infinity : lang_order.indexOf(b));
+		});
 	}
 
 	let sorted_languages = $derived(sort_languages(languages));
@@ -15,7 +19,8 @@
 	{#each translationHistory as translation, i (translation)}
 	<div class="card" in:fly={{ y: -200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
 		{#each sorted_languages as language (language)}
-		<div class="translation" transition:fade={{ duration: 200 }}>
+		<div class={rtl_languages.includes(language) ? 'translation rtl' : 'translation' } transition:fade={{ duration: 200
+			}}>
 			<Badge variant="outline"><span class="language">{language}</span>
 			</Badge>
 			{translation[language]}
@@ -42,5 +47,9 @@
 
 	.language {
 		font-family: monospace;
+	}
+
+	.rtl {
+		direction: rtl;
 	}
 </style>

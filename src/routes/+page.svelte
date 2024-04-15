@@ -8,11 +8,11 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
-	let languages = ['en', 'es', 'ca'];
+	let languages = ['en', 'es', 'ca', 'ar'];
 
 	let input_text = '';
 
-	let example = { en: 'hiya', es: 'hola', ru: 'привет', it: 'ciao', ca: 'hola', de: 'hallo', ar: 'مرحبا' };
+	let example = { en: 'hiya', es: 'hola', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
 	let translationHistory = [];
 
 	onMount(() => {
