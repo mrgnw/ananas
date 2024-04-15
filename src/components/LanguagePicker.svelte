@@ -4,7 +4,7 @@
 	import * as Collapsible from "$components/ui/collapsible";
 
 	let { languages } = $props();
-	let language_options = ['en', 'es', 'ca', 'it', 'ru', 'de'];
+	let language_options = ['en', 'es', 'ca', 'it', 'ru', 'de', 'ar'];
 	// languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 	// const cataloniaFlagEmoji = String.fromCodePoint(0x1F3F4, 0xE0065, 0xE0073, 0xE0063, 0xE0074, 0xE007F);
 
