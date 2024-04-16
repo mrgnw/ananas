@@ -9,6 +9,6 @@ bun run dev
 -  [SvelteKit](http://kit.svelte.dev) • [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte)
 - [shadcn-svelte](https://www.shadcn-svelte.com) • [install](https://www.shadcn-svelte.com/docs/installation)
 	- add component:
-		```bunx shadcn-svelte@latest add button``
+		```bunx shadcn-svelte@latest add button```
 
 
