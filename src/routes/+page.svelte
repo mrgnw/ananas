@@ -1,14 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
-	import TranslationList from '$components/TranslationList.svelte';
-	import LanguagePicker from '$components/LanguagePicker.svelte';
+	import TranslationList from '$jibs/TranslationList.svelte';
+	import LanguagePicker from '$jibs/LanguagePicker.svelte';
 
-	import { Input } from "$components/ui/input";
-	import { Button } from "$components/ui/button";
+	import { Button } from "$lib/components/ui/button";
+	import { Input } from "$lib/components/ui/input";
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
-	let languages = ['en', 'es', 'ca', 'ar'];
+	let languages = ['en', 'es', 'ca'];
 
 	let input_text = '';
 

@@ -6,7 +6,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$components: './src/components',
+			"$jibs": './src/jibs',
 			"$utils": "$lib/utils",
 			"@/*": "./src/lib/*",
 		}

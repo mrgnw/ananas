@@ -1,7 +1,6 @@
 <script>
-	import { Checkbox } from '$components/ui/checkbox';
-	import { Label } from '$components/ui/label';
-	import * as Collapsible from "$components/ui/collapsible";
+	import { Checkbox, Label } from '$lib/components/ui/checkbox';
+	import * as Collapsible from "$lib/components/ui/collapsible";
 
 	let { languages } = $props();
 	let language_options = ['en', 'es', 'ca', 'ar', 'it', 'ru', 'de'];
