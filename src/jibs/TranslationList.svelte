@@ -1,6 +1,5 @@
 <script>
 	import { fly, fade } from "svelte/transition";
-	// import { Button } from "$lib/components/ui/button";
 	let { languages, translationHistory } = $props();
 
 	let lang_order = ['en', 'es', 'ca', 'ru'];
@@ -30,6 +29,7 @@
 		{:else}
 		<div class="missing-translation">▸ {language}</div>
 		{/if}
+
 		{/each}
 	</div>
 	{/each}
@@ -50,10 +50,6 @@
 		max-width: fit-content;
 	}
 
-	.language {
-		font-family: monospace;
-	}
-
 	.rtl {
 		direction: rtl;
 	}
@@ -70,7 +66,7 @@
 		display: none;
 	}
 
-	.card:hover .delete-button {
+	.card:hover .delete-item {
 		display: block;
 	}
 </style>
