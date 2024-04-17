@@ -1,5 +1,6 @@
 <script>
 	import { fly, fade } from "svelte/transition";
+	import Icon from '@iconify/svelte';
 	let { languages, translationHistory } = $props();
 
 	let lang_order = ['en', 'es', 'ca', 'ru'];
@@ -29,8 +30,11 @@
 		{:else}
 		<div class="missing-translation">▸ {language}</div>
 		{/if}
-
 		{/each}
+		<div class="delete-button" on:click={() => deleteCard(i)}>
+			<Icon icon="fluent-emoji-flat:cross-mark" >
+			</Icon>
+		</div>
 	</div>
 	{/each}
 </div>
@@ -59,14 +63,18 @@
 		font-style: italic;
 	}
 
-	.delete-item {
+	.delete-button {
 		position: absolute;
-		top: 0;
-		right: 0;
+		bottom: 1em;
+		right: 1em;
 		display: none;
+		background-color: white;
+		border-radius: 50%;
+		
+		cursor: pointer;
 	}
 
-	.card:hover .delete-item {
+	.card:hover .delete-button {
 		display: block;
 	}
 </style>
