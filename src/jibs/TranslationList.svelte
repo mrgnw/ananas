@@ -20,7 +20,8 @@
 
 <div class="grid">
 	{#each translationHistory as translation, i (translation)}
-	<div class="card" in:fly={{ y: -200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
+	<div class="card {sorted_languages.length === 1 ? 'single-language' : ''}"
+		in:fly={{ y: -200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
 		{#each sorted_languages as language (language)}
 		{#if translation[language] != undefined}
 		<div class={rtl_languages.includes(language) ? 'translation rtl' : 'translation' } transition:fade={{ duration: 200
@@ -49,6 +50,11 @@
 		flex: 1 1 auto;
 		max-width: fit-content;
 	}
+	.card.single-language {
+    border: none;
+    padding: 0.5rem; /* adjust as needed */
+  }
+
 
 	.language {
 		font-family: monospace;
