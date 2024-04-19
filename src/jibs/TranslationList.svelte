@@ -41,7 +41,7 @@
 	.grid {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5em;
+		gap: 0.7em;
 		line-height: 1.0;
 	}
 
