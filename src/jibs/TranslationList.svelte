@@ -5,7 +5,7 @@
 
 	let lang_order = ['en', 'es', 'ca', 'ru'];
 	let rtl_languages = ['ar'];
-	
+
 	function sort_languages(languages) {
 		return languages.sort((a, b) => {
 			return (lang_order.indexOf(a) === -1 ? Infinity : lang_order.indexOf(a)) -
@@ -41,7 +41,8 @@
 	.grid {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 1rem;
+		gap: 0.5em;
+		line-height: 1.0;
 	}
 
 	.card {
@@ -55,6 +56,7 @@
     border: none;
     padding: 0px;
 		margin: 0px;
+		gap: 0px;
   }
 
 	.language {
