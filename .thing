@@ -1,2 +1,2 @@
 #! /usr/bin/env zsh
-bun install && bun run build && bun run dev
+bun install && bun run build && bun run preview
