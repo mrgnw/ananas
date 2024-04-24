@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import TranslationList from '$jibs/TranslationList.svelte';
+	import Cards from '$jibs/Cards.svelte';
 	import LanguagePicker from '$jibs/LanguagePicker.svelte';
 
 	import { Button } from "$lib/components/ui/button";
@@ -79,7 +79,7 @@
 
 	<LanguagePicker bind:languages />
 	<div class="card-list">
-		<TranslationList {translationHistory} bind:languages />
+		<Cards {translationHistory} bind:languages />
 	</div>
 
 </div>
