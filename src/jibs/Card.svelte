@@ -1,15 +1,15 @@
 <script>
   import { fly } from "svelte/transition";
-  export let translation;
-  export let sorted_languages;
-  export let rtl_languages;
-  export let i;
+  let {translation, languages, i} = $props();
+  let lang_class = $derived(languages ? (languages.length === 1 ? 'single-language' : '') : '');
+	let rtl_languages = ['ar'];
+
 </script>
 
-<div class="card {sorted_languages.length === 1 ? 'single-language' : ''}"
+<div class="card {lang_class}"
   in:fly={{ y: -200, duration: 500, delay: i * 100 }} 
   out:fly={{ y: -200, duration: 500 }}>
-  {#each sorted_languages as language (language)}
+  {#each languages as language (language)}
     {#if translation[language] != undefined}
       <div class={rtl_languages.includes(language) ? 'translation rtl' : 'translation' }>
         {translation[language]}
