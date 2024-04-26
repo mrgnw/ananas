@@ -3,6 +3,10 @@
 	import Card from "$jibs/Card.svelte";
 	
 	let { languages, translationHistory } = $props();
+	$effect(() => {
+		console.log('languages', languages);
+		console.log('translationHistory', translationHistory);
+	});
 	
 </script>
 

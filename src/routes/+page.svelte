@@ -8,12 +8,25 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
-	let languages = ['en', 'es', 'ca'];
+	let all_languages = new Map([
+		['en', 1],
+		['es', 0],
+		['ca', 1],
+		['it', 0],
+		['ru', 1],
+		['de', 0],
+		['ar', 0]
+	]);
+	let languages = $state(all_languages);
+	
+	let language_selections = $derived(
+		Array.from(languages).filter(([key, value]) => value === 1).map(([key]) => key)
+	)
 
 	let input_text = '';
 
 	let example = { en: 'hiya', es: 'hola', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
-	let translationHistory = [];
+	let translationHistory = $state([]);
 
 	onMount(() => {
 		const storedTranslations = JSON.parse(localStorage.getItem('translations'));
@@ -25,7 +38,7 @@
 	});
 
 	let is_loading = false;
-	$: is_ready = input_text.length > 0 && !is_loading;
+	let is_ready = $derived(input_text.length > 0 && !is_loading);
 
 	async function handleSubmit() {
 		is_loading = true; // Start loading
@@ -79,7 +92,7 @@
 
 	<LanguagePicker bind:languages />
 	<div class="card-list">
-		<Cards {translationHistory} bind:languages />
+		<Cards bind:languages bind:translationHistory />
 	</div>
 
 </div>

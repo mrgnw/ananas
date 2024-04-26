@@ -3,19 +3,19 @@
 	import * as Collapsible from "$lib/components/ui/collapsible";
 
 	let { languages } = $props();
-	let language_options = ['en', 'es', 'ca', 'ar', 'it', 'ru', 'de'];
-	// languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
+
 	// const cataloniaFlagEmoji = String.fromCodePoint(0x1F3F4, 0xE0065, 0xE0073, 0xE0063, 0xE0074, 0xE007F);
 
 	function toggle_language(lang_code) {
-		if (languages.includes(lang_code)) {
-			languages = languages.filter(l => l !== lang_code);
-			console.log(`- ${lang_code}`)
-		} else {
-			languages = [...languages, lang_code];
-			console.log(`+ ${lang_code}`)
-		}
-	}
+    const currentValue = languages.get(lang_code);
+    languages.set(lang_code, currentValue === 1 ? 0 : 1);
+		// Re-assign to trigger reactivity
+		languages = new Map(languages);
+  }
+
+	$effect(() => {
+		console.log('languages', languages);
+	});
 
 	let flags = {
 		en: '🇺🇸',
@@ -27,15 +27,12 @@
 		de: '🇩🇪',
 	};
 
-	let language_selections = $state({});
-	languages.forEach(language => language_selections[language] = true);
-
 
 </script>
 
 <div class="language-picker">
-	{#each language_options as language}
-	<span class="flag {languages.includes(language) ? 'selected' : ''}" on:click={()=> toggle_language(language)}>
+	{#each Array.from(languages) as [language, is_selected]}
+	<span class="flag" class:selected={is_selected} on:click={()=> toggle_language(language)}>
 		{#if language === 'ca'}
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 540" width="1em" height="1em">
 			<rect width="810" height="540" fill="#FCDD09" />
