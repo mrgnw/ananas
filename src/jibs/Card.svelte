@@ -12,7 +12,11 @@
 	{#each language_selections as lang}
 	{#if languages.get(lang) === 1}
 	<div class:rtl={rtl_languages.includes(lang)}>
-		{translation[lang] || '<div class="missing-translation">▸ Missing translation</div>'}
+		{#if translation[lang]}
+		{translation[lang]}
+		{:else}
+		<div class="missing-translation">▸ Missing translation</div>
+		{/if}
 	</div>
 	{/if}
 	{/each}
