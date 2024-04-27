@@ -24,7 +24,7 @@
 		Array.from(languages).filter(([key, value]) => value === 1).map(([key]) => key)
 	)
 
-	let input_text = '';
+	let input_text = $state('');
 
 	let example = { en: 'hiya', es: 'hola', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
 	let translationHistory = $state([]);
@@ -38,8 +38,13 @@
 		}
 	});
 
-	let is_loading = false;
-	let is_ready = $derived(() => input_text.length > 0 && !is_loading);
+	let is_loading = $state(false);
+	let is_ready = $derived(input_text.length > 0 && !is_loading);
+
+	
+	$effect(() => {
+		console.log('is_ready', is_ready);
+	});
 
 	async function handleSubmit() {
 		is_loading = true; // Start loading
