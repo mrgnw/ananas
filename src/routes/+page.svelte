@@ -6,6 +6,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
 
+
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 	let all_languages = new Map([
@@ -17,8 +18,8 @@
 		['de', 0],
 		['ar', 0]
 	]);
+
 	let languages = $state(all_languages);
-	
 	let language_selections = $derived(
 		Array.from(languages).filter(([key, value]) => value === 1).map(([key]) => key)
 	)
@@ -38,7 +39,7 @@
 	});
 
 	let is_loading = false;
-	let is_ready = $derived(input_text.length > 0 && !is_loading);
+	let is_ready = $derived(() => input_text.length > 0 && !is_loading);
 
 	async function handleSubmit() {
 		is_loading = true; // Start loading
