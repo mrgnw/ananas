@@ -4,10 +4,6 @@
 
 	let { languages, translationHistory } = $props();
 
-	$effect(() => {
-		console.log('languages', languages);
-	});
-
 </script>
 
 <div class="grid">

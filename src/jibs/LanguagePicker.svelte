@@ -4,18 +4,12 @@
 
 	let { languages } = $props();
 
-	// const cataloniaFlagEmoji = String.fromCodePoint(0x1F3F4, 0xE0065, 0xE0073, 0xE0063, 0xE0074, 0xE007F);
-
 	function toggle_language(lang_code) {
     const currentValue = languages.get(lang_code);
     languages.set(lang_code, currentValue === 1 ? 0 : 1);
 		// Re-assign to trigger reactivity
 		languages = new Map(languages);
   }
-
-	$effect(() => {
-		console.log('languages', languages);
-	});
 
 	let flags = {
 		en: '🇺🇸',
@@ -44,7 +38,6 @@
 	</span>
 	{/each}
 </div>
-
 
 
 <style>
