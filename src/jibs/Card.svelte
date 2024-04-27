@@ -15,7 +15,7 @@
 		{#if translation[lang]}
 		{translation[lang]}
 		{:else}
-		<div class="missing-translation">▸ Missing translation</div>
+		<div class="missing-translation">▸ {lang}</div>
 		{/if}
 	</div>
 	{/if}
