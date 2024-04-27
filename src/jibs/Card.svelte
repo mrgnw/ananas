@@ -11,7 +11,7 @@
 <div class="card {lang_class}" in:fly={{ y: -200, duration: 500, delay: i * 100 }} out:fly={{ y: -200, duration: 500 }}>
 	{#each language_selections as lang}
 	{#if languages.get(lang) === 1}
-	<div class={lang_class}>
+	<div class:rtl={rtl_languages.includes(lang)}>
 		{translation[lang] || '<div class="missing-translation">▸ Missing translation</div>'}
 	</div>
 	{/if}
