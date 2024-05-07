@@ -10,8 +10,8 @@
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 	let all_languages = new Map([
-		['en', 1],
-		['es', 0],
+		['en', 0],
+		['es', 1],
 		['ca', 1],
 		['it', 0],
 		['ru', 1],
