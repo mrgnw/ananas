@@ -12,6 +12,7 @@
 	let all_languages = new Map([
 		['en', 0],
 		['es', 1],
+		['pt', 0],
 		['ca', 1],
 		['it', 0],
 		['ru', 1],
@@ -26,7 +27,7 @@
 
 	let input_text = $state('');
 
-	let example = { en: 'hiya', es: 'hola', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
+	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
 	let translationHistory = $state([]);
 
 	onMount(() => {
