@@ -42,7 +42,7 @@
 	let is_loading = $state(false);
 	let is_ready = $derived(input_text.length > 0 && !is_loading);
 
-	
+
 	$effect(() => {
 		console.log('is_ready', is_ready);
 	});
@@ -52,14 +52,19 @@
 		const text = input_text;
 		const apiUrl = 'https://translate.xces.workers.dev';
 
+		// Extract only languages with a value of 1 (indicating selection)
+		const selectedLanguages = Array.from(all_languages.entries())
+			.filter(([_, value]) => value === 1)
+			.map(([key, _]) => key);
+
 		try {
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					api_key: OPENAI_API_KEY
+					'api_key': OPENAI_API_KEY
 				},
-				body: JSON.stringify({ text })
+				body: JSON.stringify({ text, languages: selectedLanguages })
 			});
 
 			if (!response.ok) {
