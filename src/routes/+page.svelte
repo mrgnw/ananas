@@ -54,7 +54,6 @@
 
 		// Extract only languages with a value of 1 (indicating selection)
 		const selectedLanguages = Array.from(all_languages.entries())
-			// .filter(([_, value]) => value === 1)
 			.map(([key, _]) => key);
 
 		try {
