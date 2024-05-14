@@ -6,8 +6,9 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
 
-	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
+	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
 	let all_languages = new Map([
 		['en', 0],
 		['es', 1],
@@ -19,15 +20,15 @@
 		['ar', 0]
 	]);
 
-	let languages = all_languages;
-	let language_selections = Array.from(languages.entries())
-		.filter(([key, value]) => value === 1)
-		.map(([key]) => key);
+	let languages = $state(all_languages);
+	let language_selections = $derived(
+		Array.from(languages).filter(([key, value]) => value === 1).map(([key]) => key)
+	)
 
-	let input_text = '';
+	let input_text = $state('');
 
 	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
-	let translationHistory = [];
+	let translationHistory = $state([]);
 
 	onMount(() => {
 		const storedTranslations = JSON.parse(localStorage.getItem('translations'));
@@ -38,8 +39,13 @@
 		}
 	});
 
-	let is_loading = false;
-	let is_ready = input_text.length > 0 && !is_loading;
+	let is_loading = $state(false);
+	let is_ready = $derived(input_text.length > 0 && !is_loading);
+
+
+	$effect(() => {
+		console.log('is_ready', is_ready);
+	});
 
 	async function handleSubmit() {
 		is_loading = true; // Start loading
@@ -47,11 +53,8 @@
 		const apiUrl = 'https://translate.xces.workers.dev';
 
 		// Extract only languages with a value of 1 (indicating selection)
-		const selectedLanguages = Array.from(languages.entries())
-			.filter(([_, value]) => value === 1)
-			.map(([key]) => key);
-
-		console.log('Selected languages:', selectedLanguages); // Debugging
+		const selectedLanguages = Array.from(all_languages.entries())
+			.map(([key, _]) => key);
 
 		try {
 			const response = await fetch(apiUrl, {
@@ -68,7 +71,6 @@
 			}
 
 			const data = await response.json();
-			console.log('Translation data:', data); // Debugging
 
 			translationHistory = [data, ...translationHistory];
 			if (typeof localStorage !== 'undefined') {
@@ -82,6 +84,7 @@
 			is_loading = false;
 		} // Done loading
 	}
+
 </script>
 
 <div class="container">
@@ -102,6 +105,7 @@
 	<div class="card-list">
 		<Cards bind:languages bind:translationHistory />
 	</div>
+
 </div>
 
 <style>
@@ -149,6 +153,7 @@
 		.card-list {
 			order: 1;
 			width: 100%;
+
 		}
 
 		.grid div {
