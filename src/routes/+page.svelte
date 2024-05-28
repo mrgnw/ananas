@@ -13,11 +13,11 @@
 		['en', 0],
 		['es', 1],
 		// ['pt', 0],
-		['ca', 0],
-		['it', 1],
-		['ru', 0],
+		['ca', 1],
+		['it', 0],
+		['ru', 1],
 		// ['de', 0],
-		['ar', 0]
+		// ['ar', 0]
 	]);
 
 	let languages = $state(all_languages);
