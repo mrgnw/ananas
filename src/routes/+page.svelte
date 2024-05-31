@@ -12,12 +12,12 @@
 	let all_languages = new Map([
 		['en', 0],
 		['es', 1],
-		// ['pt', 0],
+		['pt', 0],
 		['ca', 1],
 		['it', 0],
 		['ru', 1],
 		// ['de', 0],
-		// ['ar', 0]
+		['ar', 0]
 	]);
 
 	let languages = $state(all_languages);
@@ -53,9 +53,12 @@
 		const apiUrl = 'https://translate.xces.workers.dev';
 
 		// Extract only languages with a value of 1 (indicating selection)
-		const selectedLanguages = Array.from(all_languages.entries())
+		const selected_languages = Array.from(all_languages.entries())
 			.map(([key, _]) => key);
-		console.debug('selectedLanguages', selectedLanguages)
+		console.debug('selected_languages', selected_languages)
+		
+		const translate_languages = Array.from(all_languages.entries())
+			.map(([key, _]) => key);
 
 		try {
 			const response = await fetch(apiUrl, {
@@ -64,7 +67,7 @@
 					'Content-Type': 'application/json',
 					'api_key': OPENAI_API_KEY
 				},
-				body: JSON.stringify({ text, language_input: selectedLanguages })
+				body: JSON.stringify({ text, translate_languages })
 			});
 
 			if (!response.ok) {
