@@ -17,7 +17,8 @@
 		['it', 0],
 		['ru', 1],
 		// ['de', 0],
-		// ['ar', 0]
+		['ar', 0],
+		['hy', 0],
 	]);
 
 	let languages = $state(all_languages);
@@ -41,7 +42,6 @@
 
 	let is_loading = $state(false);
 	let is_ready = $derived(input_text.length > 0 && !is_loading);
-
 
 	$effect(() => {
 		console.log('is_ready', is_ready);
