@@ -55,6 +55,7 @@
 		// Extract only languages with a value of 1 (indicating selection)
 		const selectedLanguages = Array.from(all_languages.entries())
 			.map(([key, _]) => key);
+		console.debug('selectedLanguages', selectedLanguages)
 
 		try {
 			const response = await fetch(apiUrl, {
@@ -63,7 +64,7 @@
 					'Content-Type': 'application/json',
 					'api_key': OPENAI_API_KEY
 				},
-				body: JSON.stringify({ text, languages: selectedLanguages })
+				body: JSON.stringify({ text, language_input: selectedLanguages })
 			});
 
 			if (!response.ok) {
