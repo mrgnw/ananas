@@ -17,7 +17,8 @@
 		['it', 0],
 		['ru', 1],
 		// ['de', 0],
-		['ar', 0]
+		['ar', 0],
+		['hy', 0],
 	]);
 
 	let languages = $state(all_languages);
