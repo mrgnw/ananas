@@ -8,24 +8,8 @@
 
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-	// let languages = ['en', 'es', 'ca', 'it', 'ru', 'de'];
-	let all_languages = new Map([
-		['en', 0],
-		['es', 1],
-		['pt', 0],
-		['ca', 1],
-		['it', 0],
-		['ru', 1],
-		['cs', 0],
-		['ar', 0],
-		['hy', 0],
-	]);
 
-	let languages = $state(all_languages);
-	let language_selections = $derived(
-		Array.from(languages).filter(([key, value]) => value === 1).map(([key]) => key)
-	)
-
+	let translate_languages = $state([]);
 	let input_text = $state('');
 
 	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
@@ -52,14 +36,6 @@
 		is_loading = true; // Start loading
 		const text = input_text;
 		const apiUrl = 'https://translate.xces.workers.dev';
-
-		// Extract only languages with a value of 1 (indicating selection)
-		const selected_languages = Array.from(all_languages.entries())
-			.map(([key, _]) => key);
-		console.debug('selected_languages', selected_languages)
-		
-		const translate_languages = Array.from(all_languages.entries())
-			.map(([key, _]) => key);
 
 		try {
 			const response = await fetch(apiUrl, {
@@ -106,9 +82,9 @@
 		</div>
 	</form>
 
-	<LanguagePicker bind:languages />
+	<LanguagePicker bind:translate_languages />
 	<div class="card-list">
-		<Cards bind:languages bind:translationHistory />
+		<Cards bind:translate_languages bind:translationHistory />
 	</div>
 
 </div>

@@ -3,15 +3,17 @@
 	import * as Collapsible from "$lib/components/ui/collapsible";
 	import { countries } from 'countries-list';
 
-	let { languages } = $props();
+	let { translate_languages = [] } = $props();
 
-	function toggle_language(lang_code) {
-		const currentValue = languages.get(lang_code);
-		languages.set(lang_code, currentValue === 1 ? 0 : 1);
-		languages = new Map(languages);
+	function handleLanguageToggle(langCode, checked) {
+		if (checked) {
+			translate_languages = [...translate_languages, langCode];
+		} else {
+			translate_languages = translate_languages.filter(lang => lang !== langCode);
+		}
 	}
 
-	const availableLanguages = Object.entries(countries).reduce((acc, [_, country]) => {
+	const availableLanguages = Object.values(countries).reduce((acc, country) => {
 		if (country.languages) {
 			country.languages.forEach(lang => {
 				if (!acc.has(lang)) {
@@ -21,7 +23,6 @@
 		}
 		return acc;
 	}, new Map());
-
 </script>
 
 <Collapsible.Root>
@@ -29,11 +30,14 @@
 	<Collapsible.Content>
 		<div class="language-picker">
 			{#each Array.from(availableLanguages) as [langCode, flag]}
-			<label class="language-item">
-				<Checkbox checked={languages.get(langCode)===1} onCheckedChange={()=> toggle_language(langCode)} />
+				<label class="language-item">
+					<Checkbox 
+						checked={translate_languages.includes(langCode)}
+						onCheckedChange={(checked) => handleLanguageToggle(langCode, checked)}
+					/>
 					<span class="flag">{flag}</span>
 					<span class="lang-name">{new Intl.DisplayNames(['en'], { type: 'language' }).of(langCode)}</span>
-			</label>
+				</label>
 			{/each}
 		</div>
 	</Collapsible.Content>
@@ -44,6 +48,8 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		gap: 10px;
+		max-height: 300px;
+		overflow-y: auto;
 	}
 
 	.language-item {
