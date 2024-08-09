@@ -1,64 +1,62 @@
 <script>
-	import { Checkbox, Label } from '$lib/components/ui/checkbox';
+	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Collapsible from "$lib/components/ui/collapsible";
+	import { countries } from 'countries-list';
 
 	let { languages } = $props();
 
 	function toggle_language(lang_code) {
-    const currentValue = languages.get(lang_code);
-    languages.set(lang_code, currentValue === 1 ? 0 : 1);
-		// Re-assign to trigger reactivity
+		const currentValue = languages.get(lang_code);
+		languages.set(lang_code, currentValue === 1 ? 0 : 1);
 		languages = new Map(languages);
-  }
+	}
 
-	let flags = {
-		en: '🇺🇸',
-		es: '🇪🇸',
-		pt: '🇧🇷',
-		ru: '🇷🇺',
-		ar: '🇲🇦',
-		it: '🇮🇹',
-		cs: '🇨🇿',
-		ca: '',
-		hy: '🇦🇲',
-	};
-
+	const availableLanguages = Object.entries(countries).reduce((acc, [_, country]) => {
+		if (country.languages) {
+			country.languages.forEach(lang => {
+				if (!acc.has(lang)) {
+					acc.set(lang, country.emoji);
+				}
+			});
+		}
+		return acc;
+	}, new Map());
 
 </script>
 
-<div class="language-picker">
-	{#each Array.from(languages) as [language, is_selected]}
-	<span class="flag" class:selected={is_selected} on:click={()=> toggle_language(language)}>
-		{#if language === 'ca'}
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 540" width="1em" height="1em">
-			<rect width="810" height="540" fill="#FCDD09" />
-			<path stroke="#DA121A" stroke-width="60" d="M0,90H810m0,120H0m0,120H810m0,120H0" />
-		</svg>
-		{:else}
-		{flags[language]}
-		{/if}
-	</span>
-	{/each}
-</div>
-
+<Collapsible.Root>
+	<Collapsible.Trigger>Select Languages</Collapsible.Trigger>
+	<Collapsible.Content>
+		<div class="language-picker">
+			{#each Array.from(availableLanguages) as [langCode, flag]}
+			<label class="language-item">
+				<Checkbox checked={languages.get(langCode)===1} onCheckedChange={()=> toggle_language(langCode)} />
+					<span class="flag">{flag}</span>
+					<span class="lang-name">{new Intl.DisplayNames(['en'], { type: 'language' }).of(langCode)}</span>
+			</label>
+			{/each}
+		</div>
+	</Collapsible.Content>
+</Collapsible.Root>
 
 <style>
+	.language-picker {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		gap: 10px;
+	}
+
+	.language-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
 	.flag {
-		opacity: 0.3;
-		transition: opacity 0.3s ease;
-		cursor: pointer;
-		font-size: 2em;
+		font-size: 1.5em;
 	}
 
-	.flag.selected {
-		opacity: 1;
-	}
-
-	.flag svg {
-		display: inline-block;
-		/* Add this line */
-		width: 1em;
-		height: 1em;
-		vertical-align: -0.125em;
+	.lang-name {
+		font-size: 0.9em;
 	}
 </style>
