@@ -51,7 +51,7 @@
 						checked={translate_languages.includes(langCode)} 
 						onCheckedChange={(checked) => handleLanguageToggle(langCode, checked)}
 					/>
-					<span class="lang-name">{langInfo.name} ({langInfo.native})</span>
+					<span class="lang-name">{langInfo.name}</span>
 				</label>
 			{/each}
 		</div>
@@ -88,9 +88,15 @@
 	.selected-languages ul {
 		list-style-type: none;
 		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
 	}
 
 	.selected-languages li {
-		margin-bottom: 5px;
+		margin-bottom: 0;
+		padding: 5px 10px;
+		border-radius: 15px;
+		font-size: 0.9em;
 	}
 </style>
