@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { Checkbox } from '$lib/components/ui/checkbox';
 	import * as Collapsible from "$lib/components/ui/collapsible";
-	import { countries } from 'countries-list';
+	import { languages } from 'countries-list';
 
 	let { translate_languages = [] } = $props();
 
@@ -24,44 +24,35 @@
 		localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
 	}
 
-	const availableLanguages = Object.values(countries).reduce((acc, country) => {
-		if (country.languages) {
-			country.languages.forEach(lang => {
-				if (!acc.has(lang)) {
-					acc.set(lang, country.emoji);
-				}
-			});
-		}
-		return acc;
-	}, new Map());
-
 	let sortedLanguages = $derived(
-		Array.from(availableLanguages)
-			.sort((a, b) => {
-				const nameA = new Intl.DisplayNames(['en'], { type: 'language' }).of(a[0]);
-				const nameB = new Intl.DisplayNames(['en'], { type: 'language' }).of(b[0]);
-				return nameA.localeCompare(nameB);
-			})
-			.sort((a, b) => {
-				const aSelected = translate_languages.includes(a[0]);
-				const bSelected = translate_languages.includes(b[0]);
-				return bSelected - aSelected;
-			}));
-
+		Object.entries(languages)
+			.sort((a, b) => a[1].name.localeCompare(b[1].name))
+	);
+			
 </script>
+
+<div class="selected-languages">
+	<ul>
+		{#each translate_languages as langCode}
+			<li>
+				{new Intl.DisplayNames(['en'], { type: 'language' }).of(langCode)}
+			</li>
+		{/each}
+	</ul>
+</div>
 
 <Collapsible.Root>
 	<Collapsible.Trigger>Select Languages</Collapsible.Trigger>
 	<Collapsible.Content>
 		<div class="language-picker">
-			{#each sortedLanguages as [langCode, flag]}
-			<label class="language-item">
-				<Checkbox checked={translate_languages.includes(langCode)} onCheckedChange={(checked)=>
-					handleLanguageToggle(langCode, checked)}
+			{#each sortedLanguages as [langCode, langInfo]}
+				<label class="language-item">
+					<Checkbox 
+						checked={translate_languages.includes(langCode)} 
+						onCheckedChange={(checked) => handleLanguageToggle(langCode, checked)}
 					/>
-					<span class="flag">{flag}</span>
-					<span class="lang-name">{new Intl.DisplayNames(['en'], { type: 'language' }).of(langCode)}</span>
-			</label>
+					<span class="lang-name">{langInfo.name} ({langInfo.native})</span>
+				</label>
 			{/each}
 		</div>
 	</Collapsible.Content>
@@ -88,5 +79,18 @@
 
 	.lang-name {
 		font-size: 0.9em;
+	}
+
+	.selected-languages {
+		margin-bottom: 20px;
+	}
+
+	.selected-languages ul {
+		list-style-type: none;
+		padding: 0;
+	}
+
+	.selected-languages li {
+		margin-bottom: 5px;
 	}
 </style>
