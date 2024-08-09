@@ -9,7 +9,7 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
-	let translate_languages = $state([]);
+	let translate_languages = $state(['es', 'ru']);
 	let input_text = $state('');
 
 	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
