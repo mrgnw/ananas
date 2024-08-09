@@ -23,13 +23,20 @@
 		}
 		return acc;
 	}, new Map());
+
+	// Sort languages by their English names
+	const sortedLanguages = Array.from(availableLanguages).sort((a, b) => {
+		const nameA = new Intl.DisplayNames(['en'], { type: 'language' }).of(a[0]);
+		const nameB = new Intl.DisplayNames(['en'], { type: 'language' }).of(b[0]);
+		return nameA.localeCompare(nameB);
+	});
 </script>
 
 <Collapsible.Root>
 	<Collapsible.Trigger>Select Languages</Collapsible.Trigger>
 	<Collapsible.Content>
 		<div class="language-picker">
-			{#each Array.from(availableLanguages) as [langCode, flag]}
+			{#each sortedLanguages as [langCode, flag]}
 				<label class="language-item">
 					<Checkbox 
 						checked={translate_languages.includes(langCode)}
