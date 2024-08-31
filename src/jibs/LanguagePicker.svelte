@@ -1,7 +1,12 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
-	import { Checkbox } from '$lib/components/ui/checkbox';
-	import * as Collapsible from "$lib/components/ui/collapsible";
+	// import Check from "lucide-svelte/icons/check";
+	// import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
+	import * as Command from "$lib/components/ui/command/index.ts";
+  import * as Popover from "$lib/components/ui/popover/index.ts";
+	import { Button } from "$lib/components/ui/button/index.ts";
+	import { cn } from "$lib/utils.ts";
+	import { tick } from "svelte";
 	import { languages } from 'countries-list';
 
 	let { translate_languages = $bindable([]) } = $props();
@@ -24,11 +29,28 @@
 		localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
 	}
 
-	let sortedLanguages = $derived(
-		Object.entries(languages)
-			.sort((a, b) => a[1].name.localeCompare(b[1].name))
-	);
-			
+	function handleLanguageAdd(langCode) {
+		if (!translate_languages.includes(langCode)) {
+			translate_languages = [...translate_languages, langCode];
+			localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
+		}
+	}
+
+	let sortedLanguages = Object.entries(languages)
+		.sort((a, b) => a[1].name.localeCompare(b[1].name))
+		.map(([langCode, langInfo]) => ({ value: langCode, label: langInfo.name }));
+
+	let open = false;
+	let value = "";
+
+	let selectedValue = $derived(sortedLanguages.find((lang) => lang.value === value)?.label ?? "Add language...");
+
+	function closeAndFocusTrigger(triggerId) {
+		open = false;
+		tick().then(() => {
+			document.getElementById(triggerId)?.focus();
+		});
+	}
 </script>
 
 <div class="selected-languages">
@@ -41,22 +63,46 @@
 	</ul>
 </div>
 
-<Collapsible.Root>
-	<Collapsible.Trigger>Select Languages</Collapsible.Trigger>
-	<Collapsible.Content>
-		<div class="language-picker">
-			{#each sortedLanguages as [langCode, langInfo]}
-				<label class="language-item">
-					<Checkbox 
-						checked={translate_languages.includes(langCode)} 
-						onCheckedChange={(checked) => handleLanguageToggle(langCode, checked)}
-					/>
-					<span class="lang-name">{langInfo.name}</span>
-				</label>
-			{/each}
-		</div>
-	</Collapsible.Content>
-</Collapsible.Root>
+<Popover.Root bind:open let:ids>
+	<Popover.Trigger asChild let:builder>
+		<Button
+			builders={[builder]}
+			variant="outline"
+			role="combobox"
+			aria-expanded={open}
+			class="w-[200px] justify-between"
+		>
+			{selectedValue}
+			<!-- <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" /> -->
+		</Button>
+	</Popover.Trigger>
+	<Popover.Content class="w-[200px] p-0">
+		<Command.Root>
+			<Command.Input placeholder="Search language..." />
+			<Command.Empty>No language found.</Command.Empty>
+			<Command.Group>
+				{#each sortedLanguages as lang}
+					<Command.Item
+						value={lang.value}
+						onSelect={(currentValue) => {
+							value = currentValue;
+							handleLanguageAdd(currentValue);
+							closeAndFocusTrigger(ids.trigger);
+						}}
+					>
+						<div
+							class={cn(
+								"mr-2 h-4 w-4",
+								value !== lang.value && "text-transparent"
+							)}
+						></div>
+						{lang.label}
+					</Command.Item>
+				{/each}
+			</Command.Group>
+		</Command.Root>
+	</Popover.Content>
+</Popover.Root>
 
 <style>
 	.language-picker {
