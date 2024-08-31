@@ -2,18 +2,19 @@
 	import { onMount } from 'svelte';
 	import Cards from '$jibs/Cards.svelte';
 	import LanguagePicker from '$jibs/LanguagePicker.svelte';
-
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
-
+	import { createTranslateLanguages } from '../translateLanguages.svelte.js';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+	const { languages } = createTranslateLanguages();
 
-	let translate_languages = $state(['es', 'ru']);
 	let input_text = $state('');
-
 	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
 	let translationHistory = $state([]);
+	let is_loading = $state(false);
+	let is_ready = $derived(input_text.length > 0 && !is_loading);
+	let translate_languages = $state([]);
 
 	onMount(() => {
 		const storedTranslations = JSON.parse(localStorage.getItem('translations'));
@@ -22,14 +23,6 @@
 		} else {
 			translationHistory = [example];
 		}
-	});
-
-	let is_loading = $state(false);
-	let is_ready = $derived(input_text.length > 0 && !is_loading);
-
-
-	$effect(() => {
-		console.log('is_ready', is_ready);
 	});
 
 	async function handleSubmit() {
@@ -44,7 +37,7 @@
 					'Content-Type': 'application/json',
 					'api_key': OPENAI_API_KEY
 				},
-				body: JSON.stringify({ text, translate_languages })
+				body: JSON.stringify({ text, translate_languages: languages })
 			});
 
 			if (!response.ok) {

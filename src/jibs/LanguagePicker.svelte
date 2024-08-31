@@ -4,7 +4,7 @@
 	import * as Collapsible from "$lib/components/ui/collapsible";
 	import { languages } from 'countries-list';
 
-	let { translate_languages = [] } = $props();
+	let { translate_languages = $bindable([]) } = $props();
 
 	// Load saved languages from localStorage on component mount
 	onMount(() => {
