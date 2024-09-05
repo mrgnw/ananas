@@ -133,5 +133,5 @@
 		.grid div {
 			width: 100%;
 		}
-
+	}
 </style>

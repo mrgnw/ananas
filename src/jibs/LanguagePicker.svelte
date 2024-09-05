@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	
 	// import Check from "lucide-svelte/icons/check";
 	// import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
 	import * as Command from "$lib/components/ui/command/index.ts";
@@ -13,14 +13,13 @@
 	// TODO: confirm that this is reactive
 	let { translate_languages = $bindable([]) } = $props();
 
-	// TODO: Svelte5 ($effect instead of onMount)
 	// Load saved languages from localStorage on component mount
-	onMount(() => {
+	$effect(() => {
 		const savedLanguages = localStorage.getItem('translate_languages');
 		if (savedLanguages) {
 			translate_languages = JSON.parse(savedLanguages);
 		}
-	});
+	})
 
 	function handleLanguageToggle(langCode, checked) {
 		if (checked) {
