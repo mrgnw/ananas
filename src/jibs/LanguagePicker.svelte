@@ -3,14 +3,17 @@
 	// import Check from "lucide-svelte/icons/check";
 	// import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
 	import * as Command from "$lib/components/ui/command/index.ts";
-  import * as Popover from "$lib/components/ui/popover/index.ts";
+	import * as Popover from "$lib/components/ui/popover/index.ts";
 	import { Button } from "$lib/components/ui/button/index.ts";
 	import { cn } from "$lib/utils.ts";
 	import { tick } from "svelte";
 	import { languages } from 'countries-list';
+	import LanguageList from './LanguageList.svelte';
 
+	// TODO: confirm that this is reactive
 	let { translate_languages = $bindable([]) } = $props();
 
+	// TODO: Svelte5 ($effect instead of onMount)
 	// Load saved languages from localStorage on component mount
 	onMount(() => {
 		const savedLanguages = localStorage.getItem('translate_languages');
@@ -29,6 +32,7 @@
 		localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
 	}
 
+	// TODO: Rune-ify
 	function handleLanguageAdd(langCode) {
 		if (!translate_languages.includes(langCode)) {
 			translate_languages = [...translate_languages, langCode];
@@ -40,38 +44,26 @@
 		.sort((a, b) => a[1].name.localeCompare(b[1].name))
 		.map(([langCode, langInfo]) => ({ value: langCode, label: langInfo.name }));
 
-	let open = false;
-	let value = "";
+	let open = $state(false);
+	let value = $state("");
 
 	let selectedValue = $derived(sortedLanguages.find((lang) => lang.value === value)?.label ?? "Add language...");
 
 	function closeAndFocusTrigger(triggerId) {
 		open = false;
 		tick().then(() => {
-			document.getElementById(triggerId)?.focus();
+			// document.getElementById(triggerId)?.focus();
 		});
 	}
 </script>
 
-<div class="selected-languages">
-	<ul>
-		{#each translate_languages as langCode}
-			<li>
-				{new Intl.DisplayNames(['en'], { type: 'language' }).of(langCode)}
-			</li>
-		{/each}
-	</ul>
-</div>
+<LanguageList bind:translate_languages></LanguageList>
+
 
 <Popover.Root bind:open let:ids>
 	<Popover.Trigger asChild let:builder>
-		<Button
-			builders={[builder]}
-			variant="outline"
-			role="combobox"
-			aria-expanded={open}
-			class="w-[200px] justify-between"
-		>
+		<Button builders={[builder]} variant="outline" role="combobox" aria-expanded={open}
+			class="w-[200px] justify-between">
 			{selectedValue}
 			<!-- <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" /> -->
 		</Button>
@@ -82,22 +74,15 @@
 			<Command.Empty>No language found.</Command.Empty>
 			<Command.Group>
 				{#each sortedLanguages as lang}
-					<Command.Item
-						value={lang.value}
-						onSelect={(currentValue) => {
-							value = currentValue;
-							handleLanguageAdd(currentValue);
-							closeAndFocusTrigger(ids.trigger);
-						}}
+				<Command.Item value={lang.value} onSelect={(currentValue)=> {
+					value = currentValue;
+					handleLanguageAdd(currentValue);
+					closeAndFocusTrigger(ids.trigger);
+					}}
 					>
-						<div
-							class={cn(
-								"mr-2 h-4 w-4",
-								value !== lang.value && "text-transparent"
-							)}
-						></div>
-						{lang.label}
-					</Command.Item>
+					<div class={cn( "mr-2 h-4 w-4" , value !==lang.value && "text-transparent" )}></div>
+					{lang.label}
+				</Command.Item>
 				{/each}
 			</Command.Group>
 		</Command.Root>
@@ -131,18 +116,4 @@
 		margin-bottom: 20px;
 	}
 
-	.selected-languages ul {
-		list-style-type: none;
-		padding: 0;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-	}
-
-	.selected-languages li {
-		margin-bottom: 0;
-		padding: 5px 10px;
-		border-radius: 15px;
-		font-size: 0.9em;
-	}
 </style>
