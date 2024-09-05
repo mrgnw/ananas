@@ -1,5 +1,4 @@
 <script>
-	import { onMount } from 'svelte';
 	import Cards from '$jibs/Cards.svelte';
 	import LanguagePicker from '$jibs/LanguagePicker.svelte';
 	import { Button } from "$lib/components/ui/button";
@@ -16,7 +15,7 @@
 	let is_ready = $derived(input_text.length > 0 && !is_loading);
 	let translate_languages = $state([]);
 
-	onMount(() => {
+	$effect(() => {
 		const storedTranslations = JSON.parse(localStorage.getItem('translations'));
 		if (storedTranslations && storedTranslations.length > 0) {
 			translationHistory = storedTranslations;
@@ -24,6 +23,7 @@
 			translationHistory = [example];
 		}
 	});
+	
 
 	async function handleSubmit() {
 		is_loading = true; // Start loading
@@ -62,7 +62,7 @@
 </script>
 
 <div class="container">
-	<form on:submit|preventDefault={handleSubmit}>
+	<form onsubmit={handleSubmit}>
 		<div class="grid ">
 			<div>
 				<Input bind:value={input_text} placeholder="Enter text to translate" />
@@ -134,8 +134,4 @@
 			width: 100%;
 		}
 
-		Button {
-			width: 100%;
-		}
-	}
 </style>
