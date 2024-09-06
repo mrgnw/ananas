@@ -8,6 +8,14 @@
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	const { languages } = createTranslateLanguages();
 
+	// get country_languages from server
+	const { ip_country, country_languages, accept_language} = $props();
+	$effect(() => {
+		console.log('ip_country', ip_country);
+		console.log('country_languages', country_languages);
+		console.log('accept_language', accept_language);
+	});
+
 	let input_text = $state('');
 	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
 	let translationHistory = $state([]);
