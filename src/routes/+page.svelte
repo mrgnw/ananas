@@ -13,6 +13,19 @@
 	let translationHistory = $state([]);
 	let translate_languages = $state([]);
 
+	function get_browser_languages() {
+		console.log('browser languages', navigator.languages);
+		var browser_languages = new Set(navigator.languages.map(lang => lang.split('-')[0]));
+		return browser_languages;
+	}
+	$effect(() => {
+		if (translate_languages.length === 0) {
+			translate_languages = get_browser_languages();
+			
+		}
+		
+	});
+
 	let is_loading = $state(false);
 	let is_ready = $derived(input_text.length > 0 && !is_loading);
 
