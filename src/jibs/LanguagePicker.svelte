@@ -43,6 +43,7 @@
 		if (!translate_languages.includes(langCode)) {
 			translate_languages = [...translate_languages, langCode];
 			localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
+			inputValue = "";
 		}
 	}
 	let langs = Object.entries(languages).map(([langCode, langInfo]) => ({
@@ -102,19 +103,29 @@
       aria-label="Search a lang"
     />
 	</div>
-	  <Combobox.Content
+	<Combobox.Content
     class="w-full rounded-xl border border-muted bg-background px-1 py-3 shadow-popover outline-none"
-		>
+	>
 		{#each filteredLangs as lang}
-		<Combobox.Item 
-		value={lang.value} 
-		label="{lang.label} | {lang.native}"
-		class="cursor-pointer">
-		</Combobox.Item>
+			<Combobox.Item 
+				value={lang.value} 
+				label="{lang.label} | {lang.native}"
+				class="cursor-pointer flex items-center justify-between"
+				onclick={() => handleLanguageAdd(lang.value)}
+			>
+				<span class="flex items-center">
+					{#if translate_languages.includes(lang.value)}
+						<Check class="mr-2" />
+					{:else}
+						<span class="mr-2" style="width: 1em; height: 1em;"></span>
+					{/if}
+					{lang.label} | {lang.native}
+				</span>
+			</Combobox.Item>
 		{:else}
-      <span class="block px-5 py-2 text-sm text-muted-foreground">
-        No results found
-      </span>
+			<span class="block px-5 py-2 text-sm text-muted-foreground">
+				No results found
+			</span>
 		{/each}
 	</Combobox.Content>
 </Combobox.Root>
