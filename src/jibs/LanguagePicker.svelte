@@ -63,11 +63,32 @@
 
 
 	function filterLanguages(inputValue) {
-		return langs.filter(
-			(lang) =>
-				lang.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-				lang.native.toLowerCase().includes(inputValue.toLowerCase())
-		);
+		const lowerInput = inputValue.toLowerCase();
+		return langs
+			.filter(
+				(lang) =>
+					lang.value.toLowerCase().includes(lowerInput) ||
+					lang.label.toLowerCase().includes(lowerInput) ||
+					lang.native.toLowerCase().includes(lowerInput)
+			)
+			.sort((a, b) => {
+				const aExactMatch = a.value.toLowerCase() === lowerInput;
+				const bExactMatch = b.value.toLowerCase() === lowerInput;
+
+				if (aExactMatch && !bExactMatch) return -1;
+				if (!aExactMatch && bExactMatch) return 1;
+
+				const aStartsWith = a.value.toLowerCase().startsWith(lowerInput) ||
+					a.label.toLowerCase().startsWith(lowerInput) ||
+					a.native.toLowerCase().startsWith(lowerInput);
+				const bStartsWith = b.value.toLowerCase().startsWith(lowerInput) ||
+					b.label.toLowerCase().startsWith(lowerInput) ||
+					b.native.toLowerCase().startsWith(lowerInput);
+
+				if (aStartsWith && !bStartsWith) return -1;
+				if (!aStartsWith && bStartsWith) return 1;
+				return 0;
+			});
 	}
 
 </script>
