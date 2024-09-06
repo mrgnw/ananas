@@ -97,8 +97,8 @@
 	<div class="relative">
 		<Combobox.Input
 			class="inline-flex h-input w-[296px] truncate rounded-9px border border-border-input bg-background px-11 text-sm transition-colors placeholder:text-foreground-alt/50 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-			placeholder="Search a lang"
-			aria-label="Search a lang"
+			placeholder="Add a language"
+			aria-label="Add a language"
 			onkeydown={handleKeyDown}
 		/>
 	</div>
