@@ -28,23 +28,12 @@
 		}
 	})
 
-	function handleLanguageToggle(langCode, checked) {
-		if (checked) {
-			translate_languages = [...translate_languages, langCode];
-		} else {
-			translate_languages = translate_languages.filter(lang => lang !== langCode);
-		}
-		// Save updated languages to localStorage
-		localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
-	}
-
-	// TODO: Rune-ify
 	function handleLanguageAdd(langCode) {
 		if (!translate_languages.includes(langCode)) {
 			translate_languages = [...translate_languages, langCode];
 			localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
-			inputValue = "";
 		}
+		inputValue = "";
 	}
 	let langs = Object.entries(languages).map(([langCode, langInfo]) => ({
 		value: langCode,
@@ -92,16 +81,26 @@
 			});
 	}
 
+	function handleKeyDown(event) {
+		if (event.key === 'Enter') {
+			const exactMatch = filteredLangs.find(lang => lang.value.toLowerCase() === inputValue.toLowerCase());
+			if (exactMatch) {
+				handleLanguageAdd(exactMatch.value);
+			}
+		}
+	}
+
 </script>
 
 
 <Combobox.Root items={filteredLangs} bind:inputValue touchedInput=open>
 	<div class="relative">
 		<Combobox.Input
-      class="inline-flex h-input w-[296px] truncate rounded-9px border border-border-input bg-background px-11 text-sm transition-colors placeholder:text-foreground-alt/50 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-      placeholder="Search a lang"
-      aria-label="Search a lang"
-    />
+			class="inline-flex h-input w-[296px] truncate rounded-9px border border-border-input bg-background px-11 text-sm transition-colors placeholder:text-foreground-alt/50 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
+			placeholder="Search a lang"
+			aria-label="Search a lang"
+			onkeydown={handleKeyDown}
+		/>
 	</div>
 	<Combobox.Content
     class="w-full rounded-xl border border-muted bg-background px-1 py-3 shadow-popover outline-none"
@@ -159,6 +158,9 @@
 
 	.selected-languages {
 		margin-bottom: 20px;
+	}
+	.highlight {
+		color: blue;
 	}
 
 </style>
