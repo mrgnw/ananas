@@ -6,6 +6,7 @@
 	
 	function removeLanguage(lang) {
     translate_languages = translate_languages.filter(l => l !== lang);
+		localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
   }
 	let selected_lang_to_remove = $state("");
 	function handle_variant(hovered_lang) {
