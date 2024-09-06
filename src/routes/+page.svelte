@@ -11,9 +11,10 @@
 	let input_text = $state('');
 	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
 	let translationHistory = $state([]);
+	let translate_languages = $state([]);
+	
 	let is_loading = $state(false);
 	let is_ready = $derived(input_text.length > 0 && !is_loading);
-	let translate_languages = $state([]);
 
 	$effect(() => {
 		const storedTranslations = JSON.parse(localStorage.getItem('translations'));

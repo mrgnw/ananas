@@ -1,14 +1,20 @@
 <script lang="ts">
 	
-	// import Check from "lucide-svelte/icons/check";
-	// import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
+	import Check from "lucide-svelte/icons/check";
+	import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
+	
 	import * as Command from "$lib/components/ui/command/index.ts";
 	import * as Popover from "$lib/components/ui/popover/index.ts";
+	import { Input } from "$lib/components/ui/input/index.js";
 	import { Button } from "$lib/components/ui/button/index.ts";
 	import { cn } from "$lib/utils.ts";
 	import { tick } from "svelte";
 	import { languages } from 'countries-list';
 	import LanguageList from './LanguageList.svelte';
+
+	$effect(() => {
+		console.debug("languages", languages);
+	})
 
 	// TODO: confirm that this is reactive
 	let { translate_languages = $bindable([]) } = $props();
@@ -38,55 +44,76 @@
 			localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
 		}
 	}
+	let langs = Object.entries(languages).map(([langCode, langInfo]) => ({
+		value: langCode,
+		label: langInfo.name,
+		native: langInfo.native
+	}));
 
-	let sortedLanguages = Object.entries(languages)
-		.sort((a, b) => a[1].name.localeCompare(b[1].name))
-		.map(([langCode, langInfo]) => ({ value: langCode, label: langInfo.name }));
-
-	let open = $state(false);
 	let value = $state("");
+	let searchTerm = $state("");
+	let open = $derived(searchTerm.length > 0);
+	let filteredLangs = $derived(filterLanguages(searchTerm));
 
-	let selectedValue = $derived(sortedLanguages.find((lang) => lang.value === value)?.label ?? "Add language...");
+	let selectedValue = $derived(
+		langs.find((lang) => lang.label === value || lang.native === value)?.label ?? "Add language..."
+	);
+	
+
+
+	function filterLanguages(searchTerm) {
+		return langs.filter(
+			(lang) =>
+				lang.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				lang.native.toLowerCase().includes(searchTerm.toLowerCase())
+		);
+	}
 
 	function closeAndFocusTrigger(triggerId) {
-		open = false;
+		searchTerm = "";
 		tick().then(() => {
-			// document.getElementById(triggerId)?.focus();
+			document.getElementById(triggerId)?.focus();
 		});
 	}
 </script>
 
-<LanguageList bind:translate_languages></LanguageList>
 
-
-<Popover.Root bind:open let:ids>
-	<Popover.Trigger asChild let:builder>
-		<Button builders={[builder]} variant="outline" role="combobox" aria-expanded={open}
-			class="w-[200px] justify-between">
-			{selectedValue}
-			<!-- <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" /> -->
+<Input type="text" placeholder="add a language" bind:value={searchTerm}/>
+<Popover.Root open={open}>
+	<Popover.Trigger >
+		<Button > +
 		</Button>
 	</Popover.Trigger>
-	<Popover.Content class="w-[200px] p-0">
-		<Command.Root>
-			<Command.Input placeholder="Search language..." />
-			<Command.Empty>No language found.</Command.Empty>
-			<Command.Group>
-				{#each sortedLanguages as lang}
-				<Command.Item value={lang.value} onSelect={(currentValue)=> {
-					value = currentValue;
-					handleLanguageAdd(currentValue);
-					closeAndFocusTrigger(ids.trigger);
-					}}
-					>
-					<div class={cn( "mr-2 h-4 w-4" , value !==lang.value && "text-transparent" )}></div>
-					{lang.label}
-				</Command.Item>
-				{/each}
-			</Command.Group>
-		</Command.Root>
+	<Popover.Content>
+		{#if searchTerm.length > 0}
+		<ul>
+			{#each filteredLangs as lang}
+			<li onclick={()=>handleLanguageAdd(lang.value)}>
+				{lang.value} : {lang.label} | {lang.native}
+			</li>
+			{/each}
+		</ul>
+		{/if}
+		
 	</Popover.Content>
 </Popover.Root>
+<!-- {#if searchTerm.length > 0}
+	<ul>
+		{#each filteredLangs as lang}
+		<li onclick={()=>handleLanguageAdd(lang.value)}>
+			{lang.value} : {lang.label} | {lang.native}
+		</li>
+		{/each}
+	</ul>
+{/if} -->
+
+<LanguageList bind:translate_languages></LanguageList>
+
+<!-- <ul>
+	{#each filteredLangs as lang}
+	<li>{lang.value}:{lang.label}|{lang.native}</li>
+	{/each}
+</ul> -->
 
 <style>
 	.language-picker {
