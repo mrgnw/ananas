@@ -1,10 +1,9 @@
 <script lang="ts">
-	
+
 	import Check from "lucide-svelte/icons/check";
 	import { Combobox } from "bits-ui";
 	import { languages } from 'countries-list';
 	import LanguageList from './LanguageList.svelte';
-
 
 	// TODO: confirm that this is reactive
 	let { translate_languages = $bindable([]) } = $props();
@@ -38,7 +37,7 @@
 	let selectedValue = $derived(
 		langs.find((lang) => lang.label === value || lang.native === value)?.label ?? "Add language..."
 	);
-	
+
 
 
 	function filterLanguages(inputValue) {
@@ -86,34 +85,26 @@
 	<div class="relative">
 		<Combobox.Input
 			class="inline-flex h-input w-[296px] truncate rounded-9px border border-border-input bg-background px-11 text-sm transition-colors placeholder:text-foreground-alt/50 focus:outline-none focus:ring-2 focus:ring-foreground focus:ring-offset-2 focus:ring-offset-background"
-			placeholder="Add a language"
-			aria-label="Add a language"
-			onkeydown={handleKeyDown}
-		/>
+			placeholder="Add a language" aria-label="Add a language" onkeydown={handleKeyDown} />
 	</div>
-	<Combobox.Content
-    class="w-full rounded-xl border border-muted bg-background px-1 py-3 shadow-popover outline-none"
-	>
+	<Combobox.Content class="w-full rounded-xl border border-muted bg-background px-1 py-3 shadow-popover outline-none">
 		{#each filteredLangs as lang}
-			<Combobox.Item 
-				value={lang.value} 
-				label="{lang.label} | {lang.native}"
-				class="cursor-pointer flex items-center justify-between"
-				onclick={() => handleLanguageAdd(lang.value)}
+		<Combobox.Item value={lang.value} label="{lang.label} | {lang.native}"
+			class="cursor-pointer flex items-center justify-between" onclick={()=> handleLanguageAdd(lang.value)}
 			>
-				<span class="flex items-center">
-					{#if translate_languages.includes(lang.value)}
-						<Check class="mr-2" />
-					{:else}
-						<span class="mr-2" style="width: 1em; height: 1em;"></span>
-					{/if}
-					{lang.label} | {lang.native}
-				</span>
-			</Combobox.Item>
-		{:else}
-			<span class="block px-5 py-2 text-sm text-muted-foreground">
-				No results found
+			<span class="flex items-center">
+				{#if translate_languages.includes(lang.value)}
+				<Check class="mr-2" />
+				{:else}
+				<span class="mr-2" style="width: 1em; height: 1em;"></span>
+				{/if}
+				{lang.label} | {lang.native}
 			</span>
+		</Combobox.Item>
+		{:else}
+		<span class="block px-5 py-2 text-sm text-muted-foreground">
+			No results found
+		</span>
 		{/each}
 	</Combobox.Content>
 </Combobox.Root>
@@ -148,8 +139,8 @@
 	.selected-languages {
 		margin-bottom: 20px;
 	}
+
 	.highlight {
 		color: blue;
 	}
-
 </style>
