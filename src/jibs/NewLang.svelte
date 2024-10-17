@@ -13,6 +13,7 @@
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 	let text = $state("");
+	let show_original = $state(true);
 	
 	let user_langs = $state({
 		'en': { label: 'English', native: 'English', rtl: false, display: true },
@@ -36,6 +37,7 @@
 	let translations = $state([{
 		text: "Ahoy",
 		translations: {
+			// todo: "original": "Ahoy" ?
 			"en": "Hello",
 			"es": "Hola",
 			"ru": "Привет",
@@ -50,8 +52,12 @@
 	}
 
 	function toggle_display(key) {
+		if (key === 'original') {
+			show_original = !show_original;
+		} else {
+			user_langs[key].display = !user_langs[key].display;
+		}
 		console.log('toggling', key);
-		user_langs[key].display = !user_langs[key].display;
 	}
 
 	async function handleSubmit() {
@@ -103,7 +109,8 @@
 	<div class="space-y-4">
 		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 		<div class="flex flex-wrap gap-2 items-center">
-			<Badge variant="default">
+			<Badge onclick={()=> toggle_display('original')}
+			variant={show_original ? 'default' : 'outline'}>
 				original
 			</Badge>
 			{#each Object.entries(user_langs) as [key, meta]}
@@ -128,7 +135,9 @@
 		<Card>
 			<CardContent>
 				<div class="space-y-2">
-					<p title="original"><strong>{translation.text}</strong></p>
+					{#if show_original}
+						<p title="original"><strong>{translation.text}</strong></p>
+					{/if}
 					{#each show_langs as langKey}
 						{#if translation.translations[langKey]}
 							<p>{translation.translations[langKey]}</p>
