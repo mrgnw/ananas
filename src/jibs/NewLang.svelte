@@ -43,6 +43,10 @@
 		}
 	}]);
 
+	function langs_not_in_tgt(translation) {
+		return Object.keys(translation.translations).filter(lang => !tgt_langs.includes(lang));
+	}
+
 	function toggle_display(key) {
 		console.log('toggling', key);
 		langs[key].display = !langs[key].display;
@@ -127,7 +131,15 @@
 		<Card>
 			<CardContent>
 				<div class="space-y-2">
-					<pre><code>{JSON.stringify(translation, null, 2)}</code></pre>
+					<p title="original"><strong>{translation.text}</strong></p>
+					{#each show_langs as langKey}
+						{#if translation.translations[langKey]}
+							<p>{translation.translations[langKey]}</p>
+						{/if}
+					{/each}
+					<p>
+						{langs_not_in_tgt(translation).join('•')}
+					</p> 
 				</div>
 			</CardContent>
 		</Card>
