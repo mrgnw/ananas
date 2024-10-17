@@ -2,14 +2,14 @@
 	import { fly } from "svelte/transition";
 	import { copy } from "$lib/clipboard";
 	import { Copy } from "lucide-svelte";
-	let { translation, translate_languages, index = 0 } = $props();
+	let { translation, tgt_langs, index = 0 } = $props();
 	let rtl_languages = ['ar'];
-	let lang_class = $derived(translate_languages.length === 1 ? 'single-language' : '');
+	let lang_class = $derived(tgt_langs.length === 1 ? 'single-language' : '');
 </script>
 
 <div class="card {lang_class}" in:fly={{ y: -200, duration: 500, delay: index * 100 }} out:fly={{ y: -200, duration: 500
 	}}>
-	{#each translate_languages as lang}
+	{#each tgt_langs as lang}
 	{#if translation[lang]}
 	<div onclick={copy(translation[lang])}
 		class:rtl={rtl_languages.includes(lang)}

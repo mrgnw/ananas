@@ -3,7 +3,7 @@ export function createTranslateLanguages() {
 
   // Load saved languages from localStorage on initialization
   if (typeof localStorage !== 'undefined') {
-    const savedLanguages = localStorage.getItem('translate_languages');
+    const savedLanguages = localStorage.getItem('tgt_langs');
     if (savedLanguages) {
       languages = JSON.parse(savedLanguages);
     }
@@ -12,7 +12,7 @@ export function createTranslateLanguages() {
   // Save to localStorage whenever the languages change
   $effect(() => {
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('translate_languages', JSON.stringify(languages));
+      localStorage.setItem('tgt_langs', JSON.stringify(languages));
     }
   });
 

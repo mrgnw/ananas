@@ -6,20 +6,20 @@
 	import LanguageList from './LanguageList.svelte';
 
 	// TODO: confirm that this is reactive
-	let { translate_languages = $bindable([]) } = $props();
+	let { tgt_langs = $bindable([]) } = $props();
 
 	// Load saved languages from localStorage on component mount
 	$effect(() => {
-		const savedLanguages = localStorage.getItem('translate_languages');
+		const savedLanguages = localStorage.getItem('tgt_langs');
 		if (savedLanguages) {
-			translate_languages = JSON.parse(savedLanguages);
+			tgt_langs = JSON.parse(savedLanguages);
 		}
 	})
 
 	function handleLanguageAdd(langCode) {
-		if (!translate_languages.includes(langCode)) {
-			translate_languages = [...translate_languages, langCode];
-			localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
+		if (!tgt_langs.includes(langCode)) {
+			tgt_langs = [...tgt_langs, langCode];
+			localStorage.setItem('tgt_langs', JSON.stringify(tgt_langs));
 		}
 		inputValue = "";
 	}
@@ -93,7 +93,7 @@
 			class="cursor-pointer flex items-center justify-between" onclick={()=> handleLanguageAdd(lang.value)}
 			>
 			<span class="flex items-center">
-				{#if translate_languages.includes(lang.value)}
+				{#if tgt_langs.includes(lang.value)}
 				<Check class="mr-2" />
 				{:else}
 				<span class="mr-2" style="width: 1em; height: 1em;"></span>
@@ -110,7 +110,7 @@
 </Combobox.Root>
 
 
-<LanguageList bind:translate_languages></LanguageList>
+<LanguageList bind:tgt_langs></LanguageList>
 
 
 <style>

@@ -2,11 +2,11 @@
   import { Badge } from "$lib/components/ui/badge";
 	import X from "lucide-svelte/icons/x";
 
-  let { translate_languages = $bindable([]) } = $props();
+  let { tgt_langs = $bindable([]) } = $props();
 	
 	function removeLanguage(lang) {
-    translate_languages = translate_languages.filter(l => l !== lang);
-		localStorage.setItem('translate_languages', JSON.stringify(translate_languages));
+    tgt_langs = tgt_langs.filter(l => l !== lang);
+		localStorage.setItem('tgt_langs', JSON.stringify(tgt_langs));
   }
 	let selected_lang_to_remove = $state("");
 	function handle_variant(hovered_lang) {
@@ -17,7 +17,7 @@
 
 <div class="selected-languages">
 	<ul>
-		{#each translate_languages as langCode}
+		{#each tgt_langs as langCode}
 		<li>
 			<Badge variant={handle_variant(langCode)}>
 				{new Intl.DisplayNames(['en'], { type: 'language' }).of(langCode)}

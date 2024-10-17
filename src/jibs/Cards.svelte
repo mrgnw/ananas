@@ -2,13 +2,13 @@
 	import { fly, fade } from "svelte/transition";
 	import Card from "$jibs/Card.svelte";
 
-	let { translate_languages, translationHistory } = $props();
+	let { tgt_langs, translationHistory } = $props();
 
 </script>
 
 <div class="grid">
 	{#each translationHistory as translation, i (translation)}
-	<Card {translation} {translate_languages} {i} />
+	<Card {translation} {tgt_langs} {i} />
 	{/each}
 </div>
 
