@@ -58,7 +58,7 @@
 			.map(([key, _]) => key);
 		console.debug('selected_languages', selected_languages)
 		
-		const translate_languages = Array.from(all_languages.entries())
+		const tgt_langs = Array.from(all_languages.entries())
 			.map(([key, _]) => key);
 
 		try {
@@ -68,7 +68,7 @@
 					'Content-Type': 'application/json',
 					'api_key': OPENAI_API_KEY
 				},
-				body: JSON.stringify({ text, translate_languages })
+				body: JSON.stringify({ text, tgt_langs })
 			});
 
 			if (!response.ok) {
