@@ -9,19 +9,21 @@
 	import { Languages, Search } from "lucide-svelte";
 	import { dndzone } from "svelte-dnd-action";
 	import _ from "underscore";
+	import { languages } from "countries-list";
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 	let text = $state("");
-	let langs = $state({
+	
+	let user_langs = $state({
 		'en': { label: 'English', native: 'English', rtl: false, display: true },
 		'ru': { label: 'Russian', native: 'Русский', rtl: false, display: true },
 		'ja': { label: 'Japanese', native: '日本語', rtl: false, display: true },
 		'es': { label: 'Spanish', native: 'Español', rtl: false, display: true },
 	});
-	let tgt_langs = $derived(Object.keys(langs));
+	let tgt_langs = $derived(Object.keys(user_langs));
 	let show_langs = $derived(
-		Object.entries(langs)
+		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
@@ -50,7 +52,7 @@
 
 	function toggle_display(key) {
 		console.log('toggling', key);
-		langs[key].display = !langs[key].display;
+		user_langs[key].display = !user_langs[key].display;
 	}
 
 	async function handleSubmit() {
@@ -102,7 +104,7 @@
 	<div class="space-y-4">
 		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 		<div class="flex flex-wrap gap-2 items-center">
-			{#each Object.entries(langs) as [key, meta]}
+			{#each Object.entries(user_langs) as [key, meta]}
 			<Badge 
 				variant={meta.display ? 'default' : 'outline'}
 				class="cursor-pointer" 
