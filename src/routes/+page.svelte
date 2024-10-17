@@ -11,7 +11,7 @@
 	let input_text = $state('');
 	let example = { en: 'hiya', es: 'hola', pt: 'olá', ru: 'привет', ar: 'مرحبا', it: 'ciao', ca: 'hola', de: 'hallo' };
 	let translationHistory = $state([]);
-	let translate_languages = $state([]);
+	let tgt_langs = $state([]);
 
 	function get_browser_languages() {
 		console.log('browser languages', navigator.languages);
@@ -19,8 +19,8 @@
 		return browser_languages;
 	}
 	$effect(() => {
-		if (translate_languages.length === 0) {
-			translate_languages = get_browser_languages();
+		if (tgt_langs.length === 0) {
+			tgt_langs = get_browser_languages();
 			
 		}
 		
@@ -44,6 +44,14 @@
 		const text = input_text;
 		const apiUrl = 'https://translate.xces.workers.dev';
 
+		// Extract only languages with a value of 1 (indicating selection)
+		const selected_languages = Array.from(all_languages.entries())
+			.map(([key, _]) => key);
+		console.debug('selected_languages', selected_languages)
+		
+		const tgt_langs = Array.from(all_languages.entries())
+			.map(([key, _]) => key);
+
 		try {
 			const response = await fetch(apiUrl, {
 				method: 'POST',
@@ -51,7 +59,7 @@
 					'Content-Type': 'application/json',
 					'api_key': OPENAI_API_KEY
 				},
-				body: JSON.stringify({ text, translate_languages })
+				body: JSON.stringify({ text, tgt_langs })
 			});
 
 			if (!response.ok) {
@@ -89,9 +97,9 @@
 		</div>
 	</form>
 
-	<LanguagePicker bind:translate_languages />
+	<LanguagePicker bind:tgt_langs />
 	<div class="card-list">
-		<Cards bind:translate_languages bind:translationHistory />
+		<Cards bind:tgt_langs bind:translationHistory />
 	</div>
 
 </div>
