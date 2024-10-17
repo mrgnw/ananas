@@ -49,11 +49,6 @@
 	}
 
 	async function handleSubmit() {
-		if (!text || show_langs.length === 0) {
-			toast.error("Please enter text and select at least one language.");
-			return;
-		}
-
 		is_loading = true;
 		const apiUrl = 'https://translate.xces.workers.dev';
 
@@ -119,9 +114,9 @@
 	</div>
 
 	<ul>
-		<li>ready {is_ready}</li>
-		<li>text {text.length} {text}</li>
-		<li>lang {show_langs.length > 0}</li>
+		<li>{is_ready ? 'ready' : 'not ready'}</li>
+		<li><pre>{text}</pre></li>
+		<li><pre>{show_langs.length > 0 ? show_langs : '[]'}</pre></li>
 		<li>{!is_loading}</li>
 
 	</ul>
