@@ -98,7 +98,7 @@
 
 <div class="container mx-auto p-4 space-y-6">
 	<h1 class="text-2xl font-bold mb-4">Multi-Language Translator</h1>
-	<pre><code>{JSON.stringify(langs, null, 2)}</code></pre>
+	<!-- <pre><code>{JSON.stringify(langs, null, 2)}</code></pre> -->
 	<div class="space-y-4">
 		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 		<div class="flex flex-wrap gap-2 items-center">
@@ -117,14 +117,6 @@
 			{is_loading ? 'Translating...' : 'Translate'}
 		</Button>
 	</div>
-
-	<ul>
-		<li>{is_ready ? 'ready' : 'not ready'}</li>
-		<li><pre>{text}</pre></li>
-		<li><pre>{show_langs.length > 0 ? show_langs : '[]'}</pre></li>
-		<li>{!is_loading}</li>
-
-	</ul>
 
 	<div class="space-y-4">
 		<h2 class="text-xl font-semibold">Translation History</h2>
