@@ -40,8 +40,11 @@
     "kit-monorepo": "sveltejs/kit",
     "lucide-svelte": "^0.344.0",
     "svelte": "^5.0.0-next.249",
+    "svelte-dnd-action": "^0.9.51",
     "svelte-radix": "^1.1.1",
+    "svelte-sonner": "^0.3.28",
     "tailwind-merge": "^2.5.2",
-    "tailwind-variants": "^0.2.1"
+    "tailwind-variants": "^0.2.1",
+    "underscore": "^1.13.7"
   }
 }
