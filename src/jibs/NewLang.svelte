@@ -31,7 +31,17 @@
 		&& !is_loading
 	);
 
-	let translations = $state([]);
+	let translations = $state([{
+		text: "Ahoy",
+		translations: {
+			"en": "Hello",
+			"es": "Hola",
+			"ru": "Привет",
+			"it": "Ciao",
+			"de": "Hallo",
+			"ca": "Hola"
+		}
+	}]);
 
 	function toggle_display(key) {
 		console.log('toggling', key);
@@ -68,8 +78,7 @@
 
 			translations = [{
 				text,
-				translations: data,
-				languages: show_langs.map(lang => lang.value)
+				translations: data
 			}, ...translations];
 
 			if (typeof localStorage !== 'undefined') {
@@ -121,20 +130,9 @@
 		<h2 class="text-xl font-semibold">Translation History</h2>
 		{#each translations as translation}
 		<Card>
-			<CardHeader>
-				<CardTitle>Translation</CardTitle>
-			</CardHeader>
 			<CardContent>
 				<div class="space-y-2">
-					<p><strong>Original:</strong> {translation.text}</p>
-					{#each show_langs as lang}
-					{#if translation.translations[lang.value]}
-					<p>
-						<strong>{lang.label}:</strong>
-						{translation.translations[lang.value]}
-					</p>
-					{/if}
-					{/each}
+					<pre><code>{JSON.stringify(translation, null, 2)}</code></pre>
 				</div>
 			</CardContent>
 		</Card>
