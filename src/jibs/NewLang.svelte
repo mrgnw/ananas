@@ -104,7 +104,8 @@
 </script>
 
 <div class="container mx-auto p-4 space-y-6">
-	<h1 class="text-2xl font-bold mb-4">Multi-Language Translator</h1>
+	<h1 class="text-2xl font-bold mb-4">Ananas</h1>
+	<p class="text-sm text-gray-500">Multi-language translator</p>
 	<!-- <pre><code>{JSON.stringify(langs, null, 2)}</code></pre> -->
 	<div class="space-y-4">
 		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
@@ -144,7 +145,7 @@
 						{/if}
 					{/each}
 					<p>
-						{langs_not_in_tgt(translation).join('•')}
+						<i>+ {langs_not_in_tgt(translation).join('•')}</i>
 					</p> 
 				</div>
 			</CardContent>
