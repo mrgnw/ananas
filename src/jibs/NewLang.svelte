@@ -9,7 +9,6 @@
 	import { Languages, Search } from "lucide-svelte";
 	import { dndzone } from "svelte-dnd-action";
 	import _ from "underscore";
-	import { languages } from "countries-list";
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -104,6 +103,9 @@
 	<div class="space-y-4">
 		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 		<div class="flex flex-wrap gap-2 items-center">
+			<Badge variant="default">
+				original
+			</Badge>
 			{#each Object.entries(user_langs) as [key, meta]}
 			<Badge 
 				variant={meta.display ? 'default' : 'outline'}
