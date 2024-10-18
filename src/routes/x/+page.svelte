@@ -5,6 +5,7 @@
 	import { Input } from "$lib/components/ui/input";
 	import { createTranslateLanguages } from '$lib/translateLanguages.svelte.js';
 
+	
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	const { languages } = createTranslateLanguages();
 
