@@ -2,10 +2,8 @@
   import { enhance } from '$app/forms'
   import { login } from '@passlock/sveltekit'
 
-  import {
-    PUBLIC_PASSLOCK_TENANCY_ID,
-    PUBLIC_PASSLOCK_CLIENT_ID
-  } from '$env/static/public'
+  export let data;
+  const { PUBLIC_PASSLOCK_TENANCY_ID, PUBLIC_PASSLOCK_CLIENT_ID } = data;
 
   const { onSubmit } = login({ 
     tenancyId: PUBLIC_PASSLOCK_TENANCY_ID, 
