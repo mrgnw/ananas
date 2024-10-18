@@ -3,7 +3,7 @@
 	import LanguagePicker from '$jibs/LanguagePicker.svelte';
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
-	import { createTranslateLanguages } from '../translateLanguages.svelte.js';
+	import { createTranslateLanguages } from '$lib/translateLanguages.svelte.js';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 	const { languages } = createTranslateLanguages();
