@@ -20,18 +20,17 @@
   let email = '';
   let errorMessage = '';
 
-  function handleSubmit() {
+  function handleValidation() {
     if (!email) {
       errorMessage = "Please enter your email address.";
-      return;
+      return false;
     }
 
     if (!isValidEmail(email)) {
       errorMessage = "Please enter a valid email address.";
-      return;
+      return false;
     }
-
-    console.log("Authenticating with passkey for:", email);
+    return true;
   }
 
   function isValidEmail(email) {
@@ -46,10 +45,12 @@
       <CardDescription>Translate all of your languages at once</CardDescription>
     </CardHeader>
     <CardContent>
-      <form on:submit|preventDefault={handleSubmit}>
+      <form method="POST" use:enhance={onSubmit} on:submit|preventDefault={() => {
+        if (!handleValidation()) return;
+      }}>
         <div class="space-y-4">
           <div class="space-y-2">
-            <Input type="email" id="email" placeholder="Enter your email" bind:value={email} />
+            <Input type="email" id="email" name="email" placeholder="Enter your email" bind:value={email} />
           </div>
           {#if errorMessage}
             <Alert variant="destructive">
@@ -57,15 +58,12 @@
             </Alert>
           {/if}
         </div>
+        <Button type="submit" class="w-full mt-4">
+          <Key class="mr-2 h-4 w-4" />
+          Sign In with Passkey
+        </Button>
       </form>
     </CardContent>
-    <CardFooter class="flex flex-col space-y-4">
-      <Button type="submit" class="w-full" on:click={handleSubmit}>
-        <Key class="mr-2 h-4 w-4" />
-        Sign In with Passkey
-      </Button>
-      
-    </CardFooter>
   </Card>
 </div>
 
