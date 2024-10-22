@@ -43,7 +43,7 @@
   <Card class="w-full max-w-md">
     <CardHeader>
       <CardTitle class="text-2xl font-bold">🍍 Ananas</CardTitle>
-      <CardDescription>Stay fresh with all of your languages</CardDescription>
+      <CardDescription>Translate all of your languages at once</CardDescription>
     </CardHeader>
     <CardContent>
       <form on:submit|preventDefault={handleSubmit}>
