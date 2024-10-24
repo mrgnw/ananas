@@ -9,6 +9,7 @@ declare global {
 			env: {
 				PUBLIC_PASSLOCK_TENANCY_ID: string;
 				PUBLIC_PASSLOCK_CLIENT_ID: string;
+				ananas_email_addresses: KVNamespace;  // Updated to match wrangler.toml binding
 			};
 		}
 	}
