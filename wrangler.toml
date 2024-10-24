@@ -8,15 +8,6 @@ bucket = ".svelte-kit/cloudflare"
 [build]
 command = "bun run build"
 
-[env.production]
-name = "ananas-production"
-
-[env.staging]
-name = "ananas-staging"
-
-[env.development]
-name = "ananas-development"
-
 [[kv_namespaces]]
 binding = "ananas_email_addresses"
 id = "41c5ef950aa242f29f4b9b049f637ae5"
