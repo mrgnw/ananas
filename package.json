@@ -29,7 +29,10 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+    "format": "prettier --plugin-search-dir . --write .",
+    "pages:build": "bun run build",
+    "pages:dev": "wrangler pages dev .svelte-kit/cloudflare",
+    "deploy": "bun run build && wrangler pages deploy .svelte-kit/cloudflare"
   },
   "type": "module",
   "dependencies": {
