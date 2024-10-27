@@ -22,9 +22,14 @@
   let email = $state('');
   let errorMessage = $state('');
 
-  function handleSubmit(event: SubmitEvent) {
+  async function handleSubmit(event: SubmitEvent) {
+    console.log('Form submission started');
+    
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
+    
+    console.log('Email:', email);
+    console.log('Form data:', Object.fromEntries(formData));
 
     if (!email) {
       errorMessage = "Please enter your email address.";
@@ -37,7 +42,14 @@
     }
 
     errorMessage = '';
-    return onSubmit(event);  // Let Passlock handle the form submission
+    try {
+      console.log('Calling Passlock onSubmit');
+      await onSubmit(event);
+      console.log('Passlock onSubmit completed');
+    } catch (error) {
+      console.error('Passlock error:', error);
+      errorMessage = 'Registration failed. Please try again.';
+    }
   }
 
   function isValidEmail(email: string) {
