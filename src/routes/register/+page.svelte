@@ -22,7 +22,10 @@
   let email = $state('');
   let errorMessage = $state('');
 
-  async function handleSubmit() {
+  function handleSubmit(event: SubmitEvent) {
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
     if (!email) {
       errorMessage = "Please enter your email address.";
       return;
@@ -34,10 +37,10 @@
     }
 
     errorMessage = '';
-    await onSubmit({ email });
+    return onSubmit(event);  // Let Passlock handle the form submission
   }
 
-  function isValidEmail(email) {
+  function isValidEmail(email: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 </script>
@@ -49,10 +52,10 @@
       <CardDescription>Register to save your languages & translations</CardDescription>
     </CardHeader>
     <CardContent>
-      <form on:submit|preventDefault={handleSubmit} use:enhance>
+      <form method="POST" onsubmit={handleSubmit} use:enhance>
         <div class="space-y-4">
           <div class="space-y-2">
-            <Input type="email" id="email" placeholder="Enter your email" bind:value={email} />
+            <Input name="email" type="email" id="email" placeholder="Enter your email" bind:value={email} />
           </div>
           {#if errorMessage}
             <Alert variant="destructive">
@@ -63,7 +66,7 @@
       </form>
     </CardContent>
     <CardFooter class="flex flex-col space-y-4">
-      <Button type="submit" class="w-full" on:click={handleSubmit}>
+      <Button type="submit" class="w-full">
         <Key class="mr-2 h-4 w-4" />
         Register
       </Button>
