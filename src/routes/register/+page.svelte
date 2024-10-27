@@ -19,10 +19,10 @@
     clientId: PUBLIC_PASSLOCK_CLIENT_ID, 
   });
 
-  let email = '';
-  let errorMessage = '';
+  let email = $state('');
+  let errorMessage = $state('');
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!email) {
       errorMessage = "Please enter your email address.";
       return;
@@ -33,7 +33,8 @@
       return;
     }
 
-    console.log("Registering with email:", email);
+    errorMessage = '';
+    await onSubmit({ email });
   }
 
   function isValidEmail(email) {
@@ -48,7 +49,7 @@
       <CardDescription>Register to save your languages & translations</CardDescription>
     </CardHeader>
     <CardContent>
-      <form on:submit|preventDefault={handleSubmit}>
+      <form on:submit|preventDefault={handleSubmit} use:enhance>
         <div class="space-y-4">
           <div class="space-y-2">
             <Input type="email" id="email" placeholder="Enter your email" bind:value={email} />
