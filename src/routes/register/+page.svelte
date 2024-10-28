@@ -23,14 +23,8 @@
   let errorMessage = $state('');
 
   async function handleSubmit(event: SubmitEvent) {
-    console.log('Form submission started');
+    event.preventDefault(); // Prevent default form submission
     
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-    
-    console.log('Email:', email);
-    console.log('Form data:', Object.fromEntries(formData));
-
     if (!email) {
       errorMessage = "Please enter your email address.";
       return;
@@ -43,9 +37,8 @@
 
     errorMessage = '';
     try {
-      console.log('Calling Passlock onSubmit');
-      await onSubmit(event);
-      console.log('Passlock onSubmit completed');
+      // Pass the FormData directly to onSubmit
+      await onSubmit({ email });
     } catch (error) {
       console.error('Passlock error:', error);
       errorMessage = 'Registration failed. Please try again.';
@@ -64,25 +57,29 @@
       <CardDescription>Register to save your languages & translations</CardDescription>
     </CardHeader>
     <CardContent>
-      <form method="POST" onsubmit={handleSubmit} use:enhance>
+      <form method="POST" onsubmit={handleSubmit}>
         <div class="space-y-4">
           <div class="space-y-2">
-            <Input name="email" type="email" id="email" placeholder="Enter your email" bind:value={email} />
+            <Input 
+              name="email" 
+              type="email" 
+              id="email" 
+              placeholder="Enter your email" 
+              bind:value={email} 
+            />
           </div>
           {#if errorMessage}
             <Alert variant="destructive">
               <AlertDescription>{errorMessage}</AlertDescription>
             </Alert>
           {/if}
+          <Button type="submit" class="w-full">
+            <Key class="mr-2 h-4 w-4" />
+            Register
+          </Button>
         </div>
       </form>
     </CardContent>
-    <CardFooter class="flex flex-col space-y-4">
-      <Button type="submit" class="w-full">
-        <Key class="mr-2 h-4 w-4" />
-        Register
-      </Button>
-    </CardFooter>
   </Card>
 </div>
 
