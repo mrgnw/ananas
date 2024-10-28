@@ -1,55 +1,23 @@
 <!-- src/routes/register/+page.svelte -->
 <script lang="ts">
-  import { enhance } from '$app/forms'
   import { register } from '@passlock/sveltekit'
-	import {
+  import {
     PUBLIC_PASSLOCK_TENANCY_ID,
     PUBLIC_PASSLOCK_CLIENT_ID
   } from '$env/static/public'
-	import { Button } from "$lib/components/ui/button";
-	import { Input } from "$lib/components/ui/input";
-	import { Label } from "$lib/components/ui/label";
-	import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "$lib/components/ui/card";
-	import { Alert, AlertDescription } from "$lib/components/ui/alert";
-	import { Toaster } from "svelte-sonner";
-	import { Key } from "lucide-svelte";
+  import { Button } from "$lib/components/ui/button";
+  import { Input } from "$lib/components/ui/input";
+  import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "$lib/components/ui/card";
+  import { Alert, AlertDescription } from "$lib/components/ui/alert";
+  import { Key } from "lucide-svelte";
 
   const { onSubmit } = register({ 
     tenancyId: PUBLIC_PASSLOCK_TENANCY_ID, 
     clientId: PUBLIC_PASSLOCK_CLIENT_ID, 
   });
 
-  let email = $state('');
-  let errorMessage = $state('');
-
-  function handleSubmit(event: SubmitEvent) {
-    event.preventDefault();
-    
-    if (!email) {
-      errorMessage = "Please enter your email address.";
-      return;
-    }
-
-    if (!isValidEmail(email)) {
-      errorMessage = "Please enter a valid email address.";
-      return;
-    }
-
-    errorMessage = '';
-    const formData = new FormData();
-    formData.append('email', email);
-    
-    try {
-      onSubmit(formData);
-    } catch (error) {
-      console.error('Passlock error:', error);
-      errorMessage = 'Registration failed. Please try again.';
-    }
-  }
-
-  function isValidEmail(email: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
+  let email = '';
+  let errorMessage = '';
 </script>
 
 <div class="container mx-auto flex items-center justify-center min-h-screen">
@@ -59,7 +27,7 @@
       <CardDescription>Register to save your languages & translations</CardDescription>
     </CardHeader>
     <CardContent>
-      <form method="POST" onsubmit={handleSubmit}>
+      <form method="POST" action="?/register">
         <div class="space-y-4">
           <div class="space-y-2">
             <Input 
@@ -67,7 +35,7 @@
               type="email" 
               id="email" 
               placeholder="Enter your email" 
-              bind:value={email} 
+              bind:value={email}
             />
           </div>
           {#if errorMessage}
@@ -84,5 +52,3 @@
     </CardContent>
   </Card>
 </div>
-
-<Toaster />
