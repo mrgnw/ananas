@@ -9,9 +9,10 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			"$jibs": './src/jibs',
-			"$utils": "$lib/utils",
-			"@/*": "./src/lib/*",
+			"$lib": "./src/lib",
+			"$jibs": "./src/jibs",
+			"$utils": "./src/lib/utils",
+			"@/*": "./src/*"
 		}
 	},
 
