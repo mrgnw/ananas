@@ -22,8 +22,8 @@
   let email = $state('');
   let errorMessage = $state('');
 
-  async function handleSubmit(event: SubmitEvent) {
-    event.preventDefault(); // Prevent default form submission
+  function handleSubmit(event: SubmitEvent) {
+    event.preventDefault();
     
     if (!email) {
       errorMessage = "Please enter your email address.";
@@ -36,9 +36,11 @@
     }
 
     errorMessage = '';
+    const formData = new FormData();
+    formData.append('email', email);
+    
     try {
-      // Pass the FormData directly to onSubmit
-      await onSubmit({ email });
+      onSubmit(formData);
     } catch (error) {
       console.error('Passlock error:', error);
       errorMessage = 'Registration failed. Please try again.';
