@@ -2,6 +2,7 @@
   "name": "translate-xcc",
   "version": "0.0.1",
   "devDependencies": {
+    "@corbado/types": "^2.11.2",
     "@sveltejs/kit": "^2.5.28",
     "@sveltejs/vite-plugin-svelte": "^4.0.0-next.7",
     "autoprefixer": "^10.4.20",
@@ -31,6 +32,8 @@
   },
   "type": "module",
   "dependencies": {
+    "@corbado/node-sdk": "^3.0.2",
+    "@corbado/web-js": "^2.18.0",
     "@sveltejs/adapter-cloudflare": "^3.0.2",
     "animotion": "^0.1.2",
     "bits-ui": "^0.21.13",
