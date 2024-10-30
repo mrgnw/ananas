@@ -8,7 +8,7 @@
     const handleLogout = () => {
         user = null;
         Corbado.logout();
-        // Do whatever you need to do after the user is logged out, e.g. redirect
+				redirect(302, "/");
     }
  
 	onMount(async () => {

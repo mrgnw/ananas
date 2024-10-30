@@ -2,6 +2,7 @@ import { type RequestEvent } from "@sveltejs/kit";
 import { SDK, Config } from "@corbado/node-sdk";
 import { redirect } from "@sveltejs/kit";
 import { CORBADO_API_SECRET } from '$env/static/private';
+
 const config = new Config(
     "pro-4370035767074657014",
     CORBADO_API_SECRET,
@@ -13,15 +14,20 @@ const sdk = new SDK(config);
 export async function load({ request }: RequestEvent) {
     const cookies = parseCookies(request.headers.get("Cookie") || "");
     const sessionToken: string | undefined = cookies.cbo_session_token;
+    
     try {
-        if (!sessionToken) {
-            throw new Error("No session cookie found");
+        if (sessionToken) {
+            const user = await sdk.sessions().validateToken(sessionToken);
+            redirect(302, "/user");
         }
- 
-        const user = await sdk.sessions().validateToken(sessionToken);
+        
+        return {
+            authenticated: false
+        };
     } catch {
-        // session cookie was invalid
-        redirect(302, "/");
+        return {
+            authenticated: false
+        };
     }
 }
  
