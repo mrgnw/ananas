@@ -6,9 +6,40 @@
 	import { Badge } from "$lib/components/ui/badge";
 	import { Toaster } from "svelte-sonner";
 	import { toast } from "svelte-sonner";
-	import { Languages, Search } from "lucide-svelte";
+	import { Languages, Search, Trash2 } from "lucide-svelte";
 	import { dndzone } from "svelte-dnd-action";
 	import _ from "underscore";
+
+	let example_translation = {
+		text: "Ahoy",
+		translations: {	
+			en: "Hello",
+			es: "Hola",
+			ru: "Привет",
+			it: "Ciao",
+			de: "Hallo",
+			ca: "Hola",
+		},
+		timestamp: new Date().toISOString()
+	}
+	
+	function loadHistory(){
+    if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('translationHistory');
+				if (stored == '[]') {
+					return [example_translation];
+				}
+        return stored ? JSON.parse(stored) : [example_translation];
+    }
+    return [example_translation];
+  }
+	
+	let history = $state(loadHistory());
+	
+	function clearHistory() {
+    history = [];
+    localStorage.setItem('translationHistory', '[]');
+  }
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -33,19 +64,6 @@
 		&& tgt_langs.length > 0
 		&& !is_loading
 	);
-
-	let translations = $state([{
-		text: "Ahoy",
-		translations: {
-			// todo: "original": "Ahoy" ?
-			"en": "Hello",
-			"es": "Hola",
-			"ru": "Привет",
-			"it": "Ciao",
-			"de": "Hallo",
-			"ca": "Hola"
-		}
-	}]);
 
 	function langs_not_in_tgt(translation) {
 		return Object.keys(translation.translations).filter(lang => !tgt_langs.includes(lang));
@@ -83,13 +101,13 @@
 
 			const data = await response.json();
 
-			translations = [{
+			history = [{
 				text,
 				translations: data
-			}, ...translations];
+			}, ...history];
 
-			if (typeof localStorage !== 'undefined') {
-				localStorage.setItem('translations', JSON.stringify(translations));
+			if (typeof window !== 'undefined') {
+				localStorage.setItem('translationHistory', JSON.stringify(history));
 			}
 			text = '';
 			toast.success("Translation successful!");
@@ -131,8 +149,18 @@
 	</div>
 
 	<div class="space-y-4">
-		<h2 class="text-xl font-semibold">Translation History</h2>
-		{#each translations as translation}
+		<div class="flex items-center gap-2">
+			<h2 class="text-xl font-semibold">Translation History</h2>
+			<Button 
+				variant="ghost" 
+				size="icon" 
+				onclick={clearHistory}
+				title="Clear history"
+			>
+				<Trash2 class="h-4 w-4" />
+			</Button>
+		</div>
+		{#each history as translation}
 		<Card>
 			<CardContent>
 				<div class="space-y-2">
