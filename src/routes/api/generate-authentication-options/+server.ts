@@ -17,7 +17,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
             path: '/',
             httpOnly: true,
             secure: true,
-            sameSite: 'strict'
+            sameSite: 'strict',
+            maxAge: 60 * 15
         });
 
         cookies.set('userEmail', email, { 

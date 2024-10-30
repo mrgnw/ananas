@@ -5,7 +5,6 @@ import { rp } from '$lib/auth/rp';
 export const POST: RequestHandler = async ({ request, cookies }) => {
     const body = await request.json();
     const expectedChallenge = cookies.get('challenge');
-    const userEmail = cookies.get('userEmail');
 
     if (!expectedChallenge) {
         return new Response(JSON.stringify({ verified: false, error: 'No challenge found' }), {
@@ -20,7 +19,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         // 2. Get their authenticator from the database
         const authenticator = {
             // These values would come from your database
-            credentialID: body.id,
+            credentialID: Buffer.from(body.id, 'base64url'),
             credentialPublicKey: Buffer.from('your-stored-public-key'),
             counter: 0,
         };
@@ -43,22 +42,11 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
                 sameSite: 'strict',
                 maxAge: 60 * 60 * 24 * 7, // 1 week
             });
-            
-            cookies.set('user', userEmail, {
-                path: '/',
-                httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                maxAge: 60 * 60 * 24 * 7, // 1 week
-            });
 
-            // Clean up the challenge
+            // Clean up the challenge cookie
             cookies.delete('challenge', { path: '/' });
 
-            return new Response(JSON.stringify({ 
-                verified: true,
-                user: { email: userEmail }
-            }), {
+            return new Response(JSON.stringify({ verified: true }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
             });

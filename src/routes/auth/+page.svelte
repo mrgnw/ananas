@@ -32,8 +32,10 @@
 			}
 
 			const optionsJSON = await resp.json();
+			console.log('Registration options received:', optionsJSON);
 			
 			const attResp = await startRegistration({ optionsJSON });
+			console.log('Registration response:', attResp);
 			
 			const verificationResp = await fetch('/api/verify-registration', {
 				method: 'POST',
@@ -42,26 +44,19 @@
 				},
 				body: JSON.stringify(attResp),
 			});
+			console.log('Verification response:', verificationResp);
 			
-			if (!verificationResp.ok) {
-				throw new Error('Registration verification failed');
-			}
-
 			const verificationJSON = await verificationResp.json();
 			
 			if (verificationJSON.verified) {
 				toast.success('Registration successful!');
-				goto('/dashboard');
+				goto('/');
 			} else {
 				toast.error('Registration failed: ' + (verificationJSON.error || 'Unknown error'));
 			}
 		} catch (error) {
 			console.error('Registration error:', error);
-			if (error.name === 'InvalidStateError') {
-				toast.error('Error: Authenticator was probably already registered by user');
-			} else {
-				toast.error(error instanceof Error ? error.message : 'Registration failed');
-			}
+			toast.error(error instanceof Error ? error.message : 'Registration failed');
 		} finally {
 			isLoading = false;
 		}
@@ -99,15 +94,11 @@
 				body: JSON.stringify(asseResp),
 			});
 			
-			if (!verificationResp.ok) {
-				throw new Error('Authentication verification failed');
-			}
-
 			const verificationJSON = await verificationResp.json();
 			
 			if (verificationJSON.verified) {
 				toast.success('Login successful!');
-				goto('/dashboard');
+				goto('/');
 			} else {
 				toast.error('Login failed: ' + (verificationJSON.error || 'Unknown error'));
 			}

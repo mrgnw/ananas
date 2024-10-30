@@ -1,7 +1,8 @@
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { RequestHandler } from './$types';
-import { uuidv7 } from '$lib/utils/uuid';
 import { rp } from '$lib/auth/rp';
+import { generateSessionId, storeChallenge } from '$lib/server/auth';
+import { dev } from '$app/environment';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
     try {
@@ -14,12 +15,13 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
             });
         }
 
-        const userId = uuidv7();
+        // Generate userId as Uint8Array
+        const userId = new TextEncoder().encode(crypto.randomUUID());
         
         const options = await generateRegistrationOptions({
             rpName: rp.name,
             rpID: rp.id,
-            userID: Buffer.from(userId),
+            userID: userId,
             userName: email,
             userDisplayName: email,
             authenticatorSelection: {
@@ -30,26 +32,17 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
             attestationType: 'none',
         });
 
-        // Store challenge and user info in cookies
-        cookies.set('challenge', options.challenge, { 
+        // Store challenge with session
+        const sessionId = generateSessionId();
+        storeChallenge(sessionId, options.challenge, email);
+
+        // Set session cookie
+        cookies.set('sessionId', sessionId, {
             path: '/',
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict'
-        });
-        
-        cookies.set('userId', userId, { 
-            path: '/',
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict'
-        });
-        
-        cookies.set('userEmail', email, { 
-            path: '/',
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict'
+            secure: !dev,
+            sameSite: 'strict',
+            maxAge: 300 // 5 minutes
         });
 
         return new Response(JSON.stringify(options), {
