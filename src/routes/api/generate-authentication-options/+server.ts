@@ -3,21 +3,29 @@ import type { RequestHandler } from './$types';
 import { rp } from '$lib/auth/rp';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-    const { email } = await request.json();
-
     try {
+        const { email } = await request.json();
+
         const options = await generateAuthenticationOptions({
             rpID: rp.id,
-            userVerification: 'required',
-            // If you have stored authenticators, you can pass them here:
-            // allowCredentials: userAuthenticators.map(authenticator => ({
-            //     id: authenticator.credentialID,
-            //     type: 'public-key',
-            // })),
+            userVerification: 'preferred',
+            timeout: 60000,
+            allowCredentials: []
         });
 
-        // Save the challenge for verification
-        cookies.set('challenge', options.challenge, { path: '/' });
+        cookies.set('challenge', options.challenge, { 
+            path: '/',
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict'
+        });
+
+        cookies.set('userEmail', email, { 
+            path: '/',
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict'
+        });
 
         return new Response(JSON.stringify(options), {
             status: 200,
@@ -25,7 +33,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         });
     } catch (error) {
         console.error(error);
-        return new Response(JSON.stringify({ error: 'Failed to generate authentication options' }), {
+        return new Response(JSON.stringify({ 
+            error: error instanceof Error ? error.message : 'Failed to generate authentication options' 
+        }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
         });

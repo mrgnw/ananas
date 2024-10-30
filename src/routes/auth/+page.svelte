@@ -6,6 +6,7 @@
 	import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "$lib/components/ui/card";
 	import { Label } from "$lib/components/ui/label";
 	import { goto } from '$app/navigation';
+	import { Toaster } from 'svelte-sonner';
 	
 	let isLoading = $state(false);
 	let email = $state('');
@@ -25,9 +26,14 @@
 				},
 				body: JSON.stringify({ email }),
 			});
-			const options = await resp.json();
 			
-			const attResp = await startRegistration(options);
+			if (!resp.ok) {
+				throw new Error('Failed to get registration options');
+			}
+
+			const optionsJSON = await resp.json();
+			
+			const attResp = await startRegistration({ optionsJSON });
 			
 			const verificationResp = await fetch('/api/verify-registration', {
 				method: 'POST',
@@ -37,16 +43,25 @@
 				body: JSON.stringify(attResp),
 			});
 			
+			if (!verificationResp.ok) {
+				throw new Error('Registration verification failed');
+			}
+
 			const verificationJSON = await verificationResp.json();
 			
 			if (verificationJSON.verified) {
 				toast.success('Registration successful!');
+				goto('/dashboard');
 			} else {
 				toast.error('Registration failed: ' + (verificationJSON.error || 'Unknown error'));
 			}
 		} catch (error) {
 			console.error('Registration error:', error);
-			toast.error(error instanceof Error ? error.message : 'Registration failed');
+			if (error.name === 'InvalidStateError') {
+				toast.error('Error: Authenticator was probably already registered by user');
+			} else {
+				toast.error(error instanceof Error ? error.message : 'Registration failed');
+			}
 		} finally {
 			isLoading = false;
 		}
@@ -67,9 +82,14 @@
 				},
 				body: JSON.stringify({ email }),
 			});
-			const options = await resp.json();
+
+			if (!resp.ok) {
+				throw new Error('Failed to get authentication options');
+			}
+
+			const optionsJSON = await resp.json();
 			
-			const asseResp = await startAuthentication(options);
+			const asseResp = await startAuthentication({ optionsJSON });
 			
 			const verificationResp = await fetch('/api/verify-authentication', {
 				method: 'POST',
@@ -79,11 +99,15 @@
 				body: JSON.stringify(asseResp),
 			});
 			
+			if (!verificationResp.ok) {
+				throw new Error('Authentication verification failed');
+			}
+
 			const verificationJSON = await verificationResp.json();
 			
 			if (verificationJSON.verified) {
 				toast.success('Login successful!');
-				goto('/');
+				goto('/dashboard');
 			} else {
 				toast.error('Login failed: ' + (verificationJSON.error || 'Unknown error'));
 			}
@@ -117,18 +141,18 @@
 				on:click={handleRegistration} 
 				disabled={isLoading}
 			>
-				Register with Passkey
+				{isLoading ? 'Registering...' : 'Register with Passkey'}
 			</Button>
 			<Button 
 				on:click={handleAuthentication} 
-					disabled={isLoading}
-					variant="outline"
+				disabled={isLoading}
+				variant="outline"
 			>
-				Login with Passkey
+				{isLoading ? 'Logging in...' : 'Login with Passkey'}
 			</Button>
 		</CardContent>
 	</Card>
 </div>
 
-<!-- <Toaster /> -->
+<Toaster />
 
