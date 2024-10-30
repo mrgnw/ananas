@@ -101,6 +101,12 @@
 
 			const data = await response.json();
 
+			if (history.some(item => item.text === text)){
+				toast.info("This text has already been translated!");
+				text = '';
+				return;
+			}
+
 			history = [{
 				text,
 				translations: data
@@ -109,8 +115,9 @@
 			if (typeof window !== 'undefined') {
 				localStorage.setItem('translationHistory', JSON.stringify(history));
 			}
-			text = '';
 			toast.success("Translation successful!");
+			text = '';
+			
 		} catch (error) {
 			console.error('Error fetching translation:', error);
 			toast.error("Translation failed. Please try again.");
