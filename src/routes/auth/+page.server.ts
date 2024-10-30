@@ -12,7 +12,7 @@ export async function load({ request }: RequestEvent) {
 								details: {
 										hasProjectId: !!PUBLIC_CORBADO_PROJECT_ID,
 										hasApiSecret: !!CORBADO_API_SECRET,
-										env: process.env.NODE_ENV
+										// env: process.env.NODE_ENV
 								}
 						});
 				}
