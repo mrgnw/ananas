@@ -29,9 +29,9 @@
 				if (stored == '[]') {
 					return [example_translation];
 				}
-        return stored ? JSON.parse(stored) : [example_translation];
+        return stored ? JSON.parse(stored) : [];
     }
-    return [example_translation];
+    return [];
   }
 	
 	let history = $state(loadHistory());
@@ -169,23 +169,41 @@
 		</div>
 		<div class="flex flex-wrap gap-4 max-w-6xl">
 			{#each history as translation}
-			<Card>
-				<CardContent>
-					<div class="space-y-2">
-						{#if show_original}
-							<p title="original"><strong>{translation.text}</strong></p>
-						{/if}
-						{#each show_langs as langKey}
-							{#if translation.translations[langKey]}
-								<p>{translation.translations[langKey]}</p>
+				<Card>
+					<CardContent>
+						<div class="space-y-2">
+							{#if show_original}
+								<p title="original"><strong>{translation.text}</strong></p>
 							{/if}
-						{/each}
-						<p>
-							<i>+ {langs_not_in_tgt(translation).join('•')}</i>
-						</p> 
-					</div>
-				</CardContent>
-			</Card>
+							{#each show_langs as langKey}
+								{#if translation.translations[langKey]}
+									<p>{translation.translations[langKey]}</p>
+								{/if}
+							{/each}
+							<p>
+								<i>+ {langs_not_in_tgt(translation).join('•')}</i>
+							</p> 
+						</div>
+					</CardContent>
+				</Card>
+			{:else}
+				<Card>
+					<CardContent>
+						<div class="space-y-2">
+							{#if show_original}
+								<p title="original"><strong>{example_translation.text}</strong></p>
+							{/if}
+							{#each show_langs as langKey}
+								{#if example_translation.translations[langKey]}
+									<p>{example_translation.translations[langKey]}</p>
+								{/if}
+							{/each}
+							<p>
+								<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
+							</p>
+						</div>
+					</CardContent>
+				</Card>
 			{/each}
 		</div>
 	</div>
