@@ -4,9 +4,6 @@ import { redirect, error } from "@sveltejs/kit";
 import { CORBADO_API_SECRET } from '$env/static/private';
 import { PUBLIC_CORBADO_PROJECT_ID } from '$env/static/public';
 
-// Add edge runtime declaration
-export const runtime = 'edge';
-
 // Move SDK initialization outside of the function
 let sdk: SDK;
 try {
