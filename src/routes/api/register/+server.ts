@@ -4,15 +4,16 @@ import { uuidv7 } from '$lib/utils/uuid';
 import { rp } from '$lib/auth/rp';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
+    const { email } = await request.json();
     const userId = uuidv7();
-
+    
     try {
         const options = await generateRegistrationOptions({
             rpName: rp.name,
             rpID: rp.id,
-            userID: userId,
-            userName: userId,
-            userDisplayName: userId,
+            userID: Buffer.from(userId),
+            userName: email,
+            userDisplayName: email,
             authenticatorSelection: {
                 residentKey: 'required',
                 requireResidentKey: true,
@@ -23,6 +24,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
         cookies.set('challenge', options.challenge, { path: '/' });
         cookies.set('userId', userId, { path: '/' });
+        cookies.set('userEmail', email, { path: '/' });
 
         return new Response(JSON.stringify(options), {
             status: 200,

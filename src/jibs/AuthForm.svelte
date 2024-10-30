@@ -1,12 +1,21 @@
 <script lang="ts">
 	import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
 	import { toast } from 'svelte-sonner';
+	import { Button } from "$lib/components/ui/button";
+	import { Input } from "$lib/components/ui/input";
+	import { Card, CardContent, CardHeader, CardTitle } from "$lib/components/ui/card";
 
 	let isLoading = $state(false);
+	let email = $state('');
 	let errorMessage = $state('');
 	let successMessage = $state('');
 
 	async function handleRegistration() {
+			if (!email || !email.includes('@')) {
+					toast.error('Please enter a valid email address');
+					return;
+			}
+
 			isLoading = true;
 			errorMessage = '';
 			successMessage = '';
@@ -17,7 +26,7 @@
 							headers: {
 									'Content-Type': 'application/json',
 							},
-							body: JSON.stringify({ username: 'user', password: 'pass' }), // Replace with actual user input
+							body: JSON.stringify({ email }),
 					});
 					const data = await resp.json();
 					const attResp = await startRegistration(data.registrationOptions);
@@ -79,7 +88,13 @@
 	}
 </script>
 
-<div>
+<div class="grid gap-4">
+	<Input 
+			type="email" 
+			placeholder="Enter your email" 
+			bind:value={email}
+			autocomplete="email webauthn"
+	/>
 	<Button on:click={handleRegistration} disabled={isLoading}>
 			Register with Passkey
 	</Button>
