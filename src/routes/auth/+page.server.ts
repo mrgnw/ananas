@@ -3,6 +3,7 @@ import { SDK, Config } from "@corbado/node-sdk";
 import { redirect, error } from "@sveltejs/kit";
 import { CORBADO_API_SECRET } from '$env/static/private';
 import { PUBLIC_CORBADO_PROJECT_ID } from '$env/static/public';
+export const ssr = false;
 
 // Move SDK initialization outside of the function
 let sdk: SDK;
@@ -14,6 +15,7 @@ try {
 		"https://backendapi.cloud.corbado.io",
 	);
 	sdk = new SDK(config);
+	
 } catch (initError) {
 	console.error('SDK initialization failed:', {
 		error: initError instanceof Error ? initError.message : String(initError),
