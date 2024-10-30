@@ -3,7 +3,7 @@
 	import {onMount} from 'svelte';
 	import { PUBLIC_CORBADO_PROJECT_ID } from '$env/static/public';
 
-	export let data;
+	let { data } = $props();
 	let authElement: HTMLDivElement;
 	let error = $state('');
 	let loading = $state(true);
