@@ -172,12 +172,11 @@
 				<Card>
 					<CardContent>
 						<div class="space-y-2">
-							{#if show_original}
-								<p title="original"><strong>{translation.text}</strong></p>
-							{/if}
 							{#each show_langs as langKey}
 								{#if translation.translations[langKey]}
-									<p>{translation.translations[langKey]}</p>
+									<p class={translation.translations[langKey] === translation.text ? 'font-bold' : ''}>
+										{translation.translations[langKey]}
+									</p>
 								{/if}
 							{/each}
 							<p>
@@ -190,12 +189,11 @@
 				<Card>
 					<CardContent>
 						<div class="space-y-2">
-							{#if show_original}
-								<p title="original"><strong>{example_translation.text}</strong></p>
-							{/if}
 							{#each show_langs as langKey}
 								{#if example_translation.translations[langKey]}
-									<p>{example_translation.translations[langKey]}</p>
+									<p class={example_translation.translations[langKey] === example_translation.text ? 'font-bold' : ''}>
+										{example_translation.translations[langKey]}
+									</p>
 								{/if}
 							{/each}
 							<p>
