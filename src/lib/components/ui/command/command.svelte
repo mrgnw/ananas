@@ -4,10 +4,11 @@
 
 	type $$Props = CommandPrimitive.CommandProps;
 
-	export let value: $$Props["value"] = undefined;
 
-	let className: string | undefined | null = undefined;
-	export { className as class };
+	interface Props { [key: string]: any }
+
+	let { value = $bindable(undefined), class: className = undefined, children, ...rest }: Props = $props();
+	
 </script>
 
 <CommandPrimitive.Root
@@ -16,7 +17,7 @@
 		className
 	)}
 	bind:value
-	{...$$restProps}
+	{...rest}
 >
-	<slot />
+	{@render children?.()}
 </CommandPrimitive.Root>

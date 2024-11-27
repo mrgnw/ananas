@@ -4,13 +4,15 @@
 
 	type $$Props = HTMLAttributes<HTMLSpanElement>;
 
-	let className: string | undefined | null = undefined;
-	export { className as class };
+	interface Props { [key: string]: any }
+
+	let { class: className = undefined, children, ...rest }: Props = $props();
+	
 </script>
 
 <span
 	class={cn("text-muted-foreground ml-auto text-xs tracking-widest", className)}
-	{...$$restProps}
+	{...rest}
 >
-	<slot />
+	{@render children?.()}
 </span>

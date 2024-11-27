@@ -1,6 +1,7 @@
 <script>
-	export let value = '';
-  $: isValid = value.startsWith('sk-') && value.length === 51;
+	/** @type {{value?: string}} */
+	let { value = $bindable('') } = $props();
+  let isValid = $derived(value.startsWith('sk-') && value.length === 51);
 	let pattern = "sk-[a-zA-Z0-9]{48,48}";
 
 </script>
