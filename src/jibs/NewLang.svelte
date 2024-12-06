@@ -135,10 +135,6 @@
 	<div class="space-y-4">
 		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 		<div class="flex flex-wrap gap-2 items-center">
-			<Badge onclick={()=> toggle_display('original')}
-			variant={show_original ? 'default' : 'outline'}>
-				original
-			</Badge>
 			{#each Object.entries(user_langs) as [key, meta]}
 			<Badge 
 				variant={meta.display ? 'default' : 'outline'}
