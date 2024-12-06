@@ -179,9 +179,11 @@
 									</p>
 								{/if}
 							{/each}
-							<p>
-								<i>+ {langs_not_in_tgt(translation).join('•')}</i>
-							</p> 
+							{#if langs_not_in_tgt(translation).length > 0}
+								<p>
+									<i>+ {langs_not_in_tgt(translation).join('•')}</i>
+								</p>
+							{/if}
 						</div>
 					</CardContent>
 				</Card>
@@ -196,9 +198,11 @@
 									</p>
 								{/if}
 							{/each}
-							<p>
-								<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
-							</p>
+							{#if langs_not_in_tgt(example_translation).length > 0}
+								<p>
+									<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
+								</p>
+							{/if}
 						</div>
 					</CardContent>
 				</Card>
