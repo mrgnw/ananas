@@ -128,7 +128,7 @@
 		try {
 			if (navigator.clipboard && navigator.clipboard.writeText) {
 				await navigator.clipboard.writeText(text);
-				alert('Copied to clipboard!');
+				toast.success('Copied to clipboard!');
 			} else {
 				// Fallback for environments where Clipboard API is not available
 				const textArea = document.createElement('textarea');
@@ -137,16 +137,16 @@
 				textArea.select();
 				try {
 					document.execCommand('copy');
-					alert('Copied to clipboard!');
+					toast.success('Copied to clipboard!');
 				} catch (err) {
 					console.error('Failed to copy text:', err);
-					alert('Failed to copy text. Please copy manually.');
+					toast.error('Failed to copy text. Please copy manually.');
 				}
 				document.body.removeChild(textArea);
 			}
 		} catch (err) {
 			console.error('Failed to copy text:', err);
-			alert('Failed to copy text. Please copy manually.');
+			toast.error('Failed to copy text. Please copy manually.');
 		}
 	};
 </script>
