@@ -46,12 +46,31 @@
 	let text = $state('');
 	let show_original = $state(true);
 
-	let user_langs = $state({
-		en: { label: 'English', native: 'English', rtl: false, display: true },
-		ru: { label: 'Russian', native: 'Русский', rtl: false, display: true },
-		ja: { label: 'Japanese', native: '日本語', rtl: false, display: true },
-		es: { label: 'Spanish', native: 'Español', rtl: false, display: true }
+	let user_langs = $state(loadUserLangs());
+
+	function loadUserLangs() {
+		if (typeof window !== 'undefined') {
+			const stored = localStorage.getItem('user_langs');
+			if (stored) {
+				return JSON.parse(stored);
+			}
+		}
+		// Default languages if nothing is stored
+		return {
+			en: { label: 'English', native: 'English', rtl: false, display: true },
+			ru: { label: 'Russian', native: 'Русский', rtl: false, display: true },
+			ja: { label: 'Japanese', native: '日本語', rtl: false, display: true },
+			es: { label: 'Spanish', native: 'Español', rtl: false, display: true }
+		};
+	}
+
+	// Add effect to save changes
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('user_langs', JSON.stringify(user_langs));
+		}
 	});
+
 	let tgt_langs = $derived(Object.keys(user_langs));
 	let show_langs = $derived(
 		Object.entries(user_langs)
