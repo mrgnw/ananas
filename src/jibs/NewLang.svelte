@@ -60,7 +60,8 @@
 			en: { label: 'English', native: 'English', rtl: false, display: true },
 			ru: { label: 'Russian', native: 'Русский', rtl: false, display: true },
 			ja: { label: 'Japanese', native: '日本語', rtl: false, display: true },
-			es: { label: 'Spanish', native: 'Español', rtl: false, display: true }
+			es: { label: 'Spanish', native: 'Español', rtl: false, display: true },
+			it: { label: 'Italian', native: 'Italiano', rtl: false, display: true }
 		};
 	}
 
