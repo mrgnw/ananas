@@ -29,6 +29,17 @@
 		native: langInfo.native
 	}));
 
+	// Add custom languages that aren't in countries-list
+	const customLanguages = {
+		scn: {
+			value: 'scn',
+			label: 'Sicilian',
+			native: 'Sicilianu'
+		}
+	};
+
+	langs = [...langs, ...Object.values(customLanguages)];
+
 	let value = $state("");
 	let inputValue = $state("");
 	let open = $derived(inputValue.length > 0);
