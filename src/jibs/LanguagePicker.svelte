@@ -1,5 +1,6 @@
 <script lang="ts">
 
+
 	import Check from "lucide-svelte/icons/check";
 	import { Combobox } from "bits-ui";
 	import { languages } from 'countries-list';
@@ -8,11 +9,16 @@
 	// TODO: confirm that this is reactive
 	let { tgt_langs = $bindable([]) } = $props();
 
+	// Let's also log the initial languages array
+	console.log('Initial languages:', Object.keys(languages));
+
 	// Load saved languages from localStorage on component mount
 	$effect(() => {
 		const savedLanguages = localStorage.getItem('tgt_langs');
+		console.log('Loaded from localStorage:', savedLanguages);
 		if (savedLanguages) {
 			tgt_langs = JSON.parse(savedLanguages);
+			console.log('Current tgt_langs:', tgt_langs);
 		}
 	})
 
@@ -20,6 +26,9 @@
 		if (!tgt_langs.includes(langCode)) {
 			tgt_langs = [...tgt_langs, langCode];
 			localStorage.setItem('tgt_langs', JSON.stringify(tgt_langs));
+			console.log('tgt_langs after add:', tgt_langs);
+		} else {
+			console.log('Language already in tgt_langs');
 		}
 		inputValue = "";
 	}
@@ -28,6 +37,17 @@
 		label: langInfo.name,
 		native: langInfo.native
 	}));
+
+	// Add custom languages that aren't in countries-list
+	const customLanguages = {
+		scn: {
+			value: 'scn',
+			label: 'Sicilian',
+			native: 'Sicilianu'
+		}
+	};
+
+	langs = [...langs, ...Object.values(customLanguages)];
 
 	let value = $state("");
 	let inputValue = $state("");
