@@ -4,10 +4,11 @@ const rpName = 'Ananas';
 
 // Convert UUID string to Uint8Array
 function uuidToBytes(uuid) {
+    if (!uuid || typeof uuid !== 'string') return new Uint8Array(16);
     const hex = uuid.replace(/-/g, '');
     const bytes = new Uint8Array(16);
     for (let i = 0; i < 16; i++) {
-        bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+        bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
     }
     return bytes;
 }
@@ -34,8 +35,16 @@ function base64urlToBytes(base64url) {
     return bytes;
 }
 
-export default {
+// Export for testing
+export const handler = {
     async fetch(request, env) {
+        const corsHeaders = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '86400'
+        };
+
         try {
             console.log('Environment:', {
                 DB: !!env?.DB,
@@ -56,17 +65,9 @@ export default {
                 method 
             });
 
-            // Add CORS headers
-            const headers = {
-                'Access-Control-Allow-Origin': origin,
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Content-Type': 'application/json'
-            };
-
             // Handle CORS preflight
             if (method === 'OPTIONS') {
-                return new Response(null, { headers });
+                return new Response(null, { headers: corsHeaders });
             }
 
             if (pathname === '/auth/register') {
@@ -86,20 +87,22 @@ export default {
                         if (existingUser) {
                             return new Response(JSON.stringify({ error: 'Username already exists' }), {
                                 status: 400,
-                                headers
+                                headers: corsHeaders
                             });
                         }
 
                         const userId = crypto.randomUUID();
+                        const userIdBytes = uuidToBytes(userId);
                         const options = await generateRegistrationOptions({
                             rpName,
                             rpID,
-                            userID: uuidToBytes(userId),
+                            userID: userIdBytes,
                             userName: username,
                             attestationType: 'none',
                             authenticatorSelection: {
                                 residentKey: 'required',
-                                userVerification: 'preferred'
+                                userVerification: 'preferred',
+                                requireResidentKey: true
                             }
                         });
 
@@ -110,7 +113,13 @@ export default {
                             'INSERT INTO users (id, username, current_challenge) VALUES (?, ?, ?)'
                         ).bind(userId, username, options.challenge).run();
 
-                        return new Response(JSON.stringify(options), { headers });
+                        return new Response(JSON.stringify({
+                            ...options,
+                            user: {
+                                id: userIdBytes,
+                                name: username
+                            }
+                        }), { headers: corsHeaders });
                     } catch (error) {
                         console.error('Registration error:', error);
                         return new Response(JSON.stringify({ 
@@ -119,7 +128,7 @@ export default {
                         }), { 
                             status: 500,
                             headers: {
-                                ...headers,
+                                ...corsHeaders,
                                 'Content-Type': 'application/json'
                             }
                         });
@@ -138,7 +147,7 @@ export default {
                     if (!user || !user.current_challenge) {
                         return new Response(JSON.stringify({ error: 'Invalid registration session' }), {
                             status: 400,
-                            headers
+                            headers: corsHeaders
                         });
                     }
 
@@ -173,10 +182,10 @@ export default {
                             'UPDATE users SET current_challenge = NULL WHERE id = ?'
                         ).bind(user.id).run();
 
-                        return new Response(JSON.stringify({ verified: true }), { headers });
+                        return new Response(JSON.stringify({ verified: true }), { headers: corsHeaders });
                     }
 
-                    return new Response(JSON.stringify({ verified: false }), { headers });
+                    return new Response(JSON.stringify({ verified: false }), { headers: corsHeaders });
                 }
             } else if (pathname === '/auth/authenticate') {
                 if (method === 'POST') {
@@ -185,16 +194,12 @@ export default {
 
                     console.log('Authenticating user:', username);
 
-                    // Get user
                     const user = await env.DB.prepare(
                         'SELECT * FROM users WHERE username = ?'
                     ).bind(username).first();
 
                     if (!user) {
-                        return new Response(JSON.stringify({ error: 'User not found' }), {
-                            status: 400,
-                            headers
-                        });
+                        return new Response('Not found', { status: 404, headers: corsHeaders });
                     }
 
                     // Get authenticators
@@ -207,7 +212,7 @@ export default {
                     if (!authenticators.results.length) {
                         return new Response(JSON.stringify({ error: 'No authenticators registered' }), {
                             status: 400,
-                            headers
+                            headers: corsHeaders
                         });
                     }
 
@@ -228,7 +233,7 @@ export default {
                         'UPDATE users SET current_challenge = ? WHERE id = ?'
                     ).bind(options.challenge, user.id).run();
 
-                    return new Response(JSON.stringify(options), { headers });
+                    return new Response(JSON.stringify(options), { headers: corsHeaders });
                 } else if (method === 'PUT') {
                     const body = await request.json();
                     const { username } = body;
@@ -241,24 +246,28 @@ export default {
                         'SELECT * FROM users WHERE username = ?'
                     ).bind(username).first();
 
-                    if (!user || !user.current_challenge) {
+                    if (!user) {
+                        return new Response('Not found', { status: 404, headers: corsHeaders });
+                    }
+
+                    if (!user.current_challenge) {
                         return new Response(JSON.stringify({ error: 'Invalid authentication session' }), {
                             status: 400,
-                            headers
+                            headers: corsHeaders
                         });
                     }
 
-                    // Get authenticator
-                    const authenticator = await env.DB.prepare(
+                    // Get authenticators
+                    const authenticators = await env.DB.prepare(
                         'SELECT * FROM authenticators WHERE user_id = ?'
-                    ).bind(user.id).first();
+                    ).bind(user.id).all();
 
-                    console.log('Found authenticator:', authenticator);
+                    console.log('Found authenticators:', authenticators.results);
 
-                    if (!authenticator) {
-                        return new Response(JSON.stringify({ error: 'Authenticator not found' }), {
+                    if (!authenticators.results.length) {
+                        return new Response(JSON.stringify({ error: 'No authenticators registered' }), {
                             status: 400,
-                            headers
+                            headers: corsHeaders
                         });
                     }
 
@@ -273,9 +282,9 @@ export default {
                             expectedRPID: rpID,
                             requireUserVerification: true,
                             credential: {
-                                id: authenticator.credential_id,
-                                publicKey: base64urlToBytes(authenticator.credential_public_key),
-                                counter: authenticator.counter,
+                                id: authenticators.results[0].credential_id,
+                                publicKey: base64urlToBytes(authenticators.results[0].credential_public_key),
+                                counter: authenticators.results[0].counter,
                                 transports: ['internal']
                             }
                         });
@@ -286,7 +295,7 @@ export default {
                             const { newCounter } = authenticationInfo;
                             await env.DB.prepare(
                                 'UPDATE authenticators SET counter = ? WHERE credential_id = ?'
-                            ).bind(newCounter, authenticator.credential_id).run();
+                            ).bind(newCounter, authenticators.results[0].credential_id).run();
 
                             // Create a new session
                             const sessionId = crypto.randomUUID();
@@ -312,7 +321,7 @@ export default {
                                 'UPDATE users SET current_challenge = NULL WHERE id = ?'
                             ).bind(user.id).run();
 
-                            return new Response(JSON.stringify({ verified: true }), { headers });
+                            return new Response(JSON.stringify({ verified: true }), { headers: corsHeaders });
                         }
                     } catch (error) {
                         console.error('Authentication error:', error);
@@ -322,29 +331,29 @@ export default {
                         }), { 
                             status: 400,
                             headers: {
-                                ...headers,
+                                ...corsHeaders,
                                 'Content-Type': 'application/json'
                             }
                         });
                     }
 
-                    return new Response(JSON.stringify({ verified: false }), { headers });
+                    return new Response(JSON.stringify({ verified: false }), { headers: corsHeaders });
                 }
             }
 
-            return new Response('Not found', { status: 404, headers });
+            return new Response('Not found', { status: 404, headers: corsHeaders });
         } catch (error) {
             console.error('Worker error:', error);
-            return new Response(JSON.stringify({ 
-                error: error.message,
-                stack: error.stack
-            }), { 
+            return new Response(JSON.stringify({ error: error.message }), {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': origin
+                    ...corsHeaders
                 }
             });
         }
     }
 };
+
+// Default export for Cloudflare
+export default handler;
