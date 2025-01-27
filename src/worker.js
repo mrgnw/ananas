@@ -38,13 +38,6 @@ function base64urlToBytes(base64url) {
 // Export for testing
 export const handler = {
     async fetch(request, env) {
-        const corsHeaders = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Max-Age': '86400'
-        };
-
         try {
             console.log('Environment:', {
                 DB: !!env?.DB,
@@ -52,10 +45,17 @@ export const handler = {
                 platform: request.cf
             });
             const url = new URL(request.url);
-            const origin = url.origin;
+            const origin = request.headers.get('origin') || url.origin;
             const rpID = url.hostname;
             const pathname = url.pathname;
             const method = request.method;
+
+            const corsHeaders = {
+                'Access-Control-Allow-Origin': origin,
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Max-Age': '86400'
+            };
 
             console.log('Request:', { 
                 url: url.toString(),
@@ -98,6 +98,7 @@ export const handler = {
                             rpID,
                             userID: userIdBytes,
                             userName: username,
+                            displayName: username,  // Use email as display name
                             attestationType: 'none',
                             authenticatorSelection: {
                                 residentKey: 'required',
@@ -116,8 +117,9 @@ export const handler = {
                         return new Response(JSON.stringify({
                             ...options,
                             user: {
-                                id: userIdBytes,
-                                name: username
+                                id: bytesToBase64url(userIdBytes),
+                                name: username,
+                                displayName: username
                             }
                         }), { headers: corsHeaders });
                     } catch (error) {

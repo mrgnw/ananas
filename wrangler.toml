@@ -1,6 +1,12 @@
 name = "ananas"
 compatibility_date = "2023-01-01"
 
+# Default binding for local development
+[[d1_databases]]
+binding = "DB"
+database_name = "ananas-auth-dev"
+database_id = "56c5a913-b8f1-4104-b52e-577d7b380658"
+
 [env.production]
 [[env.production.d1_databases]]
 binding = "DB"

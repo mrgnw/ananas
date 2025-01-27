@@ -47,8 +47,9 @@ describe('Authentication Flow', () => {
             expect(response.status).toBe(200);
             expect(data.user).toBeDefined();
             expect(data.user.id).toBeDefined();
-            expect(Object.values(data.user.id)).toHaveLength(16); // Uint8Array length
-            expect(Object.values(data.user.id).every(v => typeof v === 'number')).toBe(true);
+            expect(typeof data.user.id).toBe('string');
+            expect(data.user.id.length).toBeGreaterThan(16); // base64url string will be longer than 16 bytes
+            expect(/^[A-Za-z0-9_-]+$/.test(data.user.id)).toBe(true); // valid base64url string
         });
 
         it('should reject registration with existing username', async () => {
