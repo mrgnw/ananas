@@ -1,8 +1,6 @@
 import { generateRegistrationOptions, verifyRegistrationResponse, generateAuthenticationOptions, verifyAuthenticationResponse } from '@simplewebauthn/server';
 
 const rpName = 'Ananas';
-const rpID = 'localhost';
-const origin = 'http://localhost:5173';
 
 // Convert UUID string to Uint8Array
 function uuidToBytes(uuid) {
@@ -40,7 +38,14 @@ export default {
     async fetch(request, env) {
         try {
             const url = new URL(request.url);
-            const method = request.method;
+            const origin = url.origin;
+            // rpID must be a valid domain without protocol, port, or path
+            const rpID = url.hostname;
+
+            // Log values for debugging
+            console.log('URL:', url.toString());
+            console.log('Origin:', origin);
+            console.log('rpID:', rpID);
 
             // Add CORS headers
             const headers = {
@@ -51,12 +56,12 @@ export default {
             };
 
             // Handle CORS preflight
-            if (method === 'OPTIONS') {
+            if (request.method === 'OPTIONS') {
                 return new Response(null, { headers });
             }
 
-            if (url.pathname === '/auth/register') {
-                if (method === 'POST') {
+            if (request.url.pathname === '/auth/register') {
+                if (request.method === 'POST') {
                     const body = await request.json();
                     const username = body.username;
 
@@ -95,7 +100,7 @@ export default {
                     ).bind(userId, username, options.challenge).run();
 
                     return new Response(JSON.stringify(options), { headers });
-                } else if (method === 'PUT') {
+                } else if (request.method === 'PUT') {
                     const body = await request.json();
                     const { username } = body;
 
@@ -149,8 +154,8 @@ export default {
 
                     return new Response(JSON.stringify({ verified: false }), { headers });
                 }
-            } else if (url.pathname === '/auth/authenticate') {
-                if (method === 'POST') {
+            } else if (request.url.pathname === '/auth/authenticate') {
+                if (request.method === 'POST') {
                     const body = await request.json();
                     const { username } = body;
 
@@ -200,7 +205,7 @@ export default {
                     ).bind(options.challenge, user.id).run();
 
                     return new Response(JSON.stringify(options), { headers });
-                } else if (method === 'PUT') {
+                } else if (request.method === 'PUT') {
                     const body = await request.json();
                     const { username } = body;
 
