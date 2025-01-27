@@ -1,5 +1,6 @@
 name = "ananas"
 compatibility_date = "2023-01-01"
+main = "src/worker.js"
 
 # Default binding for local development
 [[d1_databases]]

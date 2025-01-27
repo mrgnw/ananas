@@ -7,18 +7,6 @@
     let error = '';
     let success = '';
 
-    // Convert base64url to Uint8Array
-    function base64urlToUint8Array(base64url: string): Uint8Array {
-        const padding = '='.repeat((4 - base64url.length % 4) % 4);
-        const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/') + padding;
-        const binary = atob(base64);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) {
-            bytes[i] = binary.charCodeAt(i);
-        }
-        return bytes;
-    }
-
     async function register() {
         try {
             console.log('Starting registration...');
@@ -29,40 +17,44 @@
             });
 
             if (!resp.ok) {
-                const error = await resp.json();
-                throw new Error(error.error || 'Registration failed');
+                const errorData = await resp.json().catch(() => ({ error: resp.statusText }));
+                throw new Error(errorData.error || 'Registration failed');
             }
 
-            const options = await resp.json();
-            console.log('Registration options:', options);
+            const data = await resp.json();
+            console.log('Registration options:', data);
+            console.log('User ID type:', typeof data.user.id);
+            console.log('User ID value:', data.user.id);
 
-            // Convert userID from base64url to Uint8Array
-            options.user.id = base64urlToUint8Array(options.user.id);
+            try {
+                // Let SimpleWebAuthn handle the base64url conversion
+                const credential = await startRegistration(data);
+                console.log('Registration credential:', credential);
 
-            // No need to decode challenge, startRegistration handles it
-            const credential = await startRegistration(options);
-            console.log('Registration credential:', credential);
+                const verificationResp = await fetch('/auth/register', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...credential,
+                        username
+                    })
+                });
 
-            const verificationResp = await fetch('/auth/register', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...credential,
-                    username
-                })
-            });
+                if (!verificationResp.ok) {
+                    const errorData = await verificationResp.json().catch(() => ({ error: verificationResp.statusText }));
+                    throw new Error(errorData.error || 'Registration verification failed');
+                }
 
-            if (!verificationResp.ok) {
-                const error = await verificationResp.json();
-                throw new Error(error.error || 'Registration verification failed');
-            }
-
-            const verification = await verificationResp.json();
-            if (verification.verified) {
-                alert('Registration successful!');
-                state.user = username;
-            } else {
-                throw new Error('Registration verification failed');
+                const verification = await verificationResp.json();
+                if (verification.verified) {
+                    alert('Registration successful!');
+                    state.user = username;
+                } else {
+                    throw new Error('Registration verification failed');
+                }
+            } catch (err) {
+                console.error('Registration error:', err);
+                throw err;
             }
         } catch (error) {
             console.error('Registration error:', error);
@@ -80,8 +72,8 @@
             });
 
             if (!resp.ok) {
-                const error = await resp.json();
-                throw new Error(error.error || 'Authentication failed');
+                const errorData = await resp.json().catch(() => ({ error: resp.statusText }));
+                throw new Error(errorData.error || 'Authentication failed');
             }
 
             const options = await resp.json();
@@ -101,8 +93,8 @@
             });
 
             if (!verificationResp.ok) {
-                const error = await verificationResp.json();
-                throw new Error(error.error || 'Authentication verification failed');
+                const errorData = await verificationResp.json().catch(() => ({ error: verificationResp.statusText }));
+                throw new Error(errorData.error || 'Authentication verification failed');
             }
 
             const verification = await verificationResp.json();

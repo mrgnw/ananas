@@ -23,6 +23,25 @@ describe('Authentication Flow', () => {
         vi.clearAllMocks();
     });
 
+    describe('Base64URL Conversion', () => {
+        it('should properly encode and decode base64url', async () => {
+            const testEmail = 'test@example.com';
+            const response = await handler.fetch(new Request('https://example.com/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: testEmail })
+            }), env);
+
+            const data = await response.json();
+            expect(response.status).toBe(200);
+            expect(data.user.id).toBeDefined();
+            expect(typeof data.user.id).toBe('string');
+            expect(/^[A-Za-z0-9_-]+$/.test(data.user.id)).toBe(true); // valid base64url string
+            expect(data.user.name).toBe(testEmail);
+            expect(data.user.displayName).toBe(testEmail);
+        });
+    });
+
     describe('Registration', () => {
         it('should convert userID to Uint8Array during registration', async () => {
             // Mock request
@@ -123,7 +142,8 @@ describe('Authentication Flow', () => {
 
             // Verify response
             expect(response.status).toBe(404);
-            expect(await response.text()).toBe('Not found');
+            const data = await response.json();
+            expect(data.error).toBe('User not found');
         });
     });
 });
