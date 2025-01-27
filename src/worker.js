@@ -251,14 +251,18 @@ export default {
                             }
                         });
 
-                        console.log('Authentication verification result:', verification);
-
-                        if (verification.verified) {
-                            // Update counter
+                        const { verified, authenticationInfo } = verification;
+                        if (verified) {
+                            // Update the authenticator's counter in the database
+                            const { newCounter } = authenticationInfo;
                             await env.DB.prepare(
                                 'UPDATE authenticators SET counter = ? WHERE credential_id = ?'
-                            ).bind(verification.authenticationInfo.newCounter, authenticator.credential_id).run();
+                            ).bind(newCounter, authenticator.credential_id).run();
+                        }
 
+                        console.log('Authentication verification result:', verification);
+
+                        if (verified) {
                             // Clear challenge
                             await env.DB.prepare(
                                 'UPDATE users SET current_challenge = NULL WHERE id = ?'
