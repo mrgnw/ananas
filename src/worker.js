@@ -258,6 +258,21 @@ export default {
                             await env.DB.prepare(
                                 'UPDATE authenticators SET counter = ? WHERE credential_id = ?'
                             ).bind(newCounter, authenticator.credential_id).run();
+
+                            // Create a new session
+                            const sessionId = crypto.randomUUID();
+                            await env.DB.prepare(
+                                'INSERT INTO sessions (id, user_id, created_at) VALUES (?, ?, ?)'
+                            ).bind(sessionId, user.id, Date.now()).run();
+
+                            // Set session cookie
+                            const cookie = `session=${sessionId}; Path=/; HttpOnly; Secure; SameSite=Strict`;
+                            return new Response(JSON.stringify({ verified: true }), {
+                                headers: {
+                                    'Set-Cookie': cookie,
+                                    'Content-Type': 'application/json'
+                                }
+                            });
                         }
 
                         console.log('Authentication verification result:', verification);

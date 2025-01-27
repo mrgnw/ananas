@@ -3,7 +3,13 @@
 // and what to do when importing types
 declare namespace App {
 	// interface Error {}
-	// interface Locals {}
+	interface Locals {
+		user: {
+			id: string;
+			username: string;
+			created_at: number;
+		} | null;
+	}
 	// interface PageData {}
 	interface Platform {
 		env?: {
