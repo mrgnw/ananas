@@ -1,7 +1,14 @@
 name = "ananas"
 compatibility_date = "2023-01-01"
 
-[[d1_databases]]
+[env.production]
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "ananas-auth"
+database_id = "YOUR_PROD_DB_ID"
+
+[env.preview]
+[[env.preview.d1_databases]]
 binding = "DB"
 database_name = "ananas-auth-dev"
 database_id = "56c5a913-b8f1-4104-b52e-577d7b380658"

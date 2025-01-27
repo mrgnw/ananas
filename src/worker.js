@@ -37,15 +37,24 @@ function base64urlToBytes(base64url) {
 export default {
     async fetch(request, env) {
         try {
+            console.log('Environment:', {
+                DB: !!env?.DB,
+                env: Object.keys(env || {}),
+                platform: request.cf
+            });
             const url = new URL(request.url);
             const origin = url.origin;
-            // rpID must be a valid domain without protocol, port, or path
             const rpID = url.hostname;
+            const pathname = url.pathname;
+            const method = request.method;
 
-            // Log values for debugging
-            console.log('URL:', url.toString());
-            console.log('Origin:', origin);
-            console.log('rpID:', rpID);
+            console.log('Request:', { 
+                url: url.toString(),
+                origin,
+                rpID,
+                pathname,
+                method 
+            });
 
             // Add CORS headers
             const headers = {
@@ -56,51 +65,66 @@ export default {
             };
 
             // Handle CORS preflight
-            if (request.method === 'OPTIONS') {
+            if (method === 'OPTIONS') {
                 return new Response(null, { headers });
             }
 
-            if (request.url.pathname === '/auth/register') {
-                if (request.method === 'POST') {
+            if (pathname === '/auth/register') {
+                if (method === 'POST') {
                     const body = await request.json();
+                    console.log('Register POST body:', body);
                     const username = body.username;
 
-                    console.log('Registering user:', username);
+                    try {
+                        // Check if user exists
+                        const existingUser = await env.DB.prepare(
+                            'SELECT * FROM users WHERE username = ?'
+                        ).bind(username).first();
 
-                    // Check if user exists
-                    const existingUser = await env.DB.prepare(
-                        'SELECT * FROM users WHERE username = ?'
-                    ).bind(username).first();
+                        console.log('Existing user:', existingUser);
 
-                    if (existingUser) {
-                        return new Response(JSON.stringify({ error: 'Username already exists' }), {
-                            status: 400,
-                            headers
+                        if (existingUser) {
+                            return new Response(JSON.stringify({ error: 'Username already exists' }), {
+                                status: 400,
+                                headers
+                            });
+                        }
+
+                        const userId = crypto.randomUUID();
+                        const options = await generateRegistrationOptions({
+                            rpName,
+                            rpID,
+                            userID: uuidToBytes(userId),
+                            userName: username,
+                            attestationType: 'none',
+                            authenticatorSelection: {
+                                residentKey: 'required',
+                                userVerification: 'preferred'
+                            }
+                        });
+
+                        console.log('Registration options:', options);
+
+                        // Create user with challenge
+                        await env.DB.prepare(
+                            'INSERT INTO users (id, username, current_challenge) VALUES (?, ?, ?)'
+                        ).bind(userId, username, options.challenge).run();
+
+                        return new Response(JSON.stringify(options), { headers });
+                    } catch (error) {
+                        console.error('Registration error:', error);
+                        return new Response(JSON.stringify({ 
+                            error: error.message,
+                            stack: error.stack
+                        }), { 
+                            status: 500,
+                            headers: {
+                                ...headers,
+                                'Content-Type': 'application/json'
+                            }
                         });
                     }
-
-                    const userId = crypto.randomUUID();
-                    const options = await generateRegistrationOptions({
-                        rpName,
-                        rpID,
-                        userID: uuidToBytes(userId),
-                        userName: username,
-                        attestationType: 'none',
-                        authenticatorSelection: {
-                            residentKey: 'required',
-                            userVerification: 'preferred'
-                        }
-                    });
-
-                    console.log('Registration options:', options);
-
-                    // Create user with challenge
-                    await env.DB.prepare(
-                        'INSERT INTO users (id, username, current_challenge) VALUES (?, ?, ?)'
-                    ).bind(userId, username, options.challenge).run();
-
-                    return new Response(JSON.stringify(options), { headers });
-                } else if (request.method === 'PUT') {
+                } else if (method === 'PUT') {
                     const body = await request.json();
                     const { username } = body;
 
@@ -154,8 +178,8 @@ export default {
 
                     return new Response(JSON.stringify({ verified: false }), { headers });
                 }
-            } else if (request.url.pathname === '/auth/authenticate') {
-                if (request.method === 'POST') {
+            } else if (pathname === '/auth/authenticate') {
+                if (method === 'POST') {
                     const body = await request.json();
                     const { username } = body;
 
@@ -205,7 +229,7 @@ export default {
                     ).bind(options.challenge, user.id).run();
 
                     return new Response(JSON.stringify(options), { headers });
-                } else if (request.method === 'PUT') {
+                } else if (method === 'PUT') {
                     const body = await request.json();
                     const { username } = body;
 
@@ -292,9 +316,15 @@ export default {
                         }
                     } catch (error) {
                         console.error('Authentication error:', error);
-                        return new Response(JSON.stringify({ error: error.message }), {
+                        return new Response(JSON.stringify({ 
+                            error: error.message,
+                            stack: error.stack
+                        }), { 
                             status: 400,
-                            headers
+                            headers: {
+                                ...headers,
+                                'Content-Type': 'application/json'
+                            }
                         });
                     }
 
@@ -305,7 +335,10 @@ export default {
             return new Response('Not found', { status: 404, headers });
         } catch (error) {
             console.error('Worker error:', error);
-            return new Response(JSON.stringify({ error: error.message }), {
+            return new Response(JSON.stringify({ 
+                error: error.message,
+                stack: error.stack
+            }), { 
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
