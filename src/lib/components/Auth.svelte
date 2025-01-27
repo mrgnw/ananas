@@ -7,6 +7,18 @@
     let error = '';
     let success = '';
 
+    // Convert base64url to Uint8Array
+    function base64urlToUint8Array(base64url: string): Uint8Array {
+        const padding = '='.repeat((4 - base64url.length % 4) % 4);
+        const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/') + padding;
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes;
+    }
+
     async function register() {
         try {
             console.log('Starting registration...');
@@ -23,6 +35,9 @@
 
             const options = await resp.json();
             console.log('Registration options:', options);
+
+            // Convert userID from base64url to Uint8Array
+            options.user.id = base64urlToUint8Array(options.user.id);
 
             // No need to decode challenge, startRegistration handles it
             const credential = await startRegistration(options);
@@ -110,49 +125,33 @@
     {#if !$state.user}
         <div class="flex flex-col gap-4">
             <input
-                type="text"
+                type="email"
+                placeholder="Email"
                 bind:value={username}
-                placeholder="Username"
                 class="px-4 py-2 border rounded"
             />
-            
             <button
-                on:click={() => {
-                    console.log('Register button clicked');
-                    register();
-                }}
+                on:click={register}
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-                Register with Passkey
+                Register
             </button>
-            
             <button
-                on:click={() => {
-                    console.log('Authenticate button clicked');
-                    authenticate();
-                }}
+                on:click={authenticate}
                 class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
             >
-                Sign in with Passkey
+                Sign In
             </button>
         </div>
     {:else}
         <div class="text-center">
-            <p class="mb-4">Signed in as {$state.user}</p>
+            <p>Signed in as {$state.user}</p>
             <button
                 on:click={() => state.user = null}
-                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
             >
                 Sign Out
             </button>
         </div>
-    {/if}
-    
-    {#if error}
-        <p class="text-red-500 text-center">{error}</p>
-    {/if}
-    
-    {#if success}
-        <p class="text-green-500 text-center">{success}</p>
     {/if}
 </div>
