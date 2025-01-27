@@ -5,5 +5,11 @@ declare namespace App {
 	// interface Error {}
 	// interface Locals {}
 	// interface PageData {}
-	// interface Platform {}
+	interface Platform {
+		env?: {
+			DB: D1Database;
+		};
+	}
 }
+
+/// <reference types="@cloudflare/workers-types" />
