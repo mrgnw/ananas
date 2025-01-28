@@ -91,18 +91,17 @@ export const handler = {
                             });
                         }
 
-                        // Generate random userID as Uint8Array
-                        const userIdBytes = crypto.getRandomValues(new Uint8Array(16));
-                        console.log('Generated userID bytes:', [...userIdBytes]);
-                        const userId = bytesToBase64url(userIdBytes);
-                        console.log('Generated userID base64:', userId);
+                        // Generate userID
+                        const userIDBytes = new Uint8Array(16);
+                        crypto.getRandomValues(userIDBytes);
+                        const userIDBase64 = bytesToBase64url(userIDBytes);
 
+                        // Generate registration options
                         const options = await generateRegistrationOptions({
-                            rpName,
+                            rpName: 'Ananas',
                             rpID,
-                            userID: isoUint8Array.fromUTF8String(userId),
+                            userID: userIDBytes,
                             userName: username,
-                            displayName: username,
                             attestationType: 'none',
                             authenticatorSelection: {
                                 residentKey: 'required',
@@ -116,13 +115,13 @@ export const handler = {
                         // Create user with challenge
                         await env.DB.prepare(
                             'INSERT INTO users (id, username, current_challenge) VALUES (?, ?, ?)'
-                        ).bind(userId, username, options.challenge).run();
+                        ).bind(userIDBase64, username, options.challenge).run();
 
                         // Keep the original options but override user.id with base64url for transport
                         const response = {
                             ...options,
                             user: {
-                                id: userId,  // Send base64url to client
+                                id: userIDBase64,  // Send base64url to client
                                 name: username,
                                 displayName: username
                             }
