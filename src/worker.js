@@ -3,6 +3,14 @@ import { isoUint8Array } from '@simplewebauthn/server/helpers';
 
 const rpName = 'Ananas';
 
+// CORS headers for cross-origin requests
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+};
+
 // Convert UUID string to Uint8Array
 function uuidToBytes(uuid) {
     if (!uuid || typeof uuid !== 'string') return new Uint8Array(16);
@@ -46,13 +54,6 @@ export const handler = {
             const pathname = url.pathname;
             const method = request.method;
 
-            const corsHeaders = {
-                'Access-Control-Allow-Origin': origin,
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Max-Age': '86400'
-            };
-
             console.log('Request:', { 
                 url: url.toString(),
                 origin,
@@ -63,7 +64,7 @@ export const handler = {
 
             // Handle CORS preflight
             if (method === 'OPTIONS') {
-                return new Response(null, { headers: corsHeaders });
+                return handleOptions(request);
             }
 
             if (pathname === '/auth/register') {
@@ -177,20 +178,33 @@ export const handler = {
                     console.log('Verification result:', verification);
 
                     if (verification.verified) {
+                        // Store credential data
                         const { registrationInfo } = verification;
-                        console.log('Registration info:', registrationInfo);
-
-                        // Store the credential public key as a base64url string
-                        const credentialPublicKeyB64 = bytesToBase64url(registrationInfo.credential.publicKey);
+                        const {
+                            credential,
+                            credentialDeviceType,
+                            credentialBackedUp,
+                        } = registrationInfo;
 
                         // Save authenticator
                         await env.DB.prepare(
-                            'INSERT INTO authenticators (user_id, credential_id, credential_public_key, counter) VALUES (?, ?, ?, ?)'
+                            `INSERT INTO authenticators (
+                                id, 
+                                user_id, 
+                                credential_public_key, 
+                                counter,
+                                transports,
+                                device_type,
+                                backed_up
+                            ) VALUES (?, ?, ?, ?, ?, ?, ?)`
                         ).bind(
+                            credential.id,
                             user.id,
-                            registrationInfo.credential.id,
-                            credentialPublicKeyB64,
-                            registrationInfo.credential.counter
+                            credential.publicKey,
+                            credential.counter,
+                            JSON.stringify(credential.transports),
+                            credentialDeviceType,
+                            credentialBackedUp
                         ).run();
 
                         // Clear challenge
@@ -234,41 +248,45 @@ export const handler = {
                         });
                     }
 
-                    // Get authenticators
-                    const authenticators = await env.DB.prepare(
+                    // Get authenticator
+                    const authenticator = await env.DB.prepare(
                         'SELECT * FROM authenticators WHERE user_id = ?'
-                    ).bind(user.id).all();
+                    ).bind(user.id).first();
 
-                    console.log('Found authenticators:', authenticators.results);
-
-                    if (!authenticators.results.length) {
-                        return new Response(JSON.stringify({ error: 'No authenticators registered' }), {
-                            status: 400,
-                            headers: {
-                                ...corsHeaders,
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                    if (!authenticator) {
+                        return new Response(
+                            JSON.stringify({ error: 'No authenticators registered' }),
+                            { status: 400, headers: corsHeaders }
+                        );
                     }
 
+                    // Parse authenticator data
+                    const parsedAuthenticator = {
+                        id: authenticator.id,
+                        publicKey: authenticator.credential_public_key,
+                        counter: authenticator.counter || 0,
+                        transports: JSON.parse(authenticator.transports || '[]')
+                    };
+
+                    // Generate authentication options
                     const options = await generateAuthenticationOptions({
                         rpID,
                         userVerification: 'preferred',
-                        allowCredentials: authenticators.results.map(auth => ({
-                            id: auth.credential_id,
+                        allowCredentials: [{
+                            id: parsedAuthenticator.id,
                             type: 'public-key',
-                            transports: ['internal', 'hybrid', 'usb', 'ble', 'nfc']
-                        }))
+                            transports: parsedAuthenticator.transports
+                        }]
                     });
 
                     console.log('Authentication options:', options);
 
-                    // Store challenge
+                    // Save challenge
                     await env.DB.prepare(
                         'UPDATE users SET current_challenge = ? WHERE id = ?'
                     ).bind(options.challenge, user.id).run();
 
-                    return new Response(JSON.stringify(options), { 
+                    return new Response(JSON.stringify(options), {
                         headers: {
                             ...corsHeaders,
                             'Content-Type': 'application/json'
@@ -306,97 +324,67 @@ export const handler = {
                         });
                     }
 
-                    // Get authenticators
-                    const authenticators = await env.DB.prepare(
+                    // Get authenticator for verification
+                    const authenticator = await env.DB.prepare(
                         'SELECT * FROM authenticators WHERE user_id = ?'
-                    ).bind(user.id).all();
+                    ).bind(user.id).first();
 
-                    console.log('Found authenticators:', authenticators.results);
+                    console.log('Raw authenticator from DB:', authenticator);
 
-                    if (!authenticators.results.length) {
-                        return new Response(JSON.stringify({ error: 'No authenticators registered' }), {
-                            status: 400,
-                            headers: {
-                                ...corsHeaders,
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                    if (!authenticator) {
+                        return new Response(
+                            JSON.stringify({ error: 'No authenticators registered' }),
+                            { status: 400, headers: corsHeaders }
+                        );
                     }
 
-                    try {
-                        console.log('Full response structure:', JSON.stringify(body, null, 2));
-                        console.log('Parsed authenticator data:', body.response.authenticatorData);
+                    // Parse authenticator data
+                    const parsedAuthenticator = {
+                        id: authenticator.id,
+                        publicKey: authenticator.credential_public_key,
+                        counter: authenticator.counter || 0,
+                        transports: JSON.parse(authenticator.transports || '[]')
+                    };
 
-                        const verification = await verifyAuthenticationResponse({
+                    console.log('Parsed authenticator:', parsedAuthenticator);
+
+                    // Verify authentication
+                    let verification;
+                    try {
+                        verification = await verifyAuthenticationResponse({
                             response: body,
                             expectedChallenge: user.current_challenge,
                             expectedOrigin: origin,
                             expectedRPID: rpID,
-                            requireUserVerification: true,
-                            credential: {
-                                id: authenticators.results[0].credential_id,
-                                publicKey: base64urlToBytes(authenticators.results[0].credential_public_key),
-                                counter: authenticators.results[0].counter,
-                                transports: ['internal']
-                            }
+                            credential: parsedAuthenticator
                         });
-
-                        const { verified, authenticationInfo } = verification;
-                        if (verified) {
-                            // Update the authenticator's counter in the database
-                            const { newCounter } = authenticationInfo;
-                            await env.DB.prepare(
-                                'UPDATE authenticators SET counter = ? WHERE credential_id = ?'
-                            ).bind(newCounter, authenticators.results[0].credential_id).run();
-
-                            // Create a new session
-                            const sessionId = crypto.randomUUID();
-                            await env.DB.prepare(
-                                'INSERT INTO sessions (id, user_id, created_at) VALUES (?, ?, ?)'
-                            ).bind(sessionId, user.id, Date.now()).run();
-
-                            // Set session cookie
-                            const cookie = `session=${sessionId}; Path=/; HttpOnly; Secure; SameSite=Strict`;
-                            return new Response(JSON.stringify({ verified: true }), {
-                                headers: {
-                                    'Set-Cookie': cookie,
-                                    ...corsHeaders,
-                                    'Content-Type': 'application/json'
-                                }
-                            });
-                        }
-
-                        console.log('Authentication verification result:', verification);
-
-                        if (verified) {
-                            // Clear challenge
-                            await env.DB.prepare(
-                                'UPDATE users SET current_challenge = NULL WHERE id = ?'
-                            ).bind(user.id).run();
-
-                            return new Response(JSON.stringify({ verified: true }), { 
-                                headers: {
-                                    ...corsHeaders,
-                                    'Content-Type': 'application/json'
-                                }
-                            });
-                        }
                     } catch (error) {
                         console.error('Authentication error:', error);
-                        return new Response(JSON.stringify({ 
-                            error: error.message,
-                            stack: error.stack
-                        }), { 
-                            status: 400,
-                            headers: {
-                                ...corsHeaders,
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                        return new Response(
+                            JSON.stringify({ error: error.message }),
+                            { status: 400, headers: corsHeaders }
+                        );
                     }
 
-                    return new Response(JSON.stringify({ verified: false }), { 
+                    // Update counter
+                    const { authenticationInfo } = verification;
+                    const { newCounter } = authenticationInfo;
+
+                    await env.DB.prepare(
+                        'UPDATE authenticators SET counter = ? WHERE id = ?'
+                    ).bind(newCounter, authenticator.id).run();
+
+                    // Create a new session
+                    const sessionId = crypto.randomUUID();
+                    await env.DB.prepare(
+                        'INSERT INTO sessions (id, user_id, created_at) VALUES (?, ?, ?)'
+                    ).bind(sessionId, user.id, Date.now()).run();
+
+                    // Set session cookie
+                    const cookie = `session=${sessionId}; Path=/; HttpOnly; Secure; SameSite=Strict`;
+                    return new Response(JSON.stringify({ verified: true }), {
                         headers: {
+                            'Set-Cookie': cookie,
                             ...corsHeaders,
                             'Content-Type': 'application/json'
                         }
@@ -423,6 +411,23 @@ export const handler = {
         }
     }
 };
+
+// Handle CORS preflight
+function handleOptions(request) {
+    if (request.headers.get('Origin') !== null &&
+        request.headers.get('Access-Control-Request-Method') !== null &&
+        request.headers.get('Access-Control-Request-Headers') !== null) {
+        return new Response(null, {
+            headers: corsHeaders
+        });
+    } else {
+        return new Response(null, {
+            headers: {
+                Allow: 'GET, POST, PUT, DELETE, OPTIONS',
+            },
+        });
+    }
+}
 
 // Default export for Cloudflare
 export default handler;
