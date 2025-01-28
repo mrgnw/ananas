@@ -91,16 +91,15 @@ export const handler = {
                             });
                         }
 
-                        // Generate userID
-                        const userIDBytes = new Uint8Array(16);
-                        crypto.getRandomValues(userIDBytes);
-                        const userIDBase64 = bytesToBase64url(userIDBytes);
+                        // Generate userID as Uint8Array directly from string
+                        const userId = crypto.randomUUID();
+                        console.log('Generated UUID:', userId);
 
                         // Generate registration options
                         const options = await generateRegistrationOptions({
                             rpName: 'Ananas',
                             rpID,
-                            userID: userIDBytes,
+                            userID: isoUint8Array.fromUTF8String(userId),
                             userName: username,
                             attestationType: 'none',
                             authenticatorSelection: {
@@ -115,19 +114,9 @@ export const handler = {
                         // Create user with challenge
                         await env.DB.prepare(
                             'INSERT INTO users (id, username, current_challenge) VALUES (?, ?, ?)'
-                        ).bind(userIDBase64, username, options.challenge).run();
+                        ).bind(userId, username, options.challenge).run();
 
-                        // Keep the original options but override user.id with base64url for transport
-                        const response = {
-                            ...options,
-                            user: {
-                                id: userIDBase64,  // Send base64url to client
-                                name: username,
-                                displayName: username
-                            }
-                        };
-
-                        return new Response(JSON.stringify(response), { 
+                        return new Response(JSON.stringify(options), {
                             headers: {
                                 ...corsHeaders,
                                 'Content-Type': 'application/json'
