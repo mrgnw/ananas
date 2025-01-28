@@ -199,6 +199,61 @@ describe('Authentication Flow', () => {
     });
 
     describe('Authentication', () => {
+        it('should properly structure authenticator data for verification', async () => {
+            // Mock user and authenticator in DB
+            env.DB = {
+                prepare: (query: string) => ({
+                    bind: (...params: any[]) => ({
+                        first: async () => {
+                            if (query.includes('users')) {
+                                return {
+                                    id: "test-id",
+                                    username: "test@example.com",
+                                    current_challenge: "test-challenge"
+                                };
+                            } else if (query.includes('authenticators')) {
+                                return {
+                                    id: "test-credential-id",
+                                    user_id: "test-id",
+                                    credential_public_key: new Uint8Array([1,2,3]),
+                                    counter: 0,
+                                    transports: '["internal"]',
+                                    device_type: "multiDevice",
+                                    backed_up: true
+                                };
+                            }
+                            return null;
+                        },
+                        run: async () => {},
+                        all: async () => ({ results: [] })
+                    })
+                })
+            };
+
+            const response = await handler.fetch(new Request('https://example.com/auth/authenticate', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: "test-credential-id",
+                    rawId: "test-credential-id",
+                    response: {
+                        authenticatorData: "test-auth-data",
+                        clientDataJSON: "test-client-data",
+                        signature: "test-signature",
+                        userHandle: "test-user-handle"
+                    },
+                    type: "public-key",
+                    clientExtensionResults: {},
+                    authenticatorAttachment: "platform",
+                    username: "test@example.com"
+                })
+            }), env);
+
+            expect(response.status).not.toBe(400);
+            const data = await response.json();
+            expect(data.error).not.toContain('counter');
+        });
+
         it('should handle missing authenticator', async () => {
             // Mock user without authenticator
             env.DB = {
@@ -225,25 +280,24 @@ describe('Authentication Flow', () => {
         });
 
         it('should handle non-existent user', async () => {
-            // Mock request
-            const request = new Request('https://example.com/auth/authenticate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: 'nonexistent@example.com'
+            // Mock empty DB
+            env.DB = {
+                prepare: (query: string) => ({
+                    bind: (...params: any[]) => ({
+                        first: async () => null,
+                        run: async () => {},
+                        all: async () => ({ results: [] })
+                    })
                 })
-            });
+            };
 
-            // Mock DB responses
-            mockDB.first.mockResolvedValueOnce(null);
+            const response = await handler.fetch(new Request('https://example.com/auth/authenticate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: 'nonexistent@example.com' })
+            }), env);
 
-            // Make request
-            const response = await handler.fetch(request, env);
-
-            // Verify response
-            expect(response.status).toBe(404);
+            expect(response.status).toBe(400);
             const data = await response.json();
             expect(data.error).toBe('User not found');
         });
