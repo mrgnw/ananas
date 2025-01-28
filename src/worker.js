@@ -239,13 +239,10 @@ export const handler = {
                     ).bind(username).first();
 
                     if (!user) {
-                        return new Response(JSON.stringify({ error: 'User not found' }), { 
-                            status: 404, 
-                            headers: {
-                                ...corsHeaders,
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                        return new Response(
+                            JSON.stringify({ error: 'User not found' }),
+                            { status: 404, headers: corsHeaders }
+                        );
                     }
 
                     // Get authenticator
@@ -305,13 +302,10 @@ export const handler = {
                     ).bind(username).first();
 
                     if (!user) {
-                        return new Response(JSON.stringify({ error: 'User not found' }), { 
-                            status: 404, 
-                            headers: {
-                                ...corsHeaders,
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                        return new Response(
+                            JSON.stringify({ error: 'User not found' }),
+                            { status: 404, headers: corsHeaders }
+                        );
                     }
 
                     if (!user.current_challenge) {
