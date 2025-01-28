@@ -21,40 +21,32 @@
                 throw new Error(errorData.error || 'Registration failed');
             }
 
-            const data = await resp.json();
-            console.log('Registration options:', data);
-            console.log('User ID type:', typeof data.user.id);
-            console.log('User ID value:', data.user.id);
+            const options = await resp.json();
+            console.log('Registration options:', options);
 
-            try {
-                // Let SimpleWebAuthn handle the base64url conversion
-                const credential = await startRegistration(data);
-                console.log('Registration credential:', credential);
+            const credential = await startRegistration(options);
+            console.log('Registration credential:', credential);
 
-                const verificationResp = await fetch('/auth/register', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        ...credential,
-                        username
-                    })
-                });
+            const verificationResp = await fetch('/auth/register', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...credential,
+                    username
+                })
+            });
 
-                if (!verificationResp.ok) {
-                    const errorData = await verificationResp.json().catch(() => ({ error: verificationResp.statusText }));
-                    throw new Error(errorData.error || 'Registration verification failed');
-                }
+            if (!verificationResp.ok) {
+                const errorData = await verificationResp.json().catch(() => ({ error: verificationResp.statusText }));
+                throw new Error(errorData.error || 'Registration verification failed');
+            }
 
-                const verification = await verificationResp.json();
-                if (verification.verified) {
-                    alert('Registration successful!');
-                    state.user = username;
-                } else {
-                    throw new Error('Registration verification failed');
-                }
-            } catch (err) {
-                console.error('Registration error:', err);
-                throw err;
+            const verification = await verificationResp.json();
+            if (verification.verified) {
+                alert('Registration successful!');
+                state.user = username;
+            } else {
+                throw new Error('Registration verification failed');
             }
         } catch (error) {
             console.error('Registration error:', error);
@@ -79,7 +71,6 @@
             const options = await resp.json();
             console.log('Authentication options:', options);
 
-            // No need to decode challenge or allowCredentials, startAuthentication handles it
             const credential = await startAuthentication(options);
             console.log('Authentication credential:', credential);
 

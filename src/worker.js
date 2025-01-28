@@ -1,4 +1,5 @@
 import { generateRegistrationOptions, verifyRegistrationResponse, generateAuthenticationOptions, verifyAuthenticationResponse } from '@simplewebauthn/server';
+import { isoUint8Array } from '@simplewebauthn/server/helpers';
 
 const rpName = 'Ananas';
 
@@ -98,7 +99,7 @@ export const handler = {
                         const options = await generateRegistrationOptions({
                             rpName,
                             rpID,
-                            userID: userIdBytes,  // Pass Uint8Array directly
+                            userID: isoUint8Array.fromUTF8String(userId),
                             userName: username,
                             displayName: username,
                             attestationType: 'none',
@@ -116,11 +117,11 @@ export const handler = {
                             'INSERT INTO users (id, username, current_challenge) VALUES (?, ?, ?)'
                         ).bind(userId, username, options.challenge).run();
 
-                        // Keep the original options but override user.id with base64url
+                        // Keep the original options but override user.id with base64url for transport
                         const response = {
                             ...options,
                             user: {
-                                id: userId,
+                                id: userId,  // Send base64url to client
                                 name: username,
                                 displayName: username
                             }
