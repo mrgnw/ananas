@@ -36,9 +36,14 @@ async function fetchWikidataSpeakers() {
       if (key.endsWith('Speakers')) {
         simplified[key] = value.value ? parseInt(value.value) : null
       } else if (key === 'countries') {
-        simplified[key] = value.value.split('|').map(s => s.trim()).filter(Boolean)
+        simplified[key] = value.value.split('|')
+          .map(s => s.trim())
+          .filter(Boolean)
+          .sort()
       } else if (key === 'writingSystems' || key === 'families' || key === 'nativeNames') {
-        simplified[key] = value.value.split(', ').filter(Boolean)
+        simplified[key] = value.value.split(', ')
+          .filter(Boolean)
+          .sort()
       } else {
         simplified[key] = value.value
       }
