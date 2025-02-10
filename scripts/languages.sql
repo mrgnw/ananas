@@ -6,15 +6,12 @@ SELECT DISTINCT ?iso ?langLabel
   (MIN(STRAFTER(STR(?ethnologueStatus), "Q")) as ?ethnologueStatus)
   (GROUP_CONCAT(DISTINCT ?nativeName; separator=", ") as ?nativeNames)
 WHERE {
-  hint:Query hint:optimizer "None" .
-  # Core data first
+  # Core data
   ?lang wdt:P220 ?iso ;
-        wdt:P1098 ?nativeSpeakers_ .
-  FILTER(?nativeSpeakers_ >= 1000000)
-  
-  # Labels
-  ?lang rdfs:label ?langLabel .
+        wdt:P1098 ?nativeSpeakers_ ;
+        rdfs:label ?langLabel .
   FILTER(LANG(?langLabel) = "en")
+  FILTER(?nativeSpeakers_ >= 1000000)
   
   # Optional data
   OPTIONAL { 
@@ -28,7 +25,7 @@ WHERE {
     FILTER(LANG(?countryLabel) = "en")
   }
   
-  # Status and names (no label lookups needed)
+  # Status and names
   OPTIONAL { ?lang wdt:P1999 ?unescoStatus }
   OPTIONAL { ?lang wdt:P3823 ?ethnologueStatus }
   OPTIONAL { ?lang wdt:P1705 ?nativeName }
