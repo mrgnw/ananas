@@ -1,9 +1,10 @@
 SELECT DISTINCT ?iso ?langLabel 
-  (MAX(?nativeSpeakers_) as ?nativeSpeakers) 
+  (FLOOR(MAX(?nativeSpeakers_) / 1000) as ?nativeSpeakers_k)
   (GROUP_CONCAT(DISTINCT ?writingSystemLabel; separator=", ") as ?writingSystems)
   (GROUP_CONCAT(DISTINCT ?familyLabel; separator=", ") as ?families)
   (GROUP_CONCAT(DISTINCT ?countryLabel; separator="|") as ?countries)
-  ?unescoStatus ?ethnologueStatus
+  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?unescoStatus), "Q"); separator=", ") as ?unescoStatus)
+  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?ethnologueStatus), "Q"); separator=", ") as ?ethnologueStatus)
   (GROUP_CONCAT(DISTINCT ?nativeName; separator=", ") as ?nativeNames)
 WHERE {
   ?lang wdt:P220 ?iso.  # ISO 639-3 code
@@ -14,6 +15,7 @@ WHERE {
   
   # Native speakers (L1)
   ?lang wdt:P1098 ?nativeSpeakers_ .
+  FILTER(?nativeSpeakers_ >= 1000000)
   
   # Classification and identifiers
   OPTIONAL { 
@@ -39,6 +41,7 @@ WHERE {
   OPTIONAL { ?lang wdt:P3823 ?ethnologueStatus }  # Ethnologue status
   OPTIONAL { ?lang wdt:P1705 ?nativeName }  # native name
 }
-GROUP BY ?iso ?langLabel ?unescoStatus ?ethnologueStatus
-ORDER BY DESC(MAX(?nativeSpeakers_))
+GROUP BY ?iso ?langLabel
+HAVING(MAX(?nativeSpeakers_) >= 1000000)
+ORDER BY DESC(MAX(?nativeSpeakers_)) ?iso
 LIMIT 200
