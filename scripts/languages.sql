@@ -6,33 +6,32 @@ SELECT DISTINCT ?iso ?langLabel
   (MIN(STRAFTER(STR(?ethnologueStatus), "Q")) as ?ethnologueStatus)
   (GROUP_CONCAT(DISTINCT ?nativeName; separator=", ") as ?nativeNames)
 WHERE {
-  # Performance hints
   hint:Query hint:optimizer "None" .
-  
-  # Core data - required fields
-  ?lang wdt:P220 ?iso ;         # ISO 639-3 code
-        wdt:P1098 ?nativeSpeakers_ ;  # Native speakers (L1)
-        rdfs:label ?langLabel .
-  FILTER(LANG(?langLabel) = "en")
+  # Core data first
+  ?lang wdt:P220 ?iso ;
+        wdt:P1098 ?nativeSpeakers_ .
   FILTER(?nativeSpeakers_ >= 1000000)
   
-  # Optional fields in separate patterns for better performance
+  # Labels
+  ?lang rdfs:label ?langLabel .
+  FILTER(LANG(?langLabel) = "en")
+  
+  # Optional data
   OPTIONAL { 
     ?lang wdt:P282 ?writingSystem .
     ?writingSystem rdfs:label ?writingSystemLabel .
     FILTER(LANG(?writingSystemLabel) = "en")
   }
-  
   OPTIONAL {
-    ?lang wdt:P17 ?country .  # country
+    ?lang wdt:P17 ?country .
     ?country rdfs:label ?countryLabel .
     FILTER(LANG(?countryLabel) = "en")
   }
   
-  # Status fields
-  OPTIONAL { ?lang wdt:P1999 ?unescoStatus }  # UNESCO status
-  OPTIONAL { ?lang wdt:P3823 ?ethnologueStatus }  # Ethnologue status
-  OPTIONAL { ?lang wdt:P1705 ?nativeName }  # native name
+  # Status and names (no label lookups needed)
+  OPTIONAL { ?lang wdt:P1999 ?unescoStatus }
+  OPTIONAL { ?lang wdt:P3823 ?ethnologueStatus }
+  OPTIONAL { ?lang wdt:P1705 ?nativeName }
 }
 GROUP BY ?iso ?langLabel
 HAVING(MAX(?nativeSpeakers_) >= 1000000)
