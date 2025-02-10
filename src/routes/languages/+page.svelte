@@ -1,11 +1,10 @@
 <script>
-import { getAllLanguages, getLanguageName, searchLanguages } from '$lib/utils/languages.js'
+import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages } from '$lib/utils/languages.js'
 import { Input } from '$lib/components/ui/input'
 import { Search } from 'lucide-svelte'
 
 let searchQuery = $state("")
 const filteredLanguages = $derived(searchLanguages(searchQuery))
-const languages = getAllLanguages()
 </script>
 
 <div class="container mx-auto h-full overflow-y-auto p-4">
@@ -21,12 +20,26 @@ const languages = getAllLanguages()
         />
     </div>
 
-    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {#each filteredLanguages as lang}
-            <div class="rounded bg-white p-2 shadow">
-                <span class="text-sm font-medium">{getLanguageName(lang)}</span>
-                <span class="text-xs text-gray-500">({lang})</span>
-            </div>
-        {/each}
-    </div>
+    <table class="w-full rounded-lg border bg-white">
+        <thead>
+            <tr class="border-b">
+                <th class="whitespace-nowrap py-2 pl-3 pr-2 text-left font-medium">Code</th>
+                <th class="whitespace-nowrap py-2 pl-2 pr-3 text-left font-medium">Name</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y">
+            {#each filteredLanguages as lang}
+                <tr>
+                    <td class="w-[4ch] whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600">{lang}</td>
+                    <td class="py-1.5 pl-2 pr-3 text-sm">
+                        {#if getLanguageName(lang) === getEnglishName(lang)}
+                            {getLanguageName(lang)}
+                        {:else}
+                            {getEnglishName(lang)} • {getLanguageName(lang)}
+                        {/if}
+                    </td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
 </div>
