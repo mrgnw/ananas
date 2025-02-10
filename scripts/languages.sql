@@ -3,8 +3,8 @@ SELECT DISTINCT ?iso ?langLabel
   (GROUP_CONCAT(DISTINCT ?writingSystemLabel; separator=", ") as ?writingSystems)
   (GROUP_CONCAT(DISTINCT ?familyLabel; separator=", ") as ?families)
   (GROUP_CONCAT(DISTINCT ?countryLabel; separator="|") as ?countries)
-  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?unescoStatus), "Q"); separator=", ") as ?unescoStatus)
-  (GROUP_CONCAT(DISTINCT STRAFTER(STR(?ethnologueStatus), "Q"); separator=", ") as ?ethnologueStatus)
+  (MIN(STRAFTER(STR(?unescoStatus), "Q")) as ?unescoStatus)
+  (MIN(STRAFTER(STR(?ethnologueStatus), "Q")) as ?ethnologueStatus)
   (GROUP_CONCAT(DISTINCT ?nativeName; separator=", ") as ?nativeNames)
 WHERE {
   ?lang wdt:P220 ?iso.  # ISO 639-3 code

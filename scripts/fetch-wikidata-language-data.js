@@ -72,11 +72,9 @@ async function fetchWikidataSpeakers() {
           .filter(Boolean)
           .sort()
       } else if (key === 'unescoStatus') {
-        const ids = value.value.split(', ').filter(Boolean)
-        simplified[key] = ids.length > 0 ? UNESCO_STATUS[ids[0]] || ids[0] : null
+        simplified[key] = UNESCO_STATUS[value.value] || value.value
       } else if (key === 'ethnologueStatus') {
-        const ids = value.value.split(', ').filter(Boolean)
-        simplified[key] = ids.length > 0 ? ETHNOLOGUE_STATUS[ids[0]] || ids[0] : null
+        simplified[key] = ETHNOLOGUE_STATUS[value.value] || value.value
       } else {
         simplified[key] = value.value
       }
