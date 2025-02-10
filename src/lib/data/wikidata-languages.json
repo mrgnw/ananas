@@ -53,8 +53,8 @@
       "Canada",
       "Ireland",
       "United States",
-      "Ethiopia",
       "Kenya",
+      "Ethiopia",
       "Ghana",
       "United Kingdom",
       "Malta",
@@ -62,88 +62,88 @@
       "Barbados",
       "Indonesia",
       "South Africa",
-      "Bahrain",
       "Singapore",
+      "Bahrain",
       "Australia",
       "Cambodia",
       "New Zealand",
       "India",
       "Tuvalu",
       "Samoa",
-      "Vanuatu",
       "Solomon Islands",
+      "Tonga",
+      "Vanuatu",
+      "Papua New Guinea",
       "Palau",
       "Nauru",
-      "Tonga",
-      "Papua New Guinea",
       "Federated States of Micronesia",
       "Marshall Islands",
       "Kiribati",
       "Fiji",
-      "Saint Vincent and the Grenadines",
-      "Trinidad and Tobago",
-      "Jamaica",
       "Guyana",
-      "Saint Kitts and Nevis",
+      "Trinidad and Tobago",
+      "Saint Vincent and the Grenadines",
       "Saint Lucia",
-      "The Bahamas",
-      "Dominica",
+      "Saint Kitts and Nevis",
+      "Jamaica",
       "Grenada",
+      "The Bahamas",
       "Antigua and Barbuda",
+      "Dominica",
       "Jersey",
       "Israel",
       "Lebanon",
+      "Maldives",
       "Malaysia",
       "Oman",
-      "Maldives",
       "Pakistan",
+      "Sri Lanka",
       "United Arab Emirates",
       "Bhutan",
-      "Tanzania",
-      "Zimbabwe",
       "Brunei",
-      "Sri Lanka",
-      "Zambia",
+      "Tanzania",
       "Philippines",
+      "Zambia",
+      "Zimbabwe",
       "South Sudan",
       "Botswana",
       "Eritrea",
       "The Gambia",
+      "Cameroon",
       "Lesotho",
       "Liberia",
-      "Cameroon",
       "Madagascar",
       "Malawi",
       "Mauritius",
       "Namibia",
-      "Uganda",
       "Nigeria",
+      "Uganda",
       "Rwanda",
-      "Sudan",
       "Seychelles",
-      "Gibraltar",
       "Sierra Leone",
+      "Sudan",
       "Eswatini",
+      "Gibraltar",
       "Cayman Islands",
       "Falkland Islands",
-      "American Samoa",
       "Montserrat",
-      "Turks and Caicos Islands",
       "Isle of Man",
-      "Aruba",
       "United States Virgin Islands",
+      "American Samoa",
+      "Turks and Caicos Islands",
+      "Aruba",
       "Bermuda",
-      "British Virgin Islands",
       "Guernsey",
+      "Anguilla",
+      "British Virgin Islands",
+      "Sint Maarten",
       "Cook Islands",
       "Niue",
-      "Anguilla",
-      "Sint Maarten",
-      "British Indian Ocean Territory",
       "Tokelau",
-      "Saint Helena, Ascension and Tristan da Cunha",
+      "Pitcairn Islands",
+      "British Indian Ocean Territory",
       "Saint-Martin",
-      "Pitcairn Islands"
+      "Saint Helena, Ascension and Tristan da Cunha"
     ],
     "nativeNames": "English",
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051543",
@@ -160,12 +160,12 @@
       "United States",
       "Uruguay",
       "Mexico",
-      "Cuba",
       "Andorra",
+      "Cuba",
       "Belize",
       "Chile",
-      "Peru",
       "Argentina",
+      "Peru",
       "Venezuela",
       "Paraguay",
       "Ecuador",
@@ -174,14 +174,14 @@
       "Guatemala",
       "Honduras",
       "Dominican Republic",
-      "Costa Rica",
       "El Salvador",
+      "Costa Rica",
       "Panama",
       "Nicaragua",
       "Philippines",
       "Equatorial Guinea",
-      "Aruba",
       "Gibraltar",
+      "Aruba",
       "Sahrawi Arab Democratic Republic"
     ],
     "nativeNames": [
@@ -216,9 +216,20 @@
     "writingSystems": "Arabic script",
     "families": "",
     "countries": [
+      "Eritrea",
+      "Libya",
+      "Mauritania",
+      "Morocco",
+      "Niger",
+      "Senegal",
+      "Somalia",
+      "Sudan",
+      "Western Sahara",
+      "Palestinian National Authority",
+      "Palestine",
       "Spain",
-      "Portugal",
       "Turkey",
+      "Portugal",
       "Egypt",
       "Kenya",
       "Romania",
@@ -230,33 +241,22 @@
       "Iran",
       "Iraq",
       "Israel",
-      "Jordan",
       "Yemen",
+      "Jordan",
       "Kuwait",
-      "Qatar",
       "Lebanon",
       "Malaysia",
       "Oman",
+      "Qatar",
+      "Saudi Arabia",
       "Syria",
       "United Arab Emirates",
-      "Saudi Arabia",
-      "Tanzania",
       "Mali",
+      "Tanzania",
       "Tunisia",
       "South Sudan",
       "Comoros",
-      "Mauritania",
-      "Eritrea",
-      "Djibouti",
-      "Libya",
-      "Morocco",
-      "Senegal",
-      "Niger",
-      "Sudan",
-      "Somalia",
-      "Palestinian National Authority",
-      "Western Sahara",
-      "Palestine"
+      "Djibouti"
     ],
     "nativeNames": "اللُّغَة العَرَبِيّة",
     "unescoStatus": "http://www.wikidata.org/entity/Q20672086"
@@ -291,8 +291,8 @@
       "Portugal",
       "Brazil",
       "Timor-Leste",
-      "Angola",
       "Taiwan",
+      "Angola",
       "Guinea-Bissau",
       "Cape Verde",
       "Mozambique",
@@ -313,46 +313,46 @@
     "countries": [
       "Canada",
       "United States",
-      "Luxembourg",
       "Belgium",
-      "Switzerland",
+      "Luxembourg",
       "Italy",
+      "Switzerland",
       "France",
       "Andorra",
-      "Algeria",
       "Monaco",
-      "Chad",
+      "Algeria",
       "Cambodia",
       "India",
+      "Chad",
       "Vanuatu",
       "Jersey",
       "Haiti",
+      "Laos",
       "Lebanon",
+      "Vietnam",
       "Mali",
       "Central African Republic",
-      "Vietnam",
-      "Laos",
       "Togo",
       "Tunisia",
-      "Burundi",
       "Benin",
-      "Comoros",
       "Burkina Faso",
+      "Burundi",
+      "Comoros",
       "Republic of the Congo",
       "Democratic Republic of the Congo",
       "Djibouti",
-      "Ivory Coast",
       "Equatorial Guinea",
       "Gabon",
       "Guinea",
+      "Ivory Coast",
       "Cameroon",
-      "Mauritania",
       "Madagascar",
+      "Mauritania",
+      "Mauritius",
       "Morocco",
       "Niger",
-      "Mauritius",
-      "Senegal",
       "Rwanda",
+      "Senegal",
       "Seychelles",
       "Guernsey"
     ],
@@ -400,14 +400,14 @@
     ],
     "families": "",
     "countries": [
-      "United States",
       "Japan",
+      "United States",
       "Australia",
       "Peru",
       "North Korea",
       "Taiwan",
-      "Philippines",
-      "South Korea"
+      "South Korea",
+      "Philippines"
     ],
     "nativeNames": "日本語",
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
@@ -424,9 +424,9 @@
     ],
     "families": "",
     "countries": [
+      "Canada",
       "Spain",
       "United States",
-      "Canada",
       "Kenya",
       "United Kingdom",
       "People's Republic of China",
@@ -500,8 +500,8 @@
     "writingSystems": "Turkish alphabet",
     "families": "",
     "countries": [
-      "Turkey",
       "Greece",
+      "Turkey",
       "Bulgaria",
       "Cyprus",
       "Northern Cyprus"
@@ -547,8 +547,8 @@
     ],
     "families": "",
     "countries": [
-      "Japan",
       "Canada",
+      "Japan",
       "United States",
       "People's Republic of China",
       "Russia",
@@ -583,14 +583,14 @@
       "Jordan",
       "Lebanon",
       "Malaysia",
-      "Syria",
       "Saudi Arabia",
+      "Syria",
       "Thailand",
       "Brunei",
+      "Tunisia",
+      "South Sudan",
       "Eritrea",
       "Mauritania",
-      "South Sudan",
-      "Tunisia",
       "Morocco",
       "Sudan"
     ],
@@ -606,12 +606,12 @@
     ],
     "families": "",
     "countries": [
-      "Luxembourg",
       "Belgium",
+      "Luxembourg",
       "Denmark",
-      "Switzerland",
-      "Italy",
       "Poland",
+      "Italy",
+      "Switzerland",
       "Austria",
       "France",
       "Russia",
@@ -657,8 +657,8 @@
     "families": "",
     "countries": [
       "Kenya",
-      "South Africa",
       "Indonesia",
+      "South Africa",
       "Singapore",
       "India",
       "Malaysia",
@@ -818,8 +818,8 @@
     "families": "",
     "countries": [
       "People's Republic of China",
-      "Singapore",
       "Indonesia",
+      "Singapore",
       "Cambodia",
       "Malaysia",
       "Taiwan",
@@ -1039,14 +1039,14 @@
     ],
     "families": "",
     "countries": [
-      "United States",
       "Canada",
+      "United States",
       "India",
       "Iran",
       "Pakistan",
+      "Tajikistan",
       "Turkmenistan",
       "United Arab Emirates",
-      "Tajikistan",
       "Afghanistan",
       "Balochistan"
     ],
@@ -1208,21 +1208,6 @@
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549"
   },
   {
-    "iso": "ibo",
-    "langLabel": "Igbo",
-    "nativeSpeakers": 27000000,
-    "writingSystems": "Igbo alphabet",
-    "families": "",
-    "countries": [
-      "Nigeria"
-    ],
-    "nativeNames": [
-      "Igbo",
-      "Asụsụ Igbo"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051547"
-  },
-  {
     "iso": "uzb",
     "langLabel": "Uzbek",
     "nativeSpeakers": 27000000,
@@ -1249,6 +1234,21 @@
       "Ўзбек тили"
     ],
     "unescoStatus": "http://www.wikidata.org/entity/Q20672086"
+  },
+  {
+    "iso": "ibo",
+    "langLabel": "Igbo",
+    "nativeSpeakers": 27000000,
+    "writingSystems": "Igbo alphabet",
+    "families": "",
+    "countries": [
+      "Nigeria"
+    ],
+    "nativeNames": [
+      "Igbo",
+      "Asụsụ Igbo"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051547"
   },
   {
     "iso": "ukr",
@@ -1402,16 +1402,16 @@
     "writingSystems": "Latin script",
     "families": "",
     "countries": [
-      "Caribbean Netherlands",
-      "Kingdom of the Netherlands",
       "Belgium",
       "Netherlands",
-      "Germany",
       "France",
+      "Germany",
       "Suriname",
       "Aruba",
       "Curaçao",
-      "Sint Maarten"
+      "Sint Maarten",
+      "Caribbean Netherlands",
+      "Kingdom of the Netherlands"
     ],
     "nativeNames": [
       "Nederlands",
@@ -1437,16 +1437,16 @@
       "Russia",
       "Germany",
       "Ukraine",
-      "Georgia",
       "Azerbaijan",
+      "Georgia",
       "Kazakhstan",
-      "Armenia",
       "Uzbekistan",
+      "Armenia",
       "Iran",
-      "Syria",
-      "Kyrgyzstan",
-      "Turkmenistan",
       "Iraq",
+      "Kyrgyzstan",
+      "Syria",
+      "Turkmenistan",
       "Afghanistan"
     ],
     "nativeNames": "Azərbaycan dili"
@@ -1498,11 +1498,11 @@
     "writingSystems": "Geʽez script",
     "families": "",
     "countries": [
+      "Ethiopia",
+      "Israel",
       "Eritrea",
       "Somalia",
-      "Sudan",
-      "Ethiopia",
-      "Israel"
+      "Sudan"
     ],
     "nativeNames": "አማርኛ",
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546"
@@ -1519,9 +1519,9 @@
     "families": "",
     "countries": [
       "Turkey",
-      "Armenia",
       "Azerbaijan",
       "Georgia",
+      "Armenia",
       "Iran",
       "Iraq",
       "Syria",
@@ -1686,49 +1686,21 @@
     "nativeSpeakers": 16200000,
     "writingSystems": [
       "Latin script",
-      "Osmanya",
-      "Wadaad's writing"
+      "Wadaad's writing",
+      "Osmanya"
     ],
     "families": "",
     "countries": [
       "Kenya",
       "Ethiopia",
       "Djibouti",
-      "Somaliland",
-      "Somalia"
+      "Somalia",
+      "Somaliland"
     ],
     "nativeNames": [
       "Af-Soomaali",
       "𐒖𐒍 𐒈𐒝𐒑𐒛𐒐𐒘",
       "اف صومالِ"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546"
-  },
-  {
-    "iso": "tuk",
-    "langLabel": "Turkmen",
-    "nativeSpeakers": 16000000,
-    "writingSystems": [
-      "Perso-Arabic script",
-      "Cyrillic script",
-      "Latin script",
-      "Turkmen alphabet",
-      "Russian Braille"
-    ],
-    "families": "",
-    "countries": [
-      "Uzbekistan",
-      "Iran",
-      "Pakistan",
-      "Tajikistan",
-      "Turkmenistan",
-      "Afghanistan"
-    ],
-    "nativeNames": [
-      "түркменче",
-      "تۆرکمنچه",
-      "Türkmen",
-      "Türkmençe"
     ],
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546"
   },
@@ -1746,6 +1718,34 @@
     ],
     "nativeNames": "Vahcuengh",
     "unescoStatus": "http://www.wikidata.org/entity/Q20672090"
+  },
+  {
+    "iso": "tuk",
+    "langLabel": "Turkmen",
+    "nativeSpeakers": 16000000,
+    "writingSystems": [
+      "Cyrillic script",
+      "Latin script",
+      "Turkmen alphabet",
+      "Russian Braille",
+      "Perso-Arabic script"
+    ],
+    "families": "",
+    "countries": [
+      "Uzbekistan",
+      "Iran",
+      "Pakistan",
+      "Tajikistan",
+      "Turkmenistan",
+      "Afghanistan"
+    ],
+    "nativeNames": [
+      "Türkmen",
+      "Türkmençe",
+      "түркменче",
+      "تۆرکمنچه"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546"
   },
   {
     "iso": "ceb",
@@ -1810,21 +1810,6 @@
     ]
   },
   {
-    "iso": "sin",
-    "langLabel": "Sinhala",
-    "nativeSpeakers": 15300000,
-    "writingSystems": "Sinhala",
-    "families": "",
-    "countries": [
-      "Sri Lanka"
-    ],
-    "nativeNames": [
-      "සිංහල",
-      "සිංහල භාෂාව"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546"
-  },
-  {
     "iso": "asm",
     "langLabel": "Assamese",
     "nativeSpeakers": 15300000,
@@ -1840,23 +1825,19 @@
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051547"
   },
   {
-    "iso": "kau",
-    "langLabel": "Kanuri",
-    "nativeSpeakers": 15000000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Latin script"
-    ],
+    "iso": "sin",
+    "langLabel": "Sinhala",
+    "nativeSpeakers": 15300000,
+    "writingSystems": "Sinhala",
     "families": "",
     "countries": [
-      "Chad",
-      "Cameroon",
-      "Niger",
-      "Libya",
-      "Nigeria",
-      "Sudan"
+      "Sri Lanka"
     ],
-    "nativeNames": "kanuri"
+    "nativeNames": [
+      "සිංහල",
+      "සිංහල භාෂාව"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546"
   },
   {
     "iso": "tts",
@@ -1871,6 +1852,25 @@
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552"
   },
   {
+    "iso": "kau",
+    "langLabel": "Kanuri",
+    "nativeSpeakers": 15000000,
+    "writingSystems": [
+      "Arabic alphabet",
+      "Latin script"
+    ],
+    "families": "",
+    "countries": [
+      "Chad",
+      "Cameroon",
+      "Libya",
+      "Niger",
+      "Nigeria",
+      "Sudan"
+    ],
+    "nativeNames": "kanuri"
+  },
+  {
     "iso": "mad",
     "langLabel": "Madurese",
     "nativeSpeakers": 15000000,
@@ -1880,8 +1880,8 @@
     ],
     "families": "",
     "countries": [
-      "Singapore",
       "Indonesia",
+      "Singapore",
       "Malaysia",
       "Saudi Arabia"
     ],
@@ -1899,8 +1899,8 @@
     "families": "",
     "countries": [
       "Greece",
-      "Cyprus",
-      "Albania"
+      "Albania",
+      "Cyprus"
     ],
     "nativeNames": [
       "ελληνικά",
@@ -1923,8 +1923,8 @@
       "Turkey",
       "Azerbaijan",
       "Armenia",
-      "Iraq",
       "Iran",
+      "Iraq",
       "Syria"
     ],
     "nativeNames": [
@@ -1971,6 +1971,25 @@
     "nativeNames": "Boarisch",
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
     "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
+  },
+  {
+    "iso": "mwr",
+    "langLabel": "Marwari",
+    "nativeSpeakers": 14000000,
+    "writingSystems": [
+      "Devanagari",
+      "Arabic script"
+    ],
+    "families": "",
+    "countries": [
+      "India",
+      "Nepal",
+      "Pakistan"
+    ],
+    "nativeNames": [
+      "मारवाड़ी",
+      "مارواڑی"
+    ]
   },
   {
     "iso": "tgk",
@@ -2021,25 +2040,6 @@
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552"
   },
   {
-    "iso": "mwr",
-    "langLabel": "Marwari",
-    "nativeSpeakers": 14000000,
-    "writingSystems": [
-      "Devanagari",
-      "Arabic script"
-    ],
-    "families": "",
-    "countries": [
-      "India",
-      "Nepal",
-      "Pakistan"
-    ],
-    "nativeNames": [
-      "मारवाड़ी",
-      "مارواڑی"
-    ]
-  },
-  {
     "iso": "syl",
     "langLabel": "Sylheti",
     "nativeSpeakers": 13980000,
@@ -2059,9 +2059,9 @@
       "Bahrain",
       "Australia",
       "India",
-      "Kuwait",
-      "Myanmar",
       "Malaysia",
+      "Myanmar",
+      "Kuwait",
       "Oman",
       "Qatar",
       "Saudi Arabia",
@@ -2093,18 +2093,6 @@
     ]
   },
   {
-    "iso": "ctg",
-    "langLabel": "Chittagonian",
-    "nativeSpeakers": 13000000,
-    "writingSystems": "Bangla alphabet",
-    "families": "",
-    "countries": [
-      "Bangladesh"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
     "iso": "tso",
     "langLabel": "Tsonga",
     "nativeSpeakers": 13000000,
@@ -2121,6 +2109,18 @@
       "Tsonga",
       "Xitsonga"
     ]
+  },
+  {
+    "iso": "ctg",
+    "langLabel": "Chittagonian",
+    "nativeSpeakers": 13000000,
+    "writingSystems": "Bangla alphabet",
+    "families": "",
+    "countries": [
+      "Bangladesh"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
+    "nativeNames": ""
   },
   {
     "iso": "kaz",
@@ -2168,14 +2168,14 @@
     ],
     "families": "",
     "countries": [
+      "Slovenia",
+      "Romania",
+      "Croatia",
+      "Serbia",
       "Hungary",
       "Austria",
       "Ukraine",
-      "Slovenia",
-      "Slovakia",
-      "Romania",
-      "Croatia",
-      "Serbia"
+      "Slovakia"
     ],
     "unescoStatus": "http://www.wikidata.org/entity/Q20672086",
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
@@ -2233,20 +2233,6 @@
     ]
   },
   {
-    "iso": "ajp",
-    "langLabel": "South Levantine Arabic",
-    "nativeSpeakers": 11600000,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "Israel",
-      "Jordan",
-      "Palestine"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
     "iso": "aeb",
     "langLabel": "Tunisian Arabic",
     "nativeSpeakers": 11600000,
@@ -2266,6 +2252,20 @@
       "Tounsi",
       "Dèrja Tounsiyya"
     ]
+  },
+  {
+    "iso": "ajp",
+    "langLabel": "South Levantine Arabic",
+    "nativeSpeakers": 11600000,
+    "writingSystems": "",
+    "families": "",
+    "countries": [
+      "Israel",
+      "Jordan",
+      "Palestine"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
+    "nativeNames": ""
   },
   {
     "iso": "ayn",
@@ -2333,8 +2333,8 @@
     "families": "",
     "countries": [
       "Tanzania",
-      "Democratic Republic of the Congo",
       "Burundi",
+      "Democratic Republic of the Congo",
       "Uganda"
     ],
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
@@ -2403,8 +2403,8 @@
     "families": "",
     "countries": [
       "South Africa",
-      "Zimbabwe",
       "Zambia",
+      "Zimbabwe",
       "Botswana",
       "Namibia"
     ],
@@ -2598,14 +2598,14 @@
     ],
     "families": "",
     "countries": [
-      "Turkey",
       "Greece",
+      "Turkey",
       "Russia",
       "Ukraine",
-      "North Macedonia",
       "Moldova",
       "Romania",
       "Bulgaria",
+      "North Macedonia",
       "Albania",
       "Serbia"
     ],
@@ -2656,8 +2656,8 @@
     ],
     "families": "",
     "countries": [
-      "United States",
       "People's Republic of China",
+      "United States",
       "Laos",
       "Vietnam",
       "Thailand"
@@ -2779,14 +2779,29 @@
     "nativeNames": "беларуская мова"
   },
   {
+    "iso": "mos",
+    "langLabel": "Mooré",
+    "nativeSpeakers": 7600000,
+    "writingSystems": "Latin script",
+    "families": "",
+    "countries": [
+      "Ghana",
+      "Mali",
+      "Togo",
+      "Burkina Faso"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
+    "nativeNames": ""
+  },
+  {
     "iso": "bal",
     "langLabel": "Balochi",
     "nativeSpeakers": 7600000,
     "writingSystems": [
-      "Balochi Cyrillic Alphabet",
       "Balochi Roman Orthography",
       "Balochi Standard Orthography",
-      "Old Balochi Orthography"
+      "Old Balochi Orthography",
+      "Balochi Cyrillic Alphabet"
     ],
     "families": "",
     "countries": [
@@ -2802,21 +2817,6 @@
       "Балочи",
       "Balóchí"
     ]
-  },
-  {
-    "iso": "mos",
-    "langLabel": "Mooré",
-    "nativeSpeakers": 7600000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Ghana",
-      "Mali",
-      "Togo",
-      "Burkina Faso"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
   },
   {
     "iso": "tir",
@@ -2851,8 +2851,8 @@
     "writingSystems": "Latin script",
     "families": "",
     "countries": [
-      "Mozambique",
-      "Tanzania"
+      "Tanzania",
+      "Mozambique"
     ],
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
     "nativeNames": ""
@@ -2880,8 +2880,8 @@
     "nativeSpeakers": 7250000,
     "writingSystems": [
       "Arabic alphabet",
-      "Kurdish alphabets",
       "Arabic script",
+      "Kurdish alphabets",
       "Kurdish Arabic alphabet"
     ],
     "families": "",
@@ -2941,10 +2941,10 @@
     ],
     "families": "",
     "countries": [
-      "India",
-      "Nepal",
       "Bhutan",
-      "Bangladesh"
+      "Bangladesh",
+      "India",
+      "Nepal"
     ],
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
     "nativeNames": [
@@ -2962,10 +2962,10 @@
       "Hungary",
       "Italy",
       "Austria",
-      "Slovakia",
-      "Romania",
       "Czech Republic",
+      "Slovakia",
       "Slovenia",
+      "Romania",
       "Croatia",
       "Bosnia and Herzegovina",
       "Montenegro",
@@ -3013,9 +3013,9 @@
       "Russia",
       "Germany",
       "Azerbaijan",
+      "Cyprus",
       "Georgia",
       "Malta",
-      "Cyprus",
       "Armenia",
       "Australia",
       "Argentina",
@@ -3086,8 +3086,8 @@
     "langLabel": "Northern Thai",
     "nativeSpeakers": 6029500,
     "writingSystems": [
-      "Tai Tham",
-      "Thai alphabet"
+      "Thai alphabet",
+      "Tai Tham"
     ],
     "families": "",
     "countries": [
@@ -3099,6 +3099,51 @@
       "คำเมือง",
       "ᨣᩤᩴᨾᩮᩬᩥᨦ"
     ]
+  },
+  {
+    "iso": "umb",
+    "langLabel": "Umbundu",
+    "nativeSpeakers": 6000000,
+    "writingSystems": "Latin script",
+    "families": "",
+    "countries": [
+      "Angola",
+      "Namibia"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
+    "nativeNames": "Úmbúndú#"
+  },
+  {
+    "iso": "sot",
+    "langLabel": "Sesotho",
+    "nativeSpeakers": 6000000,
+    "writingSystems": "Latin script",
+    "families": "",
+    "countries": [
+      "South Africa",
+      "Lesotho"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
+    "nativeNames": [
+      "seSotho",
+      "Sesotho"
+    ]
+  },
+  {
+    "iso": "lmn",
+    "langLabel": "Lambadi",
+    "nativeSpeakers": 6000000,
+    "writingSystems": [
+      "Devanagari",
+      "Telugu",
+      "Kannada script"
+    ],
+    "families": "",
+    "countries": [
+      "India"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
+    "nativeNames": ""
   },
   {
     "iso": "slk",
@@ -3130,56 +3175,11 @@
       "Denmark",
       "Germany",
       "Greenland",
-      "Kingdom of Denmark",
-      "Faroe Islands"
+      "Faroe Islands",
+      "Kingdom of Denmark"
     ],
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
     "nativeNames": "dansk"
-  },
-  {
-    "iso": "lmn",
-    "langLabel": "Lambadi",
-    "nativeSpeakers": 6000000,
-    "writingSystems": [
-      "Devanagari",
-      "Telugu",
-      "Kannada script"
-    ],
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "sot",
-    "langLabel": "Sesotho",
-    "nativeSpeakers": 6000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "South Africa",
-      "Lesotho"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": [
-      "seSotho",
-      "Sesotho"
-    ]
-  },
-  {
-    "iso": "umb",
-    "langLabel": "Umbundu",
-    "nativeSpeakers": 6000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Angola",
-      "Namibia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "Úmbúndú#"
   },
   {
     "iso": "wal",
@@ -3248,8 +3248,8 @@
     "families": "",
     "countries": [
       "Norway",
-      "Sweden",
       "Finland",
+      "Sweden",
       "Russia",
       "Estonia"
     ],
@@ -3272,18 +3272,6 @@
       "ລາວ",
       "ພາສາລາວ"
     ]
-  },
-  {
-    "iso": "nor",
-    "langLabel": "Norwegian",
-    "nativeSpeakers": 5200000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Norway"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": "norsk"
   },
   {
     "iso": "mon",
@@ -3316,6 +3304,18 @@
     "nativeNames": "татар теле"
   },
   {
+    "iso": "nor",
+    "langLabel": "Norwegian",
+    "nativeSpeakers": 5200000,
+    "writingSystems": "Latin script",
+    "families": "",
+    "countries": [
+      "Norway"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
+    "nativeNames": "norsk"
+  },
+  {
     "iso": "bug",
     "langLabel": "Bugis",
     "nativeSpeakers": 5017800,
@@ -3341,10 +3341,22 @@
     "families": "",
     "countries": [
       "Angola",
-      "Democratic Republic of the Congo",
-      "Republic of the Congo"
+      "Republic of the Congo",
+      "Democratic Republic of the Congo"
     ],
     "nativeNames": "kikongo"
+  },
+  {
+    "iso": "mtr",
+    "langLabel": "Mewari",
+    "nativeSpeakers": 5000000,
+    "writingSystems": "Devanagari",
+    "families": "",
+    "countries": [
+      "India"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
+    "nativeNames": ""
   },
   {
     "iso": "wtm",
@@ -3368,18 +3380,6 @@
       "Ghana"
     ],
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
-    "iso": "mtr",
-    "langLabel": "Mewari",
-    "nativeSpeakers": 5000000,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
     "nativeNames": ""
   },
   {
@@ -3481,6 +3481,18 @@
     ]
   },
   {
+    "iso": "sou",
+    "langLabel": "Southern Thai",
+    "nativeSpeakers": 4500000,
+    "writingSystems": "Thai alphabet",
+    "families": "",
+    "countries": [
+      "Thailand"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
+    "nativeNames": ""
+  },
+  {
     "iso": "tsn",
     "langLabel": "Tswana",
     "nativeSpeakers": 4500000,
@@ -3494,18 +3506,6 @@
     ],
     "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
     "nativeNames": "seTswana"
-  },
-  {
-    "iso": "sou",
-    "langLabel": "Southern Thai",
-    "nativeSpeakers": 4500000,
-    "writingSystems": "Thai alphabet",
-    "families": "",
-    "countries": [
-      "Thailand"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
   },
   {
     "iso": "ayh",
@@ -3602,8 +3602,8 @@
     "langLabel": "Southern Uzbek",
     "nativeSpeakers": 4165700,
     "writingSystems": [
-      "Arabic script",
-      "Persian alphabet"
+      "Persian alphabet",
+      "Arabic script"
     ],
     "families": "",
     "countries": [
@@ -3660,6 +3660,19 @@
     ]
   },
   {
+    "iso": "ksw",
+    "langLabel": "S'gaw Karen",
+    "nativeSpeakers": 4000000,
+    "writingSystems": "S'gaw Karen Script",
+    "families": "",
+    "countries": [
+      "Myanmar",
+      "Thailand"
+    ],
+    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
+    "nativeNames": ""
+  },
+  {
     "iso": "nob",
     "langLabel": "Bokmål",
     "nativeSpeakers": 4000000,
@@ -3672,35 +3685,6 @@
       "Norway"
     ],
     "nativeNames": "bokmål"
-  },
-  {
-    "iso": "ban",
-    "langLabel": "Balinese",
-    "nativeSpeakers": 4000000,
-    "writingSystems": [
-      "Latin script",
-      "Balinese"
-    ],
-    "families": "",
-    "countries": [
-      "Indonesia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "Basa Bali"
-  },
-  {
-    "iso": "aym",
-    "langLabel": "Aymara",
-    "nativeSpeakers": 4000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Chile",
-      "Peru",
-      "Bolivia"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087",
-    "nativeNames": "Aymar aru"
   },
   {
     "iso": "wry",
@@ -3730,1526 +3714,17 @@
     ]
   },
   {
-    "iso": "ksw",
-    "langLabel": "S'gaw Karen",
+    "iso": "aym",
+    "langLabel": "Aymara",
     "nativeSpeakers": 4000000,
-    "writingSystems": "S'gaw Karen Script",
-    "families": "",
-    "countries": [
-      "Myanmar",
-      "Thailand"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
-    "iso": "blu",
-    "langLabel": "Miao",
-    "nativeSpeakers": 4000000,
-    "writingSystems": [
-      "Latin script",
-      "Pahawh Hmong",
-      "Miao"
-    ],
-    "families": "",
-    "countries": [],
-    "nativeNames": ""
-  },
-  {
-    "iso": "lmo",
-    "langLabel": "Lombard",
-    "nativeSpeakers": 3900000,
     "writingSystems": "Latin script",
     "families": "",
     "countries": [
-      "Italy",
-      "Switzerland"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": "Lengua lombarda",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672088"
-  },
-  {
-    "iso": "kam",
-    "langLabel": "Kamba",
-    "nativeSpeakers": 3893000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Kenya"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": ""
-  },
-  {
-    "iso": "mey",
-    "langLabel": "Hassaniya Arabic",
-    "nativeSpeakers": 3763900,
-    "writingSystems": "Arabic alphabet",
-    "families": "",
-    "countries": [
-      "Algeria",
-      "Mali",
-      "Mauritania",
-      "Morocco"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
-    "iso": "kat",
-    "langLabel": "Georgian",
-    "nativeSpeakers": 3700000,
-    "writingSystems": [
-      "Georgian scripts",
-      "Asomtavruli",
-      "Mkhedruli",
-      "Nuskhuri",
-      "Georgian Braille"
-    ],
-    "families": "",
-    "countries": [
-      "Turkey",
-      "Russia",
-      "Georgia",
-      "Azerbaijan",
-      "Armenia",
-      "Iran"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": [
-      "ქართული",
-      "ქართული ენა"
-    ]
-  },
-  {
-    "iso": "wol",
-    "langLabel": "Wolof",
-    "nativeSpeakers": 3700000,
-    "writingSystems": [
-      "Latin script",
-      "Wolofal script",
-      "Garay"
-    ],
-    "families": "",
-    "countries": [
-      "The Gambia",
-      "Mauritania",
-      "Senegal"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": "Wolof"
-  },
-  {
-    "iso": "gom",
-    "langLabel": "Goan Konkani",
-    "nativeSpeakers": 3633900,
-    "writingSystems": [
-      "Latin script",
-      "Devanagari",
-      "Kannada script",
-      "Malayalam script"
-    ],
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "Goan Konkani"
-  },
-  {
-    "iso": "bem",
-    "langLabel": "Bemba",
-    "nativeSpeakers": 3600000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Zambia",
-      "Democratic Republic of the Congo"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051547",
-    "nativeNames": ""
-  },
-  {
-    "iso": "ace",
-    "langLabel": "Acehnese",
-    "nativeSpeakers": 3500032,
-    "writingSystems": [
-      "Latin script",
-      "Jawoë"
-    ],
-    "families": "",
-    "countries": [
-      "Indonesia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051554",
-    "nativeNames": "bahsa Acèh"
-  },
-  {
-    "iso": "bjn",
-    "langLabel": "Banjar",
-    "nativeSpeakers": 3500000,
-    "writingSystems": [
-      "Latin alphabet",
-      "Pegon alphabet"
-    ],
-    "families": "",
-    "countries": [
-      "Indonesia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": [
-      "Basa Banjar",
-      "Pandir Banjar"
-    ]
-  },
-  {
-    "iso": "bos",
-    "langLabel": "Bosnian",
-    "nativeSpeakers": 3500000,
-    "writingSystems": "Gaj's Latin alphabet",
-    "families": "",
-    "countries": [
-      "Turkey",
-      "Croatia",
-      "Bosnia and Herzegovina",
-      "Montenegro"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": [
-      "bosanski",
-      "bosanski jezik"
-    ]
-  },
-  {
-    "iso": "bhb",
-    "langLabel": "Bhili",
-    "nativeSpeakers": 3310000,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "myq",
-    "langLabel": "Maninka",
-    "nativeSpeakers": 3300000,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "Mali",
-      "Guinea",
-      "Ivory Coast",
-      "Liberia",
-      "Senegal",
-      "Sierra Leone"
-    ],
-    "nativeNames": ""
-  },
-  {
-    "iso": "mzn",
-    "langLabel": "Mazanderani",
-    "nativeSpeakers": 3270000,
-    "writingSystems": [
-      "Persian alphabet",
-      "Arabic script"
-    ],
-    "families": "",
-    "countries": [
-      "Iran"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": [
-      "مازرونی",
-      "طبری",
-      "مازرونی زبون",
-      "گلکی"
-    ]
-  },
-  {
-    "iso": "jam",
-    "langLabel": "Jamaican Patois",
-    "nativeSpeakers": 3200000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Jamaica",
-      "Costa Rica",
-      "Panama"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "Patwa"
-  },
-  {
-    "iso": "dag",
-    "langLabel": "Dagbani",
-    "nativeSpeakers": 3160000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Ghana"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": "Dagbanli"
-  },
-  {
-    "iso": "war",
-    "langLabel": "Waray",
-    "nativeSpeakers": 3100000,
-    "writingSystems": [
-      "Latin script",
-      "Baybayin"
-    ],
-    "families": "",
-    "countries": [
-      "Philippines"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": [
-      "Binisaya",
-      "Waray",
-      "Waray-waray",
-      "Waray-Waray"
-    ]
-  },
-  {
-    "iso": "bgp",
-    "langLabel": "Eastern Balochi",
-    "nativeSpeakers": 3050000,
-    "writingSystems": [
-      "Latin script",
-      "Arabic script"
-    ],
-    "families": "",
-    "countries": [
-      "Pakistan"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "als",
-    "langLabel": "Tosk",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Greece",
-      "Albania"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": "Toskë"
-  },
-  {
-    "iso": "sdh",
-    "langLabel": "Southern Kurdish",
-    "nativeSpeakers": 3000000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Arabic script"
-    ],
-    "families": "",
-    "countries": [
-      "Iran",
-      "Iraq"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "bzs",
-    "langLabel": "Brazilian Sign Language",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "SignWriting",
-    "families": "",
-    "countries": [
-      "Brazil"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "luo",
-    "langLabel": "Dholuo",
-    "nativeSpeakers": 3000000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Latin script"
-    ],
-    "families": "",
-    "countries": [
-      "Kenya",
-      "Tanzania"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "ewe",
-    "langLabel": "Ewe",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Ghana",
-      "Togo"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": [
-      "Eʋe",
-      "Eʋegbe"
-    ]
-  },
-  {
-    "iso": "msi",
-    "langLabel": "Sabah Malay",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "Malaysia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
-    "iso": "abr",
-    "langLabel": "Bonol",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Ghana",
-      "Ivory Coast"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "twi"
-  },
-  {
-    "iso": "gbm",
-    "langLabel": "Garhwali",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "गढ़वळि",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "twi",
-    "langLabel": "Twi",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Ghana"
-    ],
-    "nativeNames": "twi"
-  },
-  {
-    "iso": "tzm",
-    "langLabel": "Central Atlas Tamazight",
-    "nativeSpeakers": 3000000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Latin script",
-      "Tifinagh"
-    ],
-    "families": "",
-    "countries": [
-      "Morocco"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": [
-      "ⵜⴰⵎⴰⵣⵉⵖⵜ ⵏ ⵡⴰⵟⵍⴰⵙ ⴰⵏⴰⵎⵎⴰⵙ",
-      "tamazight of Central Atlas",
-      "Tmaziɣt  n waṭlas anammas"
-    ]
-  },
-  {
-    "iso": "shn",
-    "langLabel": "Shan",
-    "nativeSpeakers": 3000000,
-    "writingSystems": "Shan",
-    "families": "",
-    "countries": [
-      "Myanmar",
-      "Thailand"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "လိၵ်ႈတႆး"
-  },
-  {
-    "iso": "gon",
-    "langLabel": "Gondi",
-    "nativeSpeakers": 2984453,
-    "writingSystems": [
-      "Devanagari",
-      "Telugu",
-      "Masaram Gondi",
-      "Gunjala Gondi"
-    ],
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "nativeNames": "",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "khk",
-    "langLabel": "Khalkha Mongolian",
-    "nativeSpeakers": 2704030,
-    "writingSystems": [
-      "Cyrillic script",
-      "Mongolian"
-    ],
-    "families": "",
-    "countries": [
-      "Russia",
-      "Mongolia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": [
-      "Халх аялгуу",
-      "ᠬᠠᠯᠬ᠎ᠠ ᠠᠶᠠᠯᠭᠤ"
-    ]
-  },
-  {
-    "iso": "dyu",
-    "langLabel": "Dioula",
-    "nativeSpeakers": 2700000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Mali",
-      "Burkina Faso",
-      "Ivory Coast"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
-    "iso": "efi",
-    "langLabel": "Efik",
-    "nativeSpeakers": 2693000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Nigeria"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "Efik"
-  },
-  {
-    "iso": "tum",
-    "langLabel": "Tumbuka",
-    "nativeSpeakers": 2680000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Zambia",
-      "Malawi"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": [
-      "Chitumbuka",
-      "ChiTumbuka"
-    ]
-  },
-  {
-    "iso": "spv",
-    "langLabel": "Sambalpuri",
-    "nativeSpeakers": 2630000,
-    "writingSystems": "Odia",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": ""
-  },
-  {
-    "iso": "glk",
-    "langLabel": "Gilaki",
-    "nativeSpeakers": 2550000,
-    "writingSystems": "Arabic script",
-    "families": "",
-    "countries": [
-      "Iran"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": "گيلکي"
-  },
-  {
-    "iso": "glg",
-    "langLabel": "Galician",
-    "nativeSpeakers": 2500000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Spain",
-      "Portugal"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051547",
-    "nativeNames": [
-      "galego",
-      "lingua galega"
-    ]
-  },
-  {
-    "iso": "bcl",
-    "langLabel": "Central Bikol",
-    "nativeSpeakers": 2500000,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "Philippines"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": [
-      "Bikol",
-      "Bikol Sentral"
-    ]
-  },
-  {
-    "iso": "cpx",
-    "langLabel": "Pu-Xian Min",
-    "nativeSpeakers": 2500000,
-    "writingSystems": [
-      "traditional Chinese characters",
-      "simplified Chinese characters",
-      "Hinghwa Romanized"
-    ],
-    "families": "",
-    "countries": [
-      "People's Republic of China",
-      "Taiwan"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "莆仙語"
-  },
-  {
-    "iso": "slv",
-    "langLabel": "Slovene",
-    "nativeSpeakers": 2400000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Canada",
-      "Hungary",
-      "United States",
-      "Austria",
-      "Italy",
-      "Germany",
-      "Slovenia",
-      "Croatia",
-      "South Africa",
-      "Argentina"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": [
-      "slovenščina",
-      "slovenski jezik"
-    ]
-  },
-  {
-    "iso": "sus",
-    "langLabel": "Susu",
-    "nativeSpeakers": 2400000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Latin script"
-    ],
-    "families": "",
-    "countries": [
-      "Guinea",
-      "Sierra Leone"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": "Sosoxui"
-  },
-  {
-    "iso": "pam",
-    "langLabel": "Kapampangan",
-    "nativeSpeakers": 2400000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Philippines"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "Kapampángan"
-  },
-  {
-    "iso": "cgg",
-    "langLabel": "Kiga",
-    "nativeSpeakers": 2390000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Uganda"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": ""
-  },
-  {
-    "iso": "shy",
-    "langLabel": "Shawiya",
-    "nativeSpeakers": 2300000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Tifinagh",
-      "Berber Latin alphabet"
-    ],
-    "families": "",
-    "countries": [
-      "Algeria"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": "Tacawit"
-  },
-  {
-    "iso": "nyn",
-    "langLabel": "Runyankole",
-    "nativeSpeakers": 2300000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Uganda"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": ""
-  },
-  {
-    "iso": "iba",
-    "langLabel": "Iban",
-    "nativeSpeakers": 2300000,
-    "writingSystems": [
-      "Latin script",
-      "Dunging script"
-    ],
-    "families": "",
-    "countries": [
-      "Indonesia",
-      "Malaysia",
-      "Brunei"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "jaku Iban"
-  },
-  {
-    "iso": "kfy",
-    "langLabel": "Kumaoni",
-    "nativeSpeakers": 2300000,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "कुमाऊँनी",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "haz",
-    "langLabel": "Hazaragi",
-    "nativeSpeakers": 2221000,
-    "writingSystems": "Persian alphabet",
-    "families": "",
-    "countries": [
-      "Pakistan",
-      "Afghanistan"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "آزرگی"
-  },
-  {
-    "iso": "laj",
-    "langLabel": "Lango",
-    "nativeSpeakers": 2100000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Uganda"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "bci",
-    "langLabel": "Baoulé",
-    "nativeSpeakers": 2100000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Ghana",
-      "Ivory Coast"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "ssw",
-    "langLabel": "Swazi",
-    "nativeSpeakers": 2034200,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "South Africa",
-      "Mozambique",
-      "Eswatini"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": [
-      "siSwati",
-      "Siswati"
-    ]
-  },
-  {
-    "iso": "sas",
-    "langLabel": "Sasak",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Indonesia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "ᬪᬵᬲᬵᬲᬓ᭄ᬱᬓ᭄"
-  },
-  {
-    "iso": "sxu",
-    "langLabel": "Upper Saxon",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Germany"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "wes",
-    "langLabel": "Cameroon Pidgin",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Cameroon"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": ""
-  },
-  {
-    "iso": "pcc",
-    "langLabel": "Bouyei",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "People's Republic of China",
-      "Vietnam"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "vec",
-    "langLabel": "Venetian",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Italy",
-      "Mexico",
-      "Brazil",
-      "Croatia",
-      "Slovenia",
-      "Montenegro",
-      "Romania",
-      "Argentina"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": [
-      "Łéngua vèneta",
-      "Vèneto"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "pms",
-    "langLabel": "Piedmontese",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Italy"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051555",
-    "nativeNames": [
-      "Lenga piemontèisa",
-      "Piemontèis"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672088"
-  },
-  {
-    "iso": "bbc",
-    "langLabel": "Toba Batak",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Batak script",
-    "families": "",
-    "countries": [
-      "Indonesia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051554",
-    "nativeNames": "Hata Batak"
-  },
-  {
-    "iso": "dgo",
-    "langLabel": "Dogri",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Dogri Devanagari orthography",
-    "families": "",
-    "countries": [
-      "India",
-      "Pakistan"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": "डोगरी"
-  },
-  {
-    "iso": "epo",
-    "langLabel": "Esperanto",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Esperantujo"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "Esperanto"
-  },
-  {
-    "iso": "mkd",
-    "langLabel": "Macedonian",
-    "nativeSpeakers": 2000000,
-    "writingSystems": [
-      "Cyrillic script",
-      "Macedonian alphabet"
-    ],
-    "families": "",
-    "countries": [
-      "Greece",
-      "Bulgaria",
-      "North Macedonia",
-      "Albania",
-      "Serbia",
-      "Kosovo"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051546",
-    "nativeNames": [
-      "македонски",
-      "македонски јазик"
-    ]
-  },
-  {
-    "iso": "kru",
-    "langLabel": "Kurukh",
-    "nativeSpeakers": 2000000,
-    "writingSystems": [
-      "Devanagari",
-      "Tolong Siki script"
-    ],
-    "families": "",
-    "countries": [
-      "India",
-      "Bangladesh"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "quc",
-    "langLabel": "K’iche’",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Mexico",
-      "Guatemala"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": "Qatzijobʼal"
-  },
-  {
-    "iso": "shk",
-    "langLabel": "Shilluk",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "South Sudan"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "iii",
-    "langLabel": "Nuosu",
-    "nativeSpeakers": 2000000,
-    "writingSystems": "Yi script",
-    "families": "",
-    "countries": [
-      "People's Republic of China"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": [
-      "Nuosu",
-      "ꆈꌠꉙ"
-    ]
-  },
-  {
-    "iso": "tcy",
-    "langLabel": "Tulu",
-    "nativeSpeakers": 2000000,
-    "writingSystems": [
-      "Kannada script",
-      "Malayalam script",
-      "Tigalari"
-    ],
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "ತುಳು",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "gmo",
-    "langLabel": "Gamo-Gofa-Dawro",
-    "nativeSpeakers": 2000000,
-    "writingSystems": [
-      "Latin script",
-      "Geʽez script"
-    ],
-    "families": "",
-    "countries": [
-      "Ethiopia"
-    ],
-    "nativeNames": ""
-  },
-  {
-    "iso": "zyb",
-    "langLabel": "Yongbei Zhuang",
-    "nativeSpeakers": 1980000,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "People's Republic of China"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "fon",
-    "langLabel": "Fon",
-    "nativeSpeakers": 1935500,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Benin",
-      "Togo"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "fɔ̀ngbè"
-  },
-  {
-    "iso": "bgq",
-    "langLabel": "Bagri",
-    "nativeSpeakers": 1890815,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "kai",
-    "langLabel": "Karai-karai",
-    "nativeSpeakers": 1800000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Nigeria"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "rhg",
-    "langLabel": "Rohingya",
-    "nativeSpeakers": 1800000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Latin script",
-      "Hanifi Rohingya"
-    ],
-    "families": "",
-    "countries": [
-      "Myanmar",
-      "Bangladesh"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "sid",
-    "langLabel": "Sidamo",
-    "nativeSpeakers": 1800000,
-    "writingSystems": [
-      "Latin script",
-      "Geʽez script"
-    ],
-    "families": "",
-    "countries": [
-      "Ethiopia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": ""
-  },
-  {
-    "iso": "brh",
-    "langLabel": "Brahui",
-    "nativeSpeakers": 1800000,
-    "writingSystems": [
-      "Brolikva",
-      "Perso-Arabic script"
-    ],
-    "families": "",
-    "countries": [
-      "Iran",
-      "Pakistan",
-      "Afghanistan",
-      "Turkmenistan"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": [
-      "براہوئی",
-      "Bráhuí"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "kde",
-    "langLabel": "Makonde",
-    "nativeSpeakers": 1700000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Tanzania",
-      "Mozambique"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "zza",
-    "langLabel": "Zazaki",
-    "nativeSpeakers": 1640000,
-    "writingSystems": [
-      "Arabic alphabet",
-      "Latin script",
-      "Zazaki alphabet"
-    ],
-    "families": "",
-    "countries": [
-      "Turkey",
-      "Germany"
-    ],
-    "nativeNames": "Zazaki",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "quh",
-    "langLabel": "South Bolivian Quechua",
-    "nativeSpeakers": 1616120,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "Argentina",
+      "Chile",
+      "Peru",
       "Bolivia"
     ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "Qullasuyu qhichwa simi",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "lim",
-    "langLabel": "Limburgish",
-    "nativeSpeakers": 1600000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Belgium",
-      "Netherlands",
-      "Germany"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051547",
-    "nativeNames": [
-      "Plat",
-      "Lèmbörgs",
-      "Lèmburgs",
-      "Limbörgs",
-      "Limburgisj",
-      "Limburgs",
-      "Limburgsj"
-    ]
-  },
-  {
-    "iso": "bin",
-    "langLabel": "Edo",
-    "nativeSpeakers": 1600000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Nigeria"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051550",
-    "nativeNames": "Ẹ̀dó"
-  },
-  {
-    "iso": "mak",
-    "langLabel": "Makassar",
-    "nativeSpeakers": 1600000,
-    "writingSystems": [
-      "Latin script",
-      "Jawi",
-      "Lontara",
-      "Makasar script"
-    ],
-    "families": "",
-    "countries": [
-      "Indonesia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051554",
-    "nativeNames": [
-      "Basa Mangkasaraʼ",
-      "ᨅᨔ ᨆᨀᨔᨑ"
-    ]
-  },
-  {
-    "iso": "aar",
-    "langLabel": "Afar",
-    "nativeSpeakers": 1600000,
-    "writingSystems": [
-      "Latin script",
-      "Geʽez script"
-    ],
-    "families": "",
-    "countries": [
-      "Ethiopia",
-      "Eritrea",
-      "Djibouti"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051547",
-    "nativeNames": [
-      "’Afar Af",
-      "Afar-af",
-      "Afaraf",
-      "Qafar",
-      "Qafar af",
-      "اللغة العفارية"
-    ]
-  },
-  {
-    "iso": "kbd",
-    "langLabel": "Kabardian",
-    "nativeSpeakers": 1600000,
-    "writingSystems": [
-      "Cyrillic script",
-      "Latin script",
-      "Arabic script",
-      "Kabardian script"
-    ],
-    "families": "",
-    "countries": [
-      "United States",
-      "Turkey",
-      "Russia",
-      "Germany",
-      "Jordan",
-      "Syria",
-      "Saudi Arabia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": [
-      "Адыгэбзэ",
-      "Къэбэрдей",
-      "Къэбэрдей Адыгэбзэ"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "nde",
-    "langLabel": "Northern Ndebele",
-    "nativeSpeakers": 1572800,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "Zimbabwe",
-      "Botswana"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "Sindebele"
-  },
-  {
-    "iso": "guw",
-    "langLabel": "Gun",
-    "nativeSpeakers": 1539000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Benin",
-      "Nigeria"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "Gungbe"
-  },
-  {
-    "iso": "tyz",
-    "langLabel": "Tày",
-    "nativeSpeakers": 1500000,
-    "writingSystems": [
-      "Latin script",
-      "Chữ Nôm Tày"
-    ],
-    "families": "",
-    "countries": [
-      "Vietnam"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051554",
-    "nativeNames": ""
-  },
-  {
-    "iso": "noe",
-    "langLabel": "Nimadi",
-    "nativeSpeakers": 1500000,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "unr",
-    "langLabel": "Mundari",
-    "nativeSpeakers": 1500000,
-    "writingSystems": [
-      "Latin script",
-      "Bangla–Assamese script",
-      "Mundari Bani",
-      "Devanagari",
-      "Odia"
-    ],
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "kmc",
-    "langLabel": "Kam",
-    "nativeSpeakers": 1500000,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "People's Republic of China"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "quz",
-    "langLabel": "Cusco Quechua",
-    "nativeSpeakers": 1500000,
-    "writingSystems": "",
-    "families": "",
-    "countries": [
-      "Peru"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051549",
-    "nativeNames": "",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "lav",
-    "langLabel": "Latvian",
-    "nativeSpeakers": 1500000,
-    "writingSystems": [
-      "Latin script",
-      "Latvian alphabet"
-    ],
-    "families": "",
-    "countries": [
-      "Latvia"
-    ],
-    "nativeNames": "latviešu valoda"
-  },
-  {
-    "iso": "khn",
-    "langLabel": "Khandeshi",
-    "nativeSpeakers": 1500000,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "sco",
-    "langLabel": "Scots",
-    "nativeSpeakers": 1500000,
-    "writingSystems": "Latin script",
-    "families": "",
-    "countries": [
-      "Ireland",
-      "United Kingdom"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": [
-      "Scots",
-      "Scots leid"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "hoc",
-    "langLabel": "Ho",
-    "nativeSpeakers": 1500000,
-    "writingSystems": [
-      "Latin script",
-      "Devanagari",
-      "Warang Citi",
-      "Telugu",
-      "Odia",
-      "Bangla–Assamese script"
-    ],
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": "𑢹𑣉𑣉 𑣎𑣋𑣜",
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
-  },
-  {
-    "iso": "khg",
-    "langLabel": "Khams Tibetan",
-    "nativeSpeakers": 1500000,
-    "writingSystems": "Tibetan alphabet",
-    "families": "",
-    "countries": [
-      "People's Republic of China",
-      "Myanmar"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "lrc",
-    "langLabel": "Northern Luri",
-    "nativeSpeakers": 1500000,
-    "writingSystems": "Arabic script",
-    "families": "",
-    "countries": [
-      "Iran"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": "لۊری"
-  },
-  {
-    "iso": "lki",
-    "langLabel": "Laki",
-    "nativeSpeakers": 1500000,
-    "writingSystems": [
-      "Latin script",
-      "Arabic script"
-    ],
-    "families": "",
-    "countries": [
-      "Iran",
-      "Iraq"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051552",
-    "nativeNames": ""
-  },
-  {
-    "iso": "brx",
-    "langLabel": "Bodo",
-    "nativeSpeakers": 1482929,
-    "writingSystems": "Devanagari",
-    "families": "",
-    "countries": [
-      "India"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": [
-      "बोडो भाषा",
-      "बोडो"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672089"
-  },
-  {
-    "iso": "sgw",
-    "langLabel": "Sebat Bet Gurage",
-    "nativeSpeakers": 1480000,
-    "writingSystems": "Geʽez script",
-    "families": "",
-    "countries": [
-      "Ethiopia"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": ""
-  },
-  {
-    "iso": "mfa",
-    "langLabel": "Kelantan-Pattani Malay",
-    "nativeSpeakers": 1470000,
-    "writingSystems": [
-      "Latin script",
-      "Thai alphabet",
-      "Arabic script"
-    ],
-    "families": "",
-    "countries": [
-      "Thailand"
-    ],
-    "ethnologueStatus": "http://www.wikidata.org/entity/Q29051551",
-    "nativeNames": [
-      "บา'ซอ 'นายู 'ตานิง",
-      "ภาษายาวี",
-      "بهاس ملايو ڤطاني",
-      "بهاس جاوي",
-      "Bahasa Melayu Patani"
-    ],
-    "unescoStatus": "http://www.wikidata.org/entity/Q20672087"
+    "unescoStatus": "http://www.wikidata.org/entity/Q20672087",
+    "nativeNames": "Aymar aru"
   }
 ]
