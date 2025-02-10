@@ -1,8 +1,8 @@
 <script>
 import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages } from '$lib/utils/languages.js'
-import { Input } from '$lib/components/ui/input'
 import { Button } from '$lib/components/ui/button'
-import { Search } from 'lucide-svelte'
+import { Command } from '$lib/components/ui/command'
+import { CommandInput } from '$lib/components/ui/command'
 
 let searchQuery = $state("")
 let nativeFirst = $state(false)
@@ -13,15 +13,12 @@ const filteredLanguages = $derived(searchLanguages(searchQuery))
     <h1 class="mb-4 text-2xl font-bold">Available Languages</h1>
     
     <div class="mb-4 flex items-center gap-2">
-        <div class="relative flex-1">
-            <Search class="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input 
-                type="search"
-                placeholder="Search languages by name or code..." 
-                class="pl-10"
+        <Command class="flex-1">
+            <CommandInput 
+                placeholder="Search languages by name or code..."
                 bind:value={searchQuery}
             />
-        </div>
+        </Command>
         <Button variant="outline" on:click={() => nativeFirst = !nativeFirst}>
             {nativeFirst ? 'Native First' : 'English First'}
         </Button>
