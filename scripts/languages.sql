@@ -1,10 +1,10 @@
 SELECT DISTINCT ?iso ?langLabel 
   (MAX(?nativeSpeakers_) as ?nativeSpeakers) 
-  (GROUP_CONCAT(DISTINCT ?writingSystemLabel;separator=", ") as ?writingSystems)
-  (GROUP_CONCAT(DISTINCT ?familyLabel;separator=", ") as ?families)
-  (GROUP_CONCAT(DISTINCT ?countryLabel;separator="|") as ?countries)
+  (GROUP_CONCAT(DISTINCT ?writingSystemLabel; separator=", ") as ?writingSystems)
+  (GROUP_CONCAT(DISTINCT ?familyLabel; separator=", ") as ?families)
+  (GROUP_CONCAT(DISTINCT ?countryLabel; separator="|") as ?countries)
   ?unescoStatus ?ethnologueStatus
-  (GROUP_CONCAT(DISTINCT ?nativeName;separator=", ") as ?nativeNames)
+  (GROUP_CONCAT(DISTINCT ?nativeName; separator=", ") as ?nativeNames)
 WHERE {
   ?lang wdt:P220 ?iso.  # ISO 639-3 code
   

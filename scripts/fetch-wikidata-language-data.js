@@ -7,7 +7,7 @@ import fetch from 'node-fetch'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = path.join(__dirname, '../src/lib/data')
 
-const SPARQL_QUERY = fs.readFileSync(path.join(__dirname, 'queries/languages.sql'), 'utf-8')
+const SPARQL_QUERY = fs.readFileSync(path.join(__dirname, 'languages.sql'), 'utf-8')
 
 async function fetchWikidataSpeakers() {
   console.log('Fetching comprehensive language data from Wikidata...')
@@ -37,8 +37,8 @@ async function fetchWikidataSpeakers() {
         simplified[key] = value.value ? parseInt(value.value) : null
       } else if (key === 'countries') {
         simplified[key] = value.value.split('|').map(s => s.trim()).filter(Boolean)
-      } else if (key.endsWith('s') && value.value.includes(',')) {
-        simplified[key] = value.value.split(',').map(s => s.trim()).filter(Boolean)
+      } else if (key === 'writingSystems' || key === 'families' || key === 'nativeNames') {
+        simplified[key] = value.value.split(', ').filter(Boolean)
       } else {
         simplified[key] = value.value
       }
