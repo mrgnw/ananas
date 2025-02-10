@@ -40,9 +40,7 @@
       "Taiwan"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "eng",
@@ -152,12 +150,8 @@
     "nativeNames": [
       "English"
     ],
-    "ethnologueStatus": [
-      "3 Wider Communication"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "3 Wider Communication",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "spa",
@@ -200,12 +194,8 @@
       "castellano",
       "español"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "hin",
@@ -225,9 +215,7 @@
       "मानक हिन्दी",
       "हिन्दी"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "ara",
@@ -283,9 +271,7 @@
     "nativeNames": [
       "اللُّغَة العَرَبِيّة"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "ben",
@@ -303,9 +289,7 @@
     "nativeNames": [
       "বাংলা"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "por",
@@ -332,9 +316,7 @@
       "português",
       "português"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "fra",
@@ -393,12 +375,8 @@
     "nativeNames": [
       "français"
     ],
-    "ethnologueStatus": [
-      "3 Wider Communication"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "3 Wider Communication",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "ind",
@@ -414,9 +392,7 @@
     "nativeNames": [
       "Bahasa Indonesia"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "rus",
@@ -433,12 +409,8 @@
     "nativeNames": [
       "русский язык"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "jpn",
@@ -464,12 +436,8 @@
     "nativeNames": [
       "日本語"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "pan",
@@ -505,9 +473,7 @@
       "پنجابی",
       "ਪੰਜਾਬੀ"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "fil",
@@ -521,9 +487,7 @@
       "Philippines"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "mar",
@@ -540,9 +504,7 @@
     "nativeNames": [
       "मराठी"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "swh",
@@ -563,9 +525,7 @@
     "nativeNames": [
       "kiswahili"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "tur",
@@ -585,12 +545,8 @@
     "nativeNames": [
       "Türkçe"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "tel",
@@ -606,9 +562,7 @@
     "nativeNames": [
       "తెలుగు"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "wuu",
@@ -625,9 +579,7 @@
       "吳語",
       "吴语"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ]
+    "ethnologueStatus": "9 Dormant"
   },
   {
     "iso": "kor",
@@ -653,12 +605,8 @@
       "한국말",
       "한국어"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "msa",
@@ -720,12 +668,8 @@
     "nativeNames": [
       "Deutsch"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "vie",
@@ -745,12 +689,8 @@
       "Tiếng Việt",
       "tiếng Việt"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "tam",
@@ -776,9 +716,7 @@
     "nativeNames": [
       "தமிழ்"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "yue",
@@ -800,9 +738,7 @@
       "粤语",
       "粵語"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "urd",
@@ -824,12 +760,8 @@
     "nativeNames": [
       "اردو"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "jav",
@@ -851,12 +783,8 @@
       "Basa Jawa",
       "Jawa"
     ],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "8b Nearly Extinct",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "ita",
@@ -877,12 +805,8 @@
       "Italiano",
       "italiano"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "arz",
@@ -898,9 +822,7 @@
     "nativeNames": [
       "arz"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "guj",
@@ -916,9 +838,7 @@
     "nativeNames": [
       "ગુજરાતી"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "pes",
@@ -932,9 +852,7 @@
       "Iran"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "bho",
@@ -952,9 +870,7 @@
       "भोजपुरी",
       "भोजपुरी भाषा"
     ],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ]
+    "ethnologueStatus": "8b Nearly Extinct"
   },
   {
     "iso": "nan",
@@ -982,9 +898,7 @@
       "閩南語",
       "闽南语"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "hak",
@@ -1012,9 +926,7 @@
       "客話",
       "客话"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ]
+    "ethnologueStatus": "9 Dormant"
   },
   {
     "iso": "pcm",
@@ -1030,9 +942,7 @@
     "nativeNames": [
       "pidgin"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "cjy",
@@ -1046,9 +956,7 @@
       "People's Republic of China"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "rom",
@@ -1081,9 +989,7 @@
     "nativeNames": [
       "Romani chib"
     ],
-    "unescoStatus": [
-      "20672088"
-    ]
+    "unescoStatus": "20672088"
   },
   {
     "iso": "fas",
@@ -1109,9 +1015,7 @@
     "nativeNames": [
       "فارسی"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "apc",
@@ -1155,9 +1059,7 @@
     "nativeNames": [
       "Hausa"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "kan",
@@ -1173,9 +1075,7 @@
     "nativeNames": [
       "ಕನ್ನಡ"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "arq",
@@ -1194,9 +1094,7 @@
       "العامية",
       "دريرية"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "pol",
@@ -1213,9 +1111,7 @@
       "język polski",
       "polszczyzna"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "pus",
@@ -1259,9 +1155,7 @@
       "Yorùbá",
       "Èdè Yorùbá"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "hsn",
@@ -1275,9 +1169,7 @@
       "People's Republic of China"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "mal",
@@ -1294,9 +1186,7 @@
     "nativeNames": [
       "മലയാളം"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "raj",
@@ -1324,9 +1214,7 @@
       "ଓଡ଼ିଆ",
       "ଓଡ଼ିଆ ଭାଷା"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "mai",
@@ -1345,9 +1233,7 @@
     "nativeNames": [
       "मैथिली"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "mya",
@@ -1365,12 +1251,8 @@
       "မြန်မာဘာသာ",
       "မြန်မာဘာသာစကား"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "sun",
@@ -1391,9 +1273,7 @@
       "Sunda",
       "bahasa Sunda"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ]
+    "ethnologueStatus": "9 Dormant"
   },
   {
     "iso": "apd",
@@ -1408,9 +1288,7 @@
       "Sudan"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "ary",
@@ -1429,9 +1307,7 @@
     "nativeNames": [
       "الداريجة"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "ibo",
@@ -1448,9 +1324,7 @@
       "Asụsụ Igbo",
       "Igbo"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "uzb",
@@ -1478,9 +1352,7 @@
       "Ўзбек тили",
       "ئۇزبېك تیلى"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "ukr",
@@ -1508,12 +1380,8 @@
     "nativeNames": [
       "українська мова"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "uzn",
@@ -1527,9 +1395,7 @@
       "Uzbekistan"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "apc",
@@ -1546,9 +1412,7 @@
       "Turkey"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "snd",
@@ -1571,9 +1435,7 @@
       "सिंधी",
       "સિંધી"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "ron",
@@ -1593,9 +1455,7 @@
       "limba română",
       "românește"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "ful",
@@ -1649,9 +1509,7 @@
     "nativeNames": [
       "wikang Tagalog"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "nld",
@@ -1678,9 +1536,7 @@
       "Nederlands",
       "Vlaams"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "aze",
@@ -1729,9 +1585,7 @@
     "nativeNames": [
       "صعيدي"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "gan",
@@ -1748,9 +1602,7 @@
       "Jiangxi hua",
       "贛語"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "awa",
@@ -1767,9 +1619,7 @@
     "nativeNames": [
       "अवधी"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ]
+    "ethnologueStatus": "9 Dormant"
   },
   {
     "iso": "amh",
@@ -1789,9 +1639,7 @@
     "nativeNames": [
       "አማርኛ"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "kur",
@@ -1831,9 +1679,7 @@
       "Pakistan"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ]
+    "ethnologueStatus": "8b Nearly Extinct"
   },
   {
     "iso": "mag",
@@ -1849,9 +1695,7 @@
     "nativeNames": [
       "मगही"
     ],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ]
+    "ethnologueStatus": "8b Nearly Extinct"
   },
   {
     "iso": "tha",
@@ -1871,12 +1715,8 @@
     "nativeNames": [
       "ภาษาไทย"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
-    "unescoStatus": [
-      "vulnerable"
-    ]
+    "ethnologueStatus": "6a Vigorous",
+    "unescoStatus": "vulnerable"
   },
   {
     "iso": "skr",
@@ -1895,9 +1735,7 @@
     "nativeNames": [
       "سرائیکی"
     ],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ]
+    "ethnologueStatus": "8b Nearly Extinct"
   },
   {
     "iso": "lin",
@@ -1916,9 +1754,7 @@
       "Lingála",
       "lingála"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "hbs",
@@ -1980,9 +1816,7 @@
       "ខ្មែរ",
       "ភាសាខ្មែរ"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "hne",
@@ -1996,9 +1830,7 @@
       "India"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ]
+    "ethnologueStatus": "8b Nearly Extinct"
   },
   {
     "iso": "som",
@@ -2022,9 +1854,7 @@
       "اف صومالِ",
       "𐒖𐒍 𐒈𐒝𐒑𐒛𐒐𐒘"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "tuk",
@@ -2052,9 +1882,7 @@
       "түркменче",
       "تۆرکمنچه"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "zha",
@@ -2071,9 +1899,7 @@
     "nativeNames": [
       "Vahcuengh"
     ],
-    "unescoStatus": [
-      "20672090"
-    ]
+    "unescoStatus": "20672090"
   },
   {
     "iso": "ceb",
@@ -2089,9 +1915,7 @@
     "nativeNames": [
       "Sinugboanon"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "nep",
@@ -2110,9 +1934,7 @@
     "nativeNames": [
       "नेपाली"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "acm",
@@ -2130,9 +1952,7 @@
     "nativeNames": [
       "لهجة عراقية"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "swa",
@@ -2170,9 +1990,7 @@
       "অসমীয়া",
       "অসমীয়া ভাষা"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ]
+    "ethnologueStatus": "6b Threatened"
   },
   {
     "iso": "sin",
@@ -2189,9 +2007,7 @@
       "සිංහල",
       "සිංහල භාෂාව"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "ell",
@@ -2211,9 +2027,7 @@
       "ελληνικά",
       "νέα ελληνικά"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "kau",
@@ -2255,9 +2069,7 @@
       "Bhâsa Madhurâ",
       "ꦧꦱꦩꦢꦸꦫ"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ]
+    "ethnologueStatus": "9 Dormant"
   },
   {
     "iso": "tts",
@@ -2271,9 +2083,7 @@
       "Thailand"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "kmr",
@@ -2298,9 +2108,7 @@
       "Kurmancî",
       "Zimanê Kurdî"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "acw",
@@ -2314,9 +2122,7 @@
       "Saudi Arabia"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "fuv",
@@ -2328,9 +2134,7 @@
       "Nigeria"
     ],
     "nativeNames": [],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ]
+    "ethnologueStatus": "8a Moribund"
   },
   {
     "iso": "bar",
@@ -2347,12 +2151,8 @@
     "nativeNames": [
       "Boarisch"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
-    "unescoStatus": [
-      "safe"
-    ]
+    "ethnologueStatus": "9 Dormant",
+    "unescoStatus": "safe"
   },
   {
     "iso": "bgc",
@@ -2371,9 +2171,7 @@
       "ہریاݨوی",
       "हरियाणवी"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ]
+    "ethnologueStatus": "10 Extinct"
   },
   {
     "iso": "mwr",
@@ -2421,9 +2219,7 @@
       "تاجیکی",
       "زبان تاجیکی"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ]
+    "ethnologueStatus": "6a Vigorous"
   },
   {
     "iso": "syl",
@@ -2454,12 +2250,8 @@
       "United Kingdom",
       "United States"
     ],
-    "unescoStatus": [
-      "safe"
-    ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "unescoStatus": "safe",
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "ꠍꠤꠟꠐꠤ ꠝꠣꠔ",
       "ꠘꠣꠉꠞꠤ ꠜꠣꠡꠣ"
@@ -2477,9 +2269,7 @@
       "Iran",
       "Turkey"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "آذربایجان دیلی",
       "آذربایجانجا",
@@ -2497,9 +2287,7 @@
     "countries": [
       "Bangladesh"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": []
   },
   {
@@ -2516,9 +2304,7 @@
       "South Africa",
       "Zimbabwe"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Tsonga",
       "Xitsonga"
@@ -2549,12 +2335,8 @@
       "Ukraine",
       "Uzbekistan"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "unescoStatus": "vulnerable",
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Qazaq tılı",
       "қазақ тілі",
@@ -2583,12 +2365,8 @@
       "Slovenia",
       "Ukraine"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "unescoStatus": "vulnerable",
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "magyar",
       "magyar nyelv"
@@ -2607,9 +2385,7 @@
       "Rwanda",
       "Uganda"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Ikinyarwanda",
       "Kinyarwanda"
@@ -2628,9 +2404,7 @@
       "Mozambique",
       "South Africa"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "isiZulu"
     ]
@@ -2648,9 +2422,7 @@
       "Mozambique",
       "Zambia"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "Chicheŵa",
       "Chilankhulo cha Chichewa"
@@ -2669,9 +2441,7 @@
     "countries": [
       "Tunisia"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "Dèrja Tounsiyya",
       "Tounsi",
@@ -2690,9 +2460,7 @@
       "Jordan",
       "Palestine"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": []
   },
   {
@@ -2706,9 +2474,7 @@
     "countries": [
       "Yemen"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ],
+    "ethnologueStatus": "10 Extinct",
     "nativeNames": []
   },
   {
@@ -2723,9 +2489,7 @@
       "Ghana",
       "Ivory Coast"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "Akan",
       "akan"
@@ -2743,9 +2507,7 @@
     "countries": [
       "People's Republic of China"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -2760,9 +2522,7 @@
       "Pakistan",
       "Tajikistan"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": []
   },
   {
@@ -2779,9 +2539,7 @@
       "Tanzania",
       "Uganda"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Ikirundi"
     ]
@@ -2797,9 +2555,7 @@
     "countries": [
       "Czech Republic"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "český jazyk",
       "čeština"
@@ -2817,9 +2573,7 @@
       "Djibouti",
       "Yemen"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ],
+    "ethnologueStatus": "10 Extinct",
     "nativeNames": []
   },
   {
@@ -2842,9 +2596,7 @@
       "Turkey",
       "Uzbekistan"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": [
       "ئۇيغۇر",
       "ئۇيغۇر تىلى",
@@ -2866,9 +2618,7 @@
       "Zambia",
       "Zimbabwe"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Afrikaans"
     ]
@@ -2889,9 +2639,7 @@
       "People's Republic of China",
       "Taiwan"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Bàng-uâ",
       "Mìng-dĕ̤ng-ngṳ̄",
@@ -2919,12 +2667,8 @@
       "Switzerland",
       "Venezuela"
     ],
-    "unescoStatus": [
-      "safe"
-    ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "unescoStatus": "safe",
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Alemannisch",
       "Schwyzerdütsch"
@@ -2941,9 +2685,7 @@
     "countries": [
       "India"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -2957,9 +2699,7 @@
     "countries": [
       "India"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -2973,9 +2713,7 @@
     "countries": [
       "Haiti"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Kreyòl ayisyen"
     ]
@@ -2993,9 +2731,7 @@
     "countries": [
       "Afghanistan"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "دری"
     ]
@@ -3011,12 +2747,8 @@
     "countries": [
       "Israel"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "unescoStatus": "vulnerable",
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "עברית",
       "עברית חדשה"
@@ -3036,9 +2768,7 @@
       "Sweden",
       "Åland"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "svenska"
     ]
@@ -3054,9 +2784,7 @@
       "Azerbaijan",
       "Georgia"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": []
   },
   {
@@ -3070,9 +2798,7 @@
     "countries": [
       "Philippines"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "Ilokano",
       "Pagsasao nga Ilokano"
@@ -3090,9 +2816,7 @@
       "Democratic Republic of the Congo",
       "Zambia"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": []
   },
   {
@@ -3117,9 +2841,7 @@
       "Turkey",
       "Ukraine"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "български език"
     ]
@@ -3141,9 +2863,7 @@
       "North Macedonia",
       "Serbia"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "srpski jezik",
       "српски",
@@ -3180,9 +2900,7 @@
       "United States",
       "Vietnam"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -3199,9 +2917,7 @@
       "Zambia",
       "Zimbabwe"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "ChiShona",
       "Chishona",
@@ -3219,9 +2935,7 @@
     "countries": [
       "Philippines"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "Hiligaynon"
     ]
@@ -3239,9 +2953,7 @@
       "South Africa",
       "Zimbabwe"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "IsiXhosa",
       "isiXhosa"
@@ -3258,9 +2970,7 @@
     "countries": [
       "India"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ],
+    "ethnologueStatus": "10 Extinct",
     "nativeNames": []
   },
   {
@@ -3276,9 +2986,7 @@
     "countries": [
       "Morocco"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Taclḥit",
       "تشلحيت",
@@ -3295,9 +3003,7 @@
       "India",
       "Nepal"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -3343,12 +3049,8 @@
       "Ukraine",
       "United States"
     ],
-    "unescoStatus": [
-      "safe"
-    ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "unescoStatus": "safe",
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "беларуская мова"
     ]
@@ -3367,9 +3069,7 @@
       "Mali",
       "Togo"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": []
   },
   {
@@ -3384,9 +3084,7 @@
       "Eritrea",
       "Ethiopia"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": [
       "ትግርኛ"
     ]
@@ -3402,12 +3100,8 @@
     "countries": [
       "Italy"
     ],
-    "unescoStatus": [
-      "safe"
-    ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "unescoStatus": "safe",
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Lengua napulitana"
     ]
@@ -3424,9 +3118,7 @@
       "Mozambique",
       "Tanzania"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -3461,9 +3153,7 @@
       "Iran",
       "Iraq"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": [
       "سۆرانی",
       "کوردی",
@@ -3489,12 +3179,8 @@
       "India",
       "Nepal"
     ],
-    "unescoStatus": [
-      "safe"
-    ],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ],
+    "unescoStatus": "safe",
+    "ethnologueStatus": "8b Nearly Extinct",
     "nativeNames": [
       "Santali",
       "संथाली भाषा",
@@ -3529,9 +3215,7 @@
       "Slovakia",
       "Slovenia"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "hrvatski",
       "hrvatski jezik"
@@ -3553,9 +3237,7 @@
       "India",
       "Nepal"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "नागपुरी",
       "सादरी"
@@ -3575,9 +3257,7 @@
       "India",
       "Pakistan"
     ],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ],
+    "ethnologueStatus": "8b Nearly Extinct",
     "nativeNames": [
       "کٲشُر",
       "कॉशुर",
@@ -3612,9 +3292,7 @@
       "United States",
       "Uruguay"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "հայերեն"
     ]
@@ -3630,9 +3308,7 @@
     "countries": [
       "Kenya"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Gĩgĩkũyũ",
       "Gĩkũyũ"
@@ -3649,9 +3325,7 @@
     "countries": [
       "Pakistan"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ],
+    "ethnologueStatus": "10 Extinct",
     "nativeNames": []
   },
   {
@@ -3666,9 +3340,7 @@
       "Angola",
       "Democratic Republic of the Congo"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": [
       "Tshiluba"
     ]
@@ -3702,9 +3374,7 @@
       "Laos",
       "Thailand"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "คำเมือง",
       "ᨣᩤᩴᨾᩮᩬᩥᨦ"
@@ -3725,9 +3395,7 @@
       "Greenland",
       "Kingdom of Denmark"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "dansk"
     ]
@@ -3745,9 +3413,7 @@
     "countries": [
       "India"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -3765,12 +3431,8 @@
       "Slovakia",
       "Ukraine"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "unescoStatus": "vulnerable",
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "slovenský jazyk",
       "slovenčina"
@@ -3788,9 +3450,7 @@
       "Lesotho",
       "South Africa"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Sesotho",
       "seSotho"
@@ -3808,9 +3468,7 @@
       "Angola",
       "Namibia"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "Úmbúndú#"
     ]
@@ -3826,9 +3484,7 @@
     "countries": [
       "Ethiopia"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": []
   },
   {
@@ -3842,9 +3498,7 @@
     "countries": [
       "Algeria"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Taqbaylit",
       "taqbaylit"
@@ -3864,9 +3518,7 @@
       "Malaysia",
       "Singapore"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "bahaso Minangkabau"
     ]
@@ -3882,9 +3534,7 @@
     "countries": [
       "Tanzania"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Jìsùgǔmà"
     ]
@@ -3905,12 +3555,8 @@
       "Russia",
       "Sweden"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "unescoStatus": "vulnerable",
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "suomi"
     ]
@@ -3927,9 +3573,7 @@
       "Cambodia",
       "Laos"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "ພາສາລາວ",
       "ລາວ"
@@ -3964,9 +3608,7 @@
     "countries": [
       "Norway"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "norsk"
     ]
@@ -3982,9 +3624,7 @@
     "countries": [
       "Russia"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": [
       "татар теле"
     ]
@@ -4001,9 +3641,7 @@
     "countries": [
       "Indonesia"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "basa Ogi",
       "ᨅᨔ ᨕᨚᨁᨗ"
@@ -4037,9 +3675,7 @@
     "countries": [
       "Ghana"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": []
   },
   {
@@ -4053,9 +3689,7 @@
     "countries": [
       "India"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -4070,9 +3704,7 @@
       "Germany",
       "Netherlands"
     ],
-    "ethnologueStatus": [
-      "29051555"
-    ],
+    "ethnologueStatus": "29051555",
     "nativeNames": [
       "Niedersächsisch",
       "Plattdütsch",
@@ -4091,9 +3723,7 @@
     "countries": [
       "India"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -4110,9 +3740,7 @@
       "Italy",
       "Spain"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": [
       "català",
       "valencià"
@@ -4129,12 +3757,8 @@
     "countries": [
       "Italy"
     ],
-    "unescoStatus": [
-      "safe"
-    ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "unescoStatus": "safe",
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Sicilianu"
     ]
@@ -4148,9 +3772,7 @@
     "countries": [
       "People's Republic of China"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ],
+    "ethnologueStatus": "10 Extinct",
     "nativeNames": []
   },
   {
@@ -4166,9 +3788,7 @@
       "Chad",
       "Democratic Republic of the Congo"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Sango",
       "Sängö"
@@ -4188,9 +3808,7 @@
       "People's Republic of China",
       "Tajikistan"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Кыргыз тили",
       "кыргызча"
@@ -4207,9 +3825,7 @@
     "countries": [
       "Thailand"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": []
   },
   {
@@ -4226,9 +3842,7 @@
       "South Africa",
       "Zimbabwe"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "seTswana"
     ]
@@ -4251,9 +3865,7 @@
       "Tanzania",
       "Yemen"
     ],
-    "ethnologueStatus": [
-      "10 Extinct"
-    ],
+    "ethnologueStatus": "10 Extinct",
     "nativeNames": [
       "اللهجة الحضرمية"
     ]
@@ -4274,9 +3886,7 @@
       "Senegal",
       "The Gambia"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Pulaar",
       "بولار",
@@ -4295,12 +3905,8 @@
       "Algeria",
       "Morocco"
     ],
-    "unescoStatus": [
-      "vulnerable"
-    ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "unescoStatus": "vulnerable",
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Tarifit",
       "تاريفيت",
@@ -4320,9 +3926,7 @@
       "Libya",
       "Niger"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": []
   },
   {
@@ -4340,9 +3944,7 @@
       "Ivory Coast",
       "Mali"
     ],
-    "ethnologueStatus": [
-      "8b Nearly Extinct"
-    ],
+    "ethnologueStatus": "8b Nearly Extinct",
     "nativeNames": [
       "Bamanankan"
     ]
@@ -4362,9 +3964,7 @@
       "Turkmenistan",
       "Uzbekistan"
     ],
-    "ethnologueStatus": [
-      "6b Threatened"
-    ],
+    "ethnologueStatus": "6b Threatened",
     "nativeNames": [
       "اوزبیک تورکچه"
     ]
@@ -4380,9 +3980,7 @@
     "countries": [
       "Uganda"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": [
       "Luganda"
     ]
@@ -4398,9 +3996,7 @@
     "countries": [
       "South Africa"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Sepedi",
       "Sesotho sa Leboa"
@@ -4419,9 +4015,7 @@
       "Chile",
       "Peru"
     ],
-    "unescoStatus": [
-      "safe"
-    ],
+    "unescoStatus": "safe",
     "nativeNames": [
       "Aymar aru"
     ]
@@ -4438,9 +4032,7 @@
     "countries": [
       "Indonesia"
     ],
-    "ethnologueStatus": [
-      "9 Dormant"
-    ],
+    "ethnologueStatus": "9 Dormant",
     "nativeNames": [
       "Basa Bali"
     ]
@@ -4470,9 +4062,7 @@
       "Myanmar",
       "Thailand"
     ],
-    "ethnologueStatus": [
-      "8a Moribund"
-    ],
+    "ethnologueStatus": "8a Moribund",
     "nativeNames": []
   },
   {
@@ -4488,9 +4078,7 @@
       "Lithuania",
       "Poland"
     ],
-    "ethnologueStatus": [
-      "6a Vigorous"
-    ],
+    "ethnologueStatus": "6a Vigorous",
     "nativeNames": [
       "Lietuviškai",
       "Lietuvių kalba"
