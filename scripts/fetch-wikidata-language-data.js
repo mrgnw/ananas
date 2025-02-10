@@ -67,7 +67,7 @@ async function fetchWikidataSpeakers() {
           .map(s => s.trim())
           .filter(Boolean)
           .sort()
-      } else if (key === 'writingSystems' || key === 'families' || key === 'nativeNames') {
+      } else if (key === 'writingSystems' || key === 'nativeNames') {
         simplified[key] = value.value.split(', ')
           .filter(Boolean)
           .sort()
