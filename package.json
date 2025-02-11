@@ -34,7 +34,7 @@
   "dependencies": {
     "@sveltejs/adapter-cloudflare": "^3.0.2",
     "animotion": "^0.1.2",
-    "bits-ui": "^0.21.16",
+    "bits-ui": "^0.22.0",
     "clsx": "^2.1.1",
     "cmdk-sv": "^0.0.18",
     "countries-list": "^3.1.1",
