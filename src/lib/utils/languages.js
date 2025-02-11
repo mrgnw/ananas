@@ -20,10 +20,9 @@ export const defaultLanguages = {
     scn: { label: 'Sicilian', native: 'Sicilianu'}
 }
 
-// Get all available languages (both from countries and defaults)
+// Get all available languages from Wikidata
 export function getAllLanguages() {
-    const countryLanguages = getCountryLanguages()
-    return [...new Set([...countryLanguages, ...Object.keys(defaultLanguages)])].sort()
+    return languageData.map(l => l.iso).sort()
 }
 
 // Convert language code to name using countries-list data
@@ -56,41 +55,52 @@ export function getEnglishName(code) {
     return code.toUpperCase()
 }
 
+// Get language info from wikidata
+export function getLanguageInfo(code) {
+    return languageData.find(l => l.iso === code)
+}
+
 // Search languages with smart ranking
-export function searchLanguages(query, userCountry = null) {
-    const allLanguages = getAllLanguages()
-    if (!query) {
-        return sortLanguages(allLanguages, userCountry)
-    }
-
-    const results = []
-    const lowerQuery = query.toLowerCase()
-
-    for (const code of allLanguages) {
-        const englishName = getEnglishName(code).toLowerCase()
-        const nativeName = getLanguageName(code).toLowerCase()
-        
-        // Exact matches
-        if (code.toLowerCase() === lowerQuery || englishName === lowerQuery || nativeName === lowerQuery) {
-            results.push({ code, score: 1 })
-            continue
-        }
-
-        // Starts with matches
-        if (code.toLowerCase().startsWith(lowerQuery) || englishName.startsWith(lowerQuery) || nativeName.startsWith(lowerQuery)) {
-            results.push({ code, score: 0.8 })
-            continue
-        }
-
-        // Contains matches
-        if (code.toLowerCase().includes(lowerQuery) || englishName.includes(lowerQuery) || nativeName.includes(lowerQuery)) {
-            results.push({ code, score: 0.6 })
-        }
-    }
-
-    // Sort by search score first, then by country and speakers
-    const searchResults = results.sort((a, b) => b.score - a.score).map(r => r.code)
-    return sortLanguages(searchResults, userCountry)
+export function searchLanguages(query, country) {
+    const searchTerms = query.toLowerCase().split(/\s+/).filter(Boolean)
+    
+    return getAllLanguages()
+        .filter(code => {
+            if (!searchTerms.length) return true
+            
+            const info = getLanguageInfo(code)
+            if (!info) return false
+            
+            // Check for exact ISO code matches first
+            if (searchTerms.some(term => 
+                term === info.iso?.toLowerCase() || 
+                term === info.iso1?.toLowerCase()
+            )) {
+                return true
+            }
+            
+            // Then check other fields
+            const searchableText = [
+                getEnglishName(code)?.toLowerCase(),
+                getLanguageName(code)?.toLowerCase(),
+                ...(info.countries || []).map(c => c.toLowerCase()),
+                ...(info.writingSystems || []).map(w => w.toLowerCase())
+            ].filter(Boolean).join(' ')
+            
+            return searchTerms.every(term => searchableText.includes(term))
+        })
+        .sort((a, b) => {
+            const infoA = getLanguageInfo(a)
+            const infoB = getLanguageInfo(b)
+            
+            // Sort by native speakers if available
+            if (infoA?.nativeSpeakers_k && infoB?.nativeSpeakers_k) {
+                return infoB.nativeSpeakers_k - infoA.nativeSpeakers_k
+            }
+            
+            // Fall back to alphabetical sort by name
+            return getEnglishName(a).localeCompare(getEnglishName(b))
+        })
 }
 
 // Sort languages by country and native speakers
