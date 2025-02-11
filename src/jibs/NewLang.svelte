@@ -46,25 +46,31 @@
 	let text = $state('');
 	let show_original = $state(true);
 
-	let user_langs = $state(loadUserLangs());
+	// Default languages configuration
+	const defaultLangs = {
+		en: { label: 'English', native: 'English', rtl: false, display: true },
+		ru: { label: 'Russian', native: 'Русский', rtl: false, display: true },
+		ja: { label: 'Japanese', native: '日本語', rtl: false, display: true },
+		es: { label: 'Spanish', native: 'Español', rtl: false, display: true },
+		it: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
+		ca: { label: 'Catalan', native: 'Català', rtl: false, display: true }
+	};
 
 	function loadUserLangs() {
-		if (typeof window !== 'undefined') {
+		try {
+			if (typeof window === 'undefined') return defaultLangs;
 			const stored = localStorage.getItem('user_langs');
-			if (stored) {
-				return JSON.parse(stored);
-			}
+			if (!stored) return defaultLangs;
+			const parsed = JSON.parse(stored);
+			// Merge stored languages with defaults, preserving user settings but adding new default languages
+			return { ...defaultLangs, ...parsed };
+		} catch (error) {
+			console.error('Error loading user languages:', error);
+			return defaultLangs;
 		}
-		// Default languages if nothing is stored
-		return {
-			en: { label: 'English', native: 'English', rtl: false, display: true },
-			ru: { label: 'Russian', native: 'Русский', rtl: false, display: true },
-			ja: { label: 'Japanese', native: '日本語', rtl: false, display: true },
-			es: { label: 'Spanish', native: 'Español', rtl: false, display: true },
-			it: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
-			scn: { label: 'Sicilian', native: 'Sicilianu', rtl: false, display: true }
-		};
 	}
+
+	let user_langs = $state(loadUserLangs());
 
 	// Add effect to save changes
 	$effect(() => {
