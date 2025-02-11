@@ -1,8 +1,7 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import fetch from 'node-fetch'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = path.join(__dirname, '../src/lib/data')
@@ -55,56 +54,31 @@ async function fetchWikidataSpeakers() {
   }
 
   const data = await response.json()
-  
-  // Transform the data into a simpler format
-  const simplifiedData = data.results.bindings.map(row => {
-    const simplified = {}
-    for (const [key, value] of Object.entries(row)) {
-      if (key === 'nativeSpeakers_k') {
-        simplified[key] = value.value ? parseInt(value.value) : null
-      } else if (key === 'countries') {
-        simplified[key] = value.value.split('|')
-          .map(s => s.trim())
-          .filter(Boolean)
-          .sort()
-      } else if (key === 'writingSystems' || key === 'nativeNames') {
-        simplified[key] = value.value.split(', ')
-          .filter(Boolean)
-          .sort()
-      } else if (key === 'unescoStatus') {
-        simplified[key] = UNESCO_STATUS[value.value] || value.value
-      } else if (key === 'ethnologueStatus') {
-        simplified[key] = ETHNOLOGUE_STATUS[value.value] || value.value
-      } else {
-        simplified[key] = value.value
-      }
+  const languages = data.results.bindings.map(lang => {
+    // First create object with iso codes first
+    const obj = {
+      iso: lang.iso.value,
+      iso1: lang.iso1?.value || null
     }
-    return simplified
+
+    // Then add remaining properties in alphabetical order
+    const sortedProps = Object.entries({
+      countries: lang.countries?.value.split('|').filter(Boolean).sort() || [],
+      ethnologueStatus: lang.ethnologueStatus?.value ? ETHNOLOGUE_STATUS[lang.ethnologueStatus.value] : null,
+      langLabel: lang.langLabel.value,
+      nativeNames: lang.nativeNames?.value.split(', ').filter(Boolean).sort() || [],
+      nativeSpeakers_k: parseInt(lang.nativeSpeakers_k.value),
+      unescoStatus: lang.unescoStatus?.value ? UNESCO_STATUS[lang.unescoStatus.value] : null,
+      writingSystems: lang.writingSystems?.value.split(', ').filter(Boolean).sort() || []
+    }).sort(([a], [b]) => a.localeCompare(b))
+
+    return Object.assign(obj, Object.fromEntries(sortedProps))
   })
-  
-  // Save simplified results to JSON
+
+  // Write to file
   const outputPath = path.join(OUTPUT_DIR, 'wikidata-languages.json')
-  fs.writeFileSync(
-    outputPath,
-    JSON.stringify(simplifiedData, null, 2)
-  )
-  
-  // Print a summary of the first few languages
-  console.log('\nTop languages by native speakers (in thousands):')
-  console.log('ISO\tLanguage\tNative Speakers (k)\tCountries')
-  console.log('-'.repeat(100))
-  
-  for (const lang of simplifiedData.slice(0, 10)) {
-    const iso = lang.iso
-    const name = lang.langLabel.padEnd(15)
-    const native = lang.nativeSpeakers_k?.toLocaleString() || '-'
-    const countries = Array.isArray(lang.countries) ? lang.countries.slice(0, 3).join(', ') + (lang.countries.length > 3 ? '...' : '') : '-'
-    
-    console.log(`${iso}\t${name}\t${native}\t${countries}`)
-  }
-  
-  console.log(`\nFull data written to ${outputPath}`)
-  console.log(`Retrieved ${simplifiedData.length} unique languages`)
+  fs.writeFileSync(outputPath, JSON.stringify(languages, null, 2))
+  console.log(`Wrote ${languages.length} languages to ${outputPath}`)
 }
 
 fetchWikidataSpeakers().catch(console.error)
