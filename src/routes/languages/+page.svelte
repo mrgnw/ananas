@@ -13,7 +13,7 @@ const filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
 
 function formatSpeakers(count) {
     if (!count) return ''
-    return (count/1000).toFixed(1)
+    return (count/1000).toFixed(0)
 }
 </script>
 
@@ -36,7 +36,7 @@ function formatSpeakers(count) {
                 <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 font-medium text-right">__</th>
                 <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 font-medium text-right">___</th>
                 <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 font-medium text-center"># M</th>
-                <th class="whitespace-nowrap py-2 pl-2 pr-3 text-left font-medium">Name</th>
+                <th class="max-w-[480px] whitespace-nowrap py-2 pl-2 pr-3 text-left font-medium">Name</th>
             </tr>
         </thead>
         <tbody class="divide-y">
@@ -47,7 +47,7 @@ function formatSpeakers(count) {
                     <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600 text-right">{info?.iso1 || ''}</td>
                     <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600 text-right">{code}</td>
                     <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600 text-right">{formatSpeakers(info?.nativeSpeakers_k)}</td>
-                    <td class="py-1.5 pl-2 pr-3 text-sm">
+                    <td class="max-w-[480px] truncate py-1.5 pl-2 pr-3 text-sm">
                         {#if getLanguageName(code) === getEnglishName(code)}
                             {getLanguageName(code)}
                         {:else if nativeFirst}
