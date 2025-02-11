@@ -62,12 +62,46 @@ async function fetchWikidataSpeakers() {
       iso1: lang.iso1?.value || null
     }
 
+    // Case-insensitive deduplication for native names
+    const dedupeNames = (names) => {
+      const seen = new Map()
+      return names
+        .filter(Boolean)
+        .map(name => {
+          // Normalize by removing all case differences
+          const normalized = name.toLowerCase()
+          
+          // If we haven't seen this name before or the new version looks better
+          if (!seen.has(normalized) || shouldPreferName(name, seen.get(normalized))) {
+            seen.set(normalized, name)
+          }
+          return seen.get(normalized)
+        })
+        .filter((name, index, arr) => arr.indexOf(name) === index)
+        .sort()
+    }
+
+    // Helper to decide which version of a name to keep
+    const shouldPreferName = (newName, existingName) => {
+      // If it's a CamelCase vs lowercase difference (e.g., ChiShona vs chiShona),
+      // prefer the one that follows proper capitalization (first letter capital)
+      if (newName.charAt(0).toUpperCase() === newName.charAt(0) &&
+          existingName.charAt(0).toLowerCase() === existingName.charAt(0)) {
+        return true
+      }
+      
+      // For other cases, prefer the one with more uppercase letters
+      const newUpperCount = newName.replace(/[^A-Z]/g, '').length
+      const existingUpperCount = existingName.replace(/[^A-Z]/g, '').length
+      return newUpperCount > existingUpperCount
+    }
+
     // Then add remaining properties in alphabetical order
     const sortedProps = Object.entries({
       countries: [...new Set(lang.countries?.value.split('|').filter(Boolean))]?.sort() || [],
       ethnologueStatus: lang.ethnologueStatus?.value ? ETHNOLOGUE_STATUS[lang.ethnologueStatus.value] : null,
       langLabel: lang.langLabel.value,
-      nativeNames: [...new Set(lang.nativeNames?.value.split(', ').filter(Boolean))]?.sort() || [],
+      nativeNames: dedupeNames(lang.nativeNames?.value.split(', ') || []),
       nativeSpeakers_k: parseInt(lang.nativeSpeakers_k.value),
       ...(lang.rtl?.value === "true" ? { rtl: true } : {}),
       unescoStatus: lang.unescoStatus?.value ? UNESCO_STATUS[lang.unescoStatus.value] : null,
