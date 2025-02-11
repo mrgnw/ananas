@@ -64,13 +64,14 @@ async function fetchWikidataSpeakers() {
 
     // Then add remaining properties in alphabetical order
     const sortedProps = Object.entries({
-      countries: lang.countries?.value.split('|').filter(Boolean).sort() || [],
+      countries: [...new Set(lang.countries?.value.split('|').filter(Boolean))]?.sort() || [],
       ethnologueStatus: lang.ethnologueStatus?.value ? ETHNOLOGUE_STATUS[lang.ethnologueStatus.value] : null,
       langLabel: lang.langLabel.value,
-      nativeNames: lang.nativeNames?.value.split(', ').filter(Boolean).sort() || [],
+      nativeNames: [...new Set(lang.nativeNames?.value.split(', ').filter(Boolean))]?.sort() || [],
       nativeSpeakers_k: parseInt(lang.nativeSpeakers_k.value),
+      ...(lang.rtl?.value === "true" ? { rtl: true } : {}),
       unescoStatus: lang.unescoStatus?.value ? UNESCO_STATUS[lang.unescoStatus.value] : null,
-      writingSystems: lang.writingSystems?.value.split(', ').filter(Boolean).sort() || []
+      writingSystems: [...new Set(lang.writingSystems?.value.split(', ').filter(Boolean))]?.sort() || []
     }).sort(([a], [b]) => a.localeCompare(b))
 
     return Object.assign(obj, Object.fromEntries(sortedProps))

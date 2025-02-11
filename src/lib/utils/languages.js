@@ -1,4 +1,6 @@
 import { languages } from 'countries-list'
+
+// Import JSON data directly - Vite handles JSON imports natively
 import languageData from '$lib/data/wikidata-languages.json'
 
 // Todo: language statistic by region
@@ -57,7 +59,14 @@ export function getEnglishName(code) {
 
 // Get language info from wikidata
 export function getLanguageInfo(code) {
-    return languageData.find(l => l.iso === code)
+    const wikiLang = languageData.find(l => l.iso === code || l.iso1 === code)
+    if (wikiLang) {
+        return {
+            ...wikiLang,
+            rtl: wikiLang.rtl || false // Ensure rtl property is always boolean
+        }
+    }
+    return null
 }
 
 // Search languages with smart ranking

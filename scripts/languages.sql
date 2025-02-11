@@ -5,6 +5,7 @@ SELECT DISTINCT ?iso ?iso1 ?langLabel
   (MIN(STRAFTER(STR(?unescoStatus), "Q")) as ?unescoStatus)
   (MIN(STRAFTER(STR(?ethnologueStatus), "Q")) as ?ethnologueStatus)
   (GROUP_CONCAT(DISTINCT ?nativeName; separator=", ") as ?nativeNames)
+  (MAX(?isRTL) as ?rtl)
 WHERE {
   # Core data
   ?lang wdt:P220 ?iso ;
@@ -26,6 +27,21 @@ WHERE {
     ?lang wdt:P17 ?country .
     ?country rdfs:label ?countryLabel .
     FILTER(LANG(?countryLabel) = "en")
+  }
+  
+  # RTL detection based on writing system
+  OPTIONAL {
+    ?lang wdt:P282 ?writingSystem .
+    VALUES ?rtlSystem { 
+      wd:Q8196 # Arabic script
+      wd:Q9288 # Hebrew alphabet
+      wd:Q28564 # Persian alphabet
+      wd:Q47577 # N'Ko script
+      wd:Q1137511 # Mandaic alphabet
+      wd:Q1137469 # Samaritan script
+      wd:Q1137466 # Syriac alphabet
+    }
+    BIND(IF(?writingSystem = ?rtlSystem, true, false) as ?isRTL)
   }
   
   # Status and names

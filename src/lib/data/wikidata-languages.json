@@ -11,9 +11,6 @@
     "nativeNames": [
       "中文",
       "汉语",
-      "汉语",
-      "汉语",
-      "漢語",
       "漢語"
     ],
     "nativeSpeakers_k": 1299877,
@@ -315,7 +312,6 @@
     "ethnologueStatus": "6a Vigorous",
     "langLabel": "Portuguese",
     "nativeNames": [
-      "português",
       "português"
     ],
     "nativeSpeakers_k": 254300,
@@ -1011,6 +1007,7 @@
       "Romani chib"
     ],
     "nativeSpeakers_k": 46000,
+    "unescoStatus": "definitely endangered",
     "writingSystems": [
       "Cyrillic script",
       "Devanagari",
@@ -1059,6 +1056,7 @@
     "langLabel": "Levantine Arabic",
     "nativeNames": [],
     "nativeSpeakers_k": 44000,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -1085,6 +1083,7 @@
       "Hausa"
     ],
     "nativeSpeakers_k": 43900,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -1122,6 +1121,7 @@
       "دريرية"
     ],
     "nativeSpeakers_k": 42252,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -1167,6 +1167,7 @@
       "پښتو ژبه"
     ],
     "nativeSpeakers_k": 39000,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -1329,6 +1330,7 @@
     "langLabel": "Sudanese Arabic",
     "nativeNames": [],
     "nativeSpeakers_k": 31900,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -1348,6 +1350,7 @@
       "الداريجة"
     ],
     "nativeSpeakers_k": 27500,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -1394,6 +1397,7 @@
       "ئۇزبېك تیلى"
     ],
     "nativeSpeakers_k": 27000,
+    "rtl": true,
     "unescoStatus": "vulnerable",
     "writingSystems": [
       "Arabic alphabet",
@@ -1458,6 +1462,7 @@
     "langLabel": "North Levantine Arabic",
     "nativeNames": [],
     "nativeSpeakers_k": 24600,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -1622,6 +1627,7 @@
       "Azərbaycan dili"
     ],
     "nativeSpeakers_k": 23000,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -1642,6 +1648,7 @@
       "صعيدي"
     ],
     "nativeSpeakers_k": 22400,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -1726,6 +1733,7 @@
       "کوردی"
     ],
     "nativeSpeakers_k": 21000,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -2029,6 +2037,7 @@
       "لهجة عراقية"
     ],
     "nativeSpeakers_k": 15700,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -2131,6 +2140,7 @@
       "kanuri"
     ],
     "nativeSpeakers_k": 15000,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -2210,6 +2220,7 @@
     "langLabel": "Hijazi Arabic",
     "nativeNames": [],
     "nativeSpeakers_k": 14500,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -2368,6 +2379,7 @@
       "تۆرکجه"
     ],
     "nativeSpeakers_k": 13800,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -2431,11 +2443,11 @@
     "nativeNames": [
       "Qazaq tılı",
       "қазақ тілі",
-      "қазақ тілі",
       "қазақша",
       "قازاق ٴتىلى"
     ],
     "nativeSpeakers_k": 12900,
+    "rtl": true,
     "unescoStatus": "vulnerable",
     "writingSystems": [
       "Arabic alphabet",
@@ -2577,6 +2589,7 @@
     "langLabel": "Sanʽani Arabic",
     "nativeNames": [],
     "nativeSpeakers_k": 11400,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -2682,6 +2695,7 @@
     "langLabel": "Taʽizzi-Adeni Arabic",
     "nativeNames": [],
     "nativeSpeakers_k": 10500,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -2847,6 +2861,7 @@
       "دری"
     ],
     "nativeSpeakers_k": 9600,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -3293,6 +3308,7 @@
       "کوردیی ناوەندی"
     ],
     "nativeSpeakers_k": 7250,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -3470,6 +3486,7 @@
     "langLabel": "Central Pashto",
     "nativeNames": [],
     "nativeSpeakers_k": 6520,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -3982,6 +3999,7 @@
       "кыргызча"
     ],
     "nativeSpeakers_k": 4568,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet",
@@ -4042,6 +4060,7 @@
       "اللهجة الحضرمية"
     ],
     "nativeSpeakers_k": 4473,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
@@ -4103,6 +4122,7 @@
     "langLabel": "Libyan Arabic",
     "nativeNames": [],
     "nativeSpeakers_k": 4320,
+    "rtl": true,
     "unescoStatus": null,
     "writingSystems": [
       "Arabic alphabet"
