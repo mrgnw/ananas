@@ -15,7 +15,8 @@ const UNESCO_STATUS = {
   "20672084": "severely endangered",
   "20672085": "definitely endangered",
   "20672086": "vulnerable",
-  "20672087": "safe"
+  "20672087": "safe",
+  "20672088": "definitely endangered"
 }
 
 // Ethnologue status mapping
