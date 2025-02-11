@@ -13,9 +13,7 @@ const filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
 
 function formatSpeakers(count) {
     if (!count) return ''
-    if (count >= 1000000) return `${(count/1000000).toFixed(1)}M speakers`
-    if (count >= 1000) return `${(count/1000).toFixed(1)}K speakers`
-    return `${count} speakers`
+    return (count/1000).toFixed(1)
 }
 </script>
 
@@ -37,8 +35,8 @@ function formatSpeakers(count) {
             <tr class="border-b">
                 <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 text-left font-medium">3-digit</th>
                 <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 text-left font-medium">2-digit</th>
+                <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 text-right font-medium"># M</th>
                 <th class="whitespace-nowrap py-2 pl-2 pr-3 text-left font-medium">Name</th>
-                <th class="whitespace-nowrap py-2 pl-2 pr-3 text-right font-medium">Speakers</th>
             </tr>
         </thead>
         <tbody class="divide-y">
@@ -48,6 +46,7 @@ function formatSpeakers(count) {
                 <tr class:bg-blue-50={inUserCountry}>
                     <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600">{code}</td>
                     <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600">{info?.iso1 || '—'}</td>
+                    <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 text-right text-sm text-gray-600">{formatSpeakers(info?.nativeSpeakers_k)}</td>
                     <td class="py-1.5 pl-2 pr-3 text-sm">
                         {#if getLanguageName(code) === getEnglishName(code)}
                             {getLanguageName(code)}
@@ -56,9 +55,6 @@ function formatSpeakers(count) {
                         {:else}
                             {getEnglishName(code)} • {getLanguageName(code)}
                         {/if}
-                    </td>
-                    <td class="whitespace-nowrap py-1.5 pl-2 pr-3 text-right text-sm text-gray-600">
-                        {formatSpeakers(info?.nativeSpeakers_k)}
                     </td>
                 </tr>
             {/each}
