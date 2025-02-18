@@ -92,7 +92,6 @@
 	);
 	let is_loading = $state(false);
 	let is_ready = $derived(text.length > 0 && tgt_langs.length > 0 && !is_loading);
-
 	let is_single_language = $derived(show_langs.length === 1);
 
 	function getNextAvailableTranslation(translation) {
@@ -114,7 +113,11 @@
 	}
 
 	function langs_not_in_tgt(translation) {
-		return Object.keys(translation.translations).filter((lang) => !tgt_langs.includes(lang));
+		return show_langs.filter((lang) => !translation.translations[lang]);
+	}
+
+	function hasAdditionalLanguages(translations) {
+		return show_langs.some(lang => !translations[lang]);
 	}
 
 	function toggle_display(lang) {
@@ -125,13 +128,16 @@
 		}
 	}
 
+	const API_URL = import.meta.env.DEV 
+		? 'http://localhost:8787'
+		: 'https://translate.xces.workers.dev';
+
 	async function handleSubmit() {
 		is_loading = true;
-		const apiUrl = 'https://translate.xces.workers.dev';
 
 		try {
 			console.log('Target languages:', tgt_langs);
-			const response = await fetch(apiUrl, {
+			const response = await fetch(API_URL, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -220,6 +226,64 @@
 		
 		return { original, other_translations };
 	}
+
+	async function requestAdditionalTranslations(text, existingTranslations) {
+		is_loading = true;
+		
+		// Get languages we don't have yet
+		const missingLangs = langs_not_in_tgt({ translations: existingTranslations });
+		console.log('Missing languages:', missingLangs);
+		
+		if (missingLangs.length === 0) {
+			toast.info('No additional languages to translate to');
+			is_loading = false;
+			return;
+		}
+
+		try {
+			const response = await fetch(API_URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					text,
+					tgt_langs: missingLangs
+				})
+			});
+
+			if (!response.ok) {
+				throw new Error('Translation request failed');
+			}
+
+			const data = await response.json();
+			console.log('New translations:', data);
+			
+			// Merge new translations with existing ones
+			return {
+				...existingTranslations,
+				...Object.fromEntries(
+					Object.entries(data).filter(([key]) => key !== 'metadata' && key !== 'original')
+				)
+			};
+		} catch (error) {
+			console.error('Translation error:', error);
+			toast.error('Failed to get additional translations');
+			return null;
+		} finally {
+			is_loading = false;
+		}
+	}
+
+	async function handleExpandTranslations(index, text, translations) {
+		const updatedTranslations = await requestAdditionalTranslations(text, translations);
+		if (updatedTranslations) {
+			history[index].translations = updatedTranslations;
+			history = [...history]; // Trigger reactivity
+			localStorage.setItem('translationHistory', JSON.stringify(history));
+			toast.success('Added new translations!');
+		}
+	}
 </script>
 
 <div class="container mx-auto space-y-6 p-4">
@@ -265,19 +329,8 @@
 							<div class="flex items-center gap-2">
 								<p>{translation.text}</p>
 								<span class="text-xs text-gray-400">[{original.lang}]</span>
-								<span class="text-gray-400">▸</span>
 							</div>
 							<div class="flex items-center gap-2">
-								<button
-									class="hidden group-hover/item:block hover:text-red-500"
-									aria-label="Delete translation"
-									onclick={(e) => {
-										e.stopPropagation();
-										deleteTranslation(index);
-									}}
-								>
-									<Trash2 class="h-4 w-4" />
-								</button>
 								<button
 									class="hidden group-hover/item:block hover:text-blue-500"
 									aria-label="Copy translation"
@@ -330,9 +383,22 @@
 										{/if}
 									{/each}
 									{#if langs_not_in_tgt(translation).length > 0}
-										<p>
+										<div class="flex items-center gap-2 text-gray-500">
 											<i>+ {langs_not_in_tgt(translation).join('•')}</i>
-										</p>
+											{#if hasAdditionalLanguages(translation.translations)}
+												<button 
+													class="text-gray-400 hover:text-gray-600" 
+													onclick={(e) => {
+														e.stopPropagation();
+														handleExpandTranslations(index, translation.text, translation.translations);
+													}}
+													disabled={is_loading}
+													title="Get more translations"
+												>
+													▸
+												</button>
+											{/if}
+										</div>
 									{/if}
 								</div>
 							</CardContent>
@@ -351,7 +417,6 @@
 							<div class="flex items-center gap-2">
 								<p>{example_translation.text}</p>
 								<span class="text-xs text-gray-400">[{original.lang}]</span>
-								<span class="text-gray-400">▸</span>
 							</div>
 							<div class="flex items-center gap-2">
 								<button
@@ -399,9 +464,22 @@
 										{/if}
 									{/each}
 									{#if langs_not_in_tgt(example_translation).length > 0}
-										<p>
+										<div class="flex items-center gap-2 text-gray-500">
 											<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
-										</p>
+											{#if hasAdditionalLanguages(example_translation.translations)}
+												<button 
+													class="text-gray-400 hover:text-gray-600" 
+													onclick={(e) => {
+														e.stopPropagation();
+														handleExpandTranslations(index, example_translation.text, example_translation.translations);
+													}}
+													disabled={is_loading}
+													title="Get more translations"
+												>
+													▸
+												</button>
+											{/if}
+										</div>
 									{/if}
 								</div>
 							</CardContent>
