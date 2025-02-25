@@ -12,6 +12,7 @@ const WIKIDATA_ENDPOINT = 'https://query.wikidata.org/sparql';
 
 const QUERY = `
 SELECT DISTINCT ?country ?countryLabel ?isoCode ?iso3Code ?flagImage
+(GROUP_CONCAT(DISTINCT ?nativeName; separator="|") as ?nativeNames)
 (GROUP_CONCAT(DISTINCT ?lang; separator="|") as ?languages)
 (GROUP_CONCAT(DISTINCT ?langLabel; separator="|") as ?languageLabels)
 (GROUP_CONCAT(DISTINCT ?langIso; separator="|") as ?languageIsos)
@@ -21,6 +22,11 @@ WHERE {
   ?country wdt:P31 wd:Q3624078 .  # Instance of: sovereign state
   ?country wdt:P297 ?isoCode .     # ISO 3166-1 alpha-2 code
   ?country wdt:P298 ?iso3Code .    # ISO 3166-1 alpha-3 code
+  
+  # Get official native name (P1448)
+  OPTIONAL {
+    ?country wdt:P1448 ?nativeName .
+  }
   
   # Get flag image
   OPTIONAL { ?country wdt:P41 ?flagImage . }
@@ -47,7 +53,7 @@ WHERE {
   }
 }
 GROUP BY ?country ?countryLabel ?isoCode ?iso3Code ?flagImage
-ORDER BY ?countryLabel
+ORDER BY ?isoCode
 `;
 
 async function fetchWikidataCountries() {
@@ -91,6 +97,7 @@ async function fetchWikidataCountries() {
     return {
       wikidata_id: country.country.value.split('/').pop(),
       name: country.countryLabel.value,
+      native_name: country.nativeNames?.value.split('|')[0] || null,
       iso: country.isoCode.value.toLowerCase(),
       iso3: country.iso3Code.value.toLowerCase(),
       flag: String.fromCodePoint(
