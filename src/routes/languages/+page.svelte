@@ -1,5 +1,6 @@
 <script>
 import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages, getLanguageInfo } from '$lib/utils/languages.js'
+import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js'
 import { Button } from '$lib/components/ui/button'
 import { Command } from '$lib/components/ui/command'
 import { CommandInput } from '$lib/components/ui/command'
@@ -10,97 +11,100 @@ const data = $props()
 
 let searchQuery = $state("")
 let nativeFirst = $state(false)
-const filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
+let sortBy = $state('code')
+let sortDirection = $state('asc')
 
-// Load the current user_langs from localStorage
-function loadUserLangs() {
-    if (typeof window === 'undefined') return {};
-    const stored = localStorage.getItem('user_langs');
-    return stored ? JSON.parse(stored) : {};
-}
-
-let user_langs = $state(loadUserLangs());
+// Get all languages from your existing utils
+let allLanguages = $state(getAllLanguages())
 
 function toggleLanguage(code, info) {
-    if (user_langs[code]) {
-        delete user_langs[code];
+    if (translateLanguages.languages[code]) {
+        translateLanguages.removeLanguage(code)
     } else {
-        user_langs[code] = {
+        translateLanguages.addLanguage(code, {
             label: getEnglishName(code),
             native: getLanguageName(code),
-            rtl: false, // You might want to get this from language info
+            rtl: info?.rtl || false,
             display: true
-        };
+        })
     }
-    // Save to localStorage
-    localStorage.setItem('user_langs', JSON.stringify(user_langs));
 }
 
 function isSelected(code) {
-    return !!user_langs[code];
+    return code in translateLanguages.languages
 }
 
 function formatSpeakers(count) {
     if (!count) return ''
     return (count/1000).toFixed(0)
 }
+
+let filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
+
+let sortedLanguages = $derived([...filteredLanguages].sort((a, b) => {
+    const aValue = a[sortBy]
+    const bValue = b[sortBy]
+    const modifier = sortDirection === 'asc' ? 1 : -1
+    return aValue > bValue ? modifier : -modifier
+}))
+
+function updateSort(field) {
+    if (sortBy === field) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'
+    } else {
+        sortBy = field
+        sortDirection = 'asc'
+    }
+}
 </script>
 
-<div class="mx-auto max-w-5xl px-4 py-8">
-    <div class="mb-6 space-y-4">
-        <h1 class="text-2xl font-bold">Language Settings</h1>
-        <p class="text-sm text-gray-500">
-            Select the languages you want to translate to. Changes are saved automatically.
-        </p>
+<div class="container mx-auto p-4" in:fade>
+    <h1 class="text-3xl font-bold mb-6">Language Selection</h1>
+    
+    <div class="mb-6">
+        <input
+            type="text"
+            placeholder="Search languages..."
+            bind:value={searchQuery}
+            class="w-full p-2 border rounded"
+        />
     </div>
 
-    <div class="mb-6 flex items-center justify-between gap-4">
-        <Command class="w-96">
-            <CommandInput 
-                placeholder="Search languages..." 
-                bind:value={searchQuery}
-            />
-        </Command>
-        <Button variant="outline" on:click={() => nativeFirst = !nativeFirst}>
-            {nativeFirst ? 'Show English first' : 'Show native first'}
-        </Button>
-    </div>
-
-    <table class="w-full rounded-lg border bg-white">
-        <thead>
-            <tr class="border-b">
-                <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 font-medium text-center">Select</th>
-                <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 font-medium text-right">__</th>
-                <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 font-medium text-right">___</th>
-                <th class="w-16 whitespace-nowrap py-2 pl-3 pr-2 font-medium text-center"># M</th>
-                <th class="max-w-[480px] whitespace-nowrap py-2 pl-2 pr-3 text-left font-medium">Name</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y">
-            {#each filteredLanguages as code}
-                {@const info = getLanguageInfo(code)}
-                {@const inUserCountry = data.country && info?.countries?.includes(data.country)}
-                <tr class:bg-blue-50={inUserCountry}>
-                    <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 text-center">
-                        <Checkbox 
-                            checked={isSelected(code)}
-                            onCheckedChange={() => toggleLanguage(code, info)}
-                        />
-                    </td>
-                    <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600 text-right">{info?.iso1 || ''}</td>
-                    <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600 text-right">{code}</td>
-                    <td class="w-16 whitespace-nowrap py-1.5 pl-3 pr-2 font-mono text-sm text-gray-600 text-right">{formatSpeakers(info?.nativeSpeakers_k)}</td>
-                    <td class="max-w-[480px] truncate py-1.5 pl-2 pr-3 text-sm">
-                        {#if getLanguageName(code) === getEnglishName(code)}
-                            {getLanguageName(code)}
-                        {:else if nativeFirst}
-                            {getLanguageName(code)} • {getEnglishName(code)}
-                        {:else}
-                            {getEnglishName(code)} • {getLanguageName(code)}
-                        {/if}
-                    </td>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+            <thead>
+                <tr>
+                    <th class="cursor-pointer p-2" on:click={() => updateSort('code')}>
+                        Code {sortBy === 'code' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                    </th>
+                    <th class="cursor-pointer p-2" on:click={() => updateSort('name')}>
+                        Name {sortBy === 'name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                    </th>
+                    <th class="cursor-pointer p-2" on:click={() => updateSort('nativeName')}>
+                        Native Name {sortBy === 'nativeName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                    </th>
+                    <th class="p-2">Select</th>
                 </tr>
-            {/each}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {#each sortedLanguages as lang}
+                    {@const info = getLanguageInfo(lang.code)}
+                    {@const inUserCountry = data.country && info?.countries?.includes(data.country)}
+                    <tr class:bg-blue-50={inUserCountry}>
+                        <td class="p-2">{lang.code}</td>
+                        <td class="p-2">{lang.name}</td>
+                        <td class="p-2">{lang.nativeName}</td>
+                        <td class="p-2">
+                            <button
+                                class="px-4 py-1 rounded {isSelected(lang.code) ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
+                                on:click={() => toggleLanguage(lang.code, info)}
+                            >
+                                {isSelected(lang.code) ? 'Selected' : 'Select'}
+                            </button>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    </div>
 </div>
