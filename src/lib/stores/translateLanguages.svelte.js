@@ -1,41 +1,25 @@
+import { defaultLanguages } from '$lib/utils/languages.js';
+
 export function createTranslateLanguages() {
   // Using an object to store language data instead of an array
   let languages = $state({});
 
   function initializeFromStorage() {
+    // Always start with default languages
+    languages = { ...defaultLanguages };
+    
     if (typeof localStorage === 'undefined') return;
 
     try {
-      // Try to load from user_langs first, fall back to tgt_langs for migration
-      const savedUserLangs = localStorage.getItem('user_langs');
-      const savedTgtLangs = localStorage.getItem('tgt_langs');
-      
-      if (savedUserLangs) {
-        languages = JSON.parse(savedUserLangs);
-      } else if (savedTgtLangs) {
-        // Migrate from old format to new format
-        const tgtLangs = JSON.parse(savedTgtLangs);
-        const newLanguages = {};
-        
-        tgtLangs.forEach(code => {
-          try {
-            newLanguages[code] = {
-              label: new Intl.DisplayNames(['en'], { type: 'language' }).of(code),
-              native: new Intl.DisplayNames([code], { type: 'language' }).of(code),
-              rtl: false, // Default to false, can be updated later
-              display: true
-            };
-          } catch (e) {
-            console.warn(`Failed to migrate language ${code}:`, e);
-          }
-        });
-        
-        languages = newLanguages;
-        // Save in new format
+        const savedUserLangs = localStorage.getItem('user_langs');
+        if (savedUserLangs) {
+            // Merge saved languages with defaults, preserving user settings
+            const saved = JSON.parse(savedUserLangs);
+            languages = { ...languages, ...saved };
+        }
         saveToStorage();
-      }
     } catch (e) {
-      console.error('Failed to initialize languages from storage:', e);
+        console.error('Failed to initialize languages from storage:', e);
     }
   }
 

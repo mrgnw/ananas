@@ -19,21 +19,21 @@ let sortDirection = $state<'asc' | 'desc'>('desc')
 // Get all languages from your existing utils
 let allLanguages = $state<Language[]>(getAllLanguages())
 
-function toggleLanguage(code, info) {
-    if (translateLanguages.languages[code]) {
-        translateLanguages.removeLanguage(code)
+function toggleLanguage(code: string) {
+    if (isSelected(code)) {
+        translateLanguages.removeLanguage(code);
     } else {
         translateLanguages.addLanguage(code, {
             label: getEnglishName(code),
             native: getLanguageName(code),
-            rtl: info?.rtl || false,
+            rtl: false, // You might want to get this from language info
             display: true
-        })
+        });
     }
 }
 
-function isSelected(code) {
-    return code in translateLanguages.languages
+function isSelected(code: string) {
+    return translateLanguages.selectedCodes.includes(code);
 }
 
 function formatSpeakers(count: number | undefined) {
@@ -44,6 +44,14 @@ function formatSpeakers(count: number | undefined) {
 let filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
 
 let sortedLanguages = $derived([...filteredLanguages].sort((a, b) => {
+    if (sortBy === 'selected') {
+        const aSelected = isSelected(a.code);
+        const bSelected = isSelected(b.code);
+        return sortDirection === 'asc' 
+            ? Number(aSelected) - Number(bSelected)
+            : Number(bSelected) - Number(aSelected);
+    }
+    
     const aValue = a[sortBy]
     const bValue = b[sortBy]
     const modifier = sortDirection === 'asc' ? 1 : -1
@@ -61,9 +69,6 @@ function updateSort(field: typeof sortBy) {
 }
 
 function resetLanguages() {
-    if (typeof window === 'undefined') return
-    localStorage.removeItem('user_langs')
-    localStorage.removeItem('tgt_langs')
     translateLanguages.clearLanguages()
     // Re-add default languages
     Object.entries(defaultLanguages).forEach(([code, info]) => {
@@ -106,6 +111,11 @@ function resetLanguages() {
                     <th class="cursor-pointer p-2" on:click={() => updateSort('nativeName')}>
                         Native Name {sortBy === 'nativeName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                     </th>
+                    {#if sortBy === 'speakers'}
+                    <th class="cursor-pointer p-2" on:click={() => updateSort('speakers')}>
+                        Speakers (M) {sortBy === 'speakers' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
+                    </th>
+                    {/if}
                 </tr>
             </thead>
             <tbody>
@@ -115,16 +125,34 @@ function resetLanguages() {
                     <tr class:bg-blue-50={inUserCountry}>
                         <td class="p-2">
                             <Checkbox 
-                                checked={translateLanguages.languages[lang.code] ? true : false}
-                                onCheckedChange={() => toggleLanguage(lang.code, info)}
+                                checked={isSelected(lang.code)}
+                                onCheckedChange={() => toggleLanguage(lang.code)}
                             />
                         </td>
                         <td class="p-2">{lang.code}</td>
                         <td class="p-2">{lang.name}</td>
                         <td class="p-2">{lang.nativeName}</td>
+                        {#if sortBy === 'speakers'}
+                        <td class="p-2">{formatSpeakers(info?.nativeSpeakers_k)}</td>
+                        {/if}
                     </tr>
                 {/each}
             </tbody>
         </table>
     </div>
 </div>
+
+<style>
+  .languages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  label {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+</style>
