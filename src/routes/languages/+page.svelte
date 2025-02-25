@@ -1,4 +1,4 @@
-Update <script lang="ts">
+<script lang="ts">
 import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages, getLanguageInfo, defaultLanguages } from '$lib/utils/languages.js'
 import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js'
 import { Button } from '$lib/components/ui/button'
@@ -37,6 +37,12 @@ function isSelected(code: string) {
 function formatSpeakers(count: number | undefined) {
     if (!count) return ''
     return (count/1000).toFixed(0)
+}
+
+function formatName(lang: Language) {
+    const name = getEnglishName(lang.code);
+    const nativeName = getLanguageName(lang.code);
+    return name === nativeName ? name : `${name} • ${nativeName}`;
 }
 
 let filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
@@ -112,15 +118,16 @@ function clearLocalStorageCache() {
         />
     </div>
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white">
+    <div class="flex justify-center">
+        <table class="w-[48rem] bg-white">
             <thead>
                 <tr>
-                    <th class="p-2">Select</th>
-                    <th class="p-2">Code</th>
-                    <th class="p-2">Name</th>
-                    <th class="p-2">Native Name</th>
-                    <th class="p-2">Speakers (M)</th>
+                    <th class="p-2 w-12 text-center">
+                        <Checkbox />
+                    </th>
+                    <th class="p-2 w-24 text-center font-mono">Speakers (M)</th>
+                    <th class="p-2 w-20 text-center font-mono">Code</th>
+                    <th class="p-2 text-left">Name</th>
                 </tr>
             </thead>
             <tbody>
@@ -128,16 +135,15 @@ function clearLocalStorageCache() {
                     {@const info = getLanguageInfo(lang.code)}
                     {@const inUserCountry = data.country && info?.countries?.includes(data.country)}
                     <tr class:bg-blue-50={inUserCountry}>
-                        <td class="p-2">
+                        <td class="p-2 text-center">
                             <Checkbox 
                                 checked={isSelected(lang.code)}
                                 onCheckedChange={() => toggleLanguage(lang.code)}
                             />
                         </td>
-                        <td class="p-2">{lang.code}</td>
-                        <td class="p-2">{lang.name}</td>
-                        <td class="p-2">{lang.nativeName}</td>
-                        <td class="p-2">{formatSpeakers(info?.nativeSpeakers_k)}</td>
+                        <td class="p-2 text-center font-mono">{formatSpeakers(info?.nativeSpeakers_k)}</td>
+                        <td class="p-2 text-center font-mono">{lang.code}</td>
+                        <td class="p-2 text-left">{formatName(lang)}</td>
                     </tr>
                 {/each}
             </tbody>
