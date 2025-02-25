@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages, getLanguageInfo } from '$lib/utils/languages.js'
+import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages, getLanguageInfo, defaultLanguages } from '$lib/utils/languages.js'
 import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js'
 import { Button } from '$lib/components/ui/button'
 import { Command } from '$lib/components/ui/command'
@@ -13,8 +13,8 @@ const data = $props<PageData>()
 
 let searchQuery = $state("")
 let nativeFirst = $state(false)
-let sortBy = $state<'code' | 'name' | 'nativeName' | 'selected' | 'speakers'>('code')
-let sortDirection = $state<'asc' | 'desc'>('asc')
+let sortBy = $state<'code' | 'name' | 'nativeName' | 'selected' | 'speakers'>('speakers')
+let sortDirection = $state<'asc' | 'desc'>('desc')
 
 // Get all languages from your existing utils
 let allLanguages = $state<Language[]>(getAllLanguages())
@@ -63,13 +63,30 @@ function updateSort(field: typeof sortBy) {
         sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'
     } else {
         sortBy = field
-        sortDirection = 'asc'
+        // Default to descending for speakers and selected
+        sortDirection = (field === 'speakers' || field === 'selected') ? 'desc' : 'asc'
     }
+}
+
+function resetLanguages() {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem('user_langs')
+    localStorage.removeItem('tgt_langs')
+    translateLanguages.clearLanguages()
+    // Re-add default languages
+    Object.entries(defaultLanguages).forEach(([code, info]) => {
+        translateLanguages.addLanguage(code, info)
+    })
 }
 </script>
 
 <div class="container mx-auto p-4" in:fade>
-    <h1 class="text-3xl font-bold mb-6">Language Selection</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Language Selection</h1>
+        <Button variant="outline" on:click={resetLanguages}>
+            Reset to Defaults
+        </Button>
+    </div>
     
     <div class="mb-6">
         <input
@@ -105,7 +122,7 @@ function updateSort(field: typeof sortBy) {
                     <tr class:bg-blue-50={inUserCountry}>
                         <td class="p-2">
                             <Checkbox 
-                                checked={translateLanguages.languages[lang.code] ? true : false}
+                                checked={Boolean(translateLanguages.languages[lang.code])}
                                 onCheckedChange={() => toggleLanguage(lang.code, info)}
                             />
                         </td>
