@@ -12,23 +12,30 @@ export function getCountryLanguages() {
     return Object.keys(languages).sort()
 }
 
-// Default languages from NewLang.svelte
+// Default languages from NewLang.svelte - using 3-character ISO codes
 export const defaultLanguages = {
-    en: { label: 'English', native: 'English', rtl: false },
-    ru: { label: 'Russian', native: 'Русский'},
-    ja: { label: 'Japanese', native: '日本語'},
-    es: { label: 'Spanish', native: 'Español'},
-    it: { label: 'Italian', native: 'Italiano'},
-    scn: { label: 'Sicilian', native: 'Sicilianu'}
+    eng: { label: 'English', native: 'English', rtl: false, display: true },
+    rus: { label: 'Russian', native: 'Русский', rtl: false, display: true },
+    jpn: { label: 'Japanese', native: '日本語', rtl: false, display: true },
+    spa: { label: 'Spanish', native: 'Español', rtl: false, display: true },
+    ita: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
+    cat: { label: 'Catalan', native: 'Català', rtl: false, display: true }
 }
 
 // Get all available languages from Wikidata
 export function getAllLanguages() {
-    return languageData.map(l => l.iso).sort()
+    return languageData.map(lang => ({
+        code: lang.iso,
+        name: lang.langLabel,
+        nativeName: lang.nativeNames?.[0] || lang.langLabel,
+        speakers: lang.speakers
+    }))
 }
 
 // Convert language code to name using countries-list data
 export function getLanguageName(code) {
+    if (!code) return '';
+    
     const wikiLang = languageData.find(l => l.iso === code)
     if (wikiLang) {
         return wikiLang.nativeNames?.[0] || wikiLang.langLabel
@@ -44,6 +51,8 @@ export function getLanguageName(code) {
 
 // Get English name of language if available
 export function getEnglishName(code) {
+    if (!code) return '';
+    
     const wikiLang = languageData.find(l => l.iso === code)
     if (wikiLang) {
         return wikiLang.langLabel
@@ -59,57 +68,30 @@ export function getEnglishName(code) {
 
 // Get language info from wikidata
 export function getLanguageInfo(code) {
-    const wikiLang = languageData.find(l => l.iso === code || l.iso1 === code)
-    if (wikiLang) {
-        return {
-            ...wikiLang,
-            rtl: wikiLang.rtl || false // Ensure rtl property is always boolean
-        }
-    }
-    return null
+    if (!code) return null
+    const wikiLang = languageData.find(l => l.iso === code)
+    return wikiLang ? {
+        ...wikiLang,
+        rtl: wikiLang.rtl || false
+    } : null
 }
 
 // Search languages with smart ranking
-export function searchLanguages(query, country) {
-    const searchTerms = query.toLowerCase().split(/\s+/).filter(Boolean)
+export function searchLanguages(query, country = null) {
+    if (!query && !country) return getAllLanguages()
     
-    return getAllLanguages()
-        .filter(code => {
-            if (!searchTerms.length) return true
+    const searchStr = query.toLowerCase()
+    return getAllLanguages().filter(lang => {
+        const matchesSearch = !query || 
+            lang.code.toLowerCase().includes(searchStr) ||
+            lang.name.toLowerCase().includes(searchStr) ||
+            lang.nativeName.toLowerCase().includes(searchStr)
             
-            const info = getLanguageInfo(code)
-            if (!info) return false
+        const matchesCountry = !country || 
+            languageData.find(l => l.iso === lang.code)?.countries?.includes(country)
             
-            // Check for exact ISO code matches first
-            if (searchTerms.some(term => 
-                term === info.iso?.toLowerCase() || 
-                term === info.iso1?.toLowerCase()
-            )) {
-                return true
-            }
-            
-            // Then check other fields
-            const searchableText = [
-                getEnglishName(code)?.toLowerCase(),
-                getLanguageName(code)?.toLowerCase(),
-                ...(info.countries || []).map(c => c.toLowerCase()),
-                ...(info.writingSystems || []).map(w => w.toLowerCase())
-            ].filter(Boolean).join(' ')
-            
-            return searchTerms.every(term => searchableText.includes(term))
-        })
-        .sort((a, b) => {
-            const infoA = getLanguageInfo(a)
-            const infoB = getLanguageInfo(b)
-            
-            // Sort by native speakers if available
-            if (infoA?.nativeSpeakers_k && infoB?.nativeSpeakers_k) {
-                return infoB.nativeSpeakers_k - infoA.nativeSpeakers_k
-            }
-            
-            // Fall back to alphabetical sort by name
-            return getEnglishName(a).localeCompare(getEnglishName(b))
-        })
+        return matchesSearch && matchesCountry
+    })
 }
 
 // Sort languages by country and native speakers

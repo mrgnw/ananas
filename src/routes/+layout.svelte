@@ -1,6 +1,6 @@
 <script>
 	import "../app.pcss";
-	import ClearCacheButton from "$lib/components/ClearCacheButton.svelte";
+	import SettingsButton from "$lib/components/SettingsButton.svelte";
 	/** @type {{children?: import('svelte').Snippet}} */
 	let { children } = $props();
 </script>
@@ -11,4 +11,4 @@
 	<link rel="manifest" href="/manifest.webmanifest">
 </svelte:head>
 {@render children?.()}
-<ClearCacheButton />
+<SettingsButton />

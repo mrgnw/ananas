@@ -6,19 +6,19 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import { Languages, Search, Trash2, Copy } from 'lucide-svelte';
+	import { Search, Trash2, Copy, Languages } from 'lucide-svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import _ from 'underscore';
 
 	let example_translation = {
 		text: 'Ahoy',
 		translations: {
-			en: 'Hello',
-			es: 'Hola',
-			ru: 'Привет',
-			it: 'Ciao',
-			de: 'Hallo',
-			ca: 'Hola'
+			eng: 'Hello',
+			spa: 'Hola',
+			rus: 'Привет',
+			ita: 'Ciao',
+			deu: 'Hallo',
+			cat: 'Hola'
 		},
 		timestamp: new Date().toISOString()
 	};
@@ -36,11 +36,6 @@
 
 	let history = $state(loadHistory());
 
-	function clearHistory() {
-		history = [];
-		localStorage.setItem('translationHistory', '[]');
-	}
-
 	function deleteTranslation(index) {
 		history = history.filter((_, i) => i !== index);
 		localStorage.setItem('translationHistory', JSON.stringify(history));
@@ -48,70 +43,53 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
+	// Import the shared language store
+	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+
 	let text = $state('');
 	let show_original = $state(true);
 
-	// Default languages configuration
-	const defaultLangs = {
-		en: { label: 'English', native: 'English', rtl: false, display: true },
-		ru: { label: 'Russian', native: 'Русский', rtl: false, display: true },
-		ja: { label: 'Japanese', native: '日本語', rtl: false, display: true },
-		es: { label: 'Spanish', native: 'Español', rtl: false, display: true },
-		it: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
-		ca: { label: 'Catalan', native: 'Català', rtl: false, display: true }
-	};
+	// Use the shared language store
+	let user_langs = $derived(translateLanguages.languages);
+	console.log('user_langs updated:', user_langs);
 
-	function loadUserLangs() {
-		try {
-			if (typeof window === 'undefined') return defaultLangs;
-			const stored = localStorage.getItem('user_langs');
-			if (!stored) return defaultLangs;
-			const parsed = JSON.parse(stored);
-			// Merge stored languages with defaults, preserving user settings but adding new default languages
-			return { ...defaultLangs, ...parsed };
-		} catch (error) {
-			console.error('Error loading user languages:', error);
-			return defaultLangs;
-		}
-	}
-
-	let user_langs = $state(loadUserLangs());
-
-	// Add effect to save changes
-	$effect(() => {
-		if (typeof window !== 'undefined') {
-			localStorage.setItem('user_langs', JSON.stringify(user_langs));
-		}
-	});
-
-	let tgt_langs = $derived(Object.keys(user_langs));
+	// All available languages that can be toggled
+	let available_langs = $derived(Object.keys(user_langs));
+	console.log('available_langs:', available_langs);
+	
+	// Languages that should appear in translation cards
 	let show_langs = $derived(
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
+	console.log('show_langs:', show_langs);
 	let is_loading = $state(false);
-	let is_ready = $derived(text.length > 0 && tgt_langs.length > 0 && !is_loading);
+	let is_ready = $derived(text.length > 0 && available_langs.length > 0 && !is_loading);
 
-	function langs_not_in_tgt(translation) {
-		return Object.keys(translation.translations).filter((lang) => !tgt_langs.includes(lang));
+	function langs_not_shown(translation) {
+		// Show languages that are in the translation but not currently displayed
+		return Object.keys(translation.translations)
+			.filter((lang) => !show_langs.includes(lang))
+			.filter((lang) => lang != 'metadata');
 	}
 
 	function toggle_display(key) {
+		console.log('toggle_display called for:', key);
+		
 		if (key === 'original') {
 			show_original = !show_original;
 		} else {
-			user_langs[key].display = !user_langs[key].display;
+			translateLanguages.toggleLanguageDisplay(key);
 		}
-		console.log('toggling', key);
 	}
 
 	async function handleSubmit() {
 		is_loading = true;
-		const apiUrl = 'https://translate.xces.workers.dev';
+		const apiUrl = 'https://ananas-api.xces.workers.dev';
 
 		try {
-			console.log('Target languages:', tgt_langs);
+			console.log('Target languages:', show_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
@@ -120,7 +98,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs
+					tgt_langs: show_langs
 				})
 			});
 
@@ -139,7 +117,8 @@
 			history = [
 				{
 					text,
-					translations: data
+					translations: data,
+					timestamp: new Date().toISOString()
 				},
 				...history
 			];
@@ -184,38 +163,34 @@
 	};
 </script>
 
-<div class="container mx-auto space-y-6 p-4">
-	<h1 class="mb-4 text-2xl font-bold">Ananas</h1>
-	<p class="text-sm text-gray-500">Multi-language translator</p>
-	<!-- <pre><code>{JSON.stringify(langs, null, 2)}</code></pre> -->
-	<div class="space-y-4">
-		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
-		<div class="flex flex-wrap items-center gap-2">
-			{#each Object.entries(user_langs) as [key, meta]}
-				<Badge
-					variant={meta.display ? 'default' : 'outline'}
-					class="cursor-pointer"
-					onclick={() => toggle_display(key)}
-				>
-					{meta.native}
-				</Badge>
-			{/each}
-		</div>
-		<Button onclick={handleSubmit} disabled={!is_ready}>
-			<Languages class="mr-2 h-4 w-4" />
-			{is_loading ? 'Translating...' : 'Translate'}
-		</Button>
+<div class="space-y-4">
+	<Input type="text" placeholder="Enter text to translate" bind:value={text} />
+	<div class="flex flex-wrap items-center gap-2">
+		<a href="/languages" class="p-2 hover:text-yellow-500 transition-colors" title="Add or remove languages">
+			<Languages class="w-5 h-5" />
+		</a>
+		{#each Object.entries(user_langs) as [key, meta]}
+			<Badge
+				variant={meta.display ? 'default' : 'outline'}
+				class="cursor-pointer"
+				onclick={() => toggle_display(key)}
+			>
+				{meta.native}
+			</Badge>
+		{/each}
+		
 	</div>
+	<Button onclick={handleSubmit} disabled={!is_ready}>
+		<Search class="mr-2 h-4 w-4" />
+		{is_loading ? 'Translating...' : 'Translate'}
+	</Button>
 
 	<div class="space-y-4">
 		<div class="flex items-center gap-2">
 			<h2 class="text-xl font-semibold">Translation History</h2>
-			<Button variant="ghost" size="icon" onclick={clearHistory} title="Clear history">
-				<Trash2 class="h-4 w-4" />
-			</Button>
 		</div>
 		<div class="flex max-w-6xl flex-wrap gap-4">
-			{#each history as translation, index}
+			{#each history as translation, i}
 				<div class="group">
 					<Card>
 						<CardContent>
@@ -223,7 +198,7 @@
 								<button
 									class="absolute right-0 top-0 hidden group-hover:block hover:text-red-500"
 									aria-label="Delete translation"
-									onclick={() => deleteTranslation(index)}
+									onclick={() => deleteTranslation(i)}
 								>
 									<Trash2 class="h-4 w-4" />
 								</button>
@@ -253,9 +228,9 @@
 										</div>
 									{/if}
 								{/each}
-								{#if langs_not_in_tgt(translation).length > 0}
+								{#if langs_not_shown(translation).length > 0}
 									<p>
-										<i>+ {langs_not_in_tgt(translation).join('•')}</i>
+										<i>+ {langs_not_shown(translation).join('•')}</i>
 									</p>
 								{/if}
 							</div>
@@ -293,9 +268,9 @@
 										</div>
 									{/if}
 								{/each}
-								{#if langs_not_in_tgt(example_translation).length > 0}
+								{#if langs_not_shown(example_translation).length > 0}
 									<p>
-										<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
+										<i>+ {langs_not_shown(example_translation).join('•')}</i>
 									</p>
 								{/if}
 							</div>
