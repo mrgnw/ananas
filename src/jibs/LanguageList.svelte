@@ -4,8 +4,9 @@
   import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 
   let selectedCodes = $derived(translateLanguages.selectedCodes);
-	
+  
   function removeLanguage(code) {
+    // The store will handle normalization internally
     translateLanguages.removeLanguage(code);
   }
 
@@ -21,7 +22,7 @@
     {#each selectedCodes as langCode}
     <li>
       <Badge variant={handle_variant(langCode)}>
-        {translateLanguages.getLanguageInfo(langCode).label}
+        {translateLanguages.getLanguageInfo(langCode)?.label || langCode}
         <X onclick={() => removeLanguage(langCode)}
           onmouseover={() => selected_lang_to_remove = langCode}
           onmouseleave={() => selected_lang_to_remove = ""}

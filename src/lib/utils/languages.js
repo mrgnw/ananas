@@ -12,14 +12,14 @@ export function getCountryLanguages() {
     return Object.keys(languages).sort()
 }
 
-// Default languages from NewLang.svelte
+// Default languages from NewLang.svelte - using 3-character ISO codes
 export const defaultLanguages = {
-    en: { label: 'English', native: 'English', rtl: false },
-    ru: { label: 'Russian', native: 'Русский'},
-    ja: { label: 'Japanese', native: '日本語'},
-    es: { label: 'Spanish', native: 'Español'},
-    it: { label: 'Italian', native: 'Italiano'},
-    scn: { label: 'Sicilian', native: 'Sicilianu'}
+    eng: { label: 'English', native: 'English', rtl: false, display: true },
+    rus: { label: 'Russian', native: 'Русский', rtl: false, display: true },
+    jpn: { label: 'Japanese', native: '日本語', rtl: false, display: true },
+    spa: { label: 'Spanish', native: 'Español', rtl: false, display: true },
+    ita: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
+    cat: { label: 'Catalan', native: 'Català', rtl: false, display: true }
 }
 
 // Get all available languages from Wikidata

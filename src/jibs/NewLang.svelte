@@ -13,12 +13,12 @@
 	let example_translation = {
 		text: 'Ahoy',
 		translations: {
-			en: 'Hello',
-			es: 'Hola',
-			ru: 'Привет',
-			it: 'Ciao',
-			de: 'Hallo',
-			ca: 'Hola'
+			eng: 'Hello',
+			spa: 'Hola',
+			rus: 'Привет',
+			ita: 'Ciao',
+			deu: 'Hallo',
+			cat: 'Hola'
 		},
 		timestamp: new Date().toISOString()
 	};
@@ -51,14 +51,14 @@
 	let text = $state('');
 	let show_original = $state(true);
 
-	// Default languages configuration
+	// Default languages configuration - using 3-character ISO codes for consistency
 	const defaultLangs = {
-		en: { label: 'English', native: 'English', rtl: false, display: true },
-		ru: { label: 'Russian', native: 'Русский', rtl: false, display: true },
-		ja: { label: 'Japanese', native: '日本語', rtl: false, display: true },
-		es: { label: 'Spanish', native: 'Español', rtl: false, display: true },
-		it: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
-		ca: { label: 'Catalan', native: 'Català', rtl: false, display: true }
+		eng: { label: 'English', native: 'English', rtl: false, display: true },
+		rus: { label: 'Russian', native: 'Русский', rtl: false, display: true },
+		jpn: { label: 'Japanese', native: '日本語', rtl: false, display: true },
+		spa: { label: 'Spanish', native: 'Español', rtl: false, display: true },
+		ita: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
+		cat: { label: 'Catalan', native: 'Català', rtl: false, display: true }
 	};
 
 	function loadUserLangs() {
@@ -111,7 +111,22 @@
 		const apiUrl = 'https://translate.xces.workers.dev';
 
 		try {
-			console.log('Target languages:', tgt_langs);
+			// Convert 3-character codes to 2-character codes for API compatibility if needed
+			const apiLangCodes = tgt_langs.map(code => {
+				// Simple mapping for common languages
+				const codeMap = {
+					eng: 'en',
+					spa: 'es',
+					rus: 'ru',
+					jpn: 'ja',
+					ita: 'it',
+					deu: 'de',
+					cat: 'ca'
+				};
+				return codeMap[code] || code;
+			});
+			
+			console.log('Target languages:', apiLangCodes);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
@@ -120,7 +135,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs
+					tgt_langs: apiLangCodes
 				})
 			});
 
@@ -128,7 +143,24 @@
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 
-			const data = await response.json();
+			const apiData = await response.json();
+			
+			// Convert the API response back to 3-character codes
+			const data = Object.entries(apiData).reduce((result, [code, translation]) => {
+				// Reverse mapping
+				const reverseCodeMap = {
+					'en': 'eng',
+					'es': 'spa',
+					'ru': 'rus',
+					'ja': 'jpn',
+					'it': 'ita',
+					'de': 'deu',
+					'ca': 'cat'
+				};
+				const normalizedCode = reverseCodeMap[code] || code;
+				result[normalizedCode] = translation;
+				return result;
+			}, {});
 
 			if (history.some((item) => item.text === text)) {
 				toast.info('This text has already been translated!');

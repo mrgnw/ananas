@@ -8,57 +8,79 @@
 
   let selectedCodes = $derived(translateLanguages.selectedCodes);
 
-  // Create lookup for 2-char code mappings
-  const iso3ToIso1Map = Object.fromEntries(
+  // First, create a map of 3-char to 2-char codes
+  const iso3ToIso1Map = new Map(
     languageData
-      .filter(lang => lang.iso1) // Only include entries with both codes
+      .filter(lang => lang.iso1)
       .map(lang => [lang.iso, lang.iso1])
   );
 
-  function handleLanguageAdd(langCode) {
-    // Convert 3-char code to 2-char if available
-    const codeToUse = iso3ToIso1Map[langCode] || langCode;
-    
-    if (!selectedCodes.includes(codeToUse)) {
-      const langInfo = langs.find(l => l.value === langCode);
-      translateLanguages.addLanguage(codeToUse, {
-        label: langInfo?.label || langCode,
-        native: langInfo?.native || langCode,
-        rtl: false,
-        display: true
-      });
-      console.log('Language added:', codeToUse);
-    } else {
-      console.log('Language already in selected languages');
-    }
-    inputValue = "";
-  }
+  // Create a map of 2-char to language info
+  const countryLanguages = new Map(
+    Object.entries(languages).map(([code, info]) => [code, {
+      value: code,
+      label: info.name,
+      native: info.native
+    }])
+  );
 
-  let langs = Object.entries(languages).map(([langCode, langInfo]) => ({
-    value: langCode,
-    label: langInfo.name,
-    native: langInfo.native
-  }));
-
-  // Add custom languages that aren't in countries-list
-  const customLanguages = {
-    scn: {
+  // Add custom languages
+  const customLanguages = new Map([
+    ['scn', {
       value: 'scn',
       label: 'Sicilian',
       native: 'Sicilianu'
+    }]
+  ]);
+
+  // Create a unified language map, preferring 2-char codes
+  const allLanguages = new Map();
+
+  // First add countries-list languages (2-char codes)
+  countryLanguages.forEach((info, code) => {
+    allLanguages.set(code, info);
+  });
+
+  // Add custom languages
+  customLanguages.forEach((info, code) => {
+    allLanguages.set(code, info);
+  });
+
+  // Add wikidata languages that don't have 2-char codes
+  languageData.forEach(lang => {
+    if (!lang.iso1 && !allLanguages.has(lang.iso)) {
+      allLanguages.set(lang.iso, {
+        value: lang.iso,
+        label: lang.langLabel,
+        native: lang.nativeNames?.[0] || lang.langLabel
+      });
     }
-  };
+  });
 
-  // Add wikidata languages with 3-char codes
-  const wikidataLangs = languageData
-    .filter(lang => !iso3ToIso1Map[lang.iso]) // Only add languages without 2-char codes
-    .map(lang => ({
-      value: lang.iso,
-      label: lang.langLabel,
-      native: lang.nativeNames?.[0] || lang.langLabel
-    }));
+  // Convert to array for the combobox
+  let langs = Array.from(allLanguages.values());
 
-  langs = [...langs, ...Object.values(customLanguages), ...wikidataLangs];
+  function isLanguageSelected(langCode) {
+    // If this is a 3-char code, try to get its 2-char equivalent
+    const codeToCheck = iso3ToIso1Map.get(langCode) || langCode;
+    return selectedCodes.includes(codeToCheck);
+  }
+
+  function handleLanguageAdd(langCode) {
+    // Always use 2-char code if available
+    const codeToUse = iso3ToIso1Map.get(langCode) || langCode;
+    const langInfo = allLanguages.get(codeToUse) || allLanguages.get(langCode);
+    
+    if (!selectedCodes.includes(codeToUse)) {
+      translateLanguages.addLanguage(codeToUse, {
+        label: langInfo?.label || codeToUse,
+        native: langInfo?.native || codeToUse,
+        rtl: false,
+        display: true
+      });
+    }
+    inputValue = "";
+  }
 
   let value = $state("");
   let inputValue = $state("");
@@ -121,7 +143,7 @@
       class="cursor-pointer flex items-center justify-between" onclick={()=> handleLanguageAdd(lang.value)}
     >
       <span class="flex items-center">
-        {#if selectedCodes.includes(iso3ToIso1Map[lang.value] || lang.value)}
+        {#if isLanguageSelected(lang.value)}
         <Check class="mr-2" />
         {:else}
         <span class="mr-2" style="width: 1em; height: 1em;"></span>
