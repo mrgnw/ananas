@@ -6,7 +6,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import { Languages, Search, Trash2, Copy } from 'lucide-svelte';
+	import { Search, Trash2, Copy, Languages } from 'lucide-svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import _ from 'underscore';
 
@@ -181,34 +181,32 @@
 	};
 </script>
 
-<div class="container mx-auto space-y-6 p-4">
-	<div class="flex justify-between items-center">
-		<div>
-			<h1 class="mb-4 text-2xl font-bold">Ananas</h1>
-			<p class="text-sm text-gray-500">Multi-language translator</p>
-		</div>
+<div class="space-y-4">
+	<div class="flex gap-2">
 		<Button variant="outline" size="sm" onclick={clearLocalStorageCache}>
 			Clear Cache
 		</Button>
 	</div>
-	<div class="space-y-4">
-		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
-		<div class="flex flex-wrap items-center gap-2">
-			{#each Object.entries(user_langs) as [key, meta]}
-				<Badge
-					variant={meta.display ? 'default' : 'outline'}
-					class="cursor-pointer"
-					onclick={() => toggle_display(key)}
-				>
-					{meta.native}
-				</Badge>
-			{/each}
-		</div>
-		<Button onclick={handleSubmit} disabled={!is_ready}>
-			<Languages class="mr-2 h-4 w-4" />
-			{is_loading ? 'Translating...' : 'Translate'}
-		</Button>
+	<Input type="text" placeholder="Enter text to translate" bind:value={text} />
+	<div class="flex flex-wrap items-center gap-2">
+		<a href="/languages" class="p-2 hover:text-yellow-500 transition-colors" title="Add or remove languages">
+			<Languages class="w-5 h-5" />
+		</a>
+		{#each Object.entries(user_langs) as [key, meta]}
+			<Badge
+				variant={meta.display ? 'default' : 'outline'}
+				class="cursor-pointer"
+				onclick={() => toggle_display(key)}
+			>
+				{meta.native}
+			</Badge>
+		{/each}
+		
 	</div>
+	<Button onclick={handleSubmit} disabled={!is_ready}>
+		<Search class="mr-2 h-4 w-4" />
+		{is_loading ? 'Translating...' : 'Translate'}
+	</Button>
 
 	<div class="space-y-4">
 		<div class="flex items-center gap-2">

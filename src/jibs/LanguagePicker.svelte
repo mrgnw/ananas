@@ -5,6 +5,7 @@
   import LanguageList from './LanguageList.svelte';
   import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
   import languageData from '$lib/data/wikidata-languages.json';
+  import { Languages, Plus } from 'lucide-svelte';
 
   let selectedCodes = $derived(translateLanguages.selectedCodes);
 
@@ -130,6 +131,19 @@
   }
 
 </script>
+
+<div class="flex gap-2 items-center">
+    <div class="flex gap-1">
+        {#each $translateLanguages as lang}
+            <button on:click={() => translateLanguages.removeLanguage(lang)} class="px-2 py-1 bg-gray-100 rounded hover:bg-gray-200">
+                {getLanguageName(lang)}
+            </button>
+        {/each}
+    </div>
+    <a href="/languages" class="p-2 hover:text-yellow-500 transition-colors" title="Add or remove languages">
+        <Languages class="w-5 h-5" />
+    </a>
+</div>
 
 <Combobox.Root items={filteredLangs} bind:inputValue touchedInput=open>
   <div class="relative">

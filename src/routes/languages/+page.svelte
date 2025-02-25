@@ -11,6 +11,7 @@ import type { Language } from '$lib/types'
 import { fade } from 'svelte/transition'
 import m2mSupport from '$lib/data/m2m-support.json'
 import wikidataLanguages from '$lib/data/wikidata-languages.json'
+import { Palmtree } from 'lucide-svelte'
 
 const data = $props<PageData>()
 
@@ -97,7 +98,12 @@ function clearLocalStorageCache() {
 
 <div class="container mx-auto p-4" in:fade>
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Languages</h1>
+        <div class="flex items-center gap-3">
+            <a href="/" class="flex items-center gap-2 text-2xl font-bold hover:text-yellow-500 transition-colors">
+                <Palmtree class="w-8 h-8" />
+                <span>Languages</span>
+            </a>
+        </div>
     </div>
     
     <div class="mb-6">
