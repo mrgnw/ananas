@@ -56,6 +56,7 @@
 
 	// Use the shared language store
 	let user_langs = $derived(translateLanguages.languages);
+	console.log('user_langs updated:', user_langs);
 
 	// Add a function to clear the localStorage cache completely
 	function clearLocalStorageCache() {
@@ -67,39 +68,33 @@
 		}
 	}
 
-	let tgt_langs = $derived(Object.keys(user_langs));
-	let show_langs = $derived(
+	// All available languages that can be toggled
+	let available_langs = $derived(Object.keys(user_langs));
+	console.log('available_langs:', available_langs);
+	
+	// Languages that should appear in translation cards
+	let display_langs = $derived(
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
+	console.log('display_langs:', display_langs);
 	let is_loading = $state(false);
-	let is_ready = $derived(text.length > 0 && tgt_langs.length > 0 && !is_loading);
+	let is_ready = $derived(text.length > 0 && available_langs.length > 0 && !is_loading);
 
-	function langs_not_in_tgt(translation) {
-		return Object.keys(translation.translations).filter((lang) => !tgt_langs.includes(lang));
+	function langs_not_shown(translation) {
+		// Show languages that are in the translation but not currently displayed
+		return Object.keys(translation.translations).filter((lang) => !display_langs.includes(lang));
 	}
 
 	function toggle_display(key) {
+		console.log('toggle_display called for:', key);
+		
 		if (key === 'original') {
 			show_original = !show_original;
 		} else {
-			// Get the current language info
-			const langInfo = translateLanguages.getLanguageInfo(key);
-			if (langInfo) {
-				// Create a new language info with toggled display
-				const updatedInfo = {
-					...langInfo,
-					display: !langInfo.display
-				};
-				
-				// First remove the language
-				translateLanguages.removeLanguage(key);
-				// Then add it back with updated display setting
-				translateLanguages.addLanguage(key, updatedInfo);
-			}
+			translateLanguages.toggleLanguageDisplay(key);
 		}
-		console.log('toggling', key);
 	}
 
 	async function handleSubmit() {
@@ -108,7 +103,7 @@
 
 		try {
 			// Send target languages as 3-character ISO codes
-			console.log('Target languages:', tgt_langs);
+			console.log('Target languages:', available_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
@@ -117,7 +112,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs: tgt_langs
+					tgt_langs: available_langs
 				})
 			});
 
@@ -216,7 +211,7 @@
 			</Button>
 		</div>
 		<div class="flex max-w-6xl flex-wrap gap-4">
-			{#each history as translation, index}
+			{#each history as translation, i}
 				<div class="group">
 					<Card>
 						<CardContent>
@@ -224,11 +219,11 @@
 								<button
 									class="absolute right-0 top-0 hidden group-hover:block hover:text-red-500"
 									aria-label="Delete translation"
-									onclick={() => deleteTranslation(index)}
+									onclick={() => deleteTranslation(i)}
 								>
 									<Trash2 class="h-4 w-4" />
 								</button>
-								{#each show_langs as langKey}
+								{#each display_langs as langKey}
 									{#if translation.translations[langKey]}
 										<div
 											class="group/item flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-50"
@@ -254,9 +249,9 @@
 										</div>
 									{/if}
 								{/each}
-								{#if langs_not_in_tgt(translation).length > 0}
+								{#if langs_not_shown(translation).length > 0}
 									<p>
-										<i>+ {langs_not_in_tgt(translation).join('•')}</i>
+										<i>+ {langs_not_shown(translation).join('•')}</i>
 									</p>
 								{/if}
 							</div>
@@ -268,7 +263,7 @@
 					<Card>
 						<CardContent>
 							<div class="space-y-2">
-								{#each show_langs as langKey}
+								{#each display_langs as langKey}
 									{#if example_translation.translations[langKey]}
 										<div
 											class="group/item flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-50"
@@ -294,9 +289,9 @@
 										</div>
 									{/if}
 								{/each}
-								{#if langs_not_in_tgt(example_translation).length > 0}
+								{#if langs_not_shown(example_translation).length > 0}
 									<p>
-										<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
+										<i>+ {langs_not_shown(example_translation).join('•')}</i>
 									</p>
 								{/if}
 							</div>

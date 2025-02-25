@@ -165,6 +165,22 @@ export function createTranslateLanguages() {
     console.log('Reset to defaults:', Object.keys(languages));
   }
 
+  function toggleLanguageDisplay(code) {
+    const normalizedCode = normalizeLanguageCode(code);
+    const langInfo = languages[normalizedCode];
+    if (langInfo) {
+      languages = {
+        ...languages,
+        [normalizedCode]: {
+          ...langInfo,
+          display: !langInfo.display
+        }
+      };
+      saveToStorage();
+      console.log('Toggled display for:', normalizedCode, 'to:', !langInfo.display);
+    }
+  }
+
   // Initialize on creation
   initializeFromStorage();
 
@@ -177,6 +193,7 @@ export function createTranslateLanguages() {
     clearLanguages,
     addDefaultLanguages,
     resetToDefaults,
+    toggleLanguageDisplay,
     // Utility functions
     normalizeLanguageCode,
     // Exposed for testing
