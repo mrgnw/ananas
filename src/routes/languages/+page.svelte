@@ -19,7 +19,7 @@ let searchQuery = $state("")
 let nativeFirst = $state(false)
 
 // Get all languages from your existing utils
-let allLanguages = $state<Language[]>(getAllLanguages())
+let allLanguages = $state(data.languages)
 
 // Create mapping for converting 3-digit to 2-digit codes for m2m100 model compatibility
 const iso3ToIso2Map = $state(wikidataLanguages.reduce((acc, lang) => {
