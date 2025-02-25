@@ -107,22 +107,8 @@
 		const apiUrl = 'https://translate.xces.workers.dev';
 
 		try {
-			// Convert 3-character codes to 2-character codes for API compatibility if needed
-			const apiLangCodes = tgt_langs.map(code => {
-				// Simple mapping for common languages
-				const codeMap = {
-					eng: 'en',
-					spa: 'es',
-					rus: 'ru',
-					jpn: 'ja',
-					ita: 'it',
-					deu: 'de',
-					cat: 'ca'
-				};
-				return codeMap[code] || code;
-			});
-			
-			console.log('Target languages:', apiLangCodes);
+			// Send target languages as 3-character ISO codes
+			console.log('Target languages:', tgt_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
@@ -131,7 +117,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs: apiLangCodes
+					tgt_langs: tgt_langs
 				})
 			});
 
@@ -139,24 +125,7 @@
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 
-			const apiData = await response.json();
-			
-			// Convert the API response back to 3-character codes
-			const data = Object.entries(apiData).reduce((result, [code, translation]) => {
-				// Reverse mapping
-				const reverseCodeMap = {
-					'en': 'eng',
-					'es': 'spa',
-					'ru': 'rus',
-					'ja': 'jpn',
-					'it': 'ita',
-					'de': 'deu',
-					'ca': 'cat'
-				};
-				const normalizedCode = reverseCodeMap[code] || code;
-				result[normalizedCode] = translation;
-				return result;
-			}, {});
+			const data = await response.json();
 
 			if (history.some((item) => item.text === text)) {
 				toast.info('This text has already been translated!');
