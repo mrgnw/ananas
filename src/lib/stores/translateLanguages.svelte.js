@@ -1,19 +1,9 @@
 import { defaultLanguages } from '$lib/utils/languages.js';
 import languageData from '$lib/data/wikidata-languages.json';
 
-// Create maps for code conversion - normalize to 3-char ISO codes
-const iso1ToIso3Map = new Map(
-  languageData
-    .filter(lang => lang.iso1)
-    .map(lang => [lang.iso1, lang.iso])
-);
-
-// Normalize a language code to its 3-char version if available
+// No need for code conversion since we use 3-letter codes consistently
 function normalizeLanguageCode(code) {
-  // If it's already a 3-char code, return it
-  if (code.length === 3) return code;
-  // Try to convert from 2-char code to 3-char code
-  return iso1ToIso3Map.get(code) || code;
+  return code;
 }
 
 export function createTranslateLanguages() {
@@ -37,12 +27,7 @@ export function createTranslateLanguages() {
       const savedUserLangs = localStorage.getItem('user_langs');
       if (savedUserLangs) {
         const saved = JSON.parse(savedUserLangs);
-        // Normalize all codes in saved data
-        languages = Object.entries(saved).reduce((acc, [code, info]) => {
-          const normalizedCode = normalizeLanguageCode(code);
-          acc[normalizedCode] = info;
-          return acc;
-        }, {});
+        languages = { ...saved };
       } else {
         // If no saved languages, use defaults
         languages = { ...defaultLanguages };
