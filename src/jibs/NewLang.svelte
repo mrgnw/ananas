@@ -41,6 +41,11 @@
 		localStorage.setItem('translationHistory', '[]');
 	}
 
+	function deleteTranslation(index) {
+		history = history.filter((_, i) => i !== index);
+		localStorage.setItem('translationHistory', JSON.stringify(history));
+	}
+
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 	let text = $state('');
@@ -210,82 +215,93 @@
 			</Button>
 		</div>
 		<div class="flex max-w-6xl flex-wrap gap-4">
-			{#each history as translation}
-				<Card>
-					<CardContent>
-						<div class="space-y-2">
-							{#each show_langs as langKey}
-								{#if translation.translations[langKey]}
-									<div
-										class="group flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-50"
-										onclick={() => copyToClipboard(translation.translations[langKey])}
-									>
-										<p
-											class={translation.translations[langKey] === translation.text
-												? 'font-bold'
-												: ''}
+			{#each history as translation, index}
+				<div class="group">
+					<Card>
+						<CardContent>
+							<div class="relative space-y-2">
+								<button
+									class="absolute right-0 top-0 hidden group-hover:block hover:text-red-500"
+									aria-label="Delete translation"
+									onclick={() => deleteTranslation(index)}
+								>
+									<Trash2 class="h-4 w-4" />
+								</button>
+								{#each show_langs as langKey}
+									{#if translation.translations[langKey]}
+										<div
+											class="group/item flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-50"
+											onclick={() => copyToClipboard(translation.translations[langKey])}
 										>
-											{translation.translations[langKey]}
-										</p>
-										<button
-											class="opacity-0 transition-opacity group-hover:opacity-100"
-											aria-label="Copy translation"
-											onclick={(e) => {
-												e.stopPropagation();
-												copyToClipboard(translation.translations[langKey]);
-											}}
-										>
-											<Copy class="h-4 w-4" />
-										</button>
-									</div>
+											<p
+												class={translation.translations[langKey] === translation.text
+													? 'font-bold'
+													: ''}
+											>
+												{translation.translations[langKey]}
+											</p>
+											<button
+												class="hidden group-hover/item:block hover:text-blue-500"
+												aria-label="Copy translation"
+												onclick={(e) => {
+													e.stopPropagation();
+													copyToClipboard(translation.translations[langKey]);
+												}}
+											>
+												<Copy class="h-4 w-4" />
+											</button>
+										</div>
+									{/if}
+								{/each}
+								{#if langs_not_in_tgt(translation).length > 0}
+									<p>
+										<i>+ {langs_not_in_tgt(translation).join('•')}</i>
+									</p>
 								{/if}
-							{/each}
-							{#if langs_not_in_tgt(translation).length > 0}
-								<p>
-									<i>+ {langs_not_in_tgt(translation).join('•')}</i>
-								</p>
-							{/if}
-						</div>
-					</CardContent>
-				</Card>
+							</div>
+						</CardContent>
+					</Card>
+				</div>
 			{:else}
-				<Card>
-					<CardContent>
-						<div class="space-y-2">
-							{#each show_langs as langKey}
-								{#if example_translation.translations[langKey]}
-									<div
-										class="flex items-center justify-between group cursor-pointer hover:bg-gray-50 p-2 rounded-md"
-										onclick={() => copyToClipboard(example_translation.translations[langKey])}
-									>
-										<p
-											class={example_translation.translations[langKey] === example_translation.text
-												? 'font-bold'
-												: ''}
+				<div class="group">
+					<Card>
+						<CardContent>
+							<div class="space-y-2">
+								{#each show_langs as langKey}
+									{#if example_translation.translations[langKey]}
+										<div
+											class="group/item flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-50"
+											onclick={() => copyToClipboard(example_translation.translations[langKey])}
 										>
-											{example_translation.translations[langKey]}
-										</p>
-										<button
-											class="opacity-0 group-hover:opacity-100 transition-opacity"
-											aria-label="Copy translation"
-											onclick={(e) => {
-												e.stopPropagation();
-												copyToClipboard(example_translation.translations[langKey]);
-											}}
-										>
-											<Copy class="h-4 w-4" />
-										</button>
-									</div>
+											<p
+												class={example_translation.translations[langKey] === example_translation.text
+													? 'font-bold'
+													: ''}
+											>
+												{example_translation.translations[langKey]}
+											</p>
+											<button
+												class="hidden group-hover/item:block hover:text-blue-500"
+												aria-label="Copy translation"
+												onclick={(e) => {
+													e.stopPropagation();
+													copyToClipboard(example_translation.translations[langKey]);
+												}}
+											>
+												<Copy class="h-4 w-4" />
+											</button>
+										</div>
+									{/if}
+								{/each}
+								{#if langs_not_in_tgt(example_translation).length > 0}
+									<p>
+										<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
+									</p>
 								{/if}
-							{/each}
-							{#if langs_not_in_tgt(example_translation).length > 0}
-								<p>
-									<i>+ {langs_not_in_tgt(example_translation).join('•')}</i>
-								</p>
-							{/if}
-						</div>
-					</CardContent>
-				</Card>
+							</div>
+						</CardContent>
+					</Card>
+				</div>
 			{/each}
 		</div>
 	</div>
