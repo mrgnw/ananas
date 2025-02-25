@@ -36,11 +36,6 @@
 
 	let history = $state(loadHistory());
 
-	function clearHistory() {
-		history = [];
-		localStorage.setItem('translationHistory', '[]');
-	}
-
 	function deleteTranslation(index) {
 		history = history.filter((_, i) => i !== index);
 		localStorage.setItem('translationHistory', JSON.stringify(history));
@@ -57,16 +52,6 @@
 	// Use the shared language store
 	let user_langs = $derived(translateLanguages.languages);
 	console.log('user_langs updated:', user_langs);
-
-	// Add a function to clear the localStorage cache completely
-	function clearLocalStorageCache() {
-		if (typeof window !== 'undefined') {
-			localStorage.clear();
-			toast.success('Local storage cache cleared!');
-			// Reload the page to reinitialize everything
-			window.location.reload();
-		}
-	}
 
 	// All available languages that can be toggled
 	let available_langs = $derived(Object.keys(user_langs));
@@ -177,11 +162,6 @@
 </script>
 
 <div class="space-y-4">
-	<div class="flex gap-2">
-		<Button variant="outline" size="sm" onclick={clearLocalStorageCache}>
-			Clear Cache
-		</Button>
-	</div>
 	<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 	<div class="flex flex-wrap items-center gap-2">
 		<a href="/languages" class="p-2 hover:text-yellow-500 transition-colors" title="Add or remove languages">
@@ -206,9 +186,6 @@
 	<div class="space-y-4">
 		<div class="flex items-center gap-2">
 			<h2 class="text-xl font-semibold">Translation History</h2>
-			<Button variant="ghost" size="icon" onclick={clearHistory} title="Clear history">
-				<Trash2 class="h-4 w-4" />
-			</Button>
 		</div>
 		<div class="flex max-w-6xl flex-wrap gap-4">
 			{#each history as translation, i}
