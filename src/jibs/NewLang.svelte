@@ -56,7 +56,7 @@
 	// All available languages that can be toggled
 	let available_langs = $derived(Object.keys(user_langs));
 	console.log('available_langs:', available_langs);
-	
+
 	// Languages that should appear in translation cards
 	let show_langs = $derived(
 		Object.entries(user_langs)
@@ -76,7 +76,7 @@
 
 	function toggle_display(key) {
 		console.log('toggle_display called for:', key);
-		
+
 		if (key === 'original') {
 			show_original = !show_original;
 		} else {
@@ -166,8 +166,12 @@
 <div class="space-y-4">
 	<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 	<div class="flex flex-wrap items-center gap-2">
-		<a href="/languages" class="p-2 hover:text-yellow-500 transition-colors" title="Add or remove languages">
-			<Languages class="w-5 h-5" />
+		<a
+			href="/languages"
+			class="p-2 transition-colors hover:text-yellow-500"
+			title="Add or remove languages"
+		>
+			<Languages class="h-5 w-5" />
 		</a>
 		{#each Object.entries(user_langs) as [key, meta]}
 			<Badge
@@ -178,7 +182,6 @@
 				{meta.native}
 			</Badge>
 		{/each}
-		
 	</div>
 	<Button onclick={handleSubmit} disabled={!is_ready}>
 		<Search class="mr-2 h-4 w-4" />
@@ -196,7 +199,7 @@
 						<CardContent>
 							<div class="relative space-y-2">
 								<button
-									class="absolute right-0 top-0 hidden group-hover:block hover:text-red-500"
+									class="absolute right-0 top-0 hidden hover:text-red-500 group-hover:block"
 									aria-label="Delete translation"
 									onclick={() => deleteTranslation(i)}
 								>
@@ -216,7 +219,7 @@
 												{translation.translations[langKey]}
 											</p>
 											<button
-												class="hidden group-hover/item:block hover:text-blue-500"
+												class="hidden hover:text-blue-500 group-hover/item:block"
 												aria-label="Copy translation"
 												onclick={(e) => {
 													e.stopPropagation();
@@ -229,9 +232,19 @@
 									{/if}
 								{/each}
 								{#if langs_not_shown(translation).length > 0}
-									<p>
-										<i>+ {langs_not_shown(translation).join('•')}</i>
-									</p>
+									<button
+										class="rounded-full border border-gray-100 px-2 py-0.5 text-xs text-gray-400"
+									>
+										{#each langs_not_shown(translation) as langCode, i}
+											<span
+												title={translateLanguages.getLanguageInfo(langCode)?.native || langCode}
+												class="cursor-pointer transition-colors hover:text-gray-600"
+												onclick={() => toggle_display(langCode)}
+											>
+												{langCode}{i < langs_not_shown(translation).length - 1 ? ' · ' : ''}
+											</span>
+										{/each}
+									</button>
 								{/if}
 							</div>
 						</CardContent>
@@ -249,7 +262,8 @@
 											onclick={() => copyToClipboard(example_translation.translations[langKey])}
 										>
 											<p
-												class={example_translation.translations[langKey] === example_translation.text
+												class={example_translation.translations[langKey] ===
+												example_translation.text
 													? 'font-bold'
 													: ''}
 											>
