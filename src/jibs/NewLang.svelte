@@ -69,7 +69,9 @@
 
 	function langs_not_shown(translation) {
 		// Show languages that are in the translation but not currently displayed
-		return Object.keys(translation.translations).filter((lang) => !show_langs.includes(lang));
+		return Object.keys(translation.translations)
+			.filter((lang) => !show_langs.includes(lang))
+			.filter((lang) => lang != 'metadata');
 	}
 
 	function toggle_display(key) {
