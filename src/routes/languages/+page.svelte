@@ -9,6 +9,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import type { PageData } from './$types'
 import type { Language } from '$lib/types'
 import { fade } from 'svelte/transition'
+import m2mSupport from '$lib/data/m2m-support.json'
+import wikidataLanguages from '$lib/data/wikidata-languages.json'
 
 const data = $props<PageData>()
 
@@ -17,6 +19,14 @@ let nativeFirst = $state(false)
 
 // Get all languages from your existing utils
 let allLanguages = $state<Language[]>(getAllLanguages())
+
+// Create mapping for converting 3-digit to 2-digit codes for m2m100 model compatibility
+const iso3ToIso2Map = $state(wikidataLanguages.reduce((acc, lang) => {
+  if (lang.iso && lang.iso1) {
+    acc[lang.iso] = lang.iso1;
+  }
+  return acc;
+}, {}))
 
 function toggleLanguage(code: string) {
     if (isSelected(code)) {
@@ -44,6 +54,12 @@ function formatName(lang: Language) {
     const name = getEnglishName(lang.code);
     const nativeName = getLanguageName(lang.code);
     return name === nativeName ? name : `${name} • ${nativeName}`;
+}
+
+function isM2MSupported(code: string) {
+    // Use proper mapping from wikidata
+    const code2 = iso3ToIso2Map[code];
+    return code2 && code2 in m2mSupport;
 }
 
 let filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
@@ -109,6 +125,7 @@ function clearLocalStorageCache() {
                 {#each sortedLanguages as lang}
                     {@const info = getLanguageInfo(lang.code)}
                     {@const inUserCountry = data.country && info?.countries?.includes(data.country)}
+                    {@const supported = isM2MSupported(lang.code)}
                     <tr class="hover:bg-gray-50" class:bg-blue-50={inUserCountry}>
                         <td class="py-1.5 px-2 text-center">
                             <Checkbox 
@@ -116,9 +133,9 @@ function clearLocalStorageCache() {
                                 onCheckedChange={() => toggleLanguage(lang.code)}
                             />
                         </td>
-                        <td class="py-1.5 px-2 text-center font-mono">{formatSpeakers(info?.nativeSpeakers_k)}</td>
-                        <td class="py-1.5 px-2 text-center font-mono">{lang.code}</td>
-                        <td class="py-1.5 px-2 text-left">{formatName(lang)}</td>
+                        <td class="py-1.5 px-2 text-center font-mono" class:text-gray-400={!supported}>{formatSpeakers(info?.nativeSpeakers_k)}</td>
+                        <td class="py-1.5 px-2 text-center font-mono" class:text-gray-400={!supported}>{lang.code}</td>
+                        <td class="py-1.5 px-2 text-left" class:text-gray-400={!supported}>{formatName(lang)}</td>
                     </tr>
                 {/each}
             </tbody>
