@@ -2,14 +2,14 @@
   {
     "wikidata_id": "Q889",
     "name": "Afghanistan",
-    "iso": "AF",
-    "iso3": "AFG",
+    "iso": "af",
+    "iso3": "afg",
     "flag": "🇦🇫",
     "languages": [
       {
-        "id": "Q58680",
-        "name": "Pashto",
-        "iso": "pus",
+        "id": "Q36670",
+        "name": "Pashayi",
+        "iso": "prs",
         "iso1": null,
         "speakers": 315421300,
         "speakers_m": 315.4
@@ -23,8 +23,8 @@
         "speakers_m": 295
       },
       {
-        "id": "Q161804",
-        "name": "Nuristani",
+        "id": "Q58680",
+        "name": "Pashto",
         "iso1": null,
         "speakers": 39000000,
         "speakers_m": 39
@@ -53,9 +53,9 @@
         "speakers_m": 9.6
       },
       {
-        "id": "Q36670",
-        "name": "Pashayi",
-        "iso": "prs",
+        "id": "Q161804",
+        "name": "Nuristani",
+        "iso": "pus",
         "iso1": null,
         "speakers": 7600000,
         "speakers_m": 7.6
@@ -80,8 +80,8 @@
   {
     "wikidata_id": "Q222",
     "name": "Albania",
-    "iso": "AL",
-    "iso3": "ALB",
+    "iso": "al",
+    "iso3": "alb",
     "flag": "🇦🇱",
     "languages": [
       {
@@ -97,8 +97,8 @@
   {
     "wikidata_id": "Q262",
     "name": "Algeria",
-    "iso": "DZ",
-    "iso3": "DZA",
+    "iso": "dz",
+    "iso3": "dza",
     "flag": "🇩🇿",
     "languages": [
       {
@@ -121,8 +121,8 @@
   {
     "wikidata_id": "Q228",
     "name": "Andorra",
-    "iso": "AD",
-    "iso3": "AND",
+    "iso": "ad",
+    "iso3": "and",
     "flag": "🇦🇩",
     "languages": [
       {
@@ -138,8 +138,8 @@
   {
     "wikidata_id": "Q916",
     "name": "Angola",
-    "iso": "AO",
-    "iso3": "AGO",
+    "iso": "ao",
+    "iso3": "ago",
     "flag": "🇦🇴",
     "languages": [
       {
@@ -155,8 +155,8 @@
   {
     "wikidata_id": "Q781",
     "name": "Antigua and Barbuda",
-    "iso": "AG",
-    "iso3": "ATG",
+    "iso": "ag",
+    "iso3": "atg",
     "flag": "🇦🇬",
     "languages": [
       {
@@ -172,8 +172,8 @@
   {
     "wikidata_id": "Q414",
     "name": "Argentina",
-    "iso": "AR",
-    "iso3": "ARG",
+    "iso": "ar",
+    "iso3": "arg",
     "flag": "🇦🇷",
     "languages": [
       {
@@ -189,8 +189,8 @@
   {
     "wikidata_id": "Q399",
     "name": "Armenia",
-    "iso": "AM",
-    "iso3": "ARM",
+    "iso": "am",
+    "iso3": "arm",
     "flag": "🇦🇲",
     "languages": [
       {
@@ -206,8 +206,8 @@
   {
     "wikidata_id": "Q408",
     "name": "Australia",
-    "iso": "AU",
-    "iso3": "AUS",
+    "iso": "au",
+    "iso3": "aus",
     "flag": "🇦🇺",
     "languages": [
       {
@@ -230,8 +230,8 @@
   {
     "wikidata_id": "Q40",
     "name": "Austria",
-    "iso": "AT",
-    "iso3": "AUT",
+    "iso": "at",
+    "iso3": "aut",
     "flag": "🇦🇹",
     "languages": [
       {
@@ -255,8 +255,8 @@
   {
     "wikidata_id": "Q227",
     "name": "Azerbaijan",
-    "iso": "AZ",
-    "iso3": "AZE",
+    "iso": "az",
+    "iso3": "aze",
     "flag": "🇦🇿",
     "languages": [
       {
@@ -279,8 +279,8 @@
   {
     "wikidata_id": "Q398",
     "name": "Bahrain",
-    "iso": "BH",
-    "iso3": "BHR",
+    "iso": "bh",
+    "iso3": "bhr",
     "flag": "🇧🇭",
     "languages": [
       {
@@ -296,8 +296,8 @@
   {
     "wikidata_id": "Q902",
     "name": "Bangladesh",
-    "iso": "BD",
-    "iso3": "BGD",
+    "iso": "bd",
+    "iso3": "bgd",
     "flag": "🇧🇩",
     "languages": [
       {
@@ -313,8 +313,8 @@
   {
     "wikidata_id": "Q244",
     "name": "Barbados",
-    "iso": "BB",
-    "iso3": "BRB",
+    "iso": "bb",
+    "iso3": "brb",
     "flag": "🇧🇧",
     "languages": [
       {
@@ -338,8 +338,8 @@
   {
     "wikidata_id": "Q184",
     "name": "Belarus",
-    "iso": "BY",
-    "iso3": "BLR",
+    "iso": "by",
+    "iso3": "blr",
     "flag": "🇧🇾",
     "languages": [
       {
@@ -363,8 +363,8 @@
   {
     "wikidata_id": "Q31",
     "name": "Belgium",
-    "iso": "BE",
-    "iso3": "BEL",
+    "iso": "be",
+    "iso3": "bel",
     "flag": "🇧🇪",
     "languages": [
       {
@@ -396,8 +396,8 @@
   {
     "wikidata_id": "Q242",
     "name": "Belize",
-    "iso": "BZ",
-    "iso3": "BLZ",
+    "iso": "bz",
+    "iso3": "blz",
     "flag": "🇧🇿",
     "languages": [
       {
@@ -413,8 +413,8 @@
   {
     "wikidata_id": "Q962",
     "name": "Benin",
-    "iso": "BJ",
-    "iso3": "BEN",
+    "iso": "bj",
+    "iso3": "ben",
     "flag": "🇧🇯",
     "languages": [
       {
@@ -430,8 +430,8 @@
   {
     "wikidata_id": "Q917",
     "name": "Bhutan",
-    "iso": "BT",
-    "iso3": "BTN",
+    "iso": "bt",
+    "iso3": "btn",
     "flag": "🇧🇹",
     "languages": [
       {
@@ -447,8 +447,8 @@
   {
     "wikidata_id": "Q750",
     "name": "Bolivia",
-    "iso": "BO",
-    "iso3": "BOL",
+    "iso": "bo",
+    "iso3": "bol",
     "flag": "🇧🇴",
     "languages": [
       {
@@ -488,8 +488,8 @@
   {
     "wikidata_id": "Q225",
     "name": "Bosnia and Herzegovina",
-    "iso": "BA",
-    "iso3": "BIH",
+    "iso": "ba",
+    "iso3": "bih",
     "flag": "🇧🇦",
     "languages": [
       {
@@ -521,8 +521,8 @@
   {
     "wikidata_id": "Q963",
     "name": "Botswana",
-    "iso": "BW",
-    "iso3": "BWA",
+    "iso": "bw",
+    "iso3": "bwa",
     "flag": "🇧🇼",
     "languages": [
       {
@@ -538,8 +538,8 @@
   {
     "wikidata_id": "Q155",
     "name": "Brazil",
-    "iso": "BR",
-    "iso3": "BRA",
+    "iso": "br",
+    "iso3": "bra",
     "flag": "🇧🇷",
     "languages": [
       {
@@ -555,8 +555,8 @@
   {
     "wikidata_id": "Q921",
     "name": "Brunei",
-    "iso": "BN",
-    "iso3": "BRN",
+    "iso": "bn",
+    "iso3": "brn",
     "flag": "🇧🇳",
     "languages": [
       {
@@ -579,8 +579,8 @@
   {
     "wikidata_id": "Q219",
     "name": "Bulgaria",
-    "iso": "BG",
-    "iso3": "BGR",
+    "iso": "bg",
+    "iso3": "bgr",
     "flag": "🇧🇬",
     "languages": [
       {
@@ -596,8 +596,8 @@
   {
     "wikidata_id": "Q965",
     "name": "Burkina Faso",
-    "iso": "BF",
-    "iso3": "BFA",
+    "iso": "bf",
+    "iso3": "bfa",
     "flag": "🇧🇫",
     "languages": [
       {
@@ -629,8 +629,8 @@
   {
     "wikidata_id": "Q967",
     "name": "Burundi",
-    "iso": "BI",
-    "iso3": "BDI",
+    "iso": "bi",
+    "iso3": "bdi",
     "flag": "🇧🇮",
     "languages": [
       {
@@ -662,8 +662,8 @@
   {
     "wikidata_id": "Q424",
     "name": "Cambodia",
-    "iso": "KH",
-    "iso3": "KHM",
+    "iso": "kh",
+    "iso3": "khm",
     "flag": "🇰🇭",
     "languages": [
       {
@@ -679,8 +679,8 @@
   {
     "wikidata_id": "Q1009",
     "name": "Cameroon",
-    "iso": "CM",
-    "iso3": "CMR",
+    "iso": "cm",
+    "iso3": "cmr",
     "flag": "🇨🇲",
     "languages": [
       {
@@ -704,8 +704,8 @@
   {
     "wikidata_id": "Q16",
     "name": "Canada",
-    "iso": "CA",
-    "iso3": "CAN",
+    "iso": "ca",
+    "iso3": "can",
     "flag": "🇨🇦",
     "languages": [
       {
@@ -729,8 +729,8 @@
   {
     "wikidata_id": "Q1011",
     "name": "Cape Verde",
-    "iso": "CV",
-    "iso3": "CPV",
+    "iso": "cv",
+    "iso3": "cpv",
     "flag": "🇨🇻",
     "languages": [
       {
@@ -754,8 +754,8 @@
   {
     "wikidata_id": "Q929",
     "name": "Central African Republic",
-    "iso": "CF",
-    "iso3": "CAF",
+    "iso": "cf",
+    "iso3": "caf",
     "flag": "🇨🇫",
     "languages": [
       {
@@ -779,8 +779,8 @@
   {
     "wikidata_id": "Q657",
     "name": "Chad",
-    "iso": "TD",
-    "iso3": "TCD",
+    "iso": "td",
+    "iso3": "tcd",
     "flag": "🇹🇩",
     "languages": [
       {
@@ -804,8 +804,8 @@
   {
     "wikidata_id": "Q298",
     "name": "Chile",
-    "iso": "CL",
-    "iso3": "CHL",
+    "iso": "cl",
+    "iso3": "chl",
     "flag": "🇨🇱",
     "languages": [
       {
@@ -821,8 +821,8 @@
   {
     "wikidata_id": "Q739",
     "name": "Colombia",
-    "iso": "CO",
-    "iso3": "COL",
+    "iso": "co",
+    "iso3": "col",
     "flag": "🇨🇴",
     "languages": [
       {
@@ -838,8 +838,8 @@
   {
     "wikidata_id": "Q970",
     "name": "Comoros",
-    "iso": "KM",
-    "iso3": "COM",
+    "iso": "km",
+    "iso3": "com",
     "flag": "🇰🇲",
     "languages": [
       {
@@ -870,8 +870,8 @@
   {
     "wikidata_id": "Q800",
     "name": "Costa Rica",
-    "iso": "CR",
-    "iso3": "CRI",
+    "iso": "cr",
+    "iso3": "cri",
     "flag": "🇨🇷",
     "languages": [
       {
@@ -887,8 +887,8 @@
   {
     "wikidata_id": "Q224",
     "name": "Croatia",
-    "iso": "HR",
-    "iso3": "HRV",
+    "iso": "hr",
+    "iso3": "hrv",
     "flag": "🇭🇷",
     "languages": [
       {
@@ -904,8 +904,8 @@
   {
     "wikidata_id": "Q241",
     "name": "Cuba",
-    "iso": "CU",
-    "iso3": "CUB",
+    "iso": "cu",
+    "iso3": "cub",
     "flag": "🇨🇺",
     "languages": [
       {
@@ -921,8 +921,8 @@
   {
     "wikidata_id": "Q229",
     "name": "Cyprus",
-    "iso": "CY",
-    "iso3": "CYP",
+    "iso": "cy",
+    "iso3": "cyp",
     "flag": "🇨🇾",
     "languages": [
       {
@@ -953,8 +953,8 @@
   {
     "wikidata_id": "Q213",
     "name": "Czech Republic",
-    "iso": "CZ",
-    "iso3": "CZE",
+    "iso": "cz",
+    "iso3": "cze",
     "flag": "🇨🇿",
     "languages": [
       {
@@ -970,8 +970,8 @@
   {
     "wikidata_id": "Q974",
     "name": "Democratic Republic of the Congo",
-    "iso": "CD",
-    "iso3": "COD",
+    "iso": "cd",
+    "iso3": "cod",
     "flag": "🇨🇩",
     "languages": [
       {
@@ -987,8 +987,8 @@
   {
     "wikidata_id": "Q977",
     "name": "Djibouti",
-    "iso": "DJ",
-    "iso3": "DJI",
+    "iso": "dj",
+    "iso3": "dji",
     "flag": "🇩🇯",
     "languages": [
       {
@@ -1012,8 +1012,8 @@
   {
     "wikidata_id": "Q784",
     "name": "Dominica",
-    "iso": "DM",
-    "iso3": "DMA",
+    "iso": "dm",
+    "iso3": "dma",
     "flag": "🇩🇲",
     "languages": [
       {
@@ -1029,8 +1029,8 @@
   {
     "wikidata_id": "Q786",
     "name": "Dominican Republic",
-    "iso": "DO",
-    "iso3": "DOM",
+    "iso": "do",
+    "iso3": "dom",
     "flag": "🇩🇴",
     "languages": [
       {
@@ -1046,8 +1046,8 @@
   {
     "wikidata_id": "Q736",
     "name": "Ecuador",
-    "iso": "EC",
-    "iso3": "ECU",
+    "iso": "ec",
+    "iso3": "ecu",
     "flag": "🇪🇨",
     "languages": [
       {
@@ -1061,7 +1061,6 @@
       {
         "id": "Q1740805",
         "name": "Northern Quichua",
-        "iso": "jiv",
         "iso1": null,
         "speakers": 591448,
         "speakers_m": 0.6
@@ -1069,6 +1068,7 @@
       {
         "id": "Q617291",
         "name": "Shuar",
+        "iso": "jiv",
         "iso1": null,
         "speakers": 35000,
         "speakers_m": 0
@@ -1078,8 +1078,8 @@
   {
     "wikidata_id": "Q79",
     "name": "Egypt",
-    "iso": "EG",
-    "iso3": "EGY",
+    "iso": "eg",
+    "iso3": "egy",
     "flag": "🇪🇬",
     "languages": [
       {
@@ -1095,8 +1095,8 @@
   {
     "wikidata_id": "Q792",
     "name": "El Salvador",
-    "iso": "SV",
-    "iso3": "SLV",
+    "iso": "sv",
+    "iso3": "slv",
     "flag": "🇸🇻",
     "languages": [
       {
@@ -1112,8 +1112,8 @@
   {
     "wikidata_id": "Q983",
     "name": "Equatorial Guinea",
-    "iso": "GQ",
-    "iso3": "GNQ",
+    "iso": "gq",
+    "iso3": "gnq",
     "flag": "🇬🇶",
     "languages": [
       {
@@ -1145,8 +1145,8 @@
   {
     "wikidata_id": "Q986",
     "name": "Eritrea",
-    "iso": "ER",
-    "iso3": "ERI",
+    "iso": "er",
+    "iso3": "eri",
     "flag": "🇪🇷",
     "languages": [
       {
@@ -1178,8 +1178,8 @@
   {
     "wikidata_id": "Q191",
     "name": "Estonia",
-    "iso": "EE",
-    "iso3": "EST",
+    "iso": "ee",
+    "iso3": "est",
     "flag": "🇪🇪",
     "languages": [
       {
@@ -1195,8 +1195,8 @@
   {
     "wikidata_id": "Q1050",
     "name": "Eswatini",
-    "iso": "SZ",
-    "iso3": "SWZ",
+    "iso": "sz",
+    "iso3": "swz",
     "flag": "🇸🇿",
     "languages": [
       {
@@ -1220,8 +1220,8 @@
   {
     "wikidata_id": "Q115",
     "name": "Ethiopia",
-    "iso": "ET",
-    "iso3": "ETH",
+    "iso": "et",
+    "iso3": "eth",
     "flag": "🇪🇹",
     "languages": [
       {
@@ -1237,8 +1237,8 @@
   {
     "wikidata_id": "Q702",
     "name": "Federated States of Micronesia",
-    "iso": "FM",
-    "iso3": "FSM",
+    "iso": "fm",
+    "iso3": "fsm",
     "flag": "🇫🇲",
     "languages": [
       {
@@ -1254,14 +1254,14 @@
   {
     "wikidata_id": "Q712",
     "name": "Fiji",
-    "iso": "FJ",
-    "iso3": "FJI",
+    "iso": "fj",
+    "iso3": "fji",
     "flag": "🇫🇯",
     "languages": [
       {
-        "id": "Q33295",
-        "name": "Fijian",
-        "iso": "fij",
+        "id": "Q46728",
+        "name": "Fiji Hindi",
+        "iso": "hif",
         "iso1": "fj",
         "speakers": 753359540,
         "speakers_m": 753.4
@@ -1275,20 +1275,20 @@
         "speakers_m": 379
       },
       {
-        "id": "Q46728",
-        "name": "Fiji Hindi",
-        "iso": "hif",
+        "id": "Q33295",
+        "name": "Fijian",
+        "iso": "fij",
         "iso1": null,
-        "speakers": 1500,
-        "speakers_m": 0
+        "speakers": 380000,
+        "speakers_m": 0.4
       }
     ]
   },
   {
     "wikidata_id": "Q33",
     "name": "Finland",
-    "iso": "FI",
-    "iso3": "FIN",
+    "iso": "fi",
+    "iso3": "fin",
     "flag": "🇫🇮",
     "languages": [
       {
@@ -1312,8 +1312,8 @@
   {
     "wikidata_id": "Q142",
     "name": "France",
-    "iso": "FR",
-    "iso3": "FRA",
+    "iso": "fr",
+    "iso3": "fra",
     "flag": "🇫🇷",
     "languages": [
       {
@@ -1329,8 +1329,8 @@
   {
     "wikidata_id": "Q1000",
     "name": "Gabon",
-    "iso": "GA",
-    "iso3": "GAB",
+    "iso": "ga",
+    "iso3": "gab",
     "flag": "🇬🇦",
     "languages": [
       {
@@ -1346,8 +1346,8 @@
   {
     "wikidata_id": "Q230",
     "name": "Georgia",
-    "iso": "GE",
-    "iso3": "GEO",
+    "iso": "ge",
+    "iso3": "geo",
     "flag": "🇬🇪",
     "languages": [
       {
@@ -1371,8 +1371,8 @@
   {
     "wikidata_id": "Q183",
     "name": "Germany",
-    "iso": "DE",
-    "iso3": "DEU",
+    "iso": "de",
+    "iso3": "deu",
     "flag": "🇩🇪",
     "languages": [
       {
@@ -1388,8 +1388,8 @@
   {
     "wikidata_id": "Q117",
     "name": "Ghana",
-    "iso": "GH",
-    "iso3": "GHA",
+    "iso": "gh",
+    "iso3": "gha",
     "flag": "🇬🇭",
     "languages": [
       {
@@ -1405,21 +1405,21 @@
   {
     "wikidata_id": "Q41",
     "name": "Greece",
-    "iso": "GR",
-    "iso3": "GRC",
+    "iso": "gr",
+    "iso3": "grc",
     "flag": "🇬🇷",
     "languages": [
       {
-        "id": "Q36510",
-        "name": "Modern Greek",
+        "id": "Q35392",
+        "name": "Demotic Greek",
         "iso": "ell",
         "iso1": "el",
         "speakers": 15000000,
         "speakers_m": 15
       },
       {
-        "id": "Q35392",
-        "name": "Demotic Greek",
+        "id": "Q36510",
+        "name": "Modern Greek",
         "iso1": null,
         "speakers": 13100000,
         "speakers_m": 13.1
@@ -1436,8 +1436,8 @@
   {
     "wikidata_id": "Q769",
     "name": "Grenada",
-    "iso": "GD",
-    "iso3": "GRD",
+    "iso": "gd",
+    "iso3": "grd",
     "flag": "🇬🇩",
     "languages": [
       {
@@ -1461,8 +1461,8 @@
   {
     "wikidata_id": "Q774",
     "name": "Guatemala",
-    "iso": "GT",
-    "iso3": "GTM",
+    "iso": "gt",
+    "iso3": "gtm",
     "flag": "🇬🇹",
     "languages": [
       {
@@ -1478,8 +1478,8 @@
   {
     "wikidata_id": "Q1006",
     "name": "Guinea",
-    "iso": "GN",
-    "iso3": "GIN",
+    "iso": "gn",
+    "iso3": "gin",
     "flag": "🇬🇳",
     "languages": [
       {
@@ -1495,8 +1495,8 @@
   {
     "wikidata_id": "Q1007",
     "name": "Guinea-Bissau",
-    "iso": "GW",
-    "iso3": "GNB",
+    "iso": "gw",
+    "iso3": "gnb",
     "flag": "🇬🇼",
     "languages": [
       {
@@ -1512,8 +1512,8 @@
   {
     "wikidata_id": "Q734",
     "name": "Guyana",
-    "iso": "GY",
-    "iso3": "GUY",
+    "iso": "gy",
+    "iso3": "guy",
     "flag": "🇬🇾",
     "languages": [
       {
@@ -1529,8 +1529,8 @@
   {
     "wikidata_id": "Q790",
     "name": "Haiti",
-    "iso": "HT",
-    "iso3": "HTI",
+    "iso": "ht",
+    "iso3": "hti",
     "flag": "🇭🇹",
     "languages": [
       {
@@ -1554,8 +1554,8 @@
   {
     "wikidata_id": "Q783",
     "name": "Honduras",
-    "iso": "HN",
-    "iso3": "HND",
+    "iso": "hn",
+    "iso3": "hnd",
     "flag": "🇭🇳",
     "languages": [
       {
@@ -1571,8 +1571,8 @@
   {
     "wikidata_id": "Q28",
     "name": "Hungary",
-    "iso": "HU",
-    "iso3": "HUN",
+    "iso": "hu",
+    "iso3": "hun",
     "flag": "🇭🇺",
     "languages": [
       {
@@ -1588,8 +1588,8 @@
   {
     "wikidata_id": "Q189",
     "name": "Iceland",
-    "iso": "IS",
-    "iso3": "ISL",
+    "iso": "is",
+    "iso3": "isl",
     "flag": "🇮🇸",
     "languages": [
       {
@@ -1605,8 +1605,8 @@
   {
     "wikidata_id": "Q668",
     "name": "India",
-    "iso": "IN",
-    "iso3": "IND",
+    "iso": "in",
+    "iso3": "ind",
     "flag": "🇮🇳",
     "languages": [
       {
@@ -1630,8 +1630,8 @@
   {
     "wikidata_id": "Q252",
     "name": "Indonesia",
-    "iso": "ID",
-    "iso3": "IDN",
+    "iso": "id",
+    "iso3": "idn",
     "flag": "🇮🇩",
     "languages": [
       {
@@ -1647,8 +1647,8 @@
   {
     "wikidata_id": "Q794",
     "name": "Iran",
-    "iso": "IR",
-    "iso3": "IRN",
+    "iso": "ir",
+    "iso3": "irn",
     "flag": "🇮🇷",
     "languages": [
       {
@@ -1664,8 +1664,8 @@
   {
     "wikidata_id": "Q796",
     "name": "Iraq",
-    "iso": "IQ",
-    "iso3": "IRQ",
+    "iso": "iq",
+    "iso3": "irq",
     "flag": "🇮🇶",
     "languages": [
       {
@@ -1689,8 +1689,8 @@
   {
     "wikidata_id": "Q27",
     "name": "Ireland",
-    "iso": "IE",
-    "iso3": "IRL",
+    "iso": "ie",
+    "iso3": "irl",
     "flag": "🇮🇪",
     "languages": [
       {
@@ -1714,8 +1714,8 @@
   {
     "wikidata_id": "Q801",
     "name": "Israel",
-    "iso": "IL",
-    "iso3": "ISR",
+    "iso": "il",
+    "iso3": "isr",
     "flag": "🇮🇱",
     "languages": [
       {
@@ -1731,8 +1731,8 @@
   {
     "wikidata_id": "Q38",
     "name": "Italy",
-    "iso": "IT",
-    "iso3": "ITA",
+    "iso": "it",
+    "iso3": "ita",
     "flag": "🇮🇹",
     "languages": [
       {
@@ -1748,8 +1748,8 @@
   {
     "wikidata_id": "Q1008",
     "name": "Ivory Coast",
-    "iso": "CI",
-    "iso3": "CIV",
+    "iso": "ci",
+    "iso3": "civ",
     "flag": "🇨🇮",
     "languages": [
       {
@@ -1765,8 +1765,8 @@
   {
     "wikidata_id": "Q766",
     "name": "Jamaica",
-    "iso": "JM",
-    "iso3": "JAM",
+    "iso": "jm",
+    "iso3": "jam",
     "flag": "🇯🇲",
     "languages": [
       {
@@ -1790,8 +1790,8 @@
   {
     "wikidata_id": "Q17",
     "name": "Japan",
-    "iso": "JP",
-    "iso3": "JPN",
+    "iso": "jp",
+    "iso3": "jpn",
     "flag": "🇯🇵",
     "languages": [
       {
@@ -1807,8 +1807,8 @@
   {
     "wikidata_id": "Q810",
     "name": "Jordan",
-    "iso": "JO",
-    "iso3": "JOR",
+    "iso": "jo",
+    "iso3": "jor",
     "flag": "🇯🇴",
     "languages": [
       {
@@ -1824,8 +1824,8 @@
   {
     "wikidata_id": "Q232",
     "name": "Kazakhstan",
-    "iso": "KZ",
-    "iso3": "KAZ",
+    "iso": "kz",
+    "iso3": "kaz",
     "flag": "🇰🇿",
     "languages": [
       {
@@ -1849,8 +1849,8 @@
   {
     "wikidata_id": "Q114",
     "name": "Kenya",
-    "iso": "KE",
-    "iso3": "KEN",
+    "iso": "ke",
+    "iso3": "ken",
     "flag": "🇰🇪",
     "languages": [
       {
@@ -1874,8 +1874,8 @@
   {
     "wikidata_id": "Q29999",
     "name": "Kingdom of the Netherlands",
-    "iso": "NL",
-    "iso3": "NLD",
+    "iso": "nl",
+    "iso3": "nld",
     "flag": "🇳🇱",
     "languages": [
       {
@@ -1891,8 +1891,8 @@
   {
     "wikidata_id": "Q710",
     "name": "Kiribati",
-    "iso": "KI",
-    "iso3": "KIR",
+    "iso": "ki",
+    "iso3": "kir",
     "flag": "🇰🇮",
     "languages": [
       {
@@ -1916,8 +1916,8 @@
   {
     "wikidata_id": "Q817",
     "name": "Kuwait",
-    "iso": "KW",
-    "iso3": "KWT",
+    "iso": "kw",
+    "iso3": "kwt",
     "flag": "🇰🇼",
     "languages": [
       {
@@ -1933,8 +1933,8 @@
   {
     "wikidata_id": "Q813",
     "name": "Kyrgyzstan",
-    "iso": "KG",
-    "iso3": "KGZ",
+    "iso": "kg",
+    "iso3": "kgz",
     "flag": "🇰🇬",
     "languages": [
       {
@@ -1950,8 +1950,8 @@
   {
     "wikidata_id": "Q819",
     "name": "Laos",
-    "iso": "LA",
-    "iso3": "LAO",
+    "iso": "la",
+    "iso3": "lao",
     "flag": "🇱🇦",
     "languages": [
       {
@@ -1967,8 +1967,8 @@
   {
     "wikidata_id": "Q211",
     "name": "Latvia",
-    "iso": "LV",
-    "iso3": "LVA",
+    "iso": "lv",
+    "iso3": "lva",
     "flag": "🇱🇻",
     "languages": [
       {
@@ -1984,8 +1984,8 @@
   {
     "wikidata_id": "Q822",
     "name": "Lebanon",
-    "iso": "LB",
-    "iso3": "LBN",
+    "iso": "lb",
+    "iso3": "lbn",
     "flag": "🇱🇧",
     "languages": [
       {
@@ -2001,8 +2001,8 @@
   {
     "wikidata_id": "Q1013",
     "name": "Lesotho",
-    "iso": "LS",
-    "iso3": "LSO",
+    "iso": "ls",
+    "iso3": "lso",
     "flag": "🇱🇸",
     "languages": [
       {
@@ -2026,8 +2026,8 @@
   {
     "wikidata_id": "Q1014",
     "name": "Liberia",
-    "iso": "LR",
-    "iso3": "LBR",
+    "iso": "lr",
+    "iso3": "lbr",
     "flag": "🇱🇷",
     "languages": [
       {
@@ -2043,8 +2043,8 @@
   {
     "wikidata_id": "Q1016",
     "name": "Libya",
-    "iso": "LY",
-    "iso3": "LBY",
+    "iso": "ly",
+    "iso3": "lby",
     "flag": "🇱🇾",
     "languages": [
       {
@@ -2060,8 +2060,8 @@
   {
     "wikidata_id": "Q347",
     "name": "Liechtenstein",
-    "iso": "LI",
-    "iso3": "LIE",
+    "iso": "li",
+    "iso3": "lie",
     "flag": "🇱🇮",
     "languages": [
       {
@@ -2077,8 +2077,8 @@
   {
     "wikidata_id": "Q37",
     "name": "Lithuania",
-    "iso": "LT",
-    "iso3": "LTU",
+    "iso": "lt",
+    "iso3": "ltu",
     "flag": "🇱🇹",
     "languages": [
       {
@@ -2094,8 +2094,8 @@
   {
     "wikidata_id": "Q32",
     "name": "Luxembourg",
-    "iso": "LU",
-    "iso3": "LUX",
+    "iso": "lu",
+    "iso3": "lux",
     "flag": "🇱🇺",
     "languages": [
       {
@@ -2127,8 +2127,8 @@
   {
     "wikidata_id": "Q1019",
     "name": "Madagascar",
-    "iso": "MG",
-    "iso3": "MDG",
+    "iso": "mg",
+    "iso3": "mdg",
     "flag": "🇲🇬",
     "languages": [
       {
@@ -2152,8 +2152,8 @@
   {
     "wikidata_id": "Q1020",
     "name": "Malawi",
-    "iso": "MW",
-    "iso3": "MWI",
+    "iso": "mw",
+    "iso3": "mwi",
     "flag": "🇲🇼",
     "languages": [
       {
@@ -2177,8 +2177,8 @@
   {
     "wikidata_id": "Q833",
     "name": "Malaysia",
-    "iso": "MY",
-    "iso3": "MYS",
+    "iso": "my",
+    "iso3": "mys",
     "flag": "🇲🇾",
     "languages": [
       {
@@ -2194,8 +2194,8 @@
   {
     "wikidata_id": "Q826",
     "name": "Maldives",
-    "iso": "MV",
-    "iso3": "MDV",
+    "iso": "mv",
+    "iso3": "mdv",
     "flag": "🇲🇻",
     "languages": [
       {
@@ -2211,70 +2211,70 @@
   {
     "wikidata_id": "Q912",
     "name": "Mali",
-    "iso": "ML",
-    "iso3": "MLI",
+    "iso": "ml",
+    "iso3": "mli",
     "flag": "🇲🇱",
     "languages": [
       {
         "id": "Q33454",
         "name": "Fula",
-        "iso": "myk",
-        "iso1": null,
+        "iso": "ful",
+        "iso1": "ff",
         "speakers": 24000000,
         "speakers_m": 24
       },
       {
-        "id": "Q33243",
-        "name": "Bambara",
-        "iso": "bam",
+        "id": "Q36187",
+        "name": "Minyanka",
+        "iso": "myk",
         "iso1": "bm",
         "speakers": 4200000,
         "speakers_m": 4.2
       },
       {
-        "id": "Q36660",
-        "name": "Soninke",
-        "iso": "mey",
+        "id": "Q36905",
+        "name": "Kassonke",
+        "iso": "taq",
         "iso1": null,
         "speakers": 3763900,
         "speakers_m": 3.8
       },
       {
-        "id": "Q36187",
-        "name": "Minyanka",
-        "iso": "myq",
+        "id": "Q33795",
+        "name": "Senufo",
+        "iso": "kao",
         "iso1": null,
         "speakers": 3300000,
         "speakers_m": 3.3
       },
       {
-        "id": "Q33795",
-        "name": "Senufo",
-        "iso": "ful",
-        "iso1": "ff",
+        "id": "Q35021",
+        "name": "Bozo",
+        "iso": "bam",
+        "iso1": null,
         "speakers": 2700000,
         "speakers_m": 2.7
       },
       {
-        "id": "Q36186",
-        "name": "Maninka",
+        "id": "Q33243",
+        "name": "Bambara",
         "iso": "snk",
         "iso1": null,
         "speakers": 1096795,
         "speakers_m": 1.1
       },
       {
-        "id": "Q56231",
-        "name": "Hassaniya Arabic",
-        "iso": "kao",
+        "id": "Q36660",
+        "name": "Soninke",
+        "iso": "myq",
         "iso1": null,
         "speakers": 500000,
         "speakers_m": 0.5
       },
       {
-        "id": "Q35021",
-        "name": "Bozo",
-        "iso": "taq",
+        "id": "Q36186",
+        "name": "Maninka",
+        "iso": "mey",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
@@ -2282,20 +2282,6 @@
       {
         "id": "Q505198",
         "name": "Songhay",
-        "iso1": null,
-        "speakers": null,
-        "speakers_m": null
-      },
-      {
-        "id": "Q36905",
-        "name": "Kassonke",
-        "iso1": null,
-        "speakers": null,
-        "speakers_m": null
-      },
-      {
-        "id": "Q1234776",
-        "name": "Dogon",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
@@ -2313,14 +2299,28 @@
         "iso1": null,
         "speakers": null,
         "speakers_m": null
+      },
+      {
+        "id": "Q1234776",
+        "name": "Dogon",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q56231",
+        "name": "Hassaniya Arabic",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q233",
     "name": "Malta",
-    "iso": "MT",
-    "iso3": "MLT",
+    "iso": "mt",
+    "iso3": "mlt",
     "flag": "🇲🇹",
     "languages": [
       {
@@ -2344,8 +2344,8 @@
   {
     "wikidata_id": "Q709",
     "name": "Marshall Islands",
-    "iso": "MH",
-    "iso3": "MHL",
+    "iso": "mh",
+    "iso3": "mhl",
     "flag": "🇲🇭",
     "languages": [
       {
@@ -2369,8 +2369,8 @@
   {
     "wikidata_id": "Q1025",
     "name": "Mauritania",
-    "iso": "MR",
-    "iso3": "MRT",
+    "iso": "mr",
+    "iso3": "mrt",
     "flag": "🇲🇷",
     "languages": [
       {
@@ -2386,8 +2386,8 @@
   {
     "wikidata_id": "Q1027",
     "name": "Mauritius",
-    "iso": "MU",
-    "iso3": "MUS",
+    "iso": "mu",
+    "iso3": "mus",
     "flag": "🇲🇺",
     "languages": [
       {
@@ -2411,8 +2411,8 @@
   {
     "wikidata_id": "Q96",
     "name": "Mexico",
-    "iso": "MX",
-    "iso3": "MEX",
+    "iso": "mx",
+    "iso3": "mex",
     "flag": "🇲🇽",
     "languages": [
       {
@@ -2426,6 +2426,7 @@
       {
         "id": "Q13300",
         "name": "Nahuatl",
+        "iso": "yua",
         "iso1": null,
         "speakers": 1925620,
         "speakers_m": 1.9
@@ -2433,7 +2434,6 @@
       {
         "id": "Q13354",
         "name": "Yucatec Maya",
-        "iso": "yua",
         "iso1": null,
         "speakers": 706000,
         "speakers_m": 0.7
@@ -2443,8 +2443,8 @@
   {
     "wikidata_id": "Q217",
     "name": "Moldova",
-    "iso": "MD",
-    "iso3": "MDA",
+    "iso": "md",
+    "iso3": "mda",
     "flag": "🇲🇩",
     "languages": [
       {
@@ -2460,8 +2460,8 @@
   {
     "wikidata_id": "Q235",
     "name": "Monaco",
-    "iso": "MC",
-    "iso3": "MCO",
+    "iso": "mc",
+    "iso3": "mco",
     "flag": "🇲🇨",
     "languages": [
       {
@@ -2477,8 +2477,8 @@
   {
     "wikidata_id": "Q711",
     "name": "Mongolia",
-    "iso": "MN",
-    "iso3": "MNG",
+    "iso": "mn",
+    "iso3": "mng",
     "flag": "🇲🇳",
     "languages": [
       {
@@ -2494,8 +2494,8 @@
   {
     "wikidata_id": "Q236",
     "name": "Montenegro",
-    "iso": "ME",
-    "iso3": "MNE",
+    "iso": "me",
+    "iso3": "mne",
     "flag": "🇲🇪",
     "languages": [
       {
@@ -2511,8 +2511,8 @@
   {
     "wikidata_id": "Q1028",
     "name": "Morocco",
-    "iso": "MA",
-    "iso3": "MAR",
+    "iso": "ma",
+    "iso3": "mar",
     "flag": "🇲🇦",
     "languages": [
       {
@@ -2536,8 +2536,8 @@
   {
     "wikidata_id": "Q1029",
     "name": "Mozambique",
-    "iso": "MZ",
-    "iso3": "MOZ",
+    "iso": "mz",
+    "iso3": "moz",
     "flag": "🇲🇿",
     "languages": [
       {
@@ -2553,8 +2553,8 @@
   {
     "wikidata_id": "Q836",
     "name": "Myanmar",
-    "iso": "MM",
-    "iso3": "MMR",
+    "iso": "mm",
+    "iso3": "mmr",
     "flag": "🇲🇲",
     "languages": [
       {
@@ -2570,8 +2570,8 @@
   {
     "wikidata_id": "Q1030",
     "name": "Namibia",
-    "iso": "NA",
-    "iso3": "NAM",
+    "iso": "na",
+    "iso3": "nam",
     "flag": "🇳🇦",
     "languages": [
       {
@@ -2587,8 +2587,8 @@
   {
     "wikidata_id": "Q697",
     "name": "Nauru",
-    "iso": "NR",
-    "iso3": "NRU",
+    "iso": "nr",
+    "iso3": "nru",
     "flag": "🇳🇷",
     "languages": [
       {
@@ -2612,8 +2612,8 @@
   {
     "wikidata_id": "Q837",
     "name": "Nepal",
-    "iso": "NP",
-    "iso3": "NPL",
+    "iso": "np",
+    "iso3": "npl",
     "flag": "🇳🇵",
     "languages": [
       {
@@ -2629,14 +2629,14 @@
   {
     "wikidata_id": "Q664",
     "name": "New Zealand",
-    "iso": "NZ",
-    "iso3": "NZL",
+    "iso": "nz",
+    "iso3": "nzl",
     "flag": "🇳🇿",
     "languages": [
       {
-        "id": "Q36239",
-        "name": "New Zealand Sign Language",
-        "iso": "nzs",
+        "id": "Q36451",
+        "name": "Māori",
+        "iso": "mri",
         "iso1": "mi",
         "speakers": 753359540,
         "speakers_m": 753.4
@@ -2650,20 +2650,20 @@
         "speakers_m": 379
       },
       {
-        "id": "Q36451",
-        "name": "Māori",
-        "iso": "mri",
+        "id": "Q36239",
+        "name": "New Zealand Sign Language",
+        "iso": "nzs",
         "iso1": null,
-        "speakers": 20200,
-        "speakers_m": 0
+        "speakers": 160000,
+        "speakers_m": 0.2
       }
     ]
   },
   {
     "wikidata_id": "Q811",
     "name": "Nicaragua",
-    "iso": "NI",
-    "iso3": "NIC",
+    "iso": "ni",
+    "iso3": "nic",
     "flag": "🇳🇮",
     "languages": [
       {
@@ -2679,8 +2679,8 @@
   {
     "wikidata_id": "Q1032",
     "name": "Niger",
-    "iso": "NE",
-    "iso3": "NER",
+    "iso": "ne",
+    "iso3": "ner",
     "flag": "🇳🇪",
     "languages": [
       {
@@ -2696,8 +2696,8 @@
   {
     "wikidata_id": "Q1033",
     "name": "Nigeria",
-    "iso": "NG",
-    "iso3": "NGA",
+    "iso": "ng",
+    "iso3": "nga",
     "flag": "🇳🇬",
     "languages": [
       {
@@ -2713,8 +2713,8 @@
   {
     "wikidata_id": "Q423",
     "name": "North Korea",
-    "iso": "KP",
-    "iso3": "PRK",
+    "iso": "kp",
+    "iso3": "prk",
     "flag": "🇰🇵",
     "languages": [
       {
@@ -2737,8 +2737,8 @@
   {
     "wikidata_id": "Q221",
     "name": "North Macedonia",
-    "iso": "MK",
-    "iso3": "MKD",
+    "iso": "mk",
+    "iso3": "mkd",
     "flag": "🇲🇰",
     "languages": [
       {
@@ -2762,8 +2762,8 @@
   {
     "wikidata_id": "Q20",
     "name": "Norway",
-    "iso": "NO",
-    "iso3": "NOR",
+    "iso": "no",
+    "iso3": "nor",
     "flag": "🇳🇴",
     "languages": [
       {
@@ -2802,8 +2802,8 @@
   {
     "wikidata_id": "Q842",
     "name": "Oman",
-    "iso": "OM",
-    "iso3": "OMN",
+    "iso": "om",
+    "iso3": "omn",
     "flag": "🇴🇲",
     "languages": [
       {
@@ -2819,8 +2819,8 @@
   {
     "wikidata_id": "Q843",
     "name": "Pakistan",
-    "iso": "PK",
-    "iso3": "PAK",
+    "iso": "pk",
+    "iso3": "pak",
     "flag": "🇵🇰",
     "languages": [
       {
@@ -2844,8 +2844,8 @@
   {
     "wikidata_id": "Q695",
     "name": "Palau",
-    "iso": "PW",
-    "iso3": "PLW",
+    "iso": "pw",
+    "iso3": "plw",
     "flag": "🇵🇼",
     "languages": [
       {
@@ -2877,8 +2877,8 @@
   {
     "wikidata_id": "Q219060",
     "name": "Palestine",
-    "iso": "PS",
-    "iso3": "PSE",
+    "iso": "ps",
+    "iso3": "pse",
     "flag": "🇵🇸",
     "languages": [
       {
@@ -2894,8 +2894,8 @@
   {
     "wikidata_id": "Q804",
     "name": "Panama",
-    "iso": "PA",
-    "iso3": "PAN",
+    "iso": "pa",
+    "iso3": "pan",
     "flag": "🇵🇦",
     "languages": [
       {
@@ -2911,8 +2911,8 @@
   {
     "wikidata_id": "Q691",
     "name": "Papua New Guinea",
-    "iso": "PG",
-    "iso3": "PNG",
+    "iso": "pg",
+    "iso3": "png",
     "flag": "🇵🇬",
     "languages": [
       {
@@ -2952,8 +2952,8 @@
   {
     "wikidata_id": "Q733",
     "name": "Paraguay",
-    "iso": "PY",
-    "iso3": "PRY",
+    "iso": "py",
+    "iso3": "pry",
     "flag": "🇵🇾",
     "languages": [
       {
@@ -2977,8 +2977,8 @@
   {
     "wikidata_id": "Q148",
     "name": "People's Republic of China",
-    "iso": "CN",
-    "iso3": "CHN",
+    "iso": "cn",
+    "iso3": "chn",
     "flag": "🇨🇳",
     "languages": [
       {
@@ -3008,8 +3008,8 @@
   {
     "wikidata_id": "Q419",
     "name": "Peru",
-    "iso": "PE",
-    "iso3": "PER",
+    "iso": "pe",
+    "iso3": "per",
     "flag": "🇵🇪",
     "languages": [
       {
@@ -3041,8 +3041,8 @@
   {
     "wikidata_id": "Q928",
     "name": "Philippines",
-    "iso": "PH",
-    "iso3": "PHL",
+    "iso": "ph",
+    "iso3": "phl",
     "flag": "🇵🇭",
     "languages": [
       {
@@ -3066,8 +3066,8 @@
   {
     "wikidata_id": "Q36",
     "name": "Poland",
-    "iso": "PL",
-    "iso3": "POL",
+    "iso": "pl",
+    "iso3": "pol",
     "flag": "🇵🇱",
     "languages": [
       {
@@ -3083,33 +3083,33 @@
   {
     "wikidata_id": "Q45",
     "name": "Portugal",
-    "iso": "PT",
-    "iso3": "PRT",
+    "iso": "pt",
+    "iso3": "prt",
     "flag": "🇵🇹",
     "languages": [
-      {
-        "id": "Q13330",
-        "name": "Mirandese",
-        "iso": "mwl",
-        "iso1": null,
-        "speakers": 254300000,
-        "speakers_m": 254.3
-      },
       {
         "id": "Q5146",
         "name": "Portuguese",
         "iso": "por",
-        "iso1": "pt",
+        "iso1": null,
         "speakers": 221000000,
         "speakers_m": 221
+      },
+      {
+        "id": "Q13330",
+        "name": "Mirandese",
+        "iso": "mwl",
+        "iso1": "pt",
+        "speakers": 15000,
+        "speakers_m": 0
       }
     ]
   },
   {
     "wikidata_id": "Q846",
     "name": "Qatar",
-    "iso": "QA",
-    "iso3": "QAT",
+    "iso": "qa",
+    "iso3": "qat",
     "flag": "🇶🇦",
     "languages": [
       {
@@ -3125,8 +3125,8 @@
   {
     "wikidata_id": "Q971",
     "name": "Republic of the Congo",
-    "iso": "CG",
-    "iso3": "COG",
+    "iso": "cg",
+    "iso3": "cog",
     "flag": "🇨🇬",
     "languages": [
       {
@@ -3142,8 +3142,8 @@
   {
     "wikidata_id": "Q218",
     "name": "Romania",
-    "iso": "RO",
-    "iso3": "ROU",
+    "iso": "ro",
+    "iso3": "rou",
     "flag": "🇷🇴",
     "languages": [
       {
@@ -3159,8 +3159,8 @@
   {
     "wikidata_id": "Q159",
     "name": "Russia",
-    "iso": "RU",
-    "iso3": "RUS",
+    "iso": "ru",
+    "iso3": "rus",
     "flag": "🇷🇺",
     "languages": [
       {
@@ -3176,8 +3176,8 @@
   {
     "wikidata_id": "Q1037",
     "name": "Rwanda",
-    "iso": "RW",
-    "iso3": "RWA",
+    "iso": "rw",
+    "iso3": "rwa",
     "flag": "🇷🇼",
     "languages": [
       {
@@ -3217,8 +3217,8 @@
   {
     "wikidata_id": "Q763",
     "name": "Saint Kitts and Nevis",
-    "iso": "KN",
-    "iso3": "KNA",
+    "iso": "kn",
+    "iso3": "kna",
     "flag": "🇰🇳",
     "languages": [
       {
@@ -3234,8 +3234,8 @@
   {
     "wikidata_id": "Q760",
     "name": "Saint Lucia",
-    "iso": "LC",
-    "iso3": "LCA",
+    "iso": "lc",
+    "iso3": "lca",
     "flag": "🇱🇨",
     "languages": [
       {
@@ -3251,8 +3251,8 @@
   {
     "wikidata_id": "Q757",
     "name": "Saint Vincent and the Grenadines",
-    "iso": "VC",
-    "iso3": "VCT",
+    "iso": "vc",
+    "iso3": "vct",
     "flag": "🇻🇨",
     "languages": [
       {
@@ -3268,8 +3268,8 @@
   {
     "wikidata_id": "Q683",
     "name": "Samoa",
-    "iso": "WS",
-    "iso3": "WSM",
+    "iso": "ws",
+    "iso3": "wsm",
     "flag": "🇼🇸",
     "languages": [
       {
@@ -3293,8 +3293,8 @@
   {
     "wikidata_id": "Q238",
     "name": "San Marino",
-    "iso": "SM",
-    "iso3": "SMR",
+    "iso": "sm",
+    "iso3": "smr",
     "flag": "🇸🇲",
     "languages": [
       {
@@ -3310,8 +3310,8 @@
   {
     "wikidata_id": "Q851",
     "name": "Saudi Arabia",
-    "iso": "SA",
-    "iso3": "SAU",
+    "iso": "sa",
+    "iso3": "sau",
     "flag": "🇸🇦",
     "languages": [
       {
@@ -3327,8 +3327,8 @@
   {
     "wikidata_id": "Q1041",
     "name": "Senegal",
-    "iso": "SN",
-    "iso3": "SEN",
+    "iso": "sn",
+    "iso3": "sen",
     "flag": "🇸🇳",
     "languages": [
       {
@@ -3367,8 +3367,8 @@
   {
     "wikidata_id": "Q403",
     "name": "Serbia",
-    "iso": "RS",
-    "iso3": "SRB",
+    "iso": "rs",
+    "iso3": "srb",
     "flag": "🇷🇸",
     "languages": [
       {
@@ -3384,8 +3384,8 @@
   {
     "wikidata_id": "Q1042",
     "name": "Seychelles",
-    "iso": "SC",
-    "iso3": "SYC",
+    "iso": "sc",
+    "iso3": "syc",
     "flag": "🇸🇨",
     "languages": [
       {
@@ -3417,8 +3417,8 @@
   {
     "wikidata_id": "Q1044",
     "name": "Sierra Leone",
-    "iso": "SL",
-    "iso3": "SLE",
+    "iso": "sl",
+    "iso3": "sle",
     "flag": "🇸🇱",
     "languages": [
       {
@@ -3442,22 +3442,23 @@
   {
     "wikidata_id": "Q334",
     "name": "Singapore",
-    "iso": "SG",
-    "iso3": "SGP",
+    "iso": "sg",
+    "iso3": "sgp",
     "flag": "🇸🇬",
     "languages": [
       {
         "id": "Q9237",
         "name": "Malay",
-        "iso1": null,
+        "iso": "tam",
+        "iso1": "ta",
         "speakers": 897071810,
         "speakers_m": 897.1
       },
       {
-        "id": "Q5885",
-        "name": "Tamil",
-        "iso": "tam",
-        "iso1": "ta",
+        "id": "Q727694",
+        "name": "Standard Chinese",
+        "iso": "msa",
+        "iso1": "ms",
         "speakers": 753359540,
         "speakers_m": 753.4
       },
@@ -3470,20 +3471,19 @@
         "speakers_m": 379
       },
       {
-        "id": "Q727694",
-        "name": "Standard Chinese",
-        "iso": "msa",
-        "iso1": "ms",
-        "speakers": 75000000,
-        "speakers_m": 75
+        "id": "Q5885",
+        "name": "Tamil",
+        "iso1": null,
+        "speakers": 77000000,
+        "speakers_m": 77
       }
     ]
   },
   {
     "wikidata_id": "Q214",
     "name": "Slovakia",
-    "iso": "SK",
-    "iso3": "SVK",
+    "iso": "sk",
+    "iso3": "svk",
     "flag": "🇸🇰",
     "languages": [
       {
@@ -3499,8 +3499,8 @@
   {
     "wikidata_id": "Q215",
     "name": "Slovenia",
-    "iso": "SI",
-    "iso3": "SVN",
+    "iso": "si",
+    "iso3": "svn",
     "flag": "🇸🇮",
     "languages": [
       {
@@ -3516,8 +3516,8 @@
   {
     "wikidata_id": "Q685",
     "name": "Solomon Islands",
-    "iso": "SB",
-    "iso3": "SLB",
+    "iso": "sb",
+    "iso3": "slb",
     "flag": "🇸🇧",
     "languages": [
       {
@@ -3533,18 +3533,10 @@
   {
     "wikidata_id": "Q1045",
     "name": "Somalia",
-    "iso": "SO",
-    "iso3": "SOM",
+    "iso": "so",
+    "iso3": "som",
     "flag": "🇸🇴",
     "languages": [
-      {
-        "id": "Q13275",
-        "name": "Somali",
-        "iso": "som",
-        "iso1": "so",
-        "speakers": 315421300,
-        "speakers_m": 315.4
-      },
       {
         "id": "Q13955",
         "name": "Arabic",
@@ -3552,21 +3544,29 @@
         "iso1": "ar",
         "speakers": 295000000,
         "speakers_m": 295
+      },
+      {
+        "id": "Q13275",
+        "name": "Somali",
+        "iso": "som",
+        "iso1": "so",
+        "speakers": 16200000,
+        "speakers_m": 16.2
       }
     ]
   },
   {
     "wikidata_id": "Q258",
     "name": "South Africa",
-    "iso": "ZA",
-    "iso3": "ZAF",
+    "iso": "za",
+    "iso3": "zaf",
     "flag": "🇿🇦",
     "languages": [
       {
-        "id": "Q34137",
-        "name": "Tswana",
-        "iso": "tsn",
-        "iso1": "tn",
+        "id": "Q3322093",
+        "name": "South African Sign Language",
+        "iso": "sfs",
+        "iso1": "af",
         "speakers": 753359540,
         "speakers_m": 753.4
       },
@@ -3579,10 +3579,18 @@
         "speakers_m": 379
       },
       {
+        "id": "Q36785",
+        "name": "Southern Ndebele",
+        "iso": "nbl",
+        "iso1": null,
+        "speakers": 13000000,
+        "speakers_m": 13
+      },
+      {
         "id": "Q13218",
         "name": "Xhosa",
         "iso": "xho",
-        "iso1": "ve",
+        "iso1": "ss",
         "speakers": 12100000,
         "speakers_m": 12.1
       },
@@ -3595,10 +3603,10 @@
         "speakers_m": 10.3
       },
       {
-        "id": "Q33890",
-        "name": "Northern Sotho",
-        "iso": "nso",
-        "iso1": "st",
+        "id": "Q34014",
+        "name": "Swazi",
+        "iso": "ssw",
+        "iso1": "ts",
         "speakers": 8177300,
         "speakers_m": 8.2
       },
@@ -3611,60 +3619,52 @@
         "speakers_m": 7.2
       },
       {
-        "id": "Q34014",
-        "name": "Swazi",
-        "iso": "ssw",
+        "id": "Q34137",
+        "name": "Tswana",
+        "iso": "tsn",
         "iso1": null,
         "speakers": 6000000,
         "speakers_m": 6
       },
       {
-        "id": "Q36785",
-        "name": "Southern Ndebele",
-        "iso": "nbl",
-        "iso1": "nr",
-        "speakers": 4500000,
-        "speakers_m": 4.5
+        "id": "Q34327",
+        "name": "Tsonga",
+        "iso": "tso",
+        "iso1": "ve",
+        "speakers": 4100000,
+        "speakers_m": 4.1
       },
       {
         "id": "Q32704",
         "name": "Venda",
         "iso": "ven",
-        "iso1": "ss",
-        "speakers": 4100000,
-        "speakers_m": 4.1
-      },
-      {
-        "id": "Q34327",
-        "name": "Tsonga",
-        "iso": "tso",
-        "iso1": null,
-        "speakers": 2034200,
-        "speakers_m": 2
+        "iso1": "tn",
+        "speakers": 4009000,
+        "speakers_m": 4
       },
       {
         "id": "Q34340",
         "name": "Sesotho",
         "iso": "sot",
-        "iso1": "ts",
-        "speakers": 1300000,
-        "speakers_m": 1.3
+        "iso1": "nr",
+        "speakers": 3400000,
+        "speakers_m": 3.4
       },
       {
-        "id": "Q3322093",
-        "name": "South African Sign Language",
-        "iso": "sfs",
-        "iso1": "af",
-        "speakers": 640000,
-        "speakers_m": 0.6
+        "id": "Q33890",
+        "name": "Northern Sotho",
+        "iso": "nso",
+        "iso1": "st",
+        "speakers": 2034200,
+        "speakers_m": 2
       }
     ]
   },
   {
     "wikidata_id": "Q884",
     "name": "South Korea",
-    "iso": "KR",
-    "iso3": "KOR",
+    "iso": "kr",
+    "iso3": "kor",
     "flag": "🇰🇷",
     "languages": [
       {
@@ -3688,8 +3688,8 @@
   {
     "wikidata_id": "Q958",
     "name": "South Sudan",
-    "iso": "SS",
-    "iso3": "SSD",
+    "iso": "ss",
+    "iso3": "ssd",
     "flag": "🇸🇸",
     "languages": [
       {
@@ -3713,8 +3713,8 @@
   {
     "wikidata_id": "Q29",
     "name": "Spain",
-    "iso": "ES",
-    "iso3": "ESP",
+    "iso": "es",
+    "iso3": "esp",
     "flag": "🇪🇸",
     "languages": [
       {
@@ -3730,8 +3730,8 @@
   {
     "wikidata_id": "Q854",
     "name": "Sri Lanka",
-    "iso": "LK",
-    "iso3": "LKA",
+    "iso": "lk",
+    "iso3": "lka",
     "flag": "🇱🇰",
     "languages": [
       {
@@ -3755,8 +3755,8 @@
   {
     "wikidata_id": "Q1049",
     "name": "Sudan",
-    "iso": "SD",
-    "iso3": "SDN",
+    "iso": "sd",
+    "iso3": "sdn",
     "flag": "🇸🇩",
     "languages": [
       {
@@ -3780,8 +3780,8 @@
   {
     "wikidata_id": "Q730",
     "name": "Suriname",
-    "iso": "SR",
-    "iso3": "SUR",
+    "iso": "sr",
+    "iso3": "sur",
     "flag": "🇸🇷",
     "languages": [
       {
@@ -3797,8 +3797,8 @@
   {
     "wikidata_id": "Q34",
     "name": "Sweden",
-    "iso": "SE",
-    "iso3": "SWE",
+    "iso": "se",
+    "iso3": "swe",
     "flag": "🇸🇪",
     "languages": [
       {
@@ -3814,8 +3814,8 @@
   {
     "wikidata_id": "Q39",
     "name": "Switzerland",
-    "iso": "CH",
-    "iso3": "CHE",
+    "iso": "ch",
+    "iso3": "che",
     "flag": "🇨🇭",
     "languages": [
       {
@@ -3855,8 +3855,8 @@
   {
     "wikidata_id": "Q858",
     "name": "Syria",
-    "iso": "SY",
-    "iso3": "SYR",
+    "iso": "sy",
+    "iso3": "syr",
     "flag": "🇸🇾",
     "languages": [
       {
@@ -3872,8 +3872,8 @@
   {
     "wikidata_id": "Q1039",
     "name": "São Tomé and Príncipe",
-    "iso": "ST",
-    "iso3": "STP",
+    "iso": "st",
+    "iso3": "stp",
     "flag": "🇸🇹",
     "languages": [
       {
@@ -3889,88 +3889,32 @@
   {
     "wikidata_id": "Q865",
     "name": "Taiwan",
-    "iso": "TW",
-    "iso3": "TWN",
+    "iso": "tw",
+    "iso3": "twn",
     "flag": "🇹🇼",
     "languages": [
       {
-        "id": "Q36778",
-        "name": "Taiwanese Hokkien",
-        "iso": "ckv",
+        "id": "Q61055662",
+        "name": "O-ku-uā",
+        "iso": "tsu",
         "iso1": null,
         "speakers": 80000,
         "speakers_m": 0.1
       },
       {
-        "id": "Q35132",
-        "name": "Amis",
-        "iso": "ami",
+        "id": "Q19599280",
+        "name": "Matsu dialect",
+        "iso": "sxr",
         "iso1": null,
         "speakers": 38000,
         "speakers_m": 0
       },
       {
-        "id": "Q716599",
-        "name": "Saaroa",
-        "iso": "tsu",
-        "iso1": null,
-        "speakers": 20000,
-        "speakers_m": 0
-      },
-      {
-        "id": "Q56505",
-        "name": "Bunun",
-        "iso": "bnn",
-        "iso1": null,
-        "speakers": 10500,
-        "speakers_m": 0
-      },
-      {
-        "id": "Q716627",
-        "name": "Kavalan",
-        "iso": "tao",
-        "iso1": null,
-        "speakers": 8500,
-        "speakers_m": 0
-      },
-      {
-        "id": "Q716681",
-        "name": "Tsou",
-        "iso": "tay",
-        "iso1": null,
-        "speakers": 4750,
-        "speakers_m": 0
-      },
-      {
-        "id": "Q49232",
-        "name": "Rukai",
-        "iso": "sxr",
-        "iso1": null,
-        "speakers": 3800,
-        "speakers_m": 0
-      },
-      {
-        "id": "Q262828",
-        "name": "Standard Taiwanese Mandarin",
+        "id": "Q36778",
+        "name": "Taiwanese Hokkien",
         "iso": "dru",
         "iso1": null,
-        "speakers": 2100,
-        "speakers_m": 0
-      },
-      {
-        "id": "Q2391532",
-        "name": "Taiwanese Hakka",
-        "iso": "trv",
-        "iso1": null,
-        "speakers": 958,
-        "speakers_m": 0
-      },
-      {
-        "id": "Q715755",
-        "name": "Paiwan",
-        "iso": "pwn",
-        "iso1": null,
-        "speakers": 70,
+        "speakers": 20000,
         "speakers_m": 0
       },
       {
@@ -3978,44 +3922,77 @@
         "name": "Taiwanese Sign Language",
         "iso": "tss",
         "iso1": null,
+        "speakers": 10500,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q49232",
+        "name": "Rukai",
+        "iso": "ami",
+        "iso1": null,
+        "speakers": 8500,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q35132",
+        "name": "Amis",
+        "iso": "pwn",
+        "iso1": null,
+        "speakers": 4750,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q56278342",
+        "name": "Kinmen dialect",
+        "iso": "ckv",
+        "iso1": null,
+        "speakers": 3800,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q11071864",
+        "name": "Truku",
+        "iso": "szy",
+        "iso1": null,
+        "speakers": 2100,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q716686",
+        "name": "Seediq",
+        "iso": "pyu",
+        "iso1": null,
+        "speakers": 958,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q716695",
+        "name": "Saisiyat",
+        "iso": "xnb",
+        "iso1": null,
+        "speakers": 70,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q716690",
+        "name": "Puyuma",
+        "iso": "xsy",
+        "iso1": null,
         "speakers": 10,
         "speakers_m": 0
       },
       {
-        "id": "Q715760",
-        "name": "Yami",
-        "iso": "pyu",
+        "id": "Q715755",
+        "name": "Paiwan",
+        "iso": "trv",
         "iso1": null,
         "speakers": 4,
         "speakers_m": 0
       },
       {
-        "id": "Q715766",
-        "name": "Atayal",
-        "iso": "xsy",
-        "iso1": null,
-        "speakers": null,
-        "speakers_m": null
-      },
-      {
-        "id": "Q716686",
-        "name": "Seediq",
-        "iso": "szy",
-        "iso1": null,
-        "speakers": null,
-        "speakers_m": null
-      },
-      {
-        "id": "Q716690",
-        "name": "Puyuma",
-        "iso": "xnb",
-        "iso1": null,
-        "speakers": null,
-        "speakers_m": null
-      },
-      {
-        "id": "Q716695",
-        "name": "Saisiyat",
+        "id": "Q172244",
+        "name": "Kanakanavu",
+        "iso": "bnn",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
@@ -4023,41 +4000,64 @@
       {
         "id": "Q718269",
         "name": "Sakizaya",
+        "iso": "tao",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
       },
       {
-        "id": "Q172244",
-        "name": "Kanakanavu",
+        "id": "Q262828",
+        "name": "Standard Taiwanese Mandarin",
+        "iso": "tay",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
       },
       {
-        "id": "Q11071864",
-        "name": "Truku",
+        "id": "Q716599",
+        "name": "Saaroa",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
       },
       {
-        "id": "Q19599280",
-        "name": "Matsu dialect",
+        "id": "Q716627",
+        "name": "Kavalan",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
       },
       {
-        "id": "Q56278342",
-        "name": "Kinmen dialect",
+        "id": "Q716681",
+        "name": "Tsou",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
       },
       {
-        "id": "Q61055662",
-        "name": "O-ku-uā",
+        "id": "Q56505",
+        "name": "Bunun",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q2391532",
+        "name": "Taiwanese Hakka",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q715760",
+        "name": "Yami",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q715766",
+        "name": "Atayal",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
@@ -4067,8 +4067,8 @@
   {
     "wikidata_id": "Q863",
     "name": "Tajikistan",
-    "iso": "TJ",
-    "iso3": "TJK",
+    "iso": "tj",
+    "iso3": "tjk",
     "flag": "🇹🇯",
     "languages": [
       {
@@ -4092,8 +4092,8 @@
   {
     "wikidata_id": "Q924",
     "name": "Tanzania",
-    "iso": "TZ",
-    "iso3": "TZA",
+    "iso": "tz",
+    "iso3": "tza",
     "flag": "🇹🇿",
     "languages": [
       {
@@ -4117,8 +4117,8 @@
   {
     "wikidata_id": "Q869",
     "name": "Thailand",
-    "iso": "TH",
-    "iso3": "THA",
+    "iso": "th",
+    "iso3": "tha",
     "flag": "🇹🇭",
     "languages": [
       {
@@ -4134,8 +4134,8 @@
   {
     "wikidata_id": "Q778",
     "name": "The Bahamas",
-    "iso": "BS",
-    "iso3": "BHS",
+    "iso": "bs",
+    "iso3": "bhs",
     "flag": "🇧🇸",
     "languages": [
       {
@@ -4151,8 +4151,8 @@
   {
     "wikidata_id": "Q1005",
     "name": "The Gambia",
-    "iso": "GM",
-    "iso3": "GMB",
+    "iso": "gm",
+    "iso3": "gmb",
     "flag": "🇬🇲",
     "languages": [
       {
@@ -4168,8 +4168,8 @@
   {
     "wikidata_id": "Q574",
     "name": "Timor-Leste",
-    "iso": "TL",
-    "iso3": "TLS",
+    "iso": "tl",
+    "iso3": "tls",
     "flag": "🇹🇱",
     "languages": [
       {
@@ -4193,8 +4193,8 @@
   {
     "wikidata_id": "Q945",
     "name": "Togo",
-    "iso": "TG",
-    "iso3": "TGO",
+    "iso": "tg",
+    "iso3": "tgo",
     "flag": "🇹🇬",
     "languages": [
       {
@@ -4210,8 +4210,8 @@
   {
     "wikidata_id": "Q678",
     "name": "Tonga",
-    "iso": "TO",
-    "iso3": "TON",
+    "iso": "to",
+    "iso3": "ton",
     "flag": "🇹🇴",
     "languages": [
       {
@@ -4235,8 +4235,8 @@
   {
     "wikidata_id": "Q754",
     "name": "Trinidad and Tobago",
-    "iso": "TT",
-    "iso3": "TTO",
+    "iso": "tt",
+    "iso3": "tto",
     "flag": "🇹🇹",
     "languages": [
       {
@@ -4252,8 +4252,8 @@
   {
     "wikidata_id": "Q948",
     "name": "Tunisia",
-    "iso": "TN",
-    "iso3": "TUN",
+    "iso": "tn",
+    "iso3": "tun",
     "flag": "🇹🇳",
     "languages": [
       {
@@ -4269,8 +4269,8 @@
   {
     "wikidata_id": "Q43",
     "name": "Turkey",
-    "iso": "TR",
-    "iso3": "TUR",
+    "iso": "tr",
+    "iso3": "tur",
     "flag": "🇹🇷",
     "languages": [
       {
@@ -4286,8 +4286,8 @@
   {
     "wikidata_id": "Q874",
     "name": "Turkmenistan",
-    "iso": "TM",
-    "iso3": "TKM",
+    "iso": "tm",
+    "iso3": "tkm",
     "flag": "🇹🇲",
     "languages": [
       {
@@ -4303,8 +4303,8 @@
   {
     "wikidata_id": "Q672",
     "name": "Tuvalu",
-    "iso": "TV",
-    "iso3": "TUV",
+    "iso": "tv",
+    "iso3": "tuv",
     "flag": "🇹🇻",
     "languages": [
       {
@@ -4328,8 +4328,8 @@
   {
     "wikidata_id": "Q1036",
     "name": "Uganda",
-    "iso": "UG",
-    "iso3": "UGA",
+    "iso": "ug",
+    "iso3": "uga",
     "flag": "🇺🇬",
     "languages": [
       {
@@ -4353,8 +4353,8 @@
   {
     "wikidata_id": "Q212",
     "name": "Ukraine",
-    "iso": "UA",
-    "iso3": "UKR",
+    "iso": "ua",
+    "iso3": "ukr",
     "flag": "🇺🇦",
     "languages": [
       {
@@ -4370,8 +4370,8 @@
   {
     "wikidata_id": "Q878",
     "name": "United Arab Emirates",
-    "iso": "AE",
-    "iso3": "ARE",
+    "iso": "ae",
+    "iso3": "are",
     "flag": "🇦🇪",
     "languages": [
       {
@@ -4387,8 +4387,8 @@
   {
     "wikidata_id": "Q145",
     "name": "United Kingdom",
-    "iso": "GB",
-    "iso3": "GBR",
+    "iso": "gb",
+    "iso3": "gbr",
     "flag": "🇬🇧",
     "languages": [
       {
@@ -4404,8 +4404,8 @@
   {
     "wikidata_id": "Q30",
     "name": "United States",
-    "iso": "US",
-    "iso3": "USA",
+    "iso": "us",
+    "iso3": "usa",
     "flag": "🇺🇸",
     "languages": [
       {
@@ -4421,8 +4421,8 @@
   {
     "wikidata_id": "Q77",
     "name": "Uruguay",
-    "iso": "UY",
-    "iso3": "URY",
+    "iso": "uy",
+    "iso3": "ury",
     "flag": "🇺🇾",
     "languages": [
       {
@@ -4438,8 +4438,8 @@
   {
     "wikidata_id": "Q265",
     "name": "Uzbekistan",
-    "iso": "UZ",
-    "iso3": "UZB",
+    "iso": "uz",
+    "iso3": "uzb",
     "flag": "🇺🇿",
     "languages": [
       {
@@ -4455,8 +4455,8 @@
   {
     "wikidata_id": "Q686",
     "name": "Vanuatu",
-    "iso": "VU",
-    "iso3": "VUT",
+    "iso": "vu",
+    "iso3": "vut",
     "flag": "🇻🇺",
     "languages": [
       {
@@ -4488,8 +4488,8 @@
   {
     "wikidata_id": "Q237",
     "name": "Vatican City",
-    "iso": "VA",
-    "iso3": "VAT",
+    "iso": "va",
+    "iso3": "vat",
     "flag": "🇻🇦",
     "languages": [
       {
@@ -4521,8 +4521,8 @@
   {
     "wikidata_id": "Q717",
     "name": "Venezuela",
-    "iso": "VE",
-    "iso3": "VEN",
+    "iso": "ve",
+    "iso3": "ven",
     "flag": "🇻🇪",
     "languages": [
       {
@@ -4546,8 +4546,8 @@
   {
     "wikidata_id": "Q881",
     "name": "Vietnam",
-    "iso": "VN",
-    "iso3": "VNM",
+    "iso": "vn",
+    "iso3": "vnm",
     "flag": "🇻🇳",
     "languages": [
       {
@@ -4563,8 +4563,8 @@
   {
     "wikidata_id": "Q805",
     "name": "Yemen",
-    "iso": "YE",
-    "iso3": "YEM",
+    "iso": "ye",
+    "iso3": "yem",
     "flag": "🇾🇪",
     "languages": [
       {
@@ -4580,8 +4580,8 @@
   {
     "wikidata_id": "Q953",
     "name": "Zambia",
-    "iso": "ZM",
-    "iso3": "ZMB",
+    "iso": "zm",
+    "iso3": "zmb",
     "flag": "🇿🇲",
     "languages": [
       {
@@ -4597,8 +4597,8 @@
   {
     "wikidata_id": "Q954",
     "name": "Zimbabwe",
-    "iso": "ZW",
-    "iso3": "ZWE",
+    "iso": "zw",
+    "iso3": "zwe",
     "flag": "🇿🇼",
     "languages": [
       {
@@ -4618,10 +4618,10 @@
         "speakers_m": 379
       },
       {
-        "id": "Q8826802",
-        "name": "Barwe",
-        "iso": "bwg",
-        "iso1": "sn",
+        "id": "Q8072097",
+        "name": "Zimbabwe Sign Language",
+        "iso": "zib",
+        "iso1": "ny",
         "speakers": 13000000,
         "speakers_m": 13
       },
@@ -4642,50 +4642,50 @@
         "speakers_m": 8.3
       },
       {
-        "id": "Q13311",
-        "name": "Ndau",
-        "iso": "ndc",
+        "id": "Q13218",
+        "name": "Xhosa",
+        "iso": "xho",
         "iso1": null,
         "speakers": 8177300,
         "speakers_m": 8.2
       },
       {
-        "id": "Q34340",
-        "name": "Sesotho",
-        "iso": "sot",
-        "iso1": "st",
+        "id": "Q8826802",
+        "name": "Barwe",
+        "iso": "bwg",
+        "iso1": "sn",
         "speakers": 6000000,
         "speakers_m": 6
-      },
-      {
-        "id": "Q34327",
-        "name": "Tsonga",
-        "iso": "tso",
-        "iso1": "xh",
-        "speakers": 4500000,
-        "speakers_m": 4.5
-      },
-      {
-        "id": "Q8072097",
-        "name": "Zimbabwe Sign Language",
-        "iso": "zib",
-        "iso1": "ve",
-        "speakers": 4009000,
-        "speakers_m": 4
-      },
-      {
-        "id": "Q3553981",
-        "name": "Nambya",
-        "iso": "nmq",
-        "iso1": "ny",
-        "speakers": 3400000,
-        "speakers_m": 3.4
       },
       {
         "id": "Q35613",
         "name": "Northern Ndebele",
         "iso": "nde",
-        "iso1": "nd",
+        "iso1": "ts",
+        "speakers": 4500000,
+        "speakers_m": 4.5
+      },
+      {
+        "id": "Q3553981",
+        "name": "Nambya",
+        "iso": "nmq",
+        "iso1": "ve",
+        "speakers": 4009000,
+        "speakers_m": 4
+      },
+      {
+        "id": "Q34340",
+        "name": "Sesotho",
+        "iso": "sot",
+        "iso1": "xh",
+        "speakers": 3400000,
+        "speakers_m": 3.4
+      },
+      {
+        "id": "Q34327",
+        "name": "Tsonga",
+        "iso": "tso",
+        "iso1": "st",
         "speakers": 1572800,
         "speakers_m": 1.6
       },
@@ -4701,7 +4701,7 @@
         "id": "Q34137",
         "name": "Tswana",
         "iso": "tsn",
-        "iso1": "ts",
+        "iso1": "nd",
         "speakers": 1270000,
         "speakers_m": 1.3
       },
@@ -4714,9 +4714,9 @@
         "speakers_m": 0.4
       },
       {
-        "id": "Q13218",
-        "name": "Xhosa",
-        "iso": "xho",
+        "id": "Q13311",
+        "name": "Ndau",
+        "iso": "ndc",
         "iso1": null,
         "speakers": 280000,
         "speakers_m": 0.3

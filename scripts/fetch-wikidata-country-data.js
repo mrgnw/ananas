@@ -91,8 +91,8 @@ async function fetchWikidataCountries() {
     return {
       wikidata_id: country.country.value.split('/').pop(),
       name: country.countryLabel.value,
-      iso: country.isoCode.value,
-      iso3: country.iso3Code.value,
+      iso: country.isoCode.value.toLowerCase(),
+      iso3: country.iso3Code.value.toLowerCase(),
       flag: String.fromCodePoint(
         ...country.isoCode.value
           .toUpperCase()
