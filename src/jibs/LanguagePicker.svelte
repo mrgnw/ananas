@@ -4,19 +4,30 @@
   import { languages } from 'countries-list';
   import LanguageList from './LanguageList.svelte';
   import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+  import languageData from '$lib/data/wikidata-languages.json';
 
   let selectedCodes = $derived(translateLanguages.selectedCodes);
 
+  // Create lookup for 2-char code mappings
+  const iso3ToIso1Map = Object.fromEntries(
+    languageData
+      .filter(lang => lang.iso1) // Only include entries with both codes
+      .map(lang => [lang.iso, lang.iso1])
+  );
+
   function handleLanguageAdd(langCode) {
-    if (!selectedCodes.includes(langCode)) {
+    // Convert 3-char code to 2-char if available
+    const codeToUse = iso3ToIso1Map[langCode] || langCode;
+    
+    if (!selectedCodes.includes(codeToUse)) {
       const langInfo = langs.find(l => l.value === langCode);
-      translateLanguages.addLanguage(langCode, {
+      translateLanguages.addLanguage(codeToUse, {
         label: langInfo?.label || langCode,
         native: langInfo?.native || langCode,
         rtl: false,
         display: true
       });
-      console.log('Language added:', langCode);
+      console.log('Language added:', codeToUse);
     } else {
       console.log('Language already in selected languages');
     }
@@ -38,7 +49,16 @@
     }
   };
 
-  langs = [...langs, ...Object.values(customLanguages)];
+  // Add wikidata languages with 3-char codes
+  const wikidataLangs = languageData
+    .filter(lang => !iso3ToIso1Map[lang.iso]) // Only add languages without 2-char codes
+    .map(lang => ({
+      value: lang.iso,
+      label: lang.langLabel,
+      native: lang.nativeNames?.[0] || lang.langLabel
+    }));
+
+  langs = [...langs, ...Object.values(customLanguages), ...wikidataLangs];
 
   let value = $state("");
   let inputValue = $state("");
@@ -101,7 +121,7 @@
       class="cursor-pointer flex items-center justify-between" onclick={()=> handleLanguageAdd(lang.value)}
     >
       <span class="flex items-center">
-        {#if selectedCodes.includes(lang.value)}
+        {#if selectedCodes.includes(iso3ToIso1Map[lang.value] || lang.value)}
         <Check class="mr-2" />
         {:else}
         <span class="mr-2" style="width: 1em; height: 1em;"></span>
