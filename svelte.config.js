@@ -9,6 +9,7 @@ const config = {
 			"$jibs": './src/jibs',
 			"$utils": "$lib/utils",
 			"@/*": "./src/lib/*",
+			"$lib/*": "./src/lib/*"
 		}
 	},
 

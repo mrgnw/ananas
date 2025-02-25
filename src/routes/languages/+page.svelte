@@ -68,17 +68,16 @@ function updateSort(field: typeof sortBy) {
 }
 </script>
 
-<div class="mx-auto max-w-5xl px-4 py-8">
-    <div class="mb-6 flex items-center justify-between gap-4">
-        <Command class="w-96">
-            <CommandInput 
-                placeholder="Search languages..." 
-                bind:value={searchQuery}
-            />
-        </Command>
-        <Button variant="outline" on:click={() => nativeFirst = !nativeFirst}>
-            {nativeFirst ? 'Show English first' : 'Show native first'}
-        </Button>
+<div class="container mx-auto p-4" in:fade>
+    <h1 class="text-3xl font-bold mb-6">Language Selection</h1>
+    
+    <div class="mb-6">
+        <input
+            type="text"
+            placeholder="Search languages..."
+            bind:value={searchQuery}
+            class="w-full p-2 border rounded"
+        />
     </div>
 
     <div class="overflow-x-auto">
