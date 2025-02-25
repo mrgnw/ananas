@@ -18,51 +18,59 @@ function normalizeLanguageCode(code) {
 
 export function createTranslateLanguages() {
   let languages = $state({});
+  
+  // Track if we've initialized from storage yet
+  let isInitialized = false;
 
   function initializeFromStorage() {
-    // Always start with default languages
-    languages = { ...defaultLanguages };
+    if (isInitialized) return;
+    isInitialized = true;
     
-    if (typeof localStorage === 'undefined') return;
+    if (typeof localStorage === 'undefined') {
+      // If localStorage isn't available, just use defaults
+      languages = { ...defaultLanguages };
+      return;
+    }
 
     try {
-        // First check for legacy tgt_langs format
+      // Load saved languages if they exist
+      const savedUserLangs = localStorage.getItem('user_langs');
+      if (savedUserLangs) {
+        const saved = JSON.parse(savedUserLangs);
+        // Normalize all codes in saved data
+        languages = Object.entries(saved).reduce((acc, [code, info]) => {
+          const normalizedCode = normalizeLanguageCode(code);
+          acc[normalizedCode] = info;
+          return acc;
+        }, {});
+      } else {
+        // If no saved languages, use defaults
+        languages = { ...defaultLanguages };
+        
+        // Check legacy format as fallback
         const oldLangs = localStorage.getItem('tgt_langs');
         if (oldLangs) {
-            const oldCodes = JSON.parse(oldLangs);
-            // Normalize old codes
-            const normalizedOld = oldCodes.reduce((acc, code) => {
-                const normalizedCode = normalizeLanguageCode(code);
-                if (!languages[normalizedCode]) {
-                    acc[normalizedCode] = {
-                        label: code,
-                        native: code,
-                        rtl: false,
-                        display: true
-                    };
-                }
-                return acc;
-            }, {});
-            languages = { ...languages, ...normalizedOld };
+          const oldCodes = JSON.parse(oldLangs);
+          oldCodes.forEach(code => {
+            const normalizedCode = normalizeLanguageCode(code);
+            if (!languages[normalizedCode]) {
+              languages[normalizedCode] = {
+                label: code,
+                native: code,
+                rtl: false,
+                display: true
+              };
+            }
+          });
         }
-
-        // Then check for new format
-        const savedUserLangs = localStorage.getItem('user_langs');
-        if (savedUserLangs) {
-            const saved = JSON.parse(savedUserLangs);
-            // Normalize all codes in saved data
-            const normalized = Object.entries(saved).reduce((acc, [code, info]) => {
-                const normalizedCode = normalizeLanguageCode(code);
-                acc[normalizedCode] = info;
-                return acc;
-            }, {});
-            languages = { ...languages, ...normalized };
-        }
-        
-        saveToStorage();
-        console.log('Initialized languages:', Object.keys(languages));
+      }
+      
+      saveToStorage();
+      console.log('Initialized languages:', Object.keys(languages));
     } catch (e) {
-        console.error('Failed to initialize languages from storage:', e);
+      console.error('Failed to initialize languages from storage:', e);
+      // Fallback to defaults
+      languages = { ...defaultLanguages };
     }
   }
 
@@ -130,14 +138,28 @@ export function createTranslateLanguages() {
   }
 
   function clearLanguages() {
-    // Clear both the store and localStorage
+    // Clear all languages
     languages = {};
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem('user_langs');
       localStorage.removeItem('tgt_langs');
     }
     
-    // Reset to defaults
+    saveToStorage();
+    console.log('Cleared all languages');
+  }
+  
+  // New function to add default languages
+  function addDefaultLanguages() {
+    // Add default languages to the current set
+    languages = { ...languages, ...defaultLanguages };
+    saveToStorage();
+    console.log('Added default languages:', Object.keys(defaultLanguages));
+  }
+  
+  // New function to reset to defaults only (replacing current languages)
+  function resetToDefaults() {
+    // Clear current languages and set to defaults
     languages = { ...defaultLanguages };
     saveToStorage();
     console.log('Reset to defaults:', Object.keys(languages));
@@ -153,6 +175,8 @@ export function createTranslateLanguages() {
     addLanguage,
     removeLanguage,
     clearLanguages,
+    addDefaultLanguages,
+    resetToDefaults,
     // Utility functions
     normalizeLanguageCode,
     // Exposed for testing

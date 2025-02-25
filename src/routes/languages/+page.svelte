@@ -69,23 +69,56 @@ function updateSort(field: typeof sortBy) {
 }
 
 function resetLanguages() {
-    translateLanguages.clearLanguages()
-    // Re-add default languages
-    Object.entries(defaultLanguages).forEach(([code, info]) => {
-        translateLanguages.addLanguage(code, info)
-    })
+    translateLanguages.resetToDefaults();
+}
+
+function clearAllLanguages() {
+    translateLanguages.clearLanguages();
+}
+
+function addDefaultLanguages() {
+    translateLanguages.addDefaultLanguages();
+}
+
+function clearLocalStorageCache() {
+    if (typeof window !== 'undefined') {
+        localStorage.clear();
+        alert('Local storage cache cleared! The page will now reload.');
+        // Reload the page to reinitialize everything
+        window.location.reload();
+    }
 }
 </script>
 
 <div class="container mx-auto p-4" in:fade>
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">Languages</h1>
-        <Button 
-            variant="destructive"
-            on:click={resetLanguages}
-        >
-            Reset to Defaults
-        </Button>
+        <div class="flex gap-2">
+            <Button 
+                variant="default"
+                on:click={addDefaultLanguages}
+            >
+                Add Defaults
+            </Button>
+            <Button 
+                variant="destructive"
+                on:click={clearAllLanguages}
+            >
+                Clear All
+            </Button>
+            <Button 
+                variant="outline"
+                on:click={resetLanguages}
+            >
+                Reset to Defaults
+            </Button>
+            <Button 
+                variant="secondary"
+                on:click={clearLocalStorageCache}
+            >
+                Clear Cache
+            </Button>
+        </div>
     </div>
     
     <div class="mb-6">

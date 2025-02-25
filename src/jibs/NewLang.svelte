@@ -48,41 +48,24 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
+	// Import the shared language store
+	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+
 	let text = $state('');
 	let show_original = $state(true);
 
-	// Default languages configuration - using 3-character ISO codes for consistency
-	const defaultLangs = {
-		eng: { label: 'English', native: 'English', rtl: false, display: true },
-		rus: { label: 'Russian', native: 'Русский', rtl: false, display: true },
-		jpn: { label: 'Japanese', native: '日本語', rtl: false, display: true },
-		spa: { label: 'Spanish', native: 'Español', rtl: false, display: true },
-		ita: { label: 'Italian', native: 'Italiano', rtl: false, display: true },
-		cat: { label: 'Catalan', native: 'Català', rtl: false, display: true }
-	};
+	// Use the shared language store
+	let user_langs = $derived(translateLanguages.languages);
 
-	function loadUserLangs() {
-		try {
-			if (typeof window === 'undefined') return defaultLangs;
-			const stored = localStorage.getItem('user_langs');
-			if (!stored) return defaultLangs;
-			const parsed = JSON.parse(stored);
-			// Merge stored languages with defaults, preserving user settings but adding new default languages
-			return { ...defaultLangs, ...parsed };
-		} catch (error) {
-			console.error('Error loading user languages:', error);
-			return defaultLangs;
+	// Add a function to clear the localStorage cache completely
+	function clearLocalStorageCache() {
+		if (typeof window !== 'undefined') {
+			localStorage.clear();
+			toast.success('Local storage cache cleared!');
+			// Reload the page to reinitialize everything
+			window.location.reload();
 		}
 	}
-
-	let user_langs = $state(loadUserLangs());
-
-	// Add effect to save changes
-	$effect(() => {
-		if (typeof window !== 'undefined') {
-			localStorage.setItem('user_langs', JSON.stringify(user_langs));
-		}
-	});
 
 	let tgt_langs = $derived(Object.keys(user_langs));
 	let show_langs = $derived(
@@ -101,7 +84,20 @@
 		if (key === 'original') {
 			show_original = !show_original;
 		} else {
-			user_langs[key].display = !user_langs[key].display;
+			// Get the current language info
+			const langInfo = translateLanguages.getLanguageInfo(key);
+			if (langInfo) {
+				// Create a new language info with toggled display
+				const updatedInfo = {
+					...langInfo,
+					display: !langInfo.display
+				};
+				
+				// First remove the language
+				translateLanguages.removeLanguage(key);
+				// Then add it back with updated display setting
+				translateLanguages.addLanguage(key, updatedInfo);
+			}
 		}
 		console.log('toggling', key);
 	}
@@ -217,9 +213,15 @@
 </script>
 
 <div class="container mx-auto space-y-6 p-4">
-	<h1 class="mb-4 text-2xl font-bold">Ananas</h1>
-	<p class="text-sm text-gray-500">Multi-language translator</p>
-	<!-- <pre><code>{JSON.stringify(langs, null, 2)}</code></pre> -->
+	<div class="flex justify-between items-center">
+		<div>
+			<h1 class="mb-4 text-2xl font-bold">Ananas</h1>
+			<p class="text-sm text-gray-500">Multi-language translator</p>
+		</div>
+		<Button variant="outline" size="sm" onclick={clearLocalStorageCache}>
+			Clear Cache
+		</Button>
+	</div>
 	<div class="space-y-4">
 		<Input type="text" placeholder="Enter text to translate" bind:value={text} />
 		<div class="flex flex-wrap items-center gap-2">
