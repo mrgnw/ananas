@@ -74,6 +74,7 @@ function updateSort(field) {
         <table class="min-w-full bg-white">
             <thead>
                 <tr>
+                    <th class="p-2">Select</th>
                     <th class="cursor-pointer p-2" on:click={() => updateSort('code')}>
                         Code {sortBy === 'code' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                     </th>
@@ -83,7 +84,6 @@ function updateSort(field) {
                     <th class="cursor-pointer p-2" on:click={() => updateSort('nativeName')}>
                         Native Name {sortBy === 'nativeName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
                     </th>
-                    <th class="p-2">Select</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,17 +91,15 @@ function updateSort(field) {
                     {@const info = getLanguageInfo(lang.code)}
                     {@const inUserCountry = data.country && info?.countries?.includes(data.country)}
                     <tr class:bg-blue-50={inUserCountry}>
+                        <td class="p-2">
+                            <Checkbox 
+                                checked={translateLanguages.languages[lang.code] ? true : false}
+                                onCheckedChange={() => toggleLanguage(lang.code, info)}
+                            />
+                        </td>
                         <td class="p-2">{lang.code}</td>
                         <td class="p-2">{lang.name}</td>
                         <td class="p-2">{lang.nativeName}</td>
-                        <td class="p-2">
-                            <button
-                                class="px-4 py-1 rounded {isSelected(lang.code) ? 'bg-blue-500 text-white' : 'bg-gray-200'}"
-                                on:click={() => toggleLanguage(lang.code, info)}
-                            >
-                                {isSelected(lang.code) ? 'Selected' : 'Select'}
-                            </button>
-                        </td>
                     </tr>
                 {/each}
             </tbody>
