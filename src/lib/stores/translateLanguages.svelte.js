@@ -1,19 +1,19 @@
 import { defaultLanguages } from '$lib/utils/languages.js';
 import languageData from '$lib/data/wikidata-languages.json';
 
-// Create maps for code conversion - normalize to 2-char ISO codes
-const iso3ToIso1Map = new Map(
+// Create maps for code conversion - normalize to 3-char ISO codes
+const iso1ToIso3Map = new Map(
   languageData
-    .filter(lang => lang.iso1 && lang.iso)
-    .map(lang => [lang.iso, lang.iso1])
+    .filter(lang => lang.iso1)
+    .map(lang => [lang.iso1, lang.iso])
 );
 
-// Normalize a language code to its 2-char version if available
+// Normalize a language code to its 3-char version if available
 function normalizeLanguageCode(code) {
-  // If it's already a 2-char code, return it
-  if (code.length === 2) return code;
-  // Try to convert from 3-char code to 2-char code
-  return iso3ToIso1Map.get(code) || code;
+  // If it's already a 3-char code, return it
+  if (code.length === 3) return code;
+  // Try to convert from 2-char code to 3-char code
+  return iso1ToIso3Map.get(code) || code;
 }
 
 export function createTranslateLanguages() {
