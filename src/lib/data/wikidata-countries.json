@@ -2,3440 +2,4731 @@
   {
     "wikidata_id": "Q889",
     "name": "Afghanistan",
-    "code": "AF",
+    "iso": "AF",
+    "iso3": "AFG",
     "flag": "🇦🇫",
     "languages": [
       {
         "id": "Q58680",
         "name": "Pashto",
-        "speakers": 315421300
+        "iso": "pus",
+        "iso1": null,
+        "speakers": 315421300,
+        "speakers_m": 315.4
       },
       {
         "id": "Q33049",
         "name": "Balochi",
-        "speakers": 295000000
-      },
-      {
-        "id": "Q178440",
-        "name": "Dari",
-        "speakers": 39000000
-      },
-      {
-        "id": "Q13955",
-        "name": "Arabic",
-        "speakers": 27000000
-      },
-      {
-        "id": "Q9264",
-        "name": "Uzbek",
-        "speakers": 16000000
+        "iso": "bal",
+        "iso1": "ps",
+        "speakers": 295000000,
+        "speakers_m": 295
       },
       {
         "id": "Q161804",
         "name": "Nuristani",
-        "speakers": 9600000
+        "iso1": null,
+        "speakers": 39000000,
+        "speakers_m": 39
+      },
+      {
+        "id": "Q9264",
+        "name": "Uzbek",
+        "iso": "uzb",
+        "iso1": "uz",
+        "speakers": 27000000,
+        "speakers_m": 27
+      },
+      {
+        "id": "Q13955",
+        "name": "Arabic",
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 16000000,
+        "speakers_m": 16
+      },
+      {
+        "id": "Q178440",
+        "name": "Dari",
+        "iso1": null,
+        "speakers": 9600000,
+        "speakers_m": 9.6
       },
       {
         "id": "Q36670",
         "name": "Pashayi",
-        "speakers": 7600000
+        "iso": "prs",
+        "iso1": null,
+        "speakers": 7600000,
+        "speakers_m": 7.6
       },
       {
         "id": "Q9267",
         "name": "Turkmen",
-        "speakers": 6975120
+        "iso": "tuk",
+        "iso1": "tk",
+        "speakers": 6975120,
+        "speakers_m": 7
       },
       {
         "id": "Q1772864",
         "name": "Pamir",
-        "speakers": 500000
+        "iso1": null,
+        "speakers": 500000,
+        "speakers_m": 0.5
       }
     ]
   },
   {
     "wikidata_id": "Q222",
     "name": "Albania",
-    "code": "AL",
+    "iso": "AL",
+    "iso3": "ALB",
     "flag": "🇦🇱",
     "languages": [
       {
         "id": "Q8748",
         "name": "Albanian",
-        "speakers": 6200000
+        "iso": "sqi",
+        "iso1": "sq",
+        "speakers": 6200000,
+        "speakers_m": 6.2
       }
     ]
   },
   {
     "wikidata_id": "Q262",
     "name": "Algeria",
-    "code": "DZ",
+    "iso": "DZ",
+    "iso3": "DZA",
     "flag": "🇩🇿",
     "languages": [
       {
-        "id": "Q61053330",
-        "name": "Standard Algerian Berber",
-        "speakers": 315421300
-      },
-      {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso1": null,
+        "speakers": 315421300,
+        "speakers_m": 315.4
+      },
+      {
+        "id": "Q61053330",
+        "name": "Standard Algerian Berber",
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q228",
     "name": "Andorra",
-    "code": "AD",
+    "iso": "AD",
+    "iso3": "AND",
     "flag": "🇦🇩",
     "languages": [
       {
         "id": "Q7026",
         "name": "Catalan",
-        "speakers": 4873396
+        "iso": "cat",
+        "iso1": "ca",
+        "speakers": 4873396,
+        "speakers_m": 4.9
       }
     ]
   },
   {
     "wikidata_id": "Q916",
     "name": "Angola",
-    "code": "AO",
+    "iso": "AO",
+    "iso3": "AGO",
     "flag": "🇦🇴",
     "languages": [
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q781",
     "name": "Antigua and Barbuda",
-    "code": "AG",
+    "iso": "AG",
+    "iso3": "ATG",
     "flag": "🇦🇬",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q414",
     "name": "Argentina",
-    "code": "AR",
+    "iso": "AR",
+    "iso3": "ARG",
     "flag": "🇦🇷",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q399",
     "name": "Armenia",
-    "code": "AM",
+    "iso": "AM",
+    "iso3": "ARM",
     "flag": "🇦🇲",
     "languages": [
       {
         "id": "Q8785",
         "name": "Armenian",
-        "speakers": 6700000
+        "iso": "hye",
+        "iso1": "hy",
+        "speakers": 6700000,
+        "speakers_m": 6.7
       }
     ]
   },
   {
     "wikidata_id": "Q408",
     "name": "Australia",
-    "code": "AU",
+    "iso": "AU",
+    "iso3": "AUS",
     "flag": "🇦🇺",
     "languages": [
       {
         "id": "Q29525",
         "name": "Auslan",
-        "speakers": 10100
+        "iso": "asf",
+        "iso1": null,
+        "speakers": 10100,
+        "speakers_m": 0
       },
       {
         "id": "Q44679",
         "name": "Australian English",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q40",
     "name": "Austria",
-    "code": "AT",
+    "iso": "AT",
+    "iso3": "AUT",
     "flag": "🇦🇹",
     "languages": [
       {
         "id": "Q36668",
         "name": "Austrian Sign Language",
-        "speakers": 76540740
+        "iso": "asq",
+        "iso1": null,
+        "speakers": 76540740,
+        "speakers_m": 76.5
       },
       {
         "id": "Q188",
         "name": "German",
-        "speakers": 58452300
+        "iso": "deu",
+        "iso1": "de",
+        "speakers": 58452300,
+        "speakers_m": 58.5
       }
     ]
   },
   {
     "wikidata_id": "Q227",
     "name": "Azerbaijan",
-    "code": "AZ",
+    "iso": "AZ",
+    "iso3": "AZE",
     "flag": "🇦🇿",
     "languages": [
       {
-        "id": "Q9292",
-        "name": "Azerbaijani",
-        "speakers": 23000000
-      },
-      {
         "id": "Q55698568",
         "name": "Azerbaijani Sign Language",
-        "speakers": null
+        "iso": "aze",
+        "iso1": "az",
+        "speakers": 23000000,
+        "speakers_m": 23
+      },
+      {
+        "id": "Q9292",
+        "name": "Azerbaijani",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q398",
     "name": "Bahrain",
-    "code": "BH",
+    "iso": "BH",
+    "iso3": "BHR",
     "flag": "🇧🇭",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q902",
     "name": "Bangladesh",
-    "code": "BD",
+    "iso": "BD",
+    "iso3": "BGD",
     "flag": "🇧🇩",
     "languages": [
       {
         "id": "Q9610",
         "name": "Bangla",
-        "speakers": 300000000
+        "iso": "ben",
+        "iso1": "bn",
+        "speakers": 300000000,
+        "speakers_m": 300
       }
     ]
   },
   {
     "wikidata_id": "Q244",
     "name": "Barbados",
-    "code": "BB",
+    "iso": "BB",
+    "iso3": "BRB",
     "flag": "🇧🇧",
     "languages": [
       {
         "id": "Q2524014",
         "name": "Bajan Creole",
-        "speakers": 753359540
+        "iso": "bjs",
+        "iso1": null,
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q184",
     "name": "Belarus",
-    "code": "BY",
+    "iso": "BY",
+    "iso3": "BLR",
     "flag": "🇧🇾",
     "languages": [
       {
         "id": "Q7737",
         "name": "Russian",
-        "speakers": 154000000
+        "iso": "rus",
+        "iso1": "ru",
+        "speakers": 154000000,
+        "speakers_m": 154
       },
       {
         "id": "Q9091",
         "name": "Belarusian",
-        "speakers": 7600000
+        "iso": "bel",
+        "iso1": "be",
+        "speakers": 7600000,
+        "speakers_m": 7.6
       }
     ]
   },
   {
     "wikidata_id": "Q31",
     "name": "Belgium",
-    "code": "BE",
+    "iso": "BE",
+    "iso3": "BEL",
     "flag": "🇧🇪",
     "languages": [
       {
         "id": "Q188",
         "name": "German",
-        "speakers": 208157220
+        "iso": "deu",
+        "iso1": "de",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       },
       {
         "id": "Q7411",
         "name": "Dutch",
-        "speakers": 58452300
+        "iso": "nld",
+        "iso1": "nl",
+        "speakers": 58452300,
+        "speakers_m": 58.5
       }
     ]
   },
   {
     "wikidata_id": "Q242",
     "name": "Belize",
-    "code": "BZ",
+    "iso": "BZ",
+    "iso3": "BLZ",
     "flag": "🇧🇿",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q962",
     "name": "Benin",
-    "code": "BJ",
+    "iso": "BJ",
+    "iso3": "BEN",
     "flag": "🇧🇯",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q917",
     "name": "Bhutan",
-    "code": "BT",
+    "iso": "BT",
+    "iso3": "BTN",
     "flag": "🇧🇹",
     "languages": [
       {
         "id": "Q33081",
         "name": "Dzongkha",
-        "speakers": 171000
+        "iso": "dzo",
+        "iso1": "dz",
+        "speakers": 171000,
+        "speakers_m": 0.2
       }
     ]
   },
   {
     "wikidata_id": "Q750",
     "name": "Bolivia",
-    "code": "BO",
+    "iso": "BO",
+    "iso3": "BOL",
     "flag": "🇧🇴",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       },
       {
         "id": "Q5218",
         "name": "Quechua",
-        "speakers": 8900000
+        "iso": "que",
+        "iso1": "qu",
+        "speakers": 8900000,
+        "speakers_m": 8.9
       },
       {
         "id": "Q4627",
         "name": "Aymara",
-        "speakers": 4000000
+        "iso": "aym",
+        "iso1": "ay",
+        "speakers": 4000000,
+        "speakers_m": 4
       },
       {
         "id": "Q35876",
         "name": "Guarani",
-        "speakers": null
+        "iso": "grn",
+        "iso1": "gn",
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q225",
     "name": "Bosnia and Herzegovina",
-    "code": "BA",
+    "iso": "BA",
+    "iso3": "BIH",
     "flag": "🇧🇦",
     "languages": [
       {
         "id": "Q9299",
         "name": "Serbian",
-        "speakers": 9000000
+        "iso": "srp",
+        "iso1": "sr",
+        "speakers": 9000000,
+        "speakers_m": 9
       },
       {
         "id": "Q6654",
         "name": "Croatian",
-        "speakers": 7000000
+        "iso": "hrv",
+        "iso1": "hr",
+        "speakers": 7000000,
+        "speakers_m": 7
       },
       {
         "id": "Q9303",
         "name": "Bosnian",
-        "speakers": 3500000
+        "iso": "bos",
+        "iso1": "bs",
+        "speakers": 3500000,
+        "speakers_m": 3.5
       }
     ]
   },
   {
     "wikidata_id": "Q963",
     "name": "Botswana",
-    "code": "BW",
+    "iso": "BW",
+    "iso3": "BWA",
     "flag": "🇧🇼",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q155",
     "name": "Brazil",
-    "code": "BR",
+    "iso": "BR",
+    "iso3": "BRA",
     "flag": "🇧🇷",
     "languages": [
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q921",
     "name": "Brunei",
-    "code": "BN",
+    "iso": "BN",
+    "iso3": "BRN",
     "flag": "🇧🇳",
     "languages": [
       {
         "id": "Q7979",
         "name": "British English",
-        "speakers": 77000000
+        "iso": "msa",
+        "iso1": "ms",
+        "speakers": 77000000,
+        "speakers_m": 77
       },
       {
         "id": "Q9237",
         "name": "Malay",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q219",
     "name": "Bulgaria",
-    "code": "BG",
+    "iso": "BG",
+    "iso3": "BGR",
     "flag": "🇧🇬",
     "languages": [
       {
         "id": "Q7918",
         "name": "Bulgarian",
-        "speakers": 9000000
+        "iso": "bul",
+        "iso1": "bg",
+        "speakers": 9000000,
+        "speakers_m": 9
       }
     ]
   },
   {
     "wikidata_id": "Q965",
     "name": "Burkina Faso",
-    "code": "BF",
+    "iso": "BF",
+    "iso3": "BFA",
     "flag": "🇧🇫",
     "languages": [
       {
         "id": "Q32934",
         "name": "Bissa",
-        "speakers": 7600000
+        "iso": "bib",
+        "iso1": null,
+        "speakers": 7600000,
+        "speakers_m": 7.6
       },
       {
         "id": "Q32706",
         "name": "Dioula",
-        "speakers": 2700000
+        "iso": "dyu",
+        "iso1": null,
+        "speakers": 2700000,
+        "speakers_m": 2.7
       },
       {
         "id": "Q36096",
         "name": "Mooré",
-        "speakers": null
+        "iso": "mos",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q967",
     "name": "Burundi",
-    "code": "BI",
+    "iso": "BI",
+    "iso3": "BDI",
     "flag": "🇧🇮",
     "languages": [
       {
         "id": "Q33583",
         "name": "Kirundi",
-        "speakers": 379007140
+        "iso": "run",
+        "iso1": "rn",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 208157220
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q424",
     "name": "Cambodia",
-    "code": "KH",
+    "iso": "KH",
+    "iso3": "KHM",
     "flag": "🇰🇭",
     "languages": [
       {
         "id": "Q9205",
         "name": "Khmer",
-        "speakers": 16600000
+        "iso": "khm",
+        "iso1": "km",
+        "speakers": 16600000,
+        "speakers_m": 16.6
       }
     ]
   },
   {
     "wikidata_id": "Q1009",
     "name": "Cameroon",
-    "code": "CM",
+    "iso": "CM",
+    "iso3": "CMR",
     "flag": "🇨🇲",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 208157220
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q16",
     "name": "Canada",
-    "code": "CA",
+    "iso": "CA",
+    "iso3": "CAN",
     "flag": "🇨🇦",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 208157220
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q1011",
     "name": "Cape Verde",
-    "code": "CV",
+    "iso": "CV",
+    "iso3": "CPV",
     "flag": "🇨🇻",
     "languages": [
       {
         "id": "Q35963",
         "name": "Cape Verdean Creole",
-        "speakers": 254300000
+        "iso": "kea",
+        "iso1": null,
+        "speakers": 254300000,
+        "speakers_m": 254.3
       },
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q929",
     "name": "Central African Republic",
-    "code": "CF",
+    "iso": "CF",
+    "iso3": "CAF",
     "flag": "🇨🇫",
     "languages": [
       {
         "id": "Q33954",
         "name": "Sango",
-        "speakers": 208157220
+        "iso": "sag",
+        "iso1": "sg",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q657",
     "name": "Chad",
-    "code": "TD",
+    "iso": "TD",
+    "iso3": "TCD",
     "flag": "🇹🇩",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 208157220
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q298",
     "name": "Chile",
-    "code": "CL",
+    "iso": "CL",
+    "iso3": "CHL",
     "flag": "🇨🇱",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q739",
     "name": "Colombia",
-    "code": "CO",
+    "iso": "CO",
+    "iso3": "COL",
     "flag": "🇨🇴",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q970",
     "name": "Comoros",
-    "code": "KM",
+    "iso": "KM",
+    "iso3": "COM",
     "flag": "🇰🇲",
     "languages": [
       {
-        "id": "Q33077",
-        "name": "Comorian",
-        "speakers": 295000000
-      },
-      {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 208157220
+        "iso1": null,
+        "speakers": 295000000,
+        "speakers_m": 295
+      },
+      {
+        "id": "Q33077",
+        "name": "Comorian",
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q800",
     "name": "Costa Rica",
-    "code": "CR",
+    "iso": "CR",
+    "iso3": "CRI",
     "flag": "🇨🇷",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q224",
     "name": "Croatia",
-    "code": "HR",
+    "iso": "HR",
+    "iso3": "HRV",
     "flag": "🇭🇷",
     "languages": [
       {
         "id": "Q6654",
         "name": "Croatian",
-        "speakers": 7000000
+        "iso": "hrv",
+        "iso1": "hr",
+        "speakers": 7000000,
+        "speakers_m": 7
       }
     ]
   },
   {
     "wikidata_id": "Q241",
     "name": "Cuba",
-    "code": "CU",
+    "iso": "CU",
+    "iso3": "CUB",
     "flag": "🇨🇺",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q229",
     "name": "Cyprus",
-    "code": "CY",
+    "iso": "CY",
+    "iso3": "CYP",
     "flag": "🇨🇾",
     "languages": [
       {
-        "id": "Q9129",
-        "name": "Greek",
-        "speakers": 82231620
-      },
-      {
         "id": "Q36510",
         "name": "Modern Greek",
-        "speakers": 13100000
+        "iso": "ell",
+        "iso1": "el",
+        "speakers": 82231620,
+        "speakers_m": 82.2
+      },
+      {
+        "id": "Q9129",
+        "name": "Greek",
+        "iso1": null,
+        "speakers": 15000000,
+        "speakers_m": 15
       },
       {
         "id": "Q256",
         "name": "Turkish",
-        "speakers": 5870300
+        "iso": "tur",
+        "iso1": "tr",
+        "speakers": 5870300,
+        "speakers_m": 5.9
       }
     ]
   },
   {
     "wikidata_id": "Q213",
     "name": "Czech Republic",
-    "code": "CZ",
+    "iso": "CZ",
+    "iso3": "CZE",
     "flag": "🇨🇿",
     "languages": [
       {
         "id": "Q9056",
         "name": "Czech",
-        "speakers": 10700000
+        "iso": "ces",
+        "iso1": "cs",
+        "speakers": 10700000,
+        "speakers_m": 10.7
       }
     ]
   },
   {
     "wikidata_id": "Q974",
     "name": "Democratic Republic of the Congo",
-    "code": "CD",
+    "iso": "CD",
+    "iso3": "COD",
     "flag": "🇨🇩",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q977",
     "name": "Djibouti",
-    "code": "DJ",
+    "iso": "DJ",
+    "iso3": "DJI",
     "flag": "🇩🇯",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 208157220
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q784",
     "name": "Dominica",
-    "code": "DM",
+    "iso": "DM",
+    "iso3": "DMA",
     "flag": "🇩🇲",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q786",
     "name": "Dominican Republic",
-    "code": "DO",
+    "iso": "DO",
+    "iso3": "DOM",
     "flag": "🇩🇴",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q736",
     "name": "Ecuador",
-    "code": "EC",
+    "iso": "EC",
+    "iso3": "ECU",
     "flag": "🇪🇨",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       },
       {
         "id": "Q1740805",
         "name": "Northern Quichua",
-        "speakers": 591448
+        "iso": "jiv",
+        "iso1": null,
+        "speakers": 591448,
+        "speakers_m": 0.6
       },
       {
         "id": "Q617291",
         "name": "Shuar",
-        "speakers": 35000
+        "iso1": null,
+        "speakers": 35000,
+        "speakers_m": 0
       }
     ]
   },
   {
     "wikidata_id": "Q79",
     "name": "Egypt",
-    "code": "EG",
+    "iso": "EG",
+    "iso3": "EGY",
     "flag": "🇪🇬",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q792",
     "name": "El Salvador",
-    "code": "SV",
+    "iso": "SV",
+    "iso3": "SLV",
     "flag": "🇸🇻",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q983",
     "name": "Equatorial Guinea",
-    "code": "GQ",
+    "iso": "GQ",
+    "iso3": "GNQ",
     "flag": "🇬🇶",
     "languages": [
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 485000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 485000000,
+        "speakers_m": 485
       },
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 208157220
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q986",
     "name": "Eritrea",
-    "code": "ER",
+    "iso": "ER",
+    "iso3": "ERI",
     "flag": "🇪🇷",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 753359540
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q34124",
         "name": "Tigrinya",
-        "speakers": 295000000
+        "iso": "tir",
+        "iso1": "ti",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q191",
     "name": "Estonia",
-    "code": "EE",
+    "iso": "EE",
+    "iso3": "EST",
     "flag": "🇪🇪",
     "languages": [
       {
         "id": "Q9072",
         "name": "Estonian",
-        "speakers": 1251770
+        "iso": "est",
+        "iso1": "et",
+        "speakers": 1251770,
+        "speakers_m": 1.3
       }
     ]
   },
   {
     "wikidata_id": "Q1050",
     "name": "Eswatini",
-    "code": "SZ",
+    "iso": "SZ",
+    "iso3": "SWZ",
     "flag": "🇸🇿",
     "languages": [
       {
         "id": "Q34014",
         "name": "Swazi",
-        "speakers": 753359540
+        "iso": "ssw",
+        "iso1": "ss",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q115",
     "name": "Ethiopia",
-    "code": "ET",
+    "iso": "ET",
+    "iso3": "ETH",
     "flag": "🇪🇹",
     "languages": [
       {
         "id": "Q28244",
         "name": "Amharic",
-        "speakers": 21900000
+        "iso": "amh",
+        "iso1": "am",
+        "speakers": 21900000,
+        "speakers_m": 21.9
       }
     ]
   },
   {
     "wikidata_id": "Q702",
     "name": "Federated States of Micronesia",
-    "code": "FM",
+    "iso": "FM",
+    "iso3": "FSM",
     "flag": "🇫🇲",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q712",
     "name": "Fiji",
-    "code": "FJ",
+    "iso": "FJ",
+    "iso3": "FJI",
     "flag": "🇫🇯",
     "languages": [
       {
         "id": "Q33295",
         "name": "Fijian",
-        "speakers": 753359540
+        "iso": "fij",
+        "iso1": "fj",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q46728",
         "name": "Fiji Hindi",
-        "speakers": 1500
+        "iso": "hif",
+        "iso1": null,
+        "speakers": 1500,
+        "speakers_m": 0
       }
     ]
   },
   {
     "wikidata_id": "Q33",
     "name": "Finland",
-    "code": "FI",
+    "iso": "FI",
+    "iso3": "FIN",
     "flag": "🇫🇮",
     "languages": [
       {
         "id": "Q9027",
         "name": "Swedish",
-        "speakers": 5413380
+        "iso": "swe",
+        "iso1": "sv",
+        "speakers": 5413380,
+        "speakers_m": 5.4
       },
       {
         "id": "Q1412",
         "name": "Finnish",
-        "speakers": 272000
+        "iso": "fin",
+        "iso1": "fi",
+        "speakers": 272000,
+        "speakers_m": 0.3
       }
     ]
   },
   {
     "wikidata_id": "Q142",
     "name": "France",
-    "code": "FR",
+    "iso": "FR",
+    "iso3": "FRA",
     "flag": "🇫🇷",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q1000",
     "name": "Gabon",
-    "code": "GA",
+    "iso": "GA",
+    "iso3": "GAB",
     "flag": "🇬🇦",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q230",
     "name": "Georgia",
-    "code": "GE",
+    "iso": "GE",
+    "iso3": "GEO",
     "flag": "🇬🇪",
     "languages": [
       {
         "id": "Q8108",
         "name": "Georgian",
-        "speakers": 3700000
+        "iso": "kat",
+        "iso1": "ka",
+        "speakers": 3700000,
+        "speakers_m": 3.7
       },
       {
         "id": "Q5111",
         "name": "Abkhaz",
-        "speakers": 190110
+        "iso": "abk",
+        "iso1": "ab",
+        "speakers": 190110,
+        "speakers_m": 0.2
       }
     ]
   },
   {
     "wikidata_id": "Q183",
     "name": "Germany",
-    "code": "DE",
+    "iso": "DE",
+    "iso3": "DEU",
     "flag": "🇩🇪",
     "languages": [
       {
         "id": "Q188",
         "name": "German",
-        "speakers": 58452300
+        "iso": "deu",
+        "iso1": "de",
+        "speakers": 58452300,
+        "speakers_m": 58.5
       }
     ]
   },
   {
     "wikidata_id": "Q117",
     "name": "Ghana",
-    "code": "GH",
+    "iso": "GH",
+    "iso3": "GHA",
     "flag": "🇬🇭",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q41",
     "name": "Greece",
-    "code": "GR",
+    "iso": "GR",
+    "iso3": "GRC",
     "flag": "🇬🇷",
     "languages": [
       {
+        "id": "Q36510",
+        "name": "Modern Greek",
+        "iso": "ell",
+        "iso1": "el",
+        "speakers": 15000000,
+        "speakers_m": 15
+      },
+      {
         "id": "Q35392",
         "name": "Demotic Greek",
-        "speakers": 15000000
+        "iso1": null,
+        "speakers": 13100000,
+        "speakers_m": 13.1
       },
       {
         "id": "Q9129",
         "name": "Greek",
-        "speakers": 13100000
-      },
-      {
-        "id": "Q36510",
-        "name": "Modern Greek",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q769",
     "name": "Grenada",
-    "code": "GD",
+    "iso": "GD",
+    "iso3": "GRD",
     "flag": "🇬🇩",
     "languages": [
       {
         "id": "Q4252500",
         "name": "Grenadian Creole English",
-        "speakers": 753359540
+        "iso": "gcl",
+        "iso1": null,
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q774",
     "name": "Guatemala",
-    "code": "GT",
+    "iso": "GT",
+    "iso3": "GTM",
     "flag": "🇬🇹",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q1006",
     "name": "Guinea",
-    "code": "GN",
+    "iso": "GN",
+    "iso3": "GIN",
     "flag": "🇬🇳",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q1007",
     "name": "Guinea-Bissau",
-    "code": "GW",
+    "iso": "GW",
+    "iso3": "GNB",
     "flag": "🇬🇼",
     "languages": [
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q734",
     "name": "Guyana",
-    "code": "GY",
+    "iso": "GY",
+    "iso3": "GUY",
     "flag": "🇬🇾",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q790",
     "name": "Haiti",
-    "code": "HT",
+    "iso": "HT",
+    "iso3": "HTI",
     "flag": "🇭🇹",
     "languages": [
       {
         "id": "Q33491",
         "name": "Haitian Creole",
-        "speakers": 208157220
+        "iso": "hat",
+        "iso1": "ht",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q783",
     "name": "Honduras",
-    "code": "HN",
+    "iso": "HN",
+    "iso3": "HND",
     "flag": "🇭🇳",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q28",
     "name": "Hungary",
-    "code": "HU",
+    "iso": "HU",
+    "iso3": "HUN",
     "flag": "🇭🇺",
     "languages": [
       {
         "id": "Q9067",
         "name": "Hungarian",
-        "speakers": 12600000
+        "iso": "hun",
+        "iso1": "hu",
+        "speakers": 12600000,
+        "speakers_m": 12.6
       }
     ]
   },
   {
     "wikidata_id": "Q189",
     "name": "Iceland",
-    "code": "IS",
+    "iso": "IS",
+    "iso3": "ISL",
     "flag": "🇮🇸",
     "languages": [
       {
         "id": "Q294",
         "name": "Icelandic",
-        "speakers": 321040
+        "iso": "isl",
+        "iso1": "is",
+        "speakers": 321040,
+        "speakers_m": 0.3
       }
     ]
   },
   {
     "wikidata_id": "Q668",
     "name": "India",
-    "code": "IN",
+    "iso": "IN",
+    "iso3": "IND",
     "flag": "🇮🇳",
     "languages": [
       {
         "id": "Q1568",
         "name": "Hindi",
-        "speakers": 753359540
+        "iso": "hin",
+        "iso1": "hi",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q252",
     "name": "Indonesia",
-    "code": "ID",
+    "iso": "ID",
+    "iso3": "IDN",
     "flag": "🇮🇩",
     "languages": [
       {
         "id": "Q9240",
         "name": "Indonesian",
-        "speakers": 43627550
+        "iso": "ind",
+        "iso1": "id",
+        "speakers": 43627550,
+        "speakers_m": 43.6
       }
     ]
   },
   {
     "wikidata_id": "Q794",
     "name": "Iran",
-    "code": "IR",
+    "iso": "IR",
+    "iso3": "IRN",
     "flag": "🇮🇷",
     "languages": [
       {
         "id": "Q9168",
         "name": "Persian",
-        "speakers": 45000000
+        "iso": "fas",
+        "iso1": "fa",
+        "speakers": 45000000,
+        "speakers_m": 45
       }
     ]
   },
   {
     "wikidata_id": "Q796",
     "name": "Iraq",
-    "code": "IQ",
+    "iso": "IQ",
+    "iso3": "IRQ",
     "flag": "🇮🇶",
     "languages": [
       {
         "id": "Q36368",
         "name": "Kurdish",
-        "speakers": 315421300
+        "iso": "kur",
+        "iso1": "ku",
+        "speakers": 315421300,
+        "speakers_m": 315.4
       },
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q27",
     "name": "Ireland",
-    "code": "IE",
+    "iso": "IE",
+    "iso3": "IRL",
     "flag": "🇮🇪",
     "languages": [
       {
         "id": "Q9142",
         "name": "Irish",
-        "speakers": 753359540
+        "iso": "gle",
+        "iso1": "ga",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q801",
     "name": "Israel",
-    "code": "IL",
+    "iso": "IL",
+    "iso3": "ISR",
     "flag": "🇮🇱",
     "languages": [
       {
         "id": "Q9288",
         "name": "Hebrew",
-        "speakers": 9303950
+        "iso": "heb",
+        "iso1": "he",
+        "speakers": 9303950,
+        "speakers_m": 9.3
       }
     ]
   },
   {
     "wikidata_id": "Q38",
     "name": "Italy",
-    "code": "IT",
+    "iso": "IT",
+    "iso3": "ITA",
     "flag": "🇮🇹",
     "languages": [
       {
         "id": "Q652",
         "name": "Italian",
-        "speakers": 64800000
+        "iso": "ita",
+        "iso1": "it",
+        "speakers": 64800000,
+        "speakers_m": 64.8
       }
     ]
   },
   {
     "wikidata_id": "Q1008",
     "name": "Ivory Coast",
-    "code": "CI",
+    "iso": "CI",
+    "iso3": "CIV",
     "flag": "🇨🇮",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q766",
     "name": "Jamaica",
-    "code": "JM",
+    "iso": "JM",
+    "iso3": "JAM",
     "flag": "🇯🇲",
     "languages": [
       {
         "id": "Q35939",
         "name": "Jamaican Patois",
-        "speakers": 753359540
+        "iso": "jam",
+        "iso1": null,
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q17",
     "name": "Japan",
-    "code": "JP",
+    "iso": "JP",
+    "iso3": "JPN",
     "flag": "🇯🇵",
     "languages": [
       {
         "id": "Q5287",
         "name": "Japanese",
-        "speakers": 128000000
+        "iso": "jpn",
+        "iso1": "ja",
+        "speakers": 128000000,
+        "speakers_m": 128
       }
     ]
   },
   {
     "wikidata_id": "Q810",
     "name": "Jordan",
-    "code": "JO",
+    "iso": "JO",
+    "iso3": "JOR",
     "flag": "🇯🇴",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q232",
     "name": "Kazakhstan",
-    "code": "KZ",
+    "iso": "KZ",
+    "iso3": "KAZ",
     "flag": "🇰🇿",
     "languages": [
       {
         "id": "Q7737",
         "name": "Russian",
-        "speakers": 154000000
+        "iso": "rus",
+        "iso1": "ru",
+        "speakers": 154000000,
+        "speakers_m": 154
       },
       {
         "id": "Q9252",
         "name": "Kazakh",
-        "speakers": 12900000
+        "iso": "kaz",
+        "iso1": "kk",
+        "speakers": 12900000,
+        "speakers_m": 12.9
       }
     ]
   },
   {
     "wikidata_id": "Q114",
     "name": "Kenya",
-    "code": "KE",
+    "iso": "KE",
+    "iso3": "KEN",
     "flag": "🇰🇪",
     "languages": [
       {
         "id": "Q7838",
         "name": "Swahili",
-        "speakers": 753359540
+        "iso": "swa",
+        "iso1": "sw",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q29999",
     "name": "Kingdom of the Netherlands",
-    "code": "NL",
+    "iso": "NL",
+    "iso3": "NLD",
     "flag": "🇳🇱",
     "languages": [
       {
         "id": "Q7411",
         "name": "Dutch",
-        "speakers": 23100000
+        "iso": "nld",
+        "iso1": "nl",
+        "speakers": 23100000,
+        "speakers_m": 23.1
       }
     ]
   },
   {
     "wikidata_id": "Q710",
     "name": "Kiribati",
-    "code": "KI",
+    "iso": "KI",
+    "iso3": "KIR",
     "flag": "🇰🇮",
     "languages": [
       {
         "id": "Q30898",
         "name": "Gilbertese",
-        "speakers": 753359540
+        "iso": "gil",
+        "iso1": null,
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q817",
     "name": "Kuwait",
-    "code": "KW",
+    "iso": "KW",
+    "iso3": "KWT",
     "flag": "🇰🇼",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q813",
     "name": "Kyrgyzstan",
-    "code": "KG",
+    "iso": "KG",
+    "iso3": "KGZ",
     "flag": "🇰🇬",
     "languages": [
       {
         "id": "Q9255",
         "name": "Kyrgyz",
-        "speakers": 4568480
+        "iso": "kir",
+        "iso1": "ky",
+        "speakers": 4568480,
+        "speakers_m": 4.6
       }
     ]
   },
   {
     "wikidata_id": "Q819",
     "name": "Laos",
-    "code": "LA",
+    "iso": "LA",
+    "iso3": "LAO",
     "flag": "🇱🇦",
     "languages": [
       {
         "id": "Q9211",
         "name": "Lao",
-        "speakers": 5225552
+        "iso": "lao",
+        "iso1": "lo",
+        "speakers": 5225552,
+        "speakers_m": 5.2
       }
     ]
   },
   {
     "wikidata_id": "Q211",
     "name": "Latvia",
-    "code": "LV",
+    "iso": "LV",
+    "iso3": "LVA",
     "flag": "🇱🇻",
     "languages": [
       {
         "id": "Q9078",
         "name": "Latvian",
-        "speakers": 1500000
+        "iso": "lav",
+        "iso1": "lv",
+        "speakers": 1500000,
+        "speakers_m": 1.5
       }
     ]
   },
   {
     "wikidata_id": "Q822",
     "name": "Lebanon",
-    "code": "LB",
+    "iso": "LB",
+    "iso3": "LBN",
     "flag": "🇱🇧",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q1013",
     "name": "Lesotho",
-    "code": "LS",
+    "iso": "LS",
+    "iso3": "LSO",
     "flag": "🇱🇸",
     "languages": [
       {
         "id": "Q34340",
         "name": "Sesotho",
-        "speakers": 753359540
+        "iso": "sot",
+        "iso1": "st",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q1014",
     "name": "Liberia",
-    "code": "LR",
+    "iso": "LR",
+    "iso3": "LBR",
     "flag": "🇱🇷",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q1016",
     "name": "Libya",
-    "code": "LY",
+    "iso": "LY",
+    "iso3": "LBY",
     "flag": "🇱🇾",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q347",
     "name": "Liechtenstein",
-    "code": "LI",
+    "iso": "LI",
+    "iso3": "LIE",
     "flag": "🇱🇮",
     "languages": [
       {
         "id": "Q188",
         "name": "German",
-        "speakers": 58452300
+        "iso": "deu",
+        "iso1": "de",
+        "speakers": 58452300,
+        "speakers_m": 58.5
       }
     ]
   },
   {
     "wikidata_id": "Q37",
     "name": "Lithuania",
-    "code": "LT",
+    "iso": "LT",
+    "iso3": "LTU",
     "flag": "🇱🇹",
     "languages": [
       {
         "id": "Q9083",
         "name": "Lithuanian",
-        "speakers": 4000000
+        "iso": "lit",
+        "iso1": "lt",
+        "speakers": 4000000,
+        "speakers_m": 4
       }
     ]
   },
   {
     "wikidata_id": "Q32",
     "name": "Luxembourg",
-    "code": "LU",
+    "iso": "LU",
+    "iso3": "LUX",
     "flag": "🇱🇺",
     "languages": [
       {
         "id": "Q188",
         "name": "German",
-        "speakers": 208157220
+        "iso": "deu",
+        "iso1": "de",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       },
       {
         "id": "Q9051",
         "name": "Luxembourgish",
-        "speakers": 58452300
+        "iso": "ltz",
+        "iso1": "lb",
+        "speakers": 58452300,
+        "speakers_m": 58.5
       }
     ]
   },
   {
     "wikidata_id": "Q1019",
     "name": "Madagascar",
-    "code": "MG",
+    "iso": "MG",
+    "iso3": "MDG",
     "flag": "🇲🇬",
     "languages": [
       {
         "id": "Q7930",
         "name": "Malagasy",
-        "speakers": 208157220
+        "iso": "mlg",
+        "iso1": "mg",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q1020",
     "name": "Malawi",
-    "code": "MW",
+    "iso": "MW",
+    "iso3": "MWI",
     "flag": "🇲🇼",
     "languages": [
       {
         "id": "Q33273",
         "name": "Chewa",
-        "speakers": 753359540
+        "iso": "nya",
+        "iso1": "ny",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q833",
     "name": "Malaysia",
-    "code": "MY",
+    "iso": "MY",
+    "iso3": "MYS",
     "flag": "🇲🇾",
     "languages": [
       {
         "id": "Q9237",
         "name": "Malay",
-        "speakers": 77000000
+        "iso": "msa",
+        "iso1": "ms",
+        "speakers": 77000000,
+        "speakers_m": 77
       }
     ]
   },
   {
     "wikidata_id": "Q826",
     "name": "Maldives",
-    "code": "MV",
+    "iso": "MV",
+    "iso3": "MDV",
     "flag": "🇲🇻",
     "languages": [
       {
         "id": "Q32656",
         "name": "Divehi",
-        "speakers": 340500
+        "iso": "div",
+        "iso1": "dv",
+        "speakers": 340500,
+        "speakers_m": 0.3
       }
     ]
   },
   {
     "wikidata_id": "Q912",
     "name": "Mali",
-    "code": "ML",
+    "iso": "ML",
+    "iso3": "MLI",
     "flag": "🇲🇱",
     "languages": [
       {
         "id": "Q33454",
         "name": "Fula",
-        "speakers": 24000000
+        "iso": "myk",
+        "iso1": null,
+        "speakers": 24000000,
+        "speakers_m": 24
       },
       {
         "id": "Q33243",
         "name": "Bambara",
-        "speakers": 4200000
-      },
-      {
-        "id": "Q56231",
-        "name": "Hassaniya Arabic",
-        "speakers": 3763900
-      },
-      {
-        "id": "Q36905",
-        "name": "Kassonke",
-        "speakers": 3300000
-      },
-      {
-        "id": "Q33795",
-        "name": "Senufo",
-        "speakers": 2700000
+        "iso": "bam",
+        "iso1": "bm",
+        "speakers": 4200000,
+        "speakers_m": 4.2
       },
       {
         "id": "Q36660",
         "name": "Soninke",
-        "speakers": 1096795
-      },
-      {
-        "id": "Q35021",
-        "name": "Bozo",
-        "speakers": 500000
-      },
-      {
-        "id": "Q36186",
-        "name": "Maninka",
-        "speakers": null
-      },
-      {
-        "id": "Q505198",
-        "name": "Songhay",
-        "speakers": null
+        "iso": "mey",
+        "iso1": null,
+        "speakers": 3763900,
+        "speakers_m": 3.8
       },
       {
         "id": "Q36187",
         "name": "Minyanka",
-        "speakers": null
+        "iso": "myq",
+        "iso1": null,
+        "speakers": 3300000,
+        "speakers_m": 3.3
       },
       {
-        "id": "Q4670066",
-        "name": "Tamasheq",
-        "speakers": null
+        "id": "Q33795",
+        "name": "Senufo",
+        "iso": "ful",
+        "iso1": "ff",
+        "speakers": 2700000,
+        "speakers_m": 2.7
       },
       {
-        "id": "Q12628055",
-        "name": "Bobo",
-        "speakers": null
+        "id": "Q36186",
+        "name": "Maninka",
+        "iso": "snk",
+        "iso1": null,
+        "speakers": 1096795,
+        "speakers_m": 1.1
+      },
+      {
+        "id": "Q56231",
+        "name": "Hassaniya Arabic",
+        "iso": "kao",
+        "iso1": null,
+        "speakers": 500000,
+        "speakers_m": 0.5
+      },
+      {
+        "id": "Q35021",
+        "name": "Bozo",
+        "iso": "taq",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q505198",
+        "name": "Songhay",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q36905",
+        "name": "Kassonke",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q1234776",
         "name": "Dogon",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q4670066",
+        "name": "Tamasheq",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q12628055",
+        "name": "Bobo",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q233",
     "name": "Malta",
-    "code": "MT",
+    "iso": "MT",
+    "iso3": "MLT",
     "flag": "🇲🇹",
     "languages": [
       {
         "id": "Q9166",
         "name": "Maltese",
-        "speakers": 753359540
+        "iso": "mlt",
+        "iso1": "mt",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q709",
     "name": "Marshall Islands",
-    "code": "MH",
+    "iso": "MH",
+    "iso3": "MHL",
     "flag": "🇲🇭",
     "languages": [
       {
         "id": "Q36280",
         "name": "Marshallese",
-        "speakers": 753359540
+        "iso": "mah",
+        "iso1": "mh",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q1025",
     "name": "Mauritania",
-    "code": "MR",
+    "iso": "MR",
+    "iso3": "MRT",
     "flag": "🇲🇷",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q1027",
     "name": "Mauritius",
-    "code": "MU",
+    "iso": "MU",
+    "iso3": "MUS",
     "flag": "🇲🇺",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 208157220
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q96",
     "name": "Mexico",
-    "code": "MX",
+    "iso": "MX",
+    "iso3": "MEX",
     "flag": "🇲🇽",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       },
       {
         "id": "Q13300",
         "name": "Nahuatl",
-        "speakers": 1925620
+        "iso1": null,
+        "speakers": 1925620,
+        "speakers_m": 1.9
       },
       {
         "id": "Q13354",
         "name": "Yucatec Maya",
-        "speakers": 706000
+        "iso": "yua",
+        "iso1": null,
+        "speakers": 706000,
+        "speakers_m": 0.7
       }
     ]
   },
   {
     "wikidata_id": "Q217",
     "name": "Moldova",
-    "code": "MD",
+    "iso": "MD",
+    "iso3": "MDA",
     "flag": "🇲🇩",
     "languages": [
       {
         "id": "Q7913",
         "name": "Romanian",
-        "speakers": 24300000
+        "iso": "ron",
+        "iso1": "ro",
+        "speakers": 24300000,
+        "speakers_m": 24.3
       }
     ]
   },
   {
     "wikidata_id": "Q235",
     "name": "Monaco",
-    "code": "MC",
+    "iso": "MC",
+    "iso3": "MCO",
     "flag": "🇲🇨",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q711",
     "name": "Mongolia",
-    "code": "MN",
+    "iso": "MN",
+    "iso3": "MNG",
     "flag": "🇲🇳",
     "languages": [
       {
         "id": "Q9246",
         "name": "Mongolian",
-        "speakers": 5200000
+        "iso": "mon",
+        "iso1": "mn",
+        "speakers": 5200000,
+        "speakers_m": 5.2
       }
     ]
   },
   {
     "wikidata_id": "Q236",
     "name": "Montenegro",
-    "code": "ME",
+    "iso": "ME",
+    "iso3": "MNE",
     "flag": "🇲🇪",
     "languages": [
       {
         "id": "Q8821",
         "name": "Montenegrin",
-        "speakers": 232600
+        "iso": "cnr",
+        "iso1": null,
+        "speakers": 232600,
+        "speakers_m": 0.2
       }
     ]
   },
   {
     "wikidata_id": "Q1028",
     "name": "Morocco",
-    "code": "MA",
+    "iso": "MA",
+    "iso3": "MAR",
     "flag": "🇲🇦",
     "languages": [
       {
         "id": "Q7598268",
         "name": "Standard Moroccan Amazigh",
-        "speakers": 315421300
+        "iso": "zgh",
+        "iso1": null,
+        "speakers": 315421300,
+        "speakers_m": 315.4
       },
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q1029",
     "name": "Mozambique",
-    "code": "MZ",
+    "iso": "MZ",
+    "iso3": "MOZ",
     "flag": "🇲🇿",
     "languages": [
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q836",
     "name": "Myanmar",
-    "code": "MM",
+    "iso": "MM",
+    "iso3": "MMR",
     "flag": "🇲🇲",
     "languages": [
       {
         "id": "Q9228",
         "name": "Burmese",
-        "speakers": 32900000
+        "iso": "mya",
+        "iso1": "my",
+        "speakers": 32900000,
+        "speakers_m": 32.9
       }
     ]
   },
   {
     "wikidata_id": "Q1030",
     "name": "Namibia",
-    "code": "NA",
+    "iso": "NA",
+    "iso3": "NAM",
     "flag": "🇳🇦",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q697",
     "name": "Nauru",
-    "code": "NR",
+    "iso": "NR",
+    "iso3": "NRU",
     "flag": "🇳🇷",
     "languages": [
       {
         "id": "Q13307",
         "name": "Nauruan",
-        "speakers": 753359540
+        "iso": "nau",
+        "iso1": "na",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q837",
     "name": "Nepal",
-    "code": "NP",
+    "iso": "NP",
+    "iso3": "NPL",
     "flag": "🇳🇵",
     "languages": [
       {
         "id": "Q33823",
         "name": "Nepali",
-        "speakers": 15800000
+        "iso": "nep",
+        "iso1": "ne",
+        "speakers": 15800000,
+        "speakers_m": 15.8
       }
     ]
   },
   {
     "wikidata_id": "Q664",
     "name": "New Zealand",
-    "code": "NZ",
+    "iso": "NZ",
+    "iso3": "NZL",
     "flag": "🇳🇿",
     "languages": [
       {
         "id": "Q36239",
         "name": "New Zealand Sign Language",
-        "speakers": 753359540
+        "iso": "nzs",
+        "iso1": "mi",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q36451",
         "name": "Māori",
-        "speakers": 20200
+        "iso": "mri",
+        "iso1": null,
+        "speakers": 20200,
+        "speakers_m": 0
       }
     ]
   },
   {
     "wikidata_id": "Q811",
     "name": "Nicaragua",
-    "code": "NI",
+    "iso": "NI",
+    "iso3": "NIC",
     "flag": "🇳🇮",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q1032",
     "name": "Niger",
-    "code": "NE",
+    "iso": "NE",
+    "iso3": "NER",
     "flag": "🇳🇪",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q1033",
     "name": "Nigeria",
-    "code": "NG",
+    "iso": "NG",
+    "iso3": "NGA",
     "flag": "🇳🇬",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q423",
     "name": "North Korea",
-    "code": "KP",
+    "iso": "KP",
+    "iso3": "PRK",
     "flag": "🇰🇵",
     "languages": [
       {
         "id": "Q9176",
         "name": "Korean",
-        "speakers": 77300000
+        "iso": "kor",
+        "iso1": "ko",
+        "speakers": 77300000,
+        "speakers_m": 77.3
       },
       {
         "id": "Q18784",
         "name": "North Korean standard language",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q221",
     "name": "North Macedonia",
-    "code": "MK",
+    "iso": "MK",
+    "iso3": "MKD",
     "flag": "🇲🇰",
     "languages": [
       {
         "id": "Q8748",
         "name": "Albanian",
-        "speakers": 6200000
+        "iso": "sqi",
+        "iso1": "sq",
+        "speakers": 6200000,
+        "speakers_m": 6.2
       },
       {
         "id": "Q9296",
         "name": "Macedonian",
-        "speakers": 2000000
+        "iso": "mkd",
+        "iso1": "mk",
+        "speakers": 2000000,
+        "speakers_m": 2
       }
     ]
   },
   {
     "wikidata_id": "Q20",
     "name": "Norway",
-    "code": "NO",
+    "iso": "NO",
+    "iso3": "NOR",
     "flag": "🇳🇴",
     "languages": [
       {
-        "id": "Q9043",
-        "name": "Norwegian",
-        "speakers": 5200000
+        "id": "Q56463",
+        "name": "Sámi",
+        "iso": "nor",
+        "iso1": "no",
+        "speakers": 5200000,
+        "speakers_m": 5.2
       },
       {
         "id": "Q25164",
         "name": "Nynorsk",
-        "speakers": 4000000
-      },
-      {
-        "id": "Q56463",
-        "name": "Sámi",
-        "speakers": 25000
+        "iso": "nno",
+        "iso1": "nn",
+        "speakers": 4000000,
+        "speakers_m": 4
       },
       {
         "id": "Q25167",
         "name": "Bokmål",
-        "speakers": null
+        "iso": "nob",
+        "iso1": "nb",
+        "speakers": 25000,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q9043",
+        "name": "Norwegian",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q842",
     "name": "Oman",
-    "code": "OM",
+    "iso": "OM",
+    "iso3": "OMN",
     "flag": "🇴🇲",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q843",
     "name": "Pakistan",
-    "code": "PK",
+    "iso": "PK",
+    "iso3": "PAK",
     "flag": "🇵🇰",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q1617",
         "name": "Urdu",
-        "speakers": 68600000
+        "iso": "urd",
+        "iso1": "ur",
+        "speakers": 68600000,
+        "speakers_m": 68.6
       }
     ]
   },
   {
     "wikidata_id": "Q695",
     "name": "Palau",
-    "code": "PW",
+    "iso": "PW",
+    "iso3": "PLW",
     "flag": "🇵🇼",
     "languages": [
       {
         "id": "Q5287",
         "name": "Japanese",
-        "speakers": 753359540
+        "iso": "jpn",
+        "iso1": "ja",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q33776",
         "name": "Palauan",
-        "speakers": 128000000
+        "iso": "pau",
+        "iso1": null,
+        "speakers": 128000000,
+        "speakers_m": 128
       }
     ]
   },
   {
     "wikidata_id": "Q219060",
     "name": "Palestine",
-    "code": "PS",
+    "iso": "PS",
+    "iso3": "PSE",
     "flag": "🇵🇸",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q804",
     "name": "Panama",
-    "code": "PA",
+    "iso": "PA",
+    "iso3": "PAN",
     "flag": "🇵🇦",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q691",
     "name": "Papua New Guinea",
-    "code": "PG",
+    "iso": "PG",
+    "iso3": "PNG",
     "flag": "🇵🇬",
     "languages": [
       {
-        "id": "Q34159",
-        "name": "Tok Pisin",
-        "speakers": 753359540
+        "id": "Q25044405",
+        "name": "Papua New Guinean Sign Language",
+        "iso": "pgz",
+        "iso1": "ho",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
-        "id": "Q25044405",
-        "name": "Papua New Guinean Sign Language",
-        "speakers": 4000000
+        "id": "Q34159",
+        "name": "Tok Pisin",
+        "iso": "tpi",
+        "iso1": null,
+        "speakers": 180000,
+        "speakers_m": 0.2
       },
       {
         "id": "Q33617",
         "name": "Hiri Motu",
-        "speakers": 122000
+        "iso": "hmo",
+        "iso1": null,
+        "speakers": 120000,
+        "speakers_m": 0.1
       }
     ]
   },
   {
     "wikidata_id": "Q733",
     "name": "Paraguay",
-    "code": "PY",
+    "iso": "PY",
+    "iso3": "PRY",
     "flag": "🇵🇾",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       },
       {
         "id": "Q35876",
         "name": "Guarani",
-        "speakers": null
+        "iso": "grn",
+        "iso1": "gn",
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q148",
     "name": "People's Republic of China",
-    "code": "CN",
+    "iso": "CN",
+    "iso3": "CHN",
     "flag": "🇨🇳",
     "languages": [
       {
-        "id": "Q7850",
-        "name": "Chinese",
-        "speakers": 1299877520
+        "id": "Q835866",
+        "name": "languages of China",
+        "iso1": null,
+        "speakers": 1299877520,
+        "speakers_m": 1299.9
       },
       {
         "id": "Q727694",
         "name": "Standard Chinese",
-        "speakers": 897071810
+        "iso": "zho",
+        "iso1": "zh",
+        "speakers": 897071810,
+        "speakers_m": 897.1
       },
       {
-        "id": "Q835866",
-        "name": "languages of China",
-        "speakers": null
+        "id": "Q7850",
+        "name": "Chinese",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q419",
     "name": "Peru",
-    "code": "PE",
+    "iso": "PE",
+    "iso3": "PER",
     "flag": "🇵🇪",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       },
       {
         "id": "Q5218",
         "name": "Quechua",
-        "speakers": 8900000
+        "iso": "que",
+        "iso1": "qu",
+        "speakers": 8900000,
+        "speakers_m": 8.9
       },
       {
         "id": "Q4627",
         "name": "Aymara",
-        "speakers": 4000000
+        "iso": "aym",
+        "iso1": "ay",
+        "speakers": 4000000,
+        "speakers_m": 4
       }
     ]
   },
   {
     "wikidata_id": "Q928",
     "name": "Philippines",
-    "code": "PH",
+    "iso": "PH",
+    "iso3": "PHL",
     "flag": "🇵🇭",
     "languages": [
       {
         "id": "Q33298",
         "name": "Filipino",
-        "speakers": 753359540
+        "iso": "fil",
+        "iso1": null,
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q36",
     "name": "Poland",
-    "code": "PL",
+    "iso": "PL",
+    "iso3": "POL",
     "flag": "🇵🇱",
     "languages": [
       {
         "id": "Q809",
         "name": "Polish",
-        "speakers": 39700000
+        "iso": "pol",
+        "iso1": "pl",
+        "speakers": 39700000,
+        "speakers_m": 39.7
       }
     ]
   },
   {
     "wikidata_id": "Q45",
     "name": "Portugal",
-    "code": "PT",
+    "iso": "PT",
+    "iso3": "PRT",
     "flag": "🇵🇹",
     "languages": [
       {
         "id": "Q13330",
         "name": "Mirandese",
-        "speakers": 254300000
+        "iso": "mwl",
+        "iso1": null,
+        "speakers": 254300000,
+        "speakers_m": 254.3
       },
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q846",
     "name": "Qatar",
-    "code": "QA",
+    "iso": "QA",
+    "iso3": "QAT",
     "flag": "🇶🇦",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q971",
     "name": "Republic of the Congo",
-    "code": "CG",
+    "iso": "CG",
+    "iso3": "COG",
     "flag": "🇨🇬",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q218",
     "name": "Romania",
-    "code": "RO",
+    "iso": "RO",
+    "iso3": "ROU",
     "flag": "🇷🇴",
     "languages": [
       {
         "id": "Q7913",
         "name": "Romanian",
-        "speakers": 24300000
+        "iso": "ron",
+        "iso1": "ro",
+        "speakers": 24300000,
+        "speakers_m": 24.3
       }
     ]
   },
   {
     "wikidata_id": "Q159",
     "name": "Russia",
-    "code": "RU",
+    "iso": "RU",
+    "iso3": "RUS",
     "flag": "🇷🇺",
     "languages": [
       {
         "id": "Q7737",
         "name": "Russian",
-        "speakers": 154000000
+        "iso": "rus",
+        "iso1": "ru",
+        "speakers": 154000000,
+        "speakers_m": 154
       }
     ]
   },
   {
     "wikidata_id": "Q1037",
     "name": "Rwanda",
-    "code": "RW",
+    "iso": "RW",
+    "iso3": "RWA",
     "flag": "🇷🇼",
     "languages": [
       {
         "id": "Q33573",
         "name": "Kinyarwanda",
-        "speakers": 753359540
+        "iso": "kin",
+        "iso1": "rw",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q7838",
         "name": "Swahili",
-        "speakers": 379007140
+        "iso": "swa",
+        "iso1": "sw",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 208157220
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q763",
     "name": "Saint Kitts and Nevis",
-    "code": "KN",
+    "iso": "KN",
+    "iso3": "KNA",
     "flag": "🇰🇳",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q760",
     "name": "Saint Lucia",
-    "code": "LC",
+    "iso": "LC",
+    "iso3": "LCA",
     "flag": "🇱🇨",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q757",
     "name": "Saint Vincent and the Grenadines",
-    "code": "VC",
+    "iso": "VC",
+    "iso3": "VCT",
     "flag": "🇻🇨",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q683",
     "name": "Samoa",
-    "code": "WS",
+    "iso": "WS",
+    "iso3": "WSM",
     "flag": "🇼🇸",
     "languages": [
       {
         "id": "Q34011",
         "name": "Samoan",
-        "speakers": 753359540
+        "iso": "smo",
+        "iso1": "sm",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q238",
     "name": "San Marino",
-    "code": "SM",
+    "iso": "SM",
+    "iso3": "SMR",
     "flag": "🇸🇲",
     "languages": [
       {
         "id": "Q652",
         "name": "Italian",
-        "speakers": 64800000
+        "iso": "ita",
+        "iso1": "it",
+        "speakers": 64800000,
+        "speakers_m": 64.8
       }
     ]
   },
   {
     "wikidata_id": "Q851",
     "name": "Saudi Arabia",
-    "code": "SA",
+    "iso": "SA",
+    "iso3": "SAU",
     "flag": "🇸🇦",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q1041",
     "name": "Senegal",
-    "code": "SN",
+    "iso": "SN",
+    "iso3": "SEN",
     "flag": "🇸🇳",
     "languages": [
       {
         "id": "Q35006",
         "name": "Balanta",
-        "speakers": 208157220
+        "iso": "pbp",
+        "iso1": "wo",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       },
       {
         "id": "Q35095",
         "name": "Badyara",
-        "speakers": 3700000
+        "iso": "wol",
+        "iso1": null,
+        "speakers": 3700000,
+        "speakers_m": 3.7
       },
       {
         "id": "Q34257",
         "name": "Wolof",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q403",
     "name": "Serbia",
-    "code": "RS",
+    "iso": "RS",
+    "iso3": "SRB",
     "flag": "🇷🇸",
     "languages": [
       {
         "id": "Q9299",
         "name": "Serbian",
-        "speakers": 9000000
+        "iso": "srp",
+        "iso1": "sr",
+        "speakers": 9000000,
+        "speakers_m": 9
       }
     ]
   },
   {
     "wikidata_id": "Q1042",
     "name": "Seychelles",
-    "code": "SC",
+    "iso": "SC",
+    "iso3": "SYC",
     "flag": "🇸🇨",
     "languages": [
       {
         "id": "Q34015",
         "name": "Seychellois Creole",
-        "speakers": 379007140
+        "iso": "crs",
+        "iso1": null,
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 208157220
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q1044",
     "name": "Sierra Leone",
-    "code": "SL",
+    "iso": "SL",
+    "iso3": "SLE",
     "flag": "🇸🇱",
     "languages": [
       {
         "id": "Q35744",
         "name": "Krio",
-        "speakers": 753359540
+        "iso": "kri",
+        "iso1": null,
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q334",
     "name": "Singapore",
-    "code": "SG",
+    "iso": "SG",
+    "iso3": "SGP",
     "flag": "🇸🇬",
     "languages": [
       {
+        "id": "Q9237",
+        "name": "Malay",
+        "iso1": null,
+        "speakers": 897071810,
+        "speakers_m": 897.1
+      },
+      {
         "id": "Q5885",
         "name": "Tamil",
-        "speakers": 753359540
+        "iso": "tam",
+        "iso1": "ta",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q727694",
         "name": "Standard Chinese",
-        "speakers": 77000000
-      },
-      {
-        "id": "Q9237",
-        "name": "Malay",
-        "speakers": 75000000
+        "iso": "msa",
+        "iso1": "ms",
+        "speakers": 75000000,
+        "speakers_m": 75
       }
     ]
   },
   {
     "wikidata_id": "Q214",
     "name": "Slovakia",
-    "code": "SK",
+    "iso": "SK",
+    "iso3": "SVK",
     "flag": "🇸🇰",
     "languages": [
       {
         "id": "Q9058",
         "name": "Slovak",
-        "speakers": 6000000
+        "iso": "slk",
+        "iso1": "sk",
+        "speakers": 6000000,
+        "speakers_m": 6
       }
     ]
   },
   {
     "wikidata_id": "Q215",
     "name": "Slovenia",
-    "code": "SI",
+    "iso": "SI",
+    "iso3": "SVN",
     "flag": "🇸🇮",
     "languages": [
       {
         "id": "Q9063",
         "name": "Slovene",
-        "speakers": 2400000
+        "iso": "slv",
+        "iso1": "sl",
+        "speakers": 2400000,
+        "speakers_m": 2.4
       }
     ]
   },
   {
     "wikidata_id": "Q685",
     "name": "Solomon Islands",
-    "code": "SB",
+    "iso": "SB",
+    "iso3": "SLB",
     "flag": "🇸🇧",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q1045",
     "name": "Somalia",
-    "code": "SO",
+    "iso": "SO",
+    "iso3": "SOM",
     "flag": "🇸🇴",
     "languages": [
       {
-        "id": "Q13955",
-        "name": "Arabic",
-        "speakers": 295000000
-      },
-      {
         "id": "Q13275",
         "name": "Somali",
-        "speakers": 16200000
+        "iso": "som",
+        "iso1": "so",
+        "speakers": 315421300,
+        "speakers_m": 315.4
+      },
+      {
+        "id": "Q13955",
+        "name": "Arabic",
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q258",
     "name": "South Africa",
-    "code": "ZA",
+    "iso": "ZA",
+    "iso3": "ZAF",
     "flag": "🇿🇦",
     "languages": [
       {
-        "id": "Q10179",
-        "name": "Zulu",
-        "speakers": 753359540
+        "id": "Q34137",
+        "name": "Tswana",
+        "iso": "tsn",
+        "iso1": "tn",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
-      },
-      {
-        "id": "Q34340",
-        "name": "Sesotho",
-        "speakers": 13000000
-      },
-      {
-        "id": "Q32704",
-        "name": "Venda",
-        "speakers": 12100000
-      },
-      {
-        "id": "Q36785",
-        "name": "Southern Ndebele",
-        "speakers": 10300000
-      },
-      {
-        "id": "Q34327",
-        "name": "Tsonga",
-        "speakers": 8177300
-      },
-      {
-        "id": "Q34137",
-        "name": "Tswana",
-        "speakers": 7200000
-      },
-      {
-        "id": "Q3322093",
-        "name": "South African Sign Language",
-        "speakers": 4100000
-      },
-      {
-        "id": "Q33890",
-        "name": "Northern Sotho",
-        "speakers": 4009000
-      },
-      {
-        "id": "Q14196",
-        "name": "Afrikaans",
-        "speakers": 3400000
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q13218",
         "name": "Xhosa",
-        "speakers": 2034200
+        "iso": "xho",
+        "iso1": "ve",
+        "speakers": 12100000,
+        "speakers_m": 12.1
+      },
+      {
+        "id": "Q10179",
+        "name": "Zulu",
+        "iso": "zul",
+        "iso1": "xh",
+        "speakers": 10300000,
+        "speakers_m": 10.3
+      },
+      {
+        "id": "Q33890",
+        "name": "Northern Sotho",
+        "iso": "nso",
+        "iso1": "st",
+        "speakers": 8177300,
+        "speakers_m": 8.2
+      },
+      {
+        "id": "Q14196",
+        "name": "Afrikaans",
+        "iso": "afr",
+        "iso1": "zu",
+        "speakers": 7200000,
+        "speakers_m": 7.2
       },
       {
         "id": "Q34014",
         "name": "Swazi",
-        "speakers": 1300000
+        "iso": "ssw",
+        "iso1": null,
+        "speakers": 6000000,
+        "speakers_m": 6
+      },
+      {
+        "id": "Q36785",
+        "name": "Southern Ndebele",
+        "iso": "nbl",
+        "iso1": "nr",
+        "speakers": 4500000,
+        "speakers_m": 4.5
+      },
+      {
+        "id": "Q32704",
+        "name": "Venda",
+        "iso": "ven",
+        "iso1": "ss",
+        "speakers": 4100000,
+        "speakers_m": 4.1
+      },
+      {
+        "id": "Q34327",
+        "name": "Tsonga",
+        "iso": "tso",
+        "iso1": null,
+        "speakers": 2034200,
+        "speakers_m": 2
+      },
+      {
+        "id": "Q34340",
+        "name": "Sesotho",
+        "iso": "sot",
+        "iso1": "ts",
+        "speakers": 1300000,
+        "speakers_m": 1.3
+      },
+      {
+        "id": "Q3322093",
+        "name": "South African Sign Language",
+        "iso": "sfs",
+        "iso1": "af",
+        "speakers": 640000,
+        "speakers_m": 0.6
       }
     ]
   },
   {
     "wikidata_id": "Q884",
     "name": "South Korea",
-    "code": "KR",
+    "iso": "KR",
+    "iso3": "KOR",
     "flag": "🇰🇷",
     "languages": [
       {
         "id": "Q9176",
         "name": "Korean",
-        "speakers": 77300000
+        "iso": "kor",
+        "iso1": "ko",
+        "speakers": 77300000,
+        "speakers_m": 77.3
       },
       {
         "id": "Q3073428",
         "name": "Korean Sign Language",
-        "speakers": 180000
+        "iso": "kvk",
+        "iso1": null,
+        "speakers": 180000,
+        "speakers_m": 0.2
       }
     ]
   },
   {
     "wikidata_id": "Q958",
     "name": "South Sudan",
-    "code": "SS",
+    "iso": "SS",
+    "iso3": "SSD",
     "flag": "🇸🇸",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 753359540
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q29",
     "name": "Spain",
-    "code": "ES",
+    "iso": "ES",
+    "iso3": "ESP",
     "flag": "🇪🇸",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q854",
     "name": "Sri Lanka",
-    "code": "LK",
+    "iso": "LK",
+    "iso3": "LKA",
     "flag": "🇱🇰",
     "languages": [
       {
         "id": "Q5885",
         "name": "Tamil",
-        "speakers": 75000000
+        "iso": "tam",
+        "iso1": "ta",
+        "speakers": 75000000,
+        "speakers_m": 75
       },
       {
         "id": "Q13267",
         "name": "Sinhala",
-        "speakers": 15300000
+        "iso": "sin",
+        "iso1": "si",
+        "speakers": 15300000,
+        "speakers_m": 15.3
       }
     ]
   },
   {
     "wikidata_id": "Q1049",
     "name": "Sudan",
-    "code": "SD",
+    "iso": "SD",
+    "iso3": "SDN",
     "flag": "🇸🇩",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 753359540
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q730",
     "name": "Suriname",
-    "code": "SR",
+    "iso": "SR",
+    "iso3": "SUR",
     "flag": "🇸🇷",
     "languages": [
       {
         "id": "Q7411",
         "name": "Dutch",
-        "speakers": 23100000
+        "iso": "nld",
+        "iso1": "nl",
+        "speakers": 23100000,
+        "speakers_m": 23.1
       }
     ]
   },
   {
     "wikidata_id": "Q34",
     "name": "Sweden",
-    "code": "SE",
+    "iso": "SE",
+    "iso3": "SWE",
     "flag": "🇸🇪",
     "languages": [
       {
         "id": "Q9027",
         "name": "Swedish",
-        "speakers": 3118000
+        "iso": "swe",
+        "iso1": "sv",
+        "speakers": 3118000,
+        "speakers_m": 3.1
       }
     ]
   },
   {
     "wikidata_id": "Q39",
     "name": "Switzerland",
-    "code": "CH",
+    "iso": "CH",
+    "iso3": "CHE",
     "flag": "🇨🇭",
     "languages": [
       {
         "id": "Q188",
         "name": "German",
-        "speakers": 208157220
+        "iso": "deu",
+        "iso1": "de",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       },
       {
         "id": "Q13199",
         "name": "Romansh",
-        "speakers": 76540740
+        "iso": "roh",
+        "iso1": "rm",
+        "speakers": 76540740,
+        "speakers_m": 76.5
       },
       {
         "id": "Q652",
         "name": "Italian",
-        "speakers": 58452300
+        "iso": "ita",
+        "iso1": "it",
+        "speakers": 58452300,
+        "speakers_m": 58.5
       }
     ]
   },
   {
     "wikidata_id": "Q858",
     "name": "Syria",
-    "code": "SY",
+    "iso": "SY",
+    "iso3": "SYR",
     "flag": "🇸🇾",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q1039",
     "name": "São Tomé and Príncipe",
-    "code": "ST",
+    "iso": "ST",
+    "iso3": "STP",
     "flag": "🇸🇹",
     "languages": [
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q865",
     "name": "Taiwan",
-    "code": "TW",
+    "iso": "TW",
+    "iso3": "TWN",
     "flag": "🇹🇼",
     "languages": [
       {
-        "id": "Q34019",
-        "name": "Taiwanese Sign Language",
-        "speakers": 80000
-      },
-      {
-        "id": "Q56505",
-        "name": "Bunun",
-        "speakers": 38000
-      },
-      {
-        "id": "Q716599",
-        "name": "Saaroa",
-        "speakers": 20000
-      },
-      {
-        "id": "Q49232",
-        "name": "Rukai",
-        "speakers": 10500
-      },
-      {
-        "id": "Q716627",
-        "name": "Kavalan",
-        "speakers": 8500
-      },
-      {
-        "id": "Q716681",
-        "name": "Tsou",
-        "speakers": 4750
-      },
-      {
         "id": "Q36778",
         "name": "Taiwanese Hokkien",
-        "speakers": 3800
-      },
-      {
-        "id": "Q715760",
-        "name": "Yami",
-        "speakers": 2100
-      },
-      {
-        "id": "Q172244",
-        "name": "Kanakanavu",
-        "speakers": 958
-      },
-      {
-        "id": "Q715755",
-        "name": "Paiwan",
-        "speakers": 70
+        "iso": "ckv",
+        "iso1": null,
+        "speakers": 80000,
+        "speakers_m": 0.1
       },
       {
         "id": "Q35132",
         "name": "Amis",
-        "speakers": 10
+        "iso": "ami",
+        "iso1": null,
+        "speakers": 38000,
+        "speakers_m": 0
       },
       {
-        "id": "Q715766",
-        "name": "Atayal",
-        "speakers": 4
+        "id": "Q716599",
+        "name": "Saaroa",
+        "iso": "tsu",
+        "iso1": null,
+        "speakers": 20000,
+        "speakers_m": 0
       },
       {
-        "id": "Q2391532",
-        "name": "Taiwanese Hakka",
-        "speakers": null
+        "id": "Q56505",
+        "name": "Bunun",
+        "iso": "bnn",
+        "iso1": null,
+        "speakers": 10500,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q716627",
+        "name": "Kavalan",
+        "iso": "tao",
+        "iso1": null,
+        "speakers": 8500,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q716681",
+        "name": "Tsou",
+        "iso": "tay",
+        "iso1": null,
+        "speakers": 4750,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q49232",
+        "name": "Rukai",
+        "iso": "sxr",
+        "iso1": null,
+        "speakers": 3800,
+        "speakers_m": 0
       },
       {
         "id": "Q262828",
         "name": "Standard Taiwanese Mandarin",
-        "speakers": null
+        "iso": "dru",
+        "iso1": null,
+        "speakers": 2100,
+        "speakers_m": 0
       },
       {
-        "id": "Q11071864",
-        "name": "Truku",
-        "speakers": null
+        "id": "Q2391532",
+        "name": "Taiwanese Hakka",
+        "iso": "trv",
+        "iso1": null,
+        "speakers": 958,
+        "speakers_m": 0
       },
       {
-        "id": "Q19599280",
-        "name": "Matsu dialect",
-        "speakers": null
+        "id": "Q715755",
+        "name": "Paiwan",
+        "iso": "pwn",
+        "iso1": null,
+        "speakers": 70,
+        "speakers_m": 0
       },
       {
-        "id": "Q56278342",
-        "name": "Kinmen dialect",
-        "speakers": null
+        "id": "Q34019",
+        "name": "Taiwanese Sign Language",
+        "iso": "tss",
+        "iso1": null,
+        "speakers": 10,
+        "speakers_m": 0
       },
       {
-        "id": "Q61055662",
-        "name": "O-ku-uā",
-        "speakers": null
+        "id": "Q715760",
+        "name": "Yami",
+        "iso": "pyu",
+        "iso1": null,
+        "speakers": 4,
+        "speakers_m": 0
+      },
+      {
+        "id": "Q715766",
+        "name": "Atayal",
+        "iso": "xsy",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q716686",
         "name": "Seediq",
-        "speakers": null
+        "iso": "szy",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q716690",
         "name": "Puyuma",
-        "speakers": null
+        "iso": "xnb",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q716695",
         "name": "Saisiyat",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q718269",
         "name": "Sakizaya",
-        "speakers": null
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q172244",
+        "name": "Kanakanavu",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q11071864",
+        "name": "Truku",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q19599280",
+        "name": "Matsu dialect",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q56278342",
+        "name": "Kinmen dialect",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q61055662",
+        "name": "O-ku-uā",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q863",
     "name": "Tajikistan",
-    "code": "TJ",
+    "iso": "TJ",
+    "iso3": "TJK",
     "flag": "🇹🇯",
     "languages": [
       {
         "id": "Q7737",
         "name": "Russian",
-        "speakers": 154000000
+        "iso": "rus",
+        "iso1": "ru",
+        "speakers": 154000000,
+        "speakers_m": 154
       },
       {
         "id": "Q9260",
         "name": "Tajik",
-        "speakers": 14000000
+        "iso": "tgk",
+        "iso1": "tg",
+        "speakers": 14000000,
+        "speakers_m": 14
       }
     ]
   },
   {
     "wikidata_id": "Q924",
     "name": "Tanzania",
-    "code": "TZ",
+    "iso": "TZ",
+    "iso3": "TZA",
     "flag": "🇹🇿",
     "languages": [
       {
         "id": "Q7838",
         "name": "Swahili",
-        "speakers": 753359540
+        "iso": "swa",
+        "iso1": "sw",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q869",
     "name": "Thailand",
-    "code": "TH",
+    "iso": "TH",
+    "iso3": "THA",
     "flag": "🇹🇭",
     "languages": [
       {
         "id": "Q9217",
         "name": "Thai",
-        "speakers": 20700000
+        "iso": "tha",
+        "iso1": "th",
+        "speakers": 20700000,
+        "speakers_m": 20.7
       }
     ]
   },
   {
     "wikidata_id": "Q778",
     "name": "The Bahamas",
-    "code": "BS",
+    "iso": "BS",
+    "iso3": "BHS",
     "flag": "🇧🇸",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q1005",
     "name": "The Gambia",
-    "code": "GM",
+    "iso": "GM",
+    "iso3": "GMB",
     "flag": "🇬🇲",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q574",
     "name": "Timor-Leste",
-    "code": "TL",
+    "iso": "TL",
+    "iso3": "TLS",
     "flag": "🇹🇱",
     "languages": [
       {
         "id": "Q34125",
         "name": "Tetum",
-        "speakers": 254300000
+        "iso": "tet",
+        "iso1": null,
+        "speakers": 254300000,
+        "speakers_m": 254.3
       },
       {
         "id": "Q5146",
         "name": "Portuguese",
-        "speakers": 221000000
+        "iso": "por",
+        "iso1": "pt",
+        "speakers": 221000000,
+        "speakers_m": 221
       }
     ]
   },
   {
     "wikidata_id": "Q945",
     "name": "Togo",
-    "code": "TG",
+    "iso": "TG",
+    "iso3": "TGO",
     "flag": "🇹🇬",
     "languages": [
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q678",
     "name": "Tonga",
-    "code": "TO",
+    "iso": "TO",
+    "iso3": "TON",
     "flag": "🇹🇴",
     "languages": [
       {
         "id": "Q34094",
         "name": "Tongan",
-        "speakers": 753359540
+        "iso": "ton",
+        "iso1": "to",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q754",
     "name": "Trinidad and Tobago",
-    "code": "TT",
+    "iso": "TT",
+    "iso3": "TTO",
     "flag": "🇹🇹",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q948",
     "name": "Tunisia",
-    "code": "TN",
+    "iso": "TN",
+    "iso3": "TUN",
     "flag": "🇹🇳",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q43",
     "name": "Turkey",
-    "code": "TR",
+    "iso": "TR",
+    "iso3": "TUR",
     "flag": "🇹🇷",
     "languages": [
       {
         "id": "Q256",
         "name": "Turkish",
-        "speakers": 5870300
+        "iso": "tur",
+        "iso1": "tr",
+        "speakers": 5870300,
+        "speakers_m": 5.9
       }
     ]
   },
   {
     "wikidata_id": "Q874",
     "name": "Turkmenistan",
-    "code": "TM",
+    "iso": "TM",
+    "iso3": "TKM",
     "flag": "🇹🇲",
     "languages": [
       {
         "id": "Q9267",
         "name": "Turkmen",
-        "speakers": 6975120
+        "iso": "tuk",
+        "iso1": "tk",
+        "speakers": 6975120,
+        "speakers_m": 7
       }
     ]
   },
   {
     "wikidata_id": "Q672",
     "name": "Tuvalu",
-    "code": "TV",
+    "iso": "TV",
+    "iso3": "TUV",
     "flag": "🇹🇻",
     "languages": [
       {
         "id": "Q34055",
         "name": "Tuvaluan",
-        "speakers": 753359540
+        "iso": "tvl",
+        "iso1": null,
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q1036",
     "name": "Uganda",
-    "code": "UG",
+    "iso": "UG",
+    "iso3": "UGA",
     "flag": "🇺🇬",
     "languages": [
       {
         "id": "Q7838",
         "name": "Swahili",
-        "speakers": 753359540
+        "iso": "swa",
+        "iso1": "sw",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q212",
     "name": "Ukraine",
-    "code": "UA",
+    "iso": "UA",
+    "iso3": "UKR",
     "flag": "🇺🇦",
     "languages": [
       {
         "id": "Q8798",
         "name": "Ukrainian",
-        "speakers": 26900000
+        "iso": "ukr",
+        "iso1": "uk",
+        "speakers": 26900000,
+        "speakers_m": 26.9
       }
     ]
   },
   {
     "wikidata_id": "Q878",
     "name": "United Arab Emirates",
-    "code": "AE",
+    "iso": "AE",
+    "iso3": "ARE",
     "flag": "🇦🇪",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q145",
     "name": "United Kingdom",
-    "code": "GB",
+    "iso": "GB",
+    "iso3": "GBR",
     "flag": "🇬🇧",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q30",
     "name": "United States",
-    "code": "US",
+    "iso": "US",
+    "iso3": "USA",
     "flag": "🇺🇸",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q77",
     "name": "Uruguay",
-    "code": "UY",
+    "iso": "UY",
+    "iso3": "URY",
     "flag": "🇺🇾",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       }
     ]
   },
   {
     "wikidata_id": "Q265",
     "name": "Uzbekistan",
-    "code": "UZ",
+    "iso": "UZ",
+    "iso3": "UZB",
     "flag": "🇺🇿",
     "languages": [
       {
         "id": "Q9264",
         "name": "Uzbek",
-        "speakers": 27000000
+        "iso": "uzb",
+        "iso1": "uz",
+        "speakers": 27000000,
+        "speakers_m": 27
       }
     ]
   },
   {
     "wikidata_id": "Q686",
     "name": "Vanuatu",
-    "code": "VU",
+    "iso": "VU",
+    "iso3": "VUT",
     "flag": "🇻🇺",
     "languages": [
       {
-        "id": "Q150",
-        "name": "French",
-        "speakers": 753359540
+        "id": "Q35452",
+        "name": "Bislama",
+        "iso": "bis",
+        "iso1": "bi",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
-        "id": "Q35452",
-        "name": "Bislama",
-        "speakers": 77200000
+        "id": "Q150",
+        "name": "French",
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       }
     ]
   },
   {
     "wikidata_id": "Q237",
     "name": "Vatican City",
-    "code": "VA",
+    "iso": "VA",
+    "iso3": "VAT",
     "flag": "🇻🇦",
     "languages": [
       {
-        "id": "Q652",
-        "name": "Italian",
-        "speakers": 208157220
+        "id": "Q397",
+        "name": "Latin",
+        "iso": "lat",
+        "iso1": "la",
+        "speakers": 208157220,
+        "speakers_m": 208.2
       },
       {
         "id": "Q150",
         "name": "French",
-        "speakers": 77200000
+        "iso": "fra",
+        "iso1": "fr",
+        "speakers": 77200000,
+        "speakers_m": 77.2
       },
       {
-        "id": "Q397",
-        "name": "Latin",
-        "speakers": 64800000
+        "id": "Q652",
+        "name": "Italian",
+        "iso": "ita",
+        "iso1": "it",
+        "speakers": 64800000,
+        "speakers_m": 64.8
       }
     ]
   },
   {
     "wikidata_id": "Q717",
     "name": "Venezuela",
-    "code": "VE",
+    "iso": "VE",
+    "iso3": "VEN",
     "flag": "🇻🇪",
     "languages": [
       {
         "id": "Q1321",
         "name": "Spanish",
-        "speakers": 485000000
+        "iso": "spa",
+        "iso1": "es",
+        "speakers": 485000000,
+        "speakers_m": 485
       },
       {
         "id": "Q3322064",
         "name": "Venezuelan Sign Language",
-        "speakers": null
+        "iso": "vsl",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
   {
     "wikidata_id": "Q881",
     "name": "Vietnam",
-    "code": "VN",
+    "iso": "VN",
+    "iso3": "VNM",
     "flag": "🇻🇳",
     "languages": [
       {
         "id": "Q9199",
         "name": "Vietnamese",
-        "speakers": 76000000
+        "iso": "vie",
+        "iso1": "vi",
+        "speakers": 76000000,
+        "speakers_m": 76
       }
     ]
   },
   {
     "wikidata_id": "Q805",
     "name": "Yemen",
-    "code": "YE",
+    "iso": "YE",
+    "iso3": "YEM",
     "flag": "🇾🇪",
     "languages": [
       {
         "id": "Q13955",
         "name": "Arabic",
-        "speakers": 295000000
+        "iso": "ara",
+        "iso1": "ar",
+        "speakers": 295000000,
+        "speakers_m": 295
       }
     ]
   },
   {
     "wikidata_id": "Q953",
     "name": "Zambia",
-    "code": "ZM",
+    "iso": "ZM",
+    "iso3": "ZMB",
     "flag": "🇿🇲",
     "languages": [
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       }
     ]
   },
   {
     "wikidata_id": "Q954",
     "name": "Zimbabwe",
-    "code": "ZW",
+    "iso": "ZW",
+    "iso3": "ZWE",
     "flag": "🇿🇼",
     "languages": [
       {
-        "id": "Q34340",
-        "name": "Sesotho",
-        "speakers": 753359540
+        "id": "Q34101",
+        "name": "Tonga",
+        "iso": "toi",
+        "iso1": "tn",
+        "speakers": 753359540,
+        "speakers_m": 753.4
       },
       {
         "id": "Q1860",
         "name": "English",
-        "speakers": 379007140
+        "iso": "eng",
+        "iso1": "en",
+        "speakers": 379007140,
+        "speakers_m": 379
       },
       {
         "id": "Q8826802",
         "name": "Barwe",
-        "speakers": 13000000
+        "iso": "bwg",
+        "iso1": "sn",
+        "speakers": 13000000,
+        "speakers_m": 13
       },
       {
         "id": "Q33273",
         "name": "Chewa",
-        "speakers": 12000000
-      },
-      {
-        "id": "Q33672",
-        "name": "Kalanga",
-        "speakers": 8300000
-      },
-      {
-        "id": "Q13311",
-        "name": "Ndau",
-        "speakers": 8177300
-      },
-      {
-        "id": "Q35613",
-        "name": "Northern Ndebele",
-        "speakers": 6000000
-      },
-      {
-        "id": "Q34327",
-        "name": "Tsonga",
-        "speakers": 4500000
-      },
-      {
-        "id": "Q8072097",
-        "name": "Zimbabwe Sign Language",
-        "speakers": 4009000
-      },
-      {
-        "id": "Q3553981",
-        "name": "Nambya",
-        "speakers": 3400000
-      },
-      {
-        "id": "Q34101",
-        "name": "Tonga",
-        "speakers": 1572800
-      },
-      {
-        "id": "Q32704",
-        "name": "Venda",
-        "speakers": 1300000
-      },
-      {
-        "id": "Q34137",
-        "name": "Tswana",
-        "speakers": 1270000
-      },
-      {
-        "id": "Q33614",
-        "name": "Khoisan",
-        "speakers": 370000
-      },
-      {
-        "id": "Q13218",
-        "name": "Xhosa",
-        "speakers": 280000
+        "iso": "nya",
+        "iso1": null,
+        "speakers": 12000000,
+        "speakers_m": 12
       },
       {
         "id": "Q34004",
         "name": "Shona",
-        "speakers": null
+        "iso": "sna",
+        "iso1": null,
+        "speakers": 8300000,
+        "speakers_m": 8.3
+      },
+      {
+        "id": "Q13311",
+        "name": "Ndau",
+        "iso": "ndc",
+        "iso1": null,
+        "speakers": 8177300,
+        "speakers_m": 8.2
+      },
+      {
+        "id": "Q34340",
+        "name": "Sesotho",
+        "iso": "sot",
+        "iso1": "st",
+        "speakers": 6000000,
+        "speakers_m": 6
+      },
+      {
+        "id": "Q34327",
+        "name": "Tsonga",
+        "iso": "tso",
+        "iso1": "xh",
+        "speakers": 4500000,
+        "speakers_m": 4.5
+      },
+      {
+        "id": "Q8072097",
+        "name": "Zimbabwe Sign Language",
+        "iso": "zib",
+        "iso1": "ve",
+        "speakers": 4009000,
+        "speakers_m": 4
+      },
+      {
+        "id": "Q3553981",
+        "name": "Nambya",
+        "iso": "nmq",
+        "iso1": "ny",
+        "speakers": 3400000,
+        "speakers_m": 3.4
+      },
+      {
+        "id": "Q35613",
+        "name": "Northern Ndebele",
+        "iso": "nde",
+        "iso1": "nd",
+        "speakers": 1572800,
+        "speakers_m": 1.6
+      },
+      {
+        "id": "Q32704",
+        "name": "Venda",
+        "iso": "ven",
+        "iso1": null,
+        "speakers": 1300000,
+        "speakers_m": 1.3
+      },
+      {
+        "id": "Q34137",
+        "name": "Tswana",
+        "iso": "tsn",
+        "iso1": "ts",
+        "speakers": 1270000,
+        "speakers_m": 1.3
+      },
+      {
+        "id": "Q33614",
+        "name": "Khoisan",
+        "iso": "kck",
+        "iso1": null,
+        "speakers": 370000,
+        "speakers_m": 0.4
+      },
+      {
+        "id": "Q13218",
+        "name": "Xhosa",
+        "iso": "xho",
+        "iso1": null,
+        "speakers": 280000,
+        "speakers_m": 0.3
+      },
+      {
+        "id": "Q33672",
+        "name": "Kalanga",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   }
