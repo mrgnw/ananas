@@ -1,5 +1,5 @@
-<script>
-import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages, getLanguageInfo } from '$lib/utils/languages.js'
+<script lang="ts">
+import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages, getLanguageInfo, defaultLanguages } from '$lib/utils/languages.js'
 import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js'
 import { Button } from '$lib/components/ui/button'
 import { Command } from '$lib/components/ui/command'
@@ -73,7 +73,15 @@ function resetLanguages() {
 </script>
 
 <div class="container mx-auto p-4" in:fade>
-    <h1 class="text-3xl font-bold mb-6">Language Selection</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Languages</h1>
+        <Button 
+            variant="destructive"
+            on:click={resetLanguages}
+        >
+            Reset to Defaults
+        </Button>
+    </div>
     
     <div class="mb-6">
         <input
