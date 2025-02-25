@@ -1,4 +1,4 @@
-<script lang="ts">
+Update <script lang="ts">
 import { getAllLanguages, getLanguageName, getEnglishName, searchLanguages, getLanguageInfo, defaultLanguages } from '$lib/utils/languages.js'
 import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js'
 import { Button } from '$lib/components/ui/button'
@@ -13,8 +13,6 @@ const data = $props<PageData>()
 
 let searchQuery = $state("")
 let nativeFirst = $state(false)
-let sortBy = $state<'code' | 'name' | 'nativeName' | 'selected' | 'speakers'>('speakers')
-let sortDirection = $state<'asc' | 'desc'>('desc')
 
 // Get all languages from your existing utils
 let allLanguages = $state<Language[]>(getAllLanguages())
@@ -44,29 +42,13 @@ function formatSpeakers(count: number | undefined) {
 let filteredLanguages = $derived(searchLanguages(searchQuery, data.country))
 
 let sortedLanguages = $derived([...filteredLanguages].sort((a, b) => {
-    if (sortBy === 'selected') {
-        const aSelected = isSelected(a.code);
-        const bSelected = isSelected(b.code);
-        return sortDirection === 'asc' 
-            ? Number(aSelected) - Number(bSelected)
-            : Number(bSelected) - Number(aSelected);
-    }
+    const aSelected = isSelected(a.code);
+    const bSelected = isSelected(b.code);
     
-    const aValue = a[sortBy]
-    const bValue = b[sortBy]
-    const modifier = sortDirection === 'asc' ? 1 : -1
-    return aValue > bValue ? modifier : -modifier
+    if (aSelected && !bSelected) return -1;
+    if (!aSelected && bSelected) return 1;
+    return 0;
 }))
-
-function updateSort(field: typeof sortBy) {
-    if (sortBy === field) {
-        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'
-    } else {
-        sortBy = field
-        // Default to descending for speakers and selected
-        sortDirection = (field === 'speakers' || field === 'selected') ? 'desc' : 'asc'
-    }
-}
 
 function resetLanguages() {
     translateLanguages.resetToDefaults();
@@ -135,20 +117,10 @@ function clearLocalStorageCache() {
             <thead>
                 <tr>
                     <th class="p-2">Select</th>
-                    <th class="cursor-pointer p-2" on:click={() => updateSort('code')}>
-                        Code {sortBy === 'code' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
-                    </th>
-                    <th class="cursor-pointer p-2" on:click={() => updateSort('name')}>
-                        Name {sortBy === 'name' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
-                    </th>
-                    <th class="cursor-pointer p-2" on:click={() => updateSort('nativeName')}>
-                        Native Name {sortBy === 'nativeName' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
-                    </th>
-                    {#if sortBy === 'speakers'}
-                    <th class="cursor-pointer p-2" on:click={() => updateSort('speakers')}>
-                        Speakers (M) {sortBy === 'speakers' ? (sortDirection === 'asc' ? '↑' : '↓') : ''}
-                    </th>
-                    {/if}
+                    <th class="p-2">Code</th>
+                    <th class="p-2">Name</th>
+                    <th class="p-2">Native Name</th>
+                    <th class="p-2">Speakers (M)</th>
                 </tr>
             </thead>
             <tbody>
@@ -165,9 +137,7 @@ function clearLocalStorageCache() {
                         <td class="p-2">{lang.code}</td>
                         <td class="p-2">{lang.name}</td>
                         <td class="p-2">{lang.nativeName}</td>
-                        {#if sortBy === 'speakers'}
                         <td class="p-2">{formatSpeakers(info?.nativeSpeakers_k)}</td>
-                        {/if}
                     </tr>
                 {/each}
             </tbody>
