@@ -73,18 +73,18 @@
 	console.log('available_langs:', available_langs);
 	
 	// Languages that should appear in translation cards
-	let display_langs = $derived(
+	let show_langs = $derived(
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
-	console.log('display_langs:', display_langs);
+	console.log('show_langs:', show_langs);
 	let is_loading = $state(false);
 	let is_ready = $derived(text.length > 0 && available_langs.length > 0 && !is_loading);
 
 	function langs_not_shown(translation) {
 		// Show languages that are in the translation but not currently displayed
-		return Object.keys(translation.translations).filter((lang) => !display_langs.includes(lang));
+		return Object.keys(translation.translations).filter((lang) => !show_langs.includes(lang));
 	}
 
 	function toggle_display(key) {
@@ -99,11 +99,10 @@
 
 	async function handleSubmit() {
 		is_loading = true;
-		const apiUrl = 'https://translate.xces.workers.dev';
+		const apiUrl = 'https://ananas-api.xces.workers.dev';
 
 		try {
-			// Send target languages as 3-character ISO codes
-			console.log('Target languages:', available_langs);
+			console.log('Target languages:', show_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
@@ -112,7 +111,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs: available_langs
+					tgt_langs: show_langs
 				})
 			});
 
@@ -131,7 +130,8 @@
 			history = [
 				{
 					text,
-					translations: data
+					translations: data,
+					timestamp: new Date().toISOString()
 				},
 				...history
 			];
@@ -223,7 +223,7 @@
 								>
 									<Trash2 class="h-4 w-4" />
 								</button>
-								{#each display_langs as langKey}
+								{#each show_langs as langKey}
 									{#if translation.translations[langKey]}
 										<div
 											class="group/item flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-50"
@@ -263,7 +263,7 @@
 					<Card>
 						<CardContent>
 							<div class="space-y-2">
-								{#each display_langs as langKey}
+								{#each show_langs as langKey}
 									{#if example_translation.translations[langKey]}
 										<div
 											class="group/item flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-50"
