@@ -5,7 +5,9 @@
 		getEnglishName,
 		searchLanguages,
 		getLanguageInfo,
-		defaultLanguages
+		defaultLanguages,
+		sortLanguages,
+		getRecommendedLanguages
 	} from '$lib/utils/languages.js';
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import { Button } from '$lib/components/ui/button';
@@ -31,8 +33,20 @@
 	let searchQuery = $state('');
 	let nativeFirst = $state(false);
 
-	// Get all languages from your existing utils
-	let allLanguages = $state(data.languages);
+	// Get all languages and sort them based on user's country
+	let allLanguages = $state(data.languages || []);
+	let sortedLanguages = $derived(sortLanguages(allLanguages, data.country));
+
+	// Get recommended languages for user's country
+	let recommendedLanguages = $state(getRecommendedLanguages(data.country));
+
+	// Log country and recommendations in dev
+	$effect(() => {
+		if (import.meta.env.DEV) {
+			console.log('\nClient-side country:', data.country);
+			console.log('Recommended languages:', recommendedLanguages);
+		}
+	});
 
 	// Create mapping for converting 3-digit to 2-digit codes for m2m100 model compatibility
 	const iso3ToIso2Map = $state(
@@ -118,60 +132,91 @@
 		<div class="flex items-center gap-3">
 			<a
 				href="/"
-				class="flex items-center gap-2 text-2xl font-bold transition-colors hover:text-yellow-500"
+				class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
 			>
-				<Palmtree class="h-8 w-8" />
-				<span>Languages</span>
+				<Palmtree class="mr-2 h-4 w-4" />
+				Back
 			</a>
+			<h1 class="text-2xl font-bold">Languages</h1>
 		</div>
 	</div>
 
-	<div class="mb-6">
-		<input
-			type="text"
-			placeholder="Search languages..."
-			bind:value={searchQuery}
-			class="w-full rounded border p-2"
-		/>
-	</div>
-
-	<div class="flex justify-center">
-		<table class="w-[48rem] border-collapse bg-white">
-			<thead class="border-b bg-gray-50">
-				<tr>
-					<th class="w-12 px-2 py-1.5 text-center">
-						<Checkbox />
-					</th>
-					<th class="w-24 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Speakers (M)</th>
-					<th class="w-20 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Code</th>
-					<th class="px-2 py-1.5 text-left text-sm text-gray-600">Name</th>
-				</tr>
-			</thead>
-			<tbody class="divide-y">
-				{#each sortedLanguages as lang}
-					{@const info = getLanguageInfo(lang.code)}
-					{@const inUserCountry = data.country && info?.countries?.includes(data.country)}
-					{@const supported = isM2MSupported(lang.code)}
-					<tr class="hover:bg-gray-50" class:bg-blue-50={inUserCountry}>
-						<td class="px-2 py-1.5 text-center">
+	{#if recommendedLanguages.length > 0}
+		<div class="mb-6">
+			<h2 class="text-xl font-semibold mb-3">Recommended for your region</h2>
+			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+				{#each recommendedLanguages as code}
+					{@const info = getLanguageInfo(code)}
+					{#if info}
+						<div class="flex items-center space-x-2">
 							<Checkbox
-								checked={isSelected(lang.code)}
-								onCheckedChange={() => toggleLanguage(lang.code)}
+								checked={$translateLanguages.includes(code)}
+								onCheckedChange={(checked) => {
+									if (checked) {
+										$translateLanguages = [...$translateLanguages, code];
+									} else {
+										$translateLanguages = $translateLanguages.filter((l) => l !== code);
+									}
+								}}
 							/>
-						</td>
-						<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
-							>{formatSpeakers(info?.nativeSpeakers_k)}</td
-						>
-						<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
-							>{lang.code}</td
-						>
-						<td class="px-2 py-1.5 text-left" class:text-gray-400={!supported}
-							>{formatName(lang)}</td
-						>
-					</tr>
+							<label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+								{info.name} ({info.native})
+							</label>
+						</div>
+					{/if}
 				{/each}
-			</tbody>
-		</table>
+			</div>
+		</div>
+	{/if}
+
+	<div class="space-y-4">
+		<div class="mb-6">
+			<input
+				type="text"
+				placeholder="Search languages..."
+				bind:value={searchQuery}
+				class="w-full rounded border p-2"
+			/>
+		</div>
+
+		<div class="flex justify-center">
+			<table class="w-[48rem] border-collapse bg-white">
+				<thead class="border-b bg-gray-50">
+					<tr>
+						<th class="w-12 px-2 py-1.5 text-center">
+							<Checkbox />
+						</th>
+						<th class="w-24 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Speakers (M)</th>
+						<th class="w-20 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Code</th>
+						<th class="px-2 py-1.5 text-left text-sm text-gray-600">Name</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y">
+					{#each sortedLanguages as lang}
+						{@const info = getLanguageInfo(lang.code)}
+						{@const inUserCountry = data.country && info?.countries?.includes(data.country)}
+						{@const supported = isM2MSupported(lang.code)}
+						<tr class="hover:bg-gray-50" class:bg-blue-50={inUserCountry}>
+							<td class="px-2 py-1.5 text-center">
+								<Checkbox
+									checked={isSelected(lang.code)}
+									onCheckedChange={() => toggleLanguage(lang.code)}
+								/>
+							</td>
+							<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
+								>{formatSpeakers(info?.nativeSpeakers_k)}</td
+							>
+							<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
+								>{lang.code}</td
+							>
+							<td class="px-2 py-1.5 text-left" class:text-gray-400={!supported}
+								>{formatName(lang)}</td
+							>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 
