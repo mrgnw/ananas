@@ -29,27 +29,73 @@
 	import { Palmtree } from 'lucide-svelte';
 
 	const data = $props<PageData>();
-
+	
 	let searchQuery = $state('');
 	let nativeFirst = $state(false);
 
 	// Get all languages and sort them based on user's country
 	let allLanguages = $state(data.languages || []);
-	let sortedLanguages = $derived(sortLanguages(allLanguages, data.country));
+	let filteredLanguages = $derived(searchLanguages(searchQuery, data.country));
+	let recommendedLanguages = $derived(data.country ? getRecommendedLanguages(data.country) : []);
 
-	// Get recommended languages for user's country
-	let recommendedLanguages = $state(getRecommendedLanguages(data.country));
-
-	// Log country and recommendations in dev
-	$effect(() => {
-		if (import.meta.env.DEV) {
-			console.log('\nClient-side country:', data.country);
-			console.log('Recommended languages:', recommendedLanguages);
-		}
+	let stats = $derived({
+		total: allLanguages.length,
+		filtered: filteredLanguages.length,
+		recommended: recommendedLanguages.length,
+		country: data.country
 	});
 
-	// Create mapping for converting 3-digit to 2-digit codes for m2m100 model compatibility
-	const iso3ToIso2Map = $state(
+	let sortedLanguages = $derived(() => {
+		// Get base list of languages
+		const languages = searchQuery ? filteredLanguages : allLanguages;
+		
+		// Sort languages with recommendations first, then by other criteria
+		return [...languages].sort((a, b) => {
+			// First priority: selected languages
+			const aSelected = isSelected(a.code);
+			const bSelected = isSelected(b.code);
+			if (aSelected !== bSelected) {
+				return aSelected ? -1 : 1;
+			}
+
+			// Second priority: recommended languages
+			const aRecommended = recommendedLanguages.includes(a.code);
+			const bRecommended = recommendedLanguages.includes(b.code);
+			if (aRecommended !== bRecommended) {
+				return aRecommended ? -1 : 1;
+			}
+
+			// Third priority: supported by M2M
+			const aSupported = isM2MSupported(a.code);
+			const bSupported = isM2MSupported(b.code);
+			if (aSupported !== bSupported) {
+				return aSupported ? -1 : 1;
+			}
+
+			// Fourth priority: number of speakers
+			const aInfo = getLanguageInfo(a.code);
+			const bInfo = getLanguageInfo(b.code);
+			const aSpeakers = aInfo?.nativeSpeakers_k || 0;
+			const bSpeakers = bInfo?.nativeSpeakers_k || 0;
+			if (aSpeakers !== bSpeakers) {
+				return bSpeakers - aSpeakers;
+			}
+
+			// Finally: alphabetical by name
+			return (aInfo?.name || '').localeCompare(bInfo?.name || '');
+		});
+	});
+
+	let languageStats = $derived({
+		total: allLanguages.length,
+		country: data.country
+	});
+
+	let recommendedCount = $derived(recommendedLanguages.length);
+
+	let filteredCount = $derived(filteredLanguages.length);
+
+	let iso3ToIso2Map = $state(
 		wikidataLanguages.reduce((acc, lang) => {
 			if (lang.iso && lang.iso1) {
 				acc[lang.iso] = lang.iso1;
@@ -91,19 +137,6 @@
 		const code2 = iso3ToIso2Map[code];
 		return code2 && code2 in m2mSupport;
 	}
-
-	let filteredLanguages = $derived(searchLanguages(searchQuery, data.country));
-
-	let sortedLanguages = $derived(
-		[...filteredLanguages].sort((a, b) => {
-			const aSelected = isSelected(a.code);
-			const bSelected = isSelected(b.code);
-
-			if (aSelected && !bSelected) return -1;
-			if (!aSelected && bSelected) return 1;
-			return 0;
-		})
-	);
 
 	function resetLanguages() {
 		translateLanguages.resetToDefaults();
