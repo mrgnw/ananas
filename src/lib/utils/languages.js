@@ -23,18 +23,12 @@ export const defaultLanguages = {
 
 // Get all available languages from Wikidata
 export function getAllLanguages() {
-    console.log('Loading language data:', { count: languageData?.length });
-    if (!languageData?.length) {
-        console.error('No language data loaded!');
-        return [];
-    }
-    
     return languageData.map(lang => ({
         code: lang.iso,
         name: lang.langLabel,
         nativeName: lang.nativeNames?.[0] || lang.langLabel,
-        speakers: lang.nativeSpeakers_k
-    }));
+        speakers: lang.speakers
+    }))
 }
 
 // Convert language code to name using countries-list data
@@ -101,24 +95,18 @@ export function searchLanguages(query, country = null) {
 
 // Get recommended languages for a country based on Wikidata data
 export function getRecommendedLanguages(countryCode) {
-    console.log('Getting recommended languages for:', countryCode);
     if (!countryCode) return [];
     
     // Find country in our Wikidata data
-    const country = countryData.find(c => c.iso === countryCode.toLowerCase());
-    if (!country) {
-        console.log('Country not found:', countryCode);
-        return [];
-    }
-    
-    console.log('Found country:', country.name, 'with languages:', country.languages);
+    const country = countryData.find(c => c.iso.toLowerCase() === countryCode.toLowerCase());
+    if (!country) return [];
     
     // Get languages from country data, sorted by number of speakers
     const recommendedLanguages = country.languages
-        .sort((a, b) => (b.speakers_m || 0) - (a.speakers_m || 0))
-        .map(l => l.iso);
-    
-    console.log('Found recommended languages:', recommendedLanguages);
+        .filter(lang => lang.iso) // Only include languages with ISO codes
+        .sort((a, b) => (b.speakers || 0) - (a.speakers || 0))
+        .map(lang => lang.iso);
+        
     return recommendedLanguages;
 }
 
