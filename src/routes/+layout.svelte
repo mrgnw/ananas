@@ -11,4 +11,6 @@
 	<link rel="manifest" href="/manifest.webmanifest">
 </svelte:head>
 {@render children?.()}
-<SettingsButton />
+<div class="fixed bottom-4 right-4">
+	<SettingsButton />
+</div>
