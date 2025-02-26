@@ -2,7 +2,6 @@
   import { Button } from "$lib/components/ui/button";
   import { Bug } from "lucide-svelte";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-  import * as Dialog from "$lib/components/ui/dialog";
   
   const props = $props<{
     data?: Record<string, any>;
@@ -11,8 +10,6 @@
   
   const title = $derived(props.title ?? 'Debug Information');
   const data = $derived(props.data ?? {});
-  
-  let dialogOpen = $state(false);
   
   function formatValue(value) {
     if (value === null) return 'null';
@@ -24,68 +21,53 @@
   }
 </script>
 
-<div class="fixed bottom-4 left-4">
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger asChild let:builder>
-      <Button
-        variant="outline"
-        size="icon"
-        class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-white dark:bg-gray-800"
-        builders={[builder]}
-      >
-        <Bug class="h-5 w-5" />
-      </Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content class="w-48">
-      <DropdownMenu.Label>Debug Options</DropdownMenu.Label>
-      <DropdownMenu.Item on:click={() => dialogOpen = true}>
-        View Debug Info
-      </DropdownMenu.Item>
-      <DropdownMenu.Item on:click={() => console.log('Debug data:', data)}>
-        Log to Console
-      </DropdownMenu.Item>
-    </DropdownMenu.Content>
-  </DropdownMenu.Root>
-</div>
-
-<Dialog.Root bind:open={dialogOpen}>
-  <Dialog.Content class="max-w-3xl max-h-[80vh] overflow-y-auto">
-    <Dialog.Header>
-      <Dialog.Title>{title}</Dialog.Title>
-    </Dialog.Header>
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger asChild let:builder>
+    <Button
+      variant="outline"
+      size="icon"
+      class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800"
+      builders={[builder]}
+    >
+      <Bug class="h-5 w-5" />
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content class="w-80 max-h-[80vh] overflow-y-auto">
+    <DropdownMenu.Label>{title}</DropdownMenu.Label>
     
-    <div class="font-mono text-xs overflow-x-auto">
+    <div class="p-2 font-mono text-xs">
       {#if data && Object.keys(data).length > 0}
         {#each Object.entries(data) as [key, value]}
-          <div class="mb-4">
-            <h3 class="font-semibold text-sm mb-1">{key}</h3>
-            <div class="bg-gray-50 p-3 rounded border">
+          <div class="mb-3">
+            <div class="font-semibold text-sm">{key}</div>
+            <div class="bg-gray-50 p-2 rounded border mt-1">
               {#if typeof value === 'object' && value !== null}
                 {#each Object.entries(value) as [subKey, subValue]}
-                  <div class="mb-2">
-                    <div class="font-medium">{subKey}:</div>
-                    <div class="ml-4">
-                      {#if typeof subValue === 'object' && subValue !== null && Array.isArray(subValue)}
-                        <div>{subValue.length} items</div>
+                  <div class="mb-1">
+                    <span class="font-medium">{subKey}:</span>
+                    {#if typeof subValue === 'object' && subValue !== null && Array.isArray(subValue)}
+                      <div class="ml-2">
                         {#if subValue.length > 0}
-                          <ul class="ml-4 list-disc">
+                          <ul class="list-disc ml-4 mt-1">
                             {#each subValue as item}
                               <li class="mb-1">
                                 {#if typeof item === 'object' && item !== null}
-                                  <pre class="whitespace-pre-wrap break-all">{formatValue(item)}</pre>
+                                  <pre class="whitespace-pre-wrap break-all text-xs">{formatValue(item)}</pre>
                                 {:else}
                                   {item}
                                 {/if}
                               </li>
                             {/each}
                           </ul>
+                        {:else}
+                          <span class="text-gray-500">Empty array</span>
                         {/if}
-                      {:else if typeof subValue === 'object' && subValue !== null}
-                        <pre class="whitespace-pre-wrap break-all">{formatValue(subValue)}</pre>
-                      {:else}
-                        {formatValue(subValue)}
-                      {/if}
-                    </div>
+                      </div>
+                    {:else if typeof subValue === 'object' && subValue !== null}
+                      <pre class="ml-2 whitespace-pre-wrap break-all text-xs">{formatValue(subValue)}</pre>
+                    {:else}
+                      <span class="ml-2">{formatValue(subValue)}</span>
+                    {/if}
                   </div>
                 {/each}
               {:else}
@@ -99,8 +81,9 @@
       {/if}
     </div>
     
-    <Dialog.Footer>
-      <Button on:click={() => dialogOpen = false}>Close</Button>
-    </Dialog.Footer>
-  </Dialog.Content>
-</Dialog.Root>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item on:click={() => console.log('Debug data:', data)}>
+      Log to Console
+    </DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>

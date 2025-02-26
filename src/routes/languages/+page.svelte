@@ -27,6 +27,7 @@
 	import wikidataLanguages from '$lib/data/wikidata-languages.json';
 	import { Palmtree, Globe } from 'lucide-svelte';
 	import DebugButton from '$lib/components/DebugButton.svelte';
+	import SettingsButton from '$lib/components/SettingsButton.svelte';
 
 	const data = $props<PageData>();
 
@@ -215,23 +216,26 @@
 	</div>
 </div>
 
-<DebugButton 
-	title="Cloudflare Country Detection" 
-	data={{
-		countryDetection: {
-			source: data.countryData?.source || 'Unknown',
-			countryCode: data.country || 'Not detected',
-			countryName: countryInfo?.name || 'Not found',
-			countryFlag: countryInfo?.flag || 'Not found'
-		},
-		countryInfo: countryInfo ? {
-			nativeName: countryInfo.native_name,
-			isoCode: countryInfo.iso,
-			iso3Code: countryInfo.iso3,
-			languages: countryInfo.languages?.map(lang => `${lang.name} (${lang.iso}) ${lang.speakers_m ? '- ' + lang.speakers_m + 'M speakers' : ''}`) || []
-		} : null
-	}} 
-/>
+<div class="fixed bottom-4 right-4 flex gap-2 z-50 bg-white/50 p-2 rounded-lg">
+	<DebugButton 
+		title="Cloudflare Country Detection" 
+		data={{
+			countryDetection: {
+				source: data.countryData?.source || 'Unknown',
+				countryCode: data.country || 'Not detected',
+				countryName: countryInfo?.name || 'Not found',
+				countryFlag: countryInfo?.flag || 'Not found'
+			},
+			countryInfo: countryInfo ? {
+				nativeName: countryInfo.native_name,
+				isoCode: countryInfo.iso,
+				iso3Code: countryInfo.iso3,
+				languages: countryInfo.languages?.map(lang => `${lang.name} (${lang.iso}) ${lang.speakers_m ? '- ' + lang.speakers_m + 'M speakers' : ''}`) || []
+			} : null
+		}} 
+	/>
+	<SettingsButton />
+</div>
 
 <style>
 	.languages {
