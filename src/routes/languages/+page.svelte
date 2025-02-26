@@ -26,6 +26,7 @@
 	import m2mSupport from '$lib/data/m2m-support.json';
 	import wikidataLanguages from '$lib/data/wikidata-languages.json';
 	import { Palmtree, Globe } from 'lucide-svelte';
+	import DebugPanel from '$lib/components/DebugPanel.svelte';
 
 	const data = $props<PageData>();
 
@@ -95,6 +96,11 @@
 	// Get country info if available
 	const countryInfo = $derived(getCountryInfo(data.country));
 
+	// Add console logs for debugging
+	console.log('[Languages] Country from Cloudflare:', data.country);
+	console.log('[Languages] Country data:', data.countryData);
+	console.log('[Languages] Country info:', countryInfo);
+
 	function resetLanguages() {
 		translateLanguages.resetToDefaults();
 	}
@@ -149,6 +155,9 @@
 	{#if data.country && countryInfo}
 		<div class="mb-6 rounded border border-blue-200 bg-blue-50 p-4">
 			<h3 class="mb-2 font-semibold">Languages in {countryInfo.name} {countryInfo.flag}</h3>
+			<div class="mb-3 border-b border-blue-100 pb-2 text-xs text-gray-600">
+				<code>Debug: Country code from {data.countryData?.source}: {data.country}</code>
+			</div>
 			{#if countryInfo.languages && countryInfo.languages.length > 0}
 				<div class="flex flex-wrap gap-2">
 					{#each countryInfo.languages as lang}
@@ -205,6 +214,25 @@
 		</table>
 	</div>
 </div>
+
+<DebugPanel 
+	title="Cloudflare Country Detection" 
+	visible={true}
+	data={{
+		countryDetection: {
+			source: data.countryData?.source || 'Unknown',
+			countryCode: data.country || 'Not detected',
+			countryName: countryInfo?.name || 'Not found',
+			countryFlag: countryInfo?.flag || 'Not found'
+		},
+		countryInfo: countryInfo ? {
+			nativeName: countryInfo.native_name,
+			isoCode: countryInfo.iso,
+			iso3Code: countryInfo.iso3,
+			languages: countryInfo.languages?.map(lang => `${lang.name} (${lang.iso}) ${lang.speakers_m ? '- ' + lang.speakers_m + 'M speakers' : ''}`) || []
+		} : null
+	}} 
+/>
 
 <style>
 	.languages {

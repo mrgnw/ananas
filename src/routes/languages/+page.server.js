@@ -1,4 +1,4 @@
-import { getAllLanguages } from '$lib/utils/languages.js';
+import { getAllLanguages, getCountryInfo } from '$lib/utils/languages.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request }) {
@@ -15,11 +15,36 @@ export async function load({ request }) {
         console.log(`[DEV] Using test country: ${country}`);
     }
 
+    // Log the Cloudflare headers for debugging
+    console.log('[SERVER] Cloudflare country code:', country);
+    
+    if (request.cf) {
+        console.log('[SERVER] Full Cloudflare data:', {
+            country: request.cf.country,
+            continent: request.cf.continent,
+            city: request.cf.city,
+            region: request.cf.region,
+            timezone: request.cf.timezone
+        });
+    } else {
+        console.log('[SERVER] No Cloudflare data available in request');
+    }
+
+    // Get country information
+    const countryInfo = getCountryInfo(country);
+    console.log('[SERVER] Country info:', countryInfo ? 
+        { name: countryInfo.name, languages: countryInfo.languages?.length || 0 } : 
+        'Not found');
+
     // Get all languages on the server side
     const languages = getAllLanguages();
 
     return {
         country,
+        countryData: {
+            code: country,
+            source: process.env.NODE_ENV !== 'production' && !request.cf ? 'development override' : 'Cloudflare'
+        },
         languages
     };
 }
