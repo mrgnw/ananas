@@ -1,6 +1,7 @@
 import { languages } from 'countries-list'
+
+// Import JSON data directly - Vite handles JSON imports natively
 import languageData from '$lib/data/wikidata-languages.json'
-import countryData from '$lib/data/wikidata-countries.json'
 
 // Todo: language statistic by region
 // language statisticts https://www.simonandsimon.co.uk/blog/global-language-statistics-by-country
@@ -93,52 +94,24 @@ export function searchLanguages(query, country = null) {
     })
 }
 
-// Get recommended languages for a country based on Wikidata data
-export function getRecommendedLanguages(countryCode) {
-    if (!countryCode) return [];
-    
-    // Find country in our Wikidata data
-    const country = countryData.find(c => c.iso.toLowerCase() === countryCode.toLowerCase());
-    if (!country) return [];
-    
-    // Get languages from country data, sorted by number of speakers
-    const recommendedLanguages = country.languages
-        .filter(lang => lang.iso) // Only include languages with ISO codes
-        .sort((a, b) => (b.speakers || 0) - (a.speakers || 0))
-        .map(lang => lang.iso);
-        
-    return recommendedLanguages;
-}
-
 // Sort languages by country and native speakers
-export function sortLanguages(codes, userCountry = null) {
-    // Handle undefined or null codes
-    if (!codes) return [];
-    
-    // Get recommended languages for user's country
-    const recommendedLanguages = getRecommendedLanguages(userCountry);
-    
-    return [...codes].sort((a, b) => {
-        const aInfo = getLanguageInfo(a);
-        const bInfo = getLanguageInfo(b);
+function sortLanguages(codes, userCountry = null) {
+    return codes.sort((a, b) => {
+        const langA = languageData.find(l => l.iso === a)
+        const langB = languageData.find(l => l.iso === b)
         
-        // First priority: recommended languages for user's country
-        const aRecommendedIndex = recommendedLanguages.indexOf(a);
-        const bRecommendedIndex = recommendedLanguages.indexOf(b);
-        if (aRecommendedIndex !== -1 || bRecommendedIndex !== -1) {
-            if (aRecommendedIndex === -1) return 1;
-            if (bRecommendedIndex === -1) return -1;
-            return aRecommendedIndex - bRecommendedIndex;
+        // If we have country data, prioritize languages from user's country
+        if (userCountry) {
+            const aInCountry = langA?.countries?.includes(userCountry) || false
+            const bInCountry = langB?.countries?.includes(userCountry) || false
+            if (aInCountry !== bInCountry) {
+                return aInCountry ? -1 : 1
+            }
         }
         
-        // Second priority: total number of speakers globally
-        const aSpeakers = aInfo?.speakers_m || 0;
-        const bSpeakers = bInfo?.speakers_m || 0;
-        if (aSpeakers !== bSpeakers) {
-            return bSpeakers - aSpeakers;
-        }
-        
-        // Third priority: alphabetical by English name
-        return (aInfo?.name || '').localeCompare(bInfo?.name || '');
-    });
+        // Then sort by number of native speakers
+        const speakersA = langA?.nativeSpeakers_k || 0
+        const speakersB = langB?.nativeSpeakers_k || 0
+        return speakersB - speakersA
+    })
 }
