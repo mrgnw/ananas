@@ -26,7 +26,7 @@
 	import m2mSupport from '$lib/data/m2m-support.json';
 	import wikidataLanguages from '$lib/data/wikidata-languages.json';
 	import { Palmtree, Globe } from 'lucide-svelte';
-	import DebugPanel from '$lib/components/DebugPanel.svelte';
+	import DebugButton from '$lib/components/DebugButton.svelte';
 
 	const data = $props<PageData>();
 
@@ -215,9 +215,8 @@
 	</div>
 </div>
 
-<DebugPanel 
+<DebugButton 
 	title="Cloudflare Country Detection" 
-	visible={true}
 	data={{
 		countryDetection: {
 			source: data.countryData?.source || 'Unknown',
