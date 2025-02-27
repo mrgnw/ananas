@@ -41,49 +41,75 @@
           <div class="mb-3 bg-blue-50 p-2 rounded border">
             <div class="font-semibold text-sm text-blue-700">Cloudflare Country</div>
             <div class="mt-1">
-              <div class="text-lg font-bold">{data.ip_country}</div>
+              <div class="text-lg font-bold">{data.ip_country || 'Not available'}</div>
+            </div>
+          </div>
+        {/if}
+        
+        {#if data.allHeaders}
+          <div class="mb-3">
+            <div class="font-semibold text-sm text-green-700">All Headers</div>
+            <div class="bg-gray-50 p-2 rounded border mt-1 max-h-80 overflow-y-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr>
+                    <th class="pb-1 border-b">Header</th>
+                    <th class="pb-1 border-b">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each Object.entries(data.allHeaders) as [key, value]}
+                    <tr class="border-b border-gray-100">
+                      <td class="pr-2 py-1 font-medium">{key}</td>
+                      <td class="py-1 break-all">{value}</td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
             </div>
           </div>
         {/if}
         
         {#each Object.entries(data) as [key, value]}
-          <div class="mb-3">
-            <div class="font-semibold text-sm">{key}</div>
-            <div class="bg-gray-50 p-2 rounded border mt-1">
-              {#if typeof value === 'object' && value !== null}
-                {#each Object.entries(value) as [subKey, subValue]}
-                  <div class="mb-1">
-                    <span class="font-medium">{subKey}:</span>
-                    {#if typeof subValue === 'object' && subValue !== null && Array.isArray(subValue)}
-                      <div class="ml-2">
-                        {#if subValue.length > 0}
-                          <ul class="list-disc ml-4 mt-1">
-                            {#each subValue as item}
-                              <li class="mb-1">
-                                {#if typeof item === 'object' && item !== null}
-                                  <pre class="whitespace-pre-wrap break-all text-xs">{formatValue(item)}</pre>
-                                {:else}
-                                  {item}
-                                {/if}
-                              </li>
-                            {/each}
-                          </ul>
-                        {:else}
-                          <span class="text-gray-500">Empty array</span>
-                        {/if}
-                      </div>
-                    {:else if typeof subValue === 'object' && subValue !== null}
-                      <pre class="ml-2 whitespace-pre-wrap break-all text-xs">{formatValue(subValue)}</pre>
-                    {:else}
-                      <span class="ml-2">{formatValue(subValue)}</span>
-                    {/if}
-                  </div>
-                {/each}
-              {:else}
-                {formatValue(value)}
-              {/if}
+          {#if key !== 'allHeaders' && key !== 'ip_country'}
+            <div class="mb-3">
+              <div class="font-semibold text-sm">{key}</div>
+              <div class="bg-gray-50 p-2 rounded border mt-1">
+                {#if typeof value === 'object' && value !== null}
+                  {#each Object.entries(value) as [subKey, subValue]}
+                    <div class="mb-1">
+                      <span class="font-medium">{subKey}:</span>
+                      {#if typeof subValue === 'object' && subValue !== null && Array.isArray(subValue)}
+                        <div class="ml-2">
+                          {#if subValue.length > 0}
+                            <ul class="list-disc ml-4 mt-1">
+                              {#each subValue as item}
+                                <li class="mb-1">
+                                  {#if typeof item === 'object' && item !== null}
+                                    <pre class="whitespace-pre-wrap break-all text-xs">{formatValue(item)}</pre>
+                                  {:else}
+                                    {item}
+                                  {/if}
+                                </li>
+                              {/each}
+                            </ul>
+                          {:else}
+                            <span class="text-gray-500">Empty array</span>
+                          {/if}
+                        </div>
+                      {:else if typeof subValue === 'object' && subValue !== null}
+                        <pre class="ml-2 whitespace-pre-wrap break-all text-xs">{formatValue(subValue)}</pre>
+                      {:else}
+                        <span class="ml-2">{formatValue(subValue)}</span>
+                      {/if}
+                    </div>
+                  {/each}
+                {:else}
+                  {formatValue(value)}
+                {/if}
+              </div>
             </div>
-          </div>
+          {/if}
         {/each}
       {:else}
         <div class="text-gray-400">No debug data available</div>

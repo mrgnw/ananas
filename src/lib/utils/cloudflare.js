@@ -7,10 +7,18 @@ import { getCountryInfo } from '$lib/utils/languages.js';
  */
 export function getCloudflareData(request) {
     const { headers } = request;
+    
+    // Convert headers to object for easier debugging
+    const allHeaders = {};
+    headers.forEach((value, key) => {
+        allHeaders[key] = value;
+    });
+    
     const ip_country = headers.get('cf-ipcountry') || '';
     const accept_language = headers.get('accept-language') || '';
     
     // Log the Cloudflare headers for debugging
+    console.log('[SERVER] All headers:', allHeaders);
     console.log('[SERVER] Cloudflare headers:', {
         ip_country,
         accept_language
@@ -28,6 +36,7 @@ export function getCloudflareData(request) {
         ip_country,
         country_phone,
         accept_language,
-        countryInfo
+        countryInfo,
+        allHeaders
     };
 }
