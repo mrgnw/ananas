@@ -1,6 +1,8 @@
 <script>
 	import "../app.pcss";
 	import SettingsButton from "$lib/components/SettingsButton.svelte";
+	import { page } from "$app/stores";
+	
 	/** @type {{children?: import('svelte').Snippet}} */
 	let { children } = $props();
 </script>

@@ -223,14 +223,14 @@
 			countryDetection: {
 				source: data.countryData?.source || 'Unknown',
 				countryCode: data.country || 'Not detected',
-				countryName: countryInfo?.name || 'Not found',
-				countryFlag: countryInfo?.flag || 'Not found'
+				countryName: data.countryInfo?.name || 'Not found',
+				countryFlag: data.countryInfo?.flag || 'Not found'
 			},
-			countryInfo: countryInfo ? {
-				nativeName: countryInfo.native_name,
-				isoCode: countryInfo.iso,
-				iso3Code: countryInfo.iso3,
-				languages: countryInfo.languages?.map(lang => `${lang.name} (${lang.iso}) ${lang.speakers_m ? '- ' + lang.speakers_m + 'M speakers' : ''}`) || []
+			countryInfo: data.countryInfo ? {
+				nativeName: data.countryInfo.native_name,
+				isoCode: data.countryInfo.iso,
+				iso3Code: data.countryInfo.iso3,
+				languages: data.countryInfo.languages?.map(lang => `${lang.name} (${lang.iso}) ${lang.speakers_m ? '- ' + lang.speakers_m + 'M speakers' : ''}`) || []
 			} : null
 		}} 
 	/>
