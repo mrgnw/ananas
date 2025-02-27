@@ -26,8 +26,6 @@
 	import m2mSupport from '$lib/data/m2m-support.json';
 	import wikidataLanguages from '$lib/data/wikidata-languages.json';
 	import { Palmtree, Globe } from 'lucide-svelte';
-	import DebugButton from '$lib/components/DebugButton.svelte';
-	import SettingsButton from '$lib/components/SettingsButton.svelte';
 
 	const data = $props<PageData>();
 
@@ -214,27 +212,6 @@
 			</tbody>
 		</table>
 	</div>
-</div>
-
-<div class="fixed bottom-4 right-4 flex gap-2 z-50 bg-white/50 p-2 rounded-lg">
-	<DebugButton 
-		title="Cloudflare Country Detection" 
-		data={{
-			countryDetection: {
-				source: data.countryData?.source || 'Unknown',
-				countryCode: data.country || 'Not detected',
-				countryName: data.countryInfo?.name || 'Not found',
-				countryFlag: data.countryInfo?.flag || 'Not found'
-			},
-			countryInfo: data.countryInfo ? {
-				nativeName: data.countryInfo.native_name,
-				isoCode: data.countryInfo.iso,
-				iso3Code: data.countryInfo.iso3,
-				languages: data.countryInfo.languages?.map(lang => `${lang.name} (${lang.iso}) ${lang.speakers_m ? '- ' + lang.speakers_m + 'M speakers' : ''}`) || []
-			} : null
-		}} 
-	/>
-	<SettingsButton />
 </div>
 
 <style>
