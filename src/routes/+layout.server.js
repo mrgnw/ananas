@@ -5,15 +5,11 @@ export async function load({ request }) {
     // Extract headers directly
     const { headers } = request;
     const ip_country = headers.get('cf-ipcountry') || '';
-    const accept_language = headers.get('accept-language') || '';
     
-    console.log('[LAYOUT SERVER] Cloudflare headers:', {
-        ip_country,
-        accept_language
-    });
+    // Log the country code for debugging
+    console.log('[LAYOUT SERVER] Cloudflare country:', ip_country);
     
     return {
-        ip_country,
-        accept_language
+        ip_country
     };
 }

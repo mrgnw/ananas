@@ -37,6 +37,15 @@
     
     <div class="p-2 font-mono text-xs">
       {#if data && Object.keys(data).length > 0}
+        {#if data.ip_country}
+          <div class="mb-3 bg-blue-50 p-2 rounded border">
+            <div class="font-semibold text-sm text-blue-700">Cloudflare Country</div>
+            <div class="mt-1">
+              <div class="text-lg font-bold">{data.ip_country}</div>
+            </div>
+          </div>
+        {/if}
+        
         {#each Object.entries(data) as [key, value]}
           <div class="mb-3">
             <div class="font-semibold text-sm">{key}</div>
