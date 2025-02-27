@@ -24,24 +24,10 @@ export function getCloudflareData(request) {
         { name: countryInfo.name, languages: countryInfo.languages?.length || 0 } : 
         'Not found');
 
-    // For development testing only - override with a sample country
-    let dev_country = null;
-    if (!ip_country && process.env.NODE_ENV !== 'production') {
-        try {
-            const url = new URL(request.url);
-            dev_country = url.searchParams.get('country') || 'US'; // Default to US for testing
-            console.log(`[DEV] Using test country: ${dev_country}`);
-        } catch (error) {
-            console.error('Error parsing URL:', error);
-        }
-    }
-
     return {
-        ip_country: ip_country || dev_country || '',
+        ip_country,
         country_phone,
         accept_language,
-        countryInfo,
-        // Additional info for debugging
-        source: process.env.NODE_ENV !== 'production' && !ip_country ? 'development override' : 'Cloudflare'
+        countryInfo
     };
 }

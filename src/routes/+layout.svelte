@@ -14,7 +14,7 @@
 		browser && 
 		page && 
 		page.data && 
-		(page.data.country || page.data.countryData || page.data.countryInfo)
+		(page.data.ip_country || page.data.countryInfo)
 	);
 	
 	// Get current page path safely
@@ -22,29 +22,10 @@
 		browser && page && page.url ? page.url.pathname : 'unknown'
 	);
 	
-	// Get Cloudflare data for debugging
-	const cloudflareData = $derived(
-		hasCloudflareData ? {
-			country: page.data.country,
-			countryData: page.data.countryData,
-			countryInfo: page.data.countryInfo,
-			rawData: page.data
-		} : null
-	);
-	
-	// Default debug data if Cloudflare data is not available
-	const defaultDebugData = $derived({
-		appInfo: {
-			page: currentPath,
-			environment: import.meta.env.MODE,
-			time: new Date().toISOString()
-		}
-	});
-	
 	// Log Cloudflare data to console on client
 	onMount(() => {
-		if (browser && cloudflareData) {
-			console.log('[CLIENT] Cloudflare data:', cloudflareData);
+		if (browser && page && page.data) {
+			console.log('[CLIENT] Cloudflare data:', page.data);
 		}
 	});
 </script>
@@ -60,20 +41,11 @@
 	<DebugButton 
 		title="Debug Info" 
 		data={{
-			cloudflare: cloudflareData ? {
-				countryDetection: {
-					source: cloudflareData.countryData?.source || 'Unknown',
-					countryCode: cloudflareData.country || 'Not detected',
-					countryName: cloudflareData.countryInfo?.name || 'Not found',
-					countryFlag: cloudflareData.countryInfo?.flag || 'Not found'
-				},
-				countryInfo: cloudflareData.countryInfo ? {
-					nativeName: cloudflareData.countryInfo.native_name,
-					isoCode: cloudflareData.countryInfo.iso,
-					iso3Code: cloudflareData.countryInfo.iso3,
-					languages: cloudflareData.countryInfo.languages?.map(lang => `${lang.name} (${lang.iso}) ${lang.speakers_m ? '- ' + lang.speakers_m + 'M speakers' : ''}`) || []
-				} : null,
-				rawData: cloudflareData
+			cloudflare: hasCloudflareData ? {
+				ip_country: page.data.ip_country || '',
+				country_phone: page.data.country_phone || '',
+				accept_language: page.data.accept_language || '',
+				countryInfo: page.data.countryInfo || null
 			} : 'No Cloudflare data available',
 			appInfo: {
 				page: currentPath,
