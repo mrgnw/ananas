@@ -5,7 +5,8 @@
 		getEnglishName,
 		searchLanguages,
 		getLanguageInfo,
-		defaultLanguages
+		defaultLanguages,
+		getCountryInfo
 	} from '$lib/utils/languages.js';
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import { Button } from '$lib/components/ui/button';
@@ -24,7 +25,7 @@
 	import { fade } from 'svelte/transition';
 	import m2mSupport from '$lib/data/m2m-support.json';
 	import wikidataLanguages from '$lib/data/wikidata-languages.json';
-	import { Palmtree } from 'lucide-svelte';
+	import { Palmtree, Globe } from 'lucide-svelte';
 
 	const data = $props<PageData>();
 
@@ -91,6 +92,14 @@
 		})
 	);
 
+	// Get country info if available
+	const countryInfo = $derived(getCountryInfo(data.country));
+
+	// Add console logs for debugging
+	console.log('[Languages] Country from Cloudflare:', data.country);
+	console.log('[Languages] Country data:', data.countryData);
+	console.log('[Languages] Country info:', countryInfo);
+
 	function resetLanguages() {
 		translateLanguages.resetToDefaults();
 	}
@@ -124,6 +133,13 @@
 				<span>Languages</span>
 			</a>
 		</div>
+		
+		{#if data.country && countryInfo}
+			<div class="flex items-center gap-2 rounded bg-blue-50 px-3 py-1.5 text-sm">
+				<Globe class="h-4 w-4 text-blue-500" />
+				<span>Your location: {countryInfo.name} {countryInfo.flag}</span>
+			</div>
+		{/if}
 	</div>
 
 	<div class="mb-6">
@@ -134,6 +150,29 @@
 			class="w-full rounded border p-2"
 		/>
 	</div>
+
+	{#if data.country && countryInfo}
+		<div class="mb-6 rounded border border-blue-200 bg-blue-50 p-4">
+			<h3 class="mb-2 font-semibold">Languages in {countryInfo.name} {countryInfo.flag}</h3>
+			<div class="mb-3 border-b border-blue-100 pb-2 text-xs text-gray-600">
+				<code>Debug: Country code from {data.countryData?.source}: {data.country}</code>
+			</div>
+			{#if countryInfo.languages && countryInfo.languages.length > 0}
+				<div class="flex flex-wrap gap-2">
+					{#each countryInfo.languages as lang}
+						<div class="rounded bg-white px-2 py-1 text-sm">
+							{lang.name} ({lang.iso})
+							{#if lang.speakers_m}
+								<span class="text-xs text-gray-500">{lang.speakers_m}M speakers</span>
+							{/if}
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<p class="text-sm text-gray-500">No language data available for this country.</p>
+			{/if}
+		</div>
+	{/if}
 
 	<div class="flex justify-center">
 		<table class="w-[48rem] border-collapse bg-white">
