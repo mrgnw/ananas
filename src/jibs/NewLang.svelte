@@ -89,7 +89,7 @@
 		const apiUrl = 'https://ananas-api.xces.workers.dev';
 
 		try {
-			console.log('Target languages:', show_langs);
+			console.log('Target languages:', available_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
@@ -98,7 +98,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs: show_langs
+					tgt_langs: available_langs // Use all selected languages, not just displayed ones
 				})
 			});
 
@@ -165,23 +165,31 @@
 
 <div class="space-y-4">
 	<Input type="text" placeholder="Enter text to translate" bind:value={text} />
-	<div class="flex flex-wrap items-center gap-2">
-		<a
-			href="/languages"
-			class="p-2 transition-colors hover:text-yellow-500"
-			title="Add or remove languages"
-		>
-			<Languages class="h-5 w-5" />
-		</a>
-		{#each Object.entries(user_langs) as [key, meta]}
-			<Badge
-				variant={meta.display ? 'default' : 'outline'}
-				class="cursor-pointer"
-				onclick={() => toggle_display(key)}
+	<div class="relative mb-2 overflow-x-auto">
+		<div class="flex items-center gap-2 pb-1">
+			<a
+				href="/languages"
+				class="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-1.5 text-sm font-medium shadow-sm transition-colors hover:text-yellow-500"
+				title="Add or remove languages"
 			>
-				{meta.native}
-			</Badge>
-		{/each}
+				<Languages class="h-4 w-4" />
+				<span class="hidden sm:inline">Manage Languages</span>
+			</a>
+			<div class="text-xs text-gray-500 italic">
+				Tap a language to toggle visibility
+			</div>
+		</div>
+		<div class="scrollbar-thin flex space-x-2 overflow-x-auto pb-2 snap-x">
+			{#each Object.entries(user_langs) as [key, meta]}
+				<Badge
+					variant={meta.display ? 'default' : 'outline'}
+					class="cursor-pointer whitespace-nowrap snap-start flex-shrink-0"
+					onclick={() => toggle_display(key)}
+				>
+					{meta.native}
+				</Badge>
+			{/each}
+		</div>
 	</div>
 	<Button onclick={handleSubmit} disabled={!is_ready}>
 		<Search class="mr-2 h-4 w-4" />
@@ -189,22 +197,34 @@
 	</Button>
 
 	<div class="space-y-4">
-		<div class="flex items-center gap-2">
+		<div class="flex items-center justify-between">
 			<h2 class="text-xl font-semibold">Translation History</h2>
+			<button 
+				class="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-medium shadow-sm" 
+				class:text-blue-500={show_original} 
+				onclick={() => show_original = !show_original}
+			>
+				{show_original ? 'Hide' : 'Show'} Original
+			</button>
 		</div>
-		<div class="flex max-w-6xl flex-wrap gap-4">
+		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
 			{#each history as translation, i}
-				<div class="group">
-					<Card>
-						<CardContent>
+				<div class="group w-full">
+					<Card class="h-full">
+						<CardContent class="p-4">
 							<div class="relative space-y-2">
 								<button
-									class="absolute right-0 top-0 hidden hover:text-red-500 group-hover:block"
+									class="absolute right-1 top-1 opacity-0 text-gray-400 hover:text-red-500 group-hover:opacity-100 transition-opacity"
 									aria-label="Delete translation"
 									onclick={() => deleteTranslation(i)}
 								>
 									<Trash2 class="h-4 w-4" />
 								</button>
+								{#if show_original}
+									<div class="text-sm font-medium text-gray-500 mb-2 border-b pb-2 pr-6">
+										{translation.text}
+									</div>
+								{/if}
 								{#each show_langs as langKey}
 									{#if translation.translations[langKey]}
 										<div
@@ -213,48 +233,55 @@
 										>
 											<p
 												class={translation.translations[langKey] === translation.text
-													? 'font-bold'
-													: ''}
+													? 'font-bold text-sm'
+													: 'text-sm'}
 											>
 												{translation.translations[langKey]}
 											</p>
 											<button
-												class="hidden hover:text-blue-500 group-hover/item:block"
+												class="opacity-0 group-hover/item:opacity-100 transition-opacity hover:text-blue-500"
 												aria-label="Copy translation"
 												onclick={(e) => {
 													e.stopPropagation();
 													copyToClipboard(translation.translations[langKey]);
 												}}
 											>
-												<Copy class="h-4 w-4" />
+												<Copy class="h-3.5 w-3.5" />
 											</button>
 										</div>
 									{/if}
 								{/each}
 								{#if langs_not_shown(translation).length > 0}
-									<button
-										class="rounded-full border border-gray-100 px-2 py-0.5 text-xs text-gray-400"
-									>
-										{#each langs_not_shown(translation) as langCode, i}
-											<span
-												title={translateLanguages.getLanguageInfo(langCode)?.native || langCode}
-												class="cursor-pointer transition-colors hover:text-gray-600"
-												onclick={() => toggle_display(langCode)}
-											>
-												{langCode}{i < langs_not_shown(translation).length - 1 ? ' · ' : ''}
-											</span>
-										{/each}
-									</button>
+									<div class="mt-2 text-center">
+										<button
+											class="rounded-full border border-gray-100 px-2 py-0.5 text-xs text-gray-400 text-center max-w-full overflow-x-auto whitespace-nowrap"
+										>
+											{#each langs_not_shown(translation) as langCode, i}
+												<span
+													title={translateLanguages.getLanguageInfo(langCode)?.native || langCode}
+													class="cursor-pointer transition-colors hover:text-gray-600"
+													onclick={() => toggle_display(langCode)}
+												>
+													{langCode}{i < langs_not_shown(translation).length - 1 ? ' · ' : ''}
+												</span>
+											{/each}
+										</button>
+									</div>
 								{/if}
 							</div>
 						</CardContent>
 					</Card>
 				</div>
 			{:else}
-				<div class="group">
-					<Card>
-						<CardContent>
+				<div class="group w-full">
+					<Card class="h-full">
+						<CardContent class="p-4">
 							<div class="space-y-2">
+								{#if show_original}
+									<div class="text-sm font-medium text-gray-500 mb-2 border-b pb-2">
+										{example_translation.text}
+									</div>
+								{/if}
 								{#each show_langs as langKey}
 									{#if example_translation.translations[langKey]}
 										<div
@@ -264,28 +291,30 @@
 											<p
 												class={example_translation.translations[langKey] ===
 												example_translation.text
-													? 'font-bold'
-													: ''}
+													? 'font-bold text-sm'
+													: 'text-sm'}
 											>
 												{example_translation.translations[langKey]}
 											</p>
 											<button
-												class="hidden group-hover/item:block hover:text-blue-500"
+												class="opacity-0 group-hover/item:opacity-100 transition-opacity hover:text-blue-500"
 												aria-label="Copy translation"
 												onclick={(e) => {
 													e.stopPropagation();
 													copyToClipboard(example_translation.translations[langKey]);
 												}}
 											>
-												<Copy class="h-4 w-4" />
+												<Copy class="h-3.5 w-3.5" />
 											</button>
 										</div>
 									{/if}
 								{/each}
 								{#if langs_not_shown(example_translation).length > 0}
-									<p>
-										<i>+ {langs_not_shown(example_translation).join('•')}</i>
-									</p>
+									<div class="mt-2 text-center">
+										<p class="text-xs text-gray-400">
+											+ {langs_not_shown(example_translation).join(' · ')}
+										</p>
+									</div>
 								{/if}
 							</div>
 						</CardContent>

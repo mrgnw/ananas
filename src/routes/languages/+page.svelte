@@ -113,14 +113,14 @@
 	}
 </script>
 
-<div class="container mx-auto p-4" in:fade>
+<div class="container mx-auto p-4 max-w-full" in:fade>
 	<div class="mb-6 flex items-center justify-between">
 		<div class="flex items-center gap-3">
 			<a
 				href="/"
-				class="flex items-center gap-2 text-2xl font-bold transition-colors hover:text-yellow-500"
+				class="flex items-center gap-2 text-xl sm:text-2xl font-bold transition-colors hover:text-yellow-500"
 			>
-				<Palmtree class="h-8 w-8" />
+				<Palmtree class="h-6 w-6 sm:h-8 sm:w-8" />
 				<span>Languages</span>
 			</a>
 		</div>
@@ -135,16 +135,16 @@
 		/>
 	</div>
 
-	<div class="flex justify-center">
-		<table class="w-[48rem] border-collapse bg-white">
+	<div class="overflow-x-auto">
+		<table class="w-full border-collapse bg-white">
 			<thead class="border-b bg-gray-50">
 				<tr>
 					<th class="w-12 px-2 py-1.5 text-center">
 						<Checkbox />
 					</th>
-					<th class="w-24 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Speakers (M)</th>
-					<th class="w-20 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Code</th>
-					<th class="px-2 py-1.5 text-left text-sm text-gray-600">Name</th>
+					<th class="px-2 py-1.5 text-center text-xs sm:text-sm text-gray-600">Speakers (M)</th>
+					<th class="px-2 py-1.5 text-center text-xs sm:text-sm text-gray-600">Code</th>
+					<th class="px-2 py-1.5 text-left text-xs sm:text-sm text-gray-600">Name</th>
 				</tr>
 			</thead>
 			<tbody class="divide-y">
@@ -159,13 +159,13 @@
 								onCheckedChange={() => toggleLanguage(lang.code)}
 							/>
 						</td>
-						<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
+						<td class="px-2 py-1.5 text-center text-xs sm:text-sm" class:text-gray-400={!supported}
 							>{formatSpeakers(info?.nativeSpeakers_k)}</td
 						>
-						<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
+						<td class="px-2 py-1.5 text-center text-xs sm:text-sm" class:text-gray-400={!supported}
 							>{lang.code}</td
 						>
-						<td class="px-2 py-1.5 text-left" class:text-gray-400={!supported}
+						<td class="px-2 py-1.5 text-left text-xs sm:text-sm" class:text-gray-400={!supported}
 							>{formatName(lang)}</td
 						>
 					</tr>
