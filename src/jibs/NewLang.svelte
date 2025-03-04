@@ -656,5 +656,10 @@
 			min-height: 44px;
 			min-width: 44px;
 		}
+		
+		/* Ensure debug and settings buttons don't overlap with the input bar */
+		:global(.fixed.bottom-4.right-4) {
+			bottom: 80px !important; /* Move above the input bar */
+		}
 	}
 </style>
