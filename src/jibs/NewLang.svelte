@@ -74,9 +74,8 @@
 
 	let text = $state('');
 	let show_original = $state(true);
-	let show_language_codes = $state(browser ? window.innerWidth > 640 : true);
 	let truncate_lines = $state(true);
-	// Badge display format: 'name', 'code', or 'flag'
+	// Badge display format: 'name', 'code', or 'none'
 	let badge_display = $state(browser ? localStorage.getItem('badgeDisplay') || 'name' : 'name');
 	
 	// Use the shared language store
@@ -99,7 +98,7 @@
 	});
 	
 	function toggleLanguageCodes() {
-		show_language_codes = !show_language_codes;
+		// Removed this function as it's no longer needed
 	}
 	
 	let is_loading = $state(false);
@@ -280,8 +279,6 @@
 											{meta.native}
 										{:else if badge_display === 'code'}
 											{key}
-										{:else if badge_display === 'flag'}
-											{meta.emoji || '🏳️'}
 										{/if}
 									</Badge>
 								{/each}
@@ -335,7 +332,7 @@
 							<DropdownMenuRadioGroup value={badge_display} onValueChange={(value) => badge_display = value}>
 								<DropdownMenuRadioItem value="name">Language Name</DropdownMenuRadioItem>
 								<DropdownMenuRadioItem value="code">Language Code</DropdownMenuRadioItem>
-								<DropdownMenuRadioItem value="flag">Flag</DropdownMenuRadioItem>
+								<DropdownMenuRadioItem value="none">None</DropdownMenuRadioItem>
 							</DropdownMenuRadioGroup>
 							
 							<DropdownMenuSeparator />
@@ -346,13 +343,6 @@
 								onCheckedChange={(value) => { show_original = value; }}
 							>
 								Show Original Text
-							</DropdownMenuCheckboxItem>
-							
-							<DropdownMenuCheckboxItem 
-								checked={show_language_codes}
-								onCheckedChange={(value) => { show_language_codes = value; }}
-							>
-								Show Language Codes
 							</DropdownMenuCheckboxItem>
 							
 							<DropdownMenuCheckboxItem 
@@ -411,17 +401,8 @@
 									{#if translation.translations[lang]}
 										<div class="text-sm border-t first:border-t-0 pt-1.5 first:pt-0 relative">
 											<div class="flex items-center gap-1 text-xs text-gray-500 mb-0.5">
-												{#if badge_display === 'name'}
-													{user_langs[lang]?.native || lang}
-												{:else if badge_display === 'code'}
-													{lang}
-												{:else if badge_display === 'flag'}
-													{user_langs[lang]?.emoji || '🏳️'}
-												{/if}
 												
-												{#if show_language_codes && badge_display !== 'code'}
-													<span class="text-gray-400 text-xs">({lang})</span>
-												{/if}
+												
 												
 												<button
 													class="ml-auto text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
