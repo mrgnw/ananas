@@ -2,6 +2,7 @@ import { languages } from 'countries-list'
 
 // Import JSON data directly - Vite handles JSON imports natively
 import languageData from '$lib/data/wikidata-languages.json'
+import countriesData from '$lib/data/wikidata-countries.json'
 
 // Todo: language statistic by region
 // language statisticts https://www.simonandsimon.co.uk/blog/global-language-statistics-by-country
@@ -74,6 +75,12 @@ export function getLanguageInfo(code) {
         ...wikiLang,
         rtl: wikiLang.rtl || false
     } : null
+}
+
+// Get country information by ISO code
+export function getCountryInfo(countryCode) {
+    if (!countryCode) return null
+    return countriesData.find(country => country.iso === countryCode.toLowerCase())
 }
 
 // Search languages with smart ranking

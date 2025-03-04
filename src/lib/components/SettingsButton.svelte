@@ -33,32 +33,30 @@
   }
 </script>
 
-<div class="fixed bottom-4 right-4">
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger asChild let:builder>
-      <Button
-        variant="outline"
-        size="icon"
-        class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-white dark:bg-gray-800"
-        builders={[builder]}
-      >
-        <Settings class="h-5 w-5" />
-      </Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content class="w-48">
-      <DropdownMenu.Item on:click={addDefaultLanguages}>
-        Add Default Languages
-      </DropdownMenu.Item>
-      <DropdownMenu.Item on:click={resetLanguages}>
-        Reset to Defaults
-      </DropdownMenu.Item>
-      <DropdownMenu.Item class="text-destructive" on:click={clearAllLanguages}>
-        Clear All Languages
-      </DropdownMenu.Item>
-      <DropdownMenu.Separator />
-      <DropdownMenu.Item class="text-destructive" on:click={clearCache}>
-        Clear Cache
-      </DropdownMenu.Item>
-    </DropdownMenu.Content>
-  </DropdownMenu.Root>
-</div>
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger asChild let:builder>
+    <Button
+      variant="outline"
+      size="icon"
+      class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-white dark:bg-gray-800"
+      builders={[builder]}
+    >
+      <Settings class="h-5 w-5" />
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content class="w-48">
+    <DropdownMenu.Item on:click={addDefaultLanguages}>
+      Add Default Languages
+    </DropdownMenu.Item>
+    <DropdownMenu.Item on:click={resetLanguages}>
+      Reset to Defaults
+    </DropdownMenu.Item>
+    <DropdownMenu.Item class="text-destructive" on:click={clearAllLanguages}>
+      Clear All Languages
+    </DropdownMenu.Item>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item class="text-destructive" on:click={clearCache}>
+      Clear Cache
+    </DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
