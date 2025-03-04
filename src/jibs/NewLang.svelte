@@ -43,7 +43,6 @@
 		DropdownMenuItem,
 		DropdownMenuTrigger,
 		DropdownMenuSeparator,
-		DropdownMenuCheckboxItem,
 		DropdownMenuLabel,
 		DropdownMenuRadioGroup,
 		DropdownMenuRadioItem
@@ -173,6 +172,14 @@
 		}
 	}
 
+	// Add this function to handle checkbox clicks without closing the dropdown
+	function handleCheckboxClick(event, key) {
+		// Prevent the default behavior which would close the dropdown
+		event.stopPropagation();
+		// Toggle the language display
+		toggle_display(key);
+	}
+
 	async function handleSubmit() {
 		is_loading = true;
 		const apiUrl = 'https://ananas-api.xces.workers.dev';
@@ -268,12 +275,7 @@
 		languageDropdownOpen = isOpen;
 	}
 	
-	function handleLanguageDropdownMouseleave() {
-		// Set a short timeout before closing to make it feel natural
-		languageDropdownHoverTimeout = setTimeout(() => {
-			languageDropdownOpen = false;
-		}, 300);
-	}
+
 </script>
 
 <div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto">
@@ -346,32 +348,31 @@
 				<div class="flex items-center gap-2">
 					<!-- Language visibility dropdown -->
 					<DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen} class="sm:hidden">
-						<div onmouseleave={handleLanguageDropdownMouseleave}>
 							<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
 								<Eye class="h-4 w-4" />
 								<span class="sr-only">Toggle language visibility</span>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent align="start">
+							<DropdownMenuContent align="start" class="dropdown-menu-content">
 								<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
 								
 								<!-- Language visibility toggles -->
 								<div class="max-h-[200px] overflow-y-auto">
 									{#each Object.entries(user_langs) as [key, meta]}
-										<div 
-											class="flex items-center px-2 py-1.5 cursor-pointer hover:bg-gray-100 {getLanguageColors(key, meta.display, 'dropdown')}"
-											onclick={() => toggle_display(key)}
-										>
-											<div class="w-4 h-4 mr-2 flex items-center justify-center">
-												{#if meta.display}
-													<Check class="h-4 w-4" />
-												{/if}
-											</div>
-											<span>{meta.native} ({key})</span>
-										</div>
+									  <div 
+									    class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-item {getLanguageColors(key, meta.display, 'dropdown')}"
+									    onclick={(e) => handleCheckboxClick(e, key)}
+									  >
+									    <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+									      {#if meta.display}
+									        <Check class="h-4 w-4" />
+									      {/if}
+									    </span>
+									    <span>{meta.native} ({key})</span>
+									  </div>
 									{/each}
 								</div>
 							</DropdownMenuContent>
-						</div>
+
 					</DropdownMenu>
 					
 					<!-- Settings dropdown for translation review -->
@@ -550,19 +551,22 @@
 		height: 6px;
 	}
 	
-	.scrollbar-thin::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	
 	.scrollbar-thin::-webkit-scrollbar-thumb {
-		background-color: rgba(0, 0, 0, 0.1);
-		border-radius: 6px;
+		background-color: rgba(0, 0, 0, 0.2);
+		border-radius: 3px;
 	}
 	
-	/* Touch-friendly tap targets */
-	@media (max-width: 640px) {
-		button {
-			min-height: 36px;
-		}
+	.scrollbar-thin::-webkit-scrollbar-track {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+	
+	/* Disable double-tap zoom on mobile */
+	:global(html) {
+		touch-action: manipulation;
+	}
+	
+	/* Specifically disable double-tap zoom in the dropdown */
+	:global(.dropdown-menu-content) {
+		touch-action: manipulation;
 	}
 </style>
