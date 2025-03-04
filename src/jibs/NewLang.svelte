@@ -24,6 +24,43 @@
 		}
 	];
 
+	// Example phrases in different languages for the "Try an Example" button
+	let examplePhrases = [
+		"あなたの名前は?", // Japanese: What is your name?
+		"¿Cómo estás hoy?", // Spanish: How are you today?
+		"Ich liebe Sprachen", // German: I love languages
+		"Où est la bibliothèque?", // French: Where is the library?
+		"Quanto costa questo?", // Italian: How much does this cost?
+		"Что ты любишь делать?", // Russian: What do you like to do?
+		"我想学习新语言", // Chinese: I want to learn new languages
+		"Tudo bem com você?", // Portuguese: Are you doing well?
+		"Hvad er klokken?", // Danish: What time is it?
+		"Jag älskar att resa", // Swedish: I love to travel
+		"Mikä on lempiruokasi?", // Finnish: What is your favorite food?
+		"Πού είναι το ξενοδοχείο;", // Greek: Where is the hotel?
+		"Dziękuję bardzo", // Polish: Thank you very much
+		"Szeretnék egy kávét", // Hungarian: I would like a coffee
+		"Jak se máš?", // Czech: How are you?
+		"Koliko je sati?", // Croatian: What time is it?
+		"Merhaba, nasılsın?", // Turkish: Hello, how are you?
+		"저는 한국어를 배우고 있어요", // Korean: I am learning Korean
+		"أين المطعم؟", // Arabic: Where is the restaurant?
+		"מה השעה עכשיו?", // Hebrew: What time is it now?
+		"Saya suka musik", // Indonesian: I like music
+		"Cảm ơn rất nhiều", // Vietnamese: Thank you very much
+		"Mahal kita", // Filipino/Tagalog: I love you
+		"Kia ora", // Maori: Hello/Be well
+		"Mình rất thích ẩm thực Việt Nam", // Vietnamese: I really like Vietnamese cuisine
+		"Ik spreek een beetje Nederlands", // Dutch: I speak a little Dutch
+		"Hvar er næsti strætó?", // Icelandic: Where is the next bus?
+		"मुझे भारतीय खाना पसंद है", // Hindi: I like Indian food
+	];
+	
+	function getRandomExample() {
+		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
+		return examplePhrases[randomIndex];
+	}
+
 	import { languages } from 'countries-list';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -296,7 +333,7 @@
 				<div class="flex items-center">
 					<Input 
 						type="text" 
-						placeholder="Type to translate..." 
+						placeholder="Enter text from any language..." 
 						bind:value={text} 
 						class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-2.5 bg-white"
 						onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
@@ -323,7 +360,7 @@
 				<!-- Example button -->
 				<button
 					onclick={() => {
-						text = "あなたの名前は?";
+						text = getRandomExample();
 						document.querySelector('input').focus();
 					}}
 					class="flex items-center justify-center h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 transition-colors"
@@ -567,10 +604,15 @@
 								{/each}
 							</div>
 							
+							<div class="text-center mb-6">
+								<h3 class="text-lg font-medium text-gray-700 mb-2">No translations yet</h3>
+								<p class="text-gray-500 mb-4">Enter text in any language to translate.</p>
+							</div>
+							
 							<Button 
 								class="mt-2" 
 								onclick={() => {
-									text = "あなたの名前は?";
+									text = getRandomExample();
 									document.querySelector('input').focus();
 								}}
 							>
@@ -591,7 +633,7 @@
 			<div class="flex items-center">
 				<Input 
 					type="text" 
-					placeholder="Type to translate..." 
+					placeholder="Enter text from any language..." 
 					bind:value={text} 
 					class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-2.5 bg-white"
 					onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
@@ -618,7 +660,7 @@
 			<!-- Example button -->
 			<button
 				onclick={() => {
-					text = "あなたの名前は?";
+					text = getRandomExample();
 					document.querySelector('input').focus();
 				}}
 				class="flex items-center justify-center h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 transition-colors"
