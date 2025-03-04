@@ -24,6 +24,43 @@
 		}
 	];
 
+	// Example phrases in different languages for the "Try an Example" button
+	let examplePhrases = [
+		"あなたの名前は?", // Japanese: What is your name?
+		"¿Cómo estás hoy?", // Spanish: How are you today?
+		"Ich liebe Sprachen", // German: I love languages
+		"Où est la bibliothèque?", // French: Where is the library?
+		"Quanto costa questo?", // Italian: How much does this cost?
+		"Что ты любишь делать?", // Russian: What do you like to do?
+		"我想学习新语言", // Chinese: I want to learn new languages
+		"Tudo bem com você?", // Portuguese: Are you doing well?
+		"Hvad er klokken?", // Danish: What time is it?
+		"Jag älskar att resa", // Swedish: I love to travel
+		"Mikä on lempiruokasi?", // Finnish: What is your favorite food?
+		"Πού είναι το ξενοδοχείο;", // Greek: Where is the hotel?
+		"Dziękuję bardzo", // Polish: Thank you very much
+		"Szeretnék egy kávét", // Hungarian: I would like a coffee
+		"Jak se máš?", // Czech: How are you?
+		"Koliko je sati?", // Croatian: What time is it?
+		"Merhaba, nasılsın?", // Turkish: Hello, how are you?
+		"저는 한국어를 배우고 있어요", // Korean: I am learning Korean
+		"أين المطعم؟", // Arabic: Where is the restaurant?
+		"מה השעה עכשיו?", // Hebrew: What time is it now?
+		"Saya suka musik", // Indonesian: I like music
+		"Cảm ơn rất nhiều", // Vietnamese: Thank you very much
+		"Mahal kita", // Filipino/Tagalog: I love you
+		"Kia ora", // Maori: Hello/Be well
+		"Mình rất thích ẩm thực Việt Nam", // Vietnamese: I really like Vietnamese cuisine
+		"Ik spreek een beetje Nederlands", // Dutch: I speak a little Dutch
+		"Hvar er næsti strætó?", // Icelandic: Where is the next bus?
+		"मुझे भारतीय खाना पसंद है", // Hindi: I like Indian food
+	];
+	
+	function getRandomExample() {
+		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
+		return examplePhrases[randomIndex];
+	}
+
 	import { languages } from 'countries-list';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -45,7 +82,8 @@
 		DropdownMenuSeparator,
 		DropdownMenuLabel,
 		DropdownMenuRadioGroup,
-		DropdownMenuRadioItem
+		DropdownMenuRadioItem,
+		DropdownMenuCheckboxItem
 	} from '$lib/components/ui/dropdown-menu';
 
 	let example_translation = {
@@ -269,35 +307,80 @@
 	// State for language dropdown
 	let languageDropdownOpen = $state(false);
 	let languageDropdownHoverTimeout;
+	let settingsDropdownOpen = $state(false);
 	
 	function setLanguageDropdownOpen(isOpen) {
 		clearTimeout(languageDropdownHoverTimeout);
 		languageDropdownOpen = isOpen;
 	}
 	
+	function setSettingsDropdownOpen(isOpen) {
+		settingsDropdownOpen = isOpen;
+	}
+	
 
 </script>
 
-<div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto">
+<div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto pb-[80px] md:pb-0">
 	<!-- Site title and info at the top of the page -->
-	<h1 class="text-3xl font-bold text-gray-900 mb-2">Translate to Multiple Languages at Once</h1>
-<p class="text-gray-600 max-w-2xl mx-auto">Type your text below and instantly see translations in all your selected languages.</p>
+	<h1 class="text-3xl font-bold text-gray-900 mb-2 text-center max-w-2xl mx-auto">Translate to Multiple Languages at Once</h1>
+	<p class="text-gray-600 max-w-2xl mx-auto text-center">Type your text below and instantly see translations in all your selected languages.</p>
 
-	<div class="relative">
-		<Input 
-			type="text" 
-			placeholder="Enter text to translate..." 
-			bind:value={text} 
-			class="pr-[100px]"
-			onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
-		/>
-		<Button 
-			onclick={handleSubmit} 
-			disabled={!is_ready}
-			class="absolute right-0 top-0 h-full rounded-l-none"
-		>
-			{is_loading ? 'Translating...' : 'Translate'}
-		</Button>
+	<!-- Desktop Input - Hidden on Mobile -->
+	<div class="relative hidden md:block max-w-2xl mx-auto">
+		<div class="flex items-center gap-2">
+			<div class="relative flex-1 rounded-full overflow-hidden shadow-sm border border-gray-200">
+				<div class="flex items-center">
+					<Input 
+						type="text" 
+						placeholder="Enter text from any language..." 
+						bind:value={text} 
+						class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-2.5 bg-white"
+						onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
+					/>
+					
+					<Button 
+						onclick={handleSubmit}
+						disabled={!is_ready}
+						class="rounded-full p-2 mr-1 h-auto"
+						variant={is_ready ? "default" : "ghost"}
+						type="submit"
+					>
+						{#if is_loading}
+							<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
+						{:else}
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+						{/if}
+						<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
+					</Button>
+				</div>
+			</div>
+			
+			<div class="flex items-center gap-1.5">
+				<!-- Example button -->
+				<button
+					onclick={() => {
+						text = getRandomExample();
+						document.querySelector('input').focus();
+					}}
+					class="flex items-center justify-center h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 transition-colors"
+					title="Try an example"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-700"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+					<span class="sr-only">Try an example</span>
+				</button>
+				
+				<!-- Languages Quick Access -->
+				<a
+					href="/languages"
+					class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+					title="Manage languages"
+				>
+					<Languages class="h-5 w-5 text-gray-700" />
+					<span class="sr-only">Manage languages</span>
+				</a>
+			</div>
+		</div>
 	</div>
 
 	<div class="space-y-4">
@@ -376,7 +459,7 @@
 					</DropdownMenu>
 					
 					<!-- Settings dropdown for translation review -->
-					<DropdownMenu>
+					<DropdownMenu open={settingsDropdownOpen} onOpenChange={setSettingsDropdownOpen}>
 						<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
 							<Sliders class="h-4 w-4" />
 							<span class="sr-only">Translation review settings</span>
@@ -442,7 +525,7 @@
 								<div class="relative">
 									<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
 										<button
-											class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
+											class="text-gray-400 hover:text-red-500 p-1"
 											aria-label="Delete translation"
 											onclick={() => deleteTranslation(i)}
 										>
@@ -461,7 +544,7 @@
 													{translation.translations[lang]}
 												</div>
 												<button
-													class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
+													class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
 													aria-label="Copy translation"
 													onclick={() => copyToClipboard(translation.translations[lang])}
 												>
@@ -488,7 +571,7 @@
 												<div class="relative">
 													<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
 														<button
-															class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
+															class="text-gray-400 hover:text-red-500 p-1"
 															aria-label="Delete translation"
 														>
 															<Trash2 class="h-3.5 w-3.5" />
@@ -499,13 +582,13 @@
 													</div>
 													
 													{#each Object.entries(example.translations) as [langCode, translation], i}
-														{#if Object.keys(user_langs).includes(langCode)}
+														{#if show_langs.includes(langCode)}
 															<div class="group relative pl-2.5 border-l-2 border-gray-100 hover:border-blue-200 transition-colors mb-2 {i === Object.entries(example.translations).length - 1 ? 'last:mb-0' : ''}">
 																<div class="text-sm {colorPalette[i % colorPalette.length].text} pr-6 pt-0.5 line-clamp-3">
 																	{translation}
 																</div>
 																<button
-																	class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
+																	class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
 																	aria-label="Copy translation"
 																	onclick={() => copyToClipboard(translation)}
 																>
@@ -521,10 +604,15 @@
 								{/each}
 							</div>
 							
+							<div class="text-center mb-6">
+								<h3 class="text-lg font-medium text-gray-700 mb-2">No translations yet</h3>
+								<p class="text-gray-500 mb-4">Enter text in any language to translate.</p>
+							</div>
+							
 							<Button 
 								class="mt-2" 
 								onclick={() => {
-									text = "あなたの名前は?";
+									text = getRandomExample();
 									document.querySelector('input').focus();
 								}}
 							>
@@ -534,6 +622,63 @@
 					</div>
 				{/each}
 			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Mobile Input Bar (fixed at bottom) with enhanced UX -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 shadow-lg z-50">
+	<div class="flex items-center gap-2 max-w-md mx-auto">
+		<div class="relative flex-1 rounded-full overflow-hidden shadow-sm border border-gray-200">
+			<div class="flex items-center">
+				<Input 
+					type="text" 
+					placeholder="Enter text from any language..." 
+					bind:value={text} 
+					class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-2.5 bg-white"
+					onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
+				/>
+				
+				<Button 
+					onclick={handleSubmit}
+					disabled={!is_ready}
+					class="rounded-full p-2 mr-1 h-auto"
+					variant={is_ready ? "default" : "ghost"}
+					type="submit"
+				>
+					{#if is_loading}
+						<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
+					{:else}
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+					{/if}
+					<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
+				</Button>
+			</div>
+		</div>
+		
+		<div class="flex items-center gap-1.5">
+			<!-- Example button -->
+			<button
+				onclick={() => {
+					text = getRandomExample();
+					document.querySelector('input').focus();
+				}}
+				class="flex items-center justify-center h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 transition-colors"
+				title="Try an example"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-700"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+				<span class="sr-only">Try an example</span>
+			</button>
+			
+			<!-- Languages Quick Access -->
+			<a
+				href="/languages"
+				class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+				title="Manage languages"
+			>
+				<Languages class="h-5 w-5 text-gray-700" />
+				<span class="sr-only">Manage languages</span>
+			</a>
 		</div>
 	</div>
 </div>
@@ -568,5 +713,40 @@
 	/* Specifically disable double-tap zoom in the dropdown */
 	:global(.dropdown-menu-content) {
 		touch-action: manipulation;
+	}
+	
+	/* Mobile-optimized styles */
+	@media (max-width: 768px) {
+		:global(body) {
+			padding-bottom: 80px; /* Space for the fixed input bar */
+		}
+		
+		/* Add a subtle animation for the mobile input bar */
+		:global(.fixed.bottom-0) {
+			animation: slide-up 0.2s ease-out;
+		}
+		
+		/* Custom animation for a smoother feel */
+		@keyframes slide-up {
+			from {
+				transform: translateY(100%);
+				opacity: 0;
+			}
+			to {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+		
+		/* Improve tap target sizes for mobile */
+		:global(button), :global(a) {
+			min-height: 44px;
+			min-width: 44px;
+		}
+		
+		/* Ensure debug and settings buttons don't overlap with the input bar */
+		:global(.fixed.bottom-4.right-4) {
+			bottom: 80px !important; /* Move above the input bar */
+		}
 	}
 </style>
