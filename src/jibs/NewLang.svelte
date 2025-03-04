@@ -1,4 +1,29 @@
 <script>
+	let exampleTranslations = [
+		{
+			text: 'Hello, how are you today?',
+			translations: {
+				eng: 'Hello, how are you today?',
+				spa: 'Hola, ¿cómo estás hoy?',
+				rus: 'Привет, как ты сегодня?',
+				jpn: 'こんにちは、今日の調子はどうですか？',
+				ita: 'Ciao, come stai oggi?',
+				cat: 'Hola, com estàs avui?'
+			}
+		},
+		{
+			text: 'I love learning new languages!',
+			translations: {
+				eng: 'I love learning new languages!',
+				spa: '¡Me encanta aprender nuevos idiomas!',
+				rus: 'Я люблю изучать новые языки!',
+				jpn: '新しい言語を学ぶのが大好きです！',
+				ita: 'Adoro imparare nuove lingue!',
+				cat: 'M\'encanta aprendre nous idiomes!'
+			}
+		}
+	];
+
 	import { languages } from 'countries-list';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -36,13 +61,38 @@
 		},
 		timestamp: new Date().toISOString()
 	};
+	
+	const colorPalette = [
+		{ bg: 'bg-blue-100', text: 'text-blue-800' },
+		{ bg: 'bg-red-100', text: 'text-red-800' },
+		{ bg: 'bg-green-100', text: 'text-green-800' },
+		{ bg: 'bg-yellow-100', text: 'text-yellow-800' },
+		{ bg: 'bg-purple-100', text: 'text-purple-800' },
+		{ bg: 'bg-pink-100', text: 'text-pink-800' },
+		{ bg: 'bg-indigo-100', text: 'text-indigo-800' },
+		{ bg: 'bg-cyan-100', text: 'text-cyan-800' },
+		{ bg: 'bg-orange-100', text: 'text-orange-800' },
+		{ bg: 'bg-teal-100', text: 'text-teal-800' },
+		{ bg: 'bg-lime-100', text: 'text-lime-800' },
+		{ bg: 'bg-amber-100', text: 'text-amber-800' }
+	];
+
+	// Helper function to get language colors
+	function getLanguageColors(key, display, type) {
+		if (colors_enabled === false) {
+			return '';
+		}
+		const index = Object.keys(user_langs).indexOf(key);
+		const colors = colorPalette[index % colorPalette.length];
+		if (type === 'dropdown') {
+			return display ? colors.text : '';
+		}
+		return display ? `${colors.bg} ${colors.text}` : '';
+	}
 
 	function loadHistory() {
 		if (browser) {
 			const stored = localStorage.getItem('translationHistory');
-			if (stored == '[]') {
-				return [example_translation];
-			}
 			return stored ? JSON.parse(stored) : [];
 		}
 		return [];
@@ -59,7 +109,7 @@
 
 	function clearAllHistory() {
 		if (confirm('Are you sure you want to clear all translation history?')) {
-			history = [example_translation];
+			history = [];
 			if (browser) {
 				localStorage.setItem('translationHistory', JSON.stringify(history));
 			}
@@ -75,6 +125,8 @@
 	let text = $state('');
 	let show_original = $state(true);
 	let truncate_lines = $state(true);
+	let colors_enabled = $state(browser ? localStorage.getItem('colorsEnabled') !== 'false' : true);
+
 	// Badge display format: 'name', 'code'
 	let badge_display = $state(browser ? localStorage.getItem('badgeDisplay') || 'name' : 'name');
 	
@@ -225,6 +277,10 @@
 </script>
 
 <div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto">
+	<!-- Site title and info at the top of the page -->
+	<h1 class="text-3xl font-bold text-gray-900 mb-2">Translate to Multiple Languages at Once</h1>
+<p class="text-gray-600 max-w-2xl mx-auto">Type your text below and instantly see translations in all your selected languages.</p>
+
 	<div class="relative">
 		<Input 
 			type="text" 
@@ -265,10 +321,10 @@
 							
 							<!-- Compact language badges -->
 							<div class="hidden sm:flex flex-wrap gap-1.5 overflow-x-auto max-w-[300px] md:max-w-none">
-								{#each Object.entries(user_langs) as [key, meta]}
+								{#each Object.entries(user_langs) as [key, meta], index}
 									<Badge
 										variant={meta.display ? 'default' : 'outline'}
-										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0 h-6"
+										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0 h-6 {getLanguageColors(key, meta.display)}"
 										onclick={() => toggle_display(key)}
 										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
 										tabindex="0"
@@ -302,7 +358,7 @@
 								<div class="max-h-[200px] overflow-y-auto">
 									{#each Object.entries(user_langs) as [key, meta]}
 										<div 
-											class="flex items-center px-2 py-1.5 cursor-pointer hover:bg-gray-100"
+											class="flex items-center px-2 py-1.5 cursor-pointer hover:bg-gray-100 {getLanguageColors(key, meta.display, 'dropdown')}"
 											onclick={() => toggle_display(key)}
 										>
 											<div class="w-4 h-4 mr-2 flex items-center justify-center">
@@ -350,6 +406,17 @@
 							>
 								Truncate Text
 							</DropdownMenuCheckboxItem>
+							<DropdownMenuCheckboxItem 
+								checked={colors_enabled}
+								onCheckedChange={(value) => { 
+									colors_enabled = value; 
+									if (browser) {
+										localStorage.setItem('colorsEnabled', value);
+									}
+								}}
+							>
+								Enable Colors
+							</DropdownMenuCheckboxItem>
 							
 							<DropdownMenuSeparator />
 							
@@ -389,7 +456,7 @@
 									{#each show_langs as lang}
 										{#if translation.translations[lang]}
 											<div class="group relative pl-2.5 border-l-2 border-gray-100 hover:border-blue-200 transition-colors mb-2 last:mb-0">
-												<div class="text-sm text-gray-800 pr-6 pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}">
+												<div class="text-sm {getLanguageColors(lang, true, 'dropdown')} pr-6 pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}">
 													{translation.translations[lang]}
 												</div>
 												<button
@@ -407,10 +474,61 @@
 						</Card>
 					</div>
 				{:else}
-					<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 text-gray-500 bg-gray-50 rounded-lg">
-						<div class="flex flex-col items-center gap-3">
-							<Inbox class="h-10 w-10 text-gray-400" />
-							<p>No translations yet. Enter text above to translate.</p>
+					<div class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl">
+						<div class="flex flex-col items-center gap-6 max-w-xl mx-auto">
+							
+							
+							
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+								{#each exampleTranslations as example, exampleIndex}
+									<div class="group w-full">
+										<Card class="h-full hover:shadow-md transition-shadow">
+											<CardContent class="p-3">
+												<div class="relative">
+													<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+														<button
+															class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
+															aria-label="Delete translation"
+														>
+															<Trash2 class="h-3.5 w-3.5" />
+														</button>
+													</div>
+													<div class="text-sm font-medium text-gray-700 mb-3 pr-8 line-clamp-2">
+														{example.text}
+													</div>
+													
+													{#each Object.entries(example.translations) as [langCode, translation], i}
+														{#if Object.keys(user_langs).includes(langCode)}
+															<div class="group relative pl-2.5 border-l-2 border-gray-100 hover:border-blue-200 transition-colors mb-2 {i === Object.entries(example.translations).length - 1 ? 'last:mb-0' : ''}">
+																<div class="text-sm {colorPalette[i % colorPalette.length].text} pr-6 pt-0.5 line-clamp-3">
+																	{translation}
+																</div>
+																<button
+																	class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
+																	aria-label="Copy translation"
+																	onclick={() => copyToClipboard(translation)}
+																>
+																	<Copy class="h-3 w-3" />
+																</button>
+															</div>
+														{/if}
+													{/each}
+												</div>
+											</CardContent>
+										</Card>
+									</div>
+								{/each}
+							</div>
+							
+							<Button 
+								class="mt-2" 
+								onclick={() => {
+									text = "あなたの名前は?";
+									document.querySelector('input').focus();
+								}}
+							>
+								Try an Example
+							</Button>
 						</div>
 					</div>
 				{/each}
