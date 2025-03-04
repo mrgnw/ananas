@@ -222,7 +222,7 @@
 
 	<div class="space-y-4">
 		<!-- Language badges section - only shown if needed -->
-		{#if available_langs.length > 0}
+		{#if available_langs.length > 0 && false}
 			<div class="space-y-2">
 				<div class="flex items-center justify-between">
 					<div class="text-sm font-medium text-gray-600">Active Languages</div>
@@ -252,22 +252,52 @@
 					{/each}
 				</div>
 			</div>
-		{:else}
+		{:else if !available_langs.length}
 			<div class="text-center py-4">
 				<a href="/languages" class="text-blue-500 hover:underline">Add languages to get started</a>
 			</div>
 		{/if}
 		
-		<!-- Translation history section -->
+		<!-- Translation review section -->
 		<div class="space-y-4">
 			<div class="flex items-center justify-between">
-				<h2 class="text-xl font-semibold">Translation History</h2>
+				<div class="flex items-center gap-4">
+					<h2 class="text-xl font-semibold">Review</h2>
+					
+					{#if available_langs.length > 0}
+						<div class="flex items-center gap-1.5">
+							<div class="scrollbar-thin flex flex-wrap gap-1.5 overflow-x-auto max-w-[200px] sm:max-w-[300px] md:max-w-none">
+								{#each Object.entries(user_langs) as [key, meta]}
+									<Badge
+										variant={meta.display ? 'default' : 'outline'}
+										class="cursor-pointer whitespace-nowrap flex-shrink-0 text-xs"
+										onclick={() => toggle_display(key)}
+										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
+										tabindex="0"
+										role="button"
+										aria-pressed={meta.display}
+									>
+										{meta.native}
+									</Badge>
+								{/each}
+							</div>
+							<a
+								href="/languages"
+								class="flex items-center justify-center rounded-full w-6 h-6 border border-gray-200 bg-white text-xs shadow-sm hover:bg-gray-50"
+								title="Manage languages"
+							>
+								<Languages class="h-3.5 w-3.5" />
+								<span class="sr-only">Manage languages</span>
+							</a>
+						</div>
+					{/if}
+				</div>
 				
-				<!-- Settings dropdown for translation history -->
+				<!-- Settings dropdown for translation review -->
 				<DropdownMenu>
 					<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
 						<Sliders class="h-4 w-4" />
-						<span class="sr-only">Translation history settings</span>
+						<span class="sr-only">Translation review settings</span>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Display Settings</DropdownMenuLabel>
@@ -391,29 +421,10 @@
 										</button>
 									{/if}
 								{/each}
-								
-								<!-- Show hidden languages as small badges -->
-								{#if langs_not_shown(translation).length > 0}
-									<div class="mt-1.5 text-center">
-										<div
-											class="inline-flex flex-wrap gap-1 justify-center"
-										>
-											{#each langs_not_shown(translation) as langCode}
-												<button
-													class="text-[10px] px-1 py-0.5 bg-gray-100 text-gray-500 rounded hover:bg-gray-200"
-													onclick={() => toggle_display(langCode)}
-													aria-label={`Show ${langCode} language`}
-												>
-													{langCode}
-												</button>
-											{/each}
-										</div>
-									</div>
-								{/if}
-								</div>
-							</CardContent>
-						</Card>
-					</div>
+							</div>
+						</CardContent>
+					</Card>
+				</div>
 				{:else}
 					<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-8 text-gray-500">
 						No translations yet. Enter text above to translate.
