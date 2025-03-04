@@ -374,16 +374,6 @@
 								<div class="relative space-y-2">
 									<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
 										<button
-											class="text-gray-400 hover:text-blue-500 p-1 rounded-full hover:bg-gray-100"
-											aria-label="Copy all translations"
-											onclick={() => {
-												const allTranslations = Object.values(translation.translations).join('\n');
-												copyToClipboard(allTranslations);
-											}}
-										>
-											<Copy class="h-3.5 w-3.5" />
-										</button>
-										<button
 											class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
 											aria-label="Delete translation"
 											onclick={() => deleteTranslation(i)}
@@ -392,13 +382,13 @@
 										</button>
 									</div>
 									{#if show_original}
-										<div class="text-sm font-medium text-gray-600 mb-2 border-b pb-2 pr-6 truncate" title={translation.text}>
+										<div class="text-sm font-medium text-gray-600 mb-2 pr-6 truncate" title={translation.text}>
 											{translation.text}
 										</div>
 									{/if}
 									{#each show_langs as lang}
 										{#if translation.translations[lang]}
-											<div class="text-sm border-t first:border-t-0 pt-1.5 first:pt-0 relative">
+											<div class="text-sm pt-1.5 relative">
 												<div class="flex items-center gap-1 text-xs text-gray-500 mb-0.5">
 													<button
 														class="ml-auto text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
