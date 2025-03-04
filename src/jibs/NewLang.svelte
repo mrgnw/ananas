@@ -6,7 +6,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import { Search, Trash2, Copy, Languages, MoreVertical, Check, Sliders } from 'lucide-svelte';
+	import { Search, Trash2, Copy, Languages, MoreVertical, Check, Sliders, Eye } from 'lucide-svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import _ from 'underscore';
 	import { browser } from '$app/environment';
@@ -261,34 +261,55 @@
 		<!-- Translation review section -->
 		<div class="space-y-4">
 			<div class="flex items-center justify-between">
-				<div class="flex items-center gap-4">
+				<div class="flex items-center gap-2">
 					<h2 class="text-xl font-semibold">Review</h2>
 					
 					{#if available_langs.length > 0}
-						<div class="flex items-center gap-1.5">
-							<div class="scrollbar-thin flex flex-wrap gap-1.5 overflow-x-auto max-w-[200px] sm:max-w-[300px] md:max-w-none">
-								{#each Object.entries(user_langs) as [key, meta]}
-									<Badge
-										variant={meta.display ? 'default' : 'outline'}
-										class="cursor-pointer whitespace-nowrap flex-shrink-0 text-xs"
-										onclick={() => toggle_display(key)}
-										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
-										tabindex="0"
-										role="button"
-										aria-pressed={meta.display}
-									>
-										{meta.native}
-									</Badge>
-								{/each}
-							</div>
+						<div class="flex items-center gap-2">
+							<!-- Language visibility dropdown -->
+							<DropdownMenu>
+								<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
+									<Eye class="h-4 w-4" />
+									<span class="sr-only">Toggle language visibility</span>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align="start">
+									<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
+									
+									<!-- Language visibility toggles -->
+									{#each Object.entries(user_langs) as [key, meta]}
+										<DropdownMenuCheckboxItem 
+											checked={meta.display}
+											onCheckedChange={() => toggle_display(key)}
+										>
+											{meta.native} ({key})
+										</DropdownMenuCheckboxItem>
+									{/each}
+								</DropdownMenuContent>
+							</DropdownMenu>
+							
+							<!-- Language management link -->
 							<a
 								href="/languages"
-								class="flex items-center justify-center rounded-full w-6 h-6 border border-gray-200 bg-white text-xs shadow-sm hover:bg-gray-50"
+								class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100"
 								title="Manage languages"
 							>
-								<Languages class="h-3.5 w-3.5" />
+								<Languages class="h-4 w-4" />
 								<span class="sr-only">Manage languages</span>
 							</a>
+							
+							<!-- Compact language badges -->
+							<div class="hidden sm:flex flex-wrap gap-1.5 overflow-x-auto max-w-[300px] md:max-w-none">
+								{#each Object.entries(user_langs) as [key, meta]}
+									{#if meta.display}
+										<Badge
+											variant="default"
+											class="whitespace-nowrap text-xs px-2 py-0"
+										>
+											{meta.native}
+										</Badge>
+									{/if}
+								{/each}
+							</div>
 						</div>
 					{/if}
 				</div>
@@ -323,19 +344,6 @@
 						>
 							Truncate Text
 						</DropdownMenuCheckboxItem>
-						
-						<DropdownMenuSeparator />
-						<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
-						
-						<!-- Language visibility toggles -->
-						{#each Object.entries(user_langs) as [key, meta]}
-							<DropdownMenuCheckboxItem 
-								checked={meta.display}
-								onCheckedChange={() => toggle_display(key)}
-							>
-								{meta.native} ({key})
-							</DropdownMenuCheckboxItem>
-						{/each}
 						
 						<DropdownMenuSeparator />
 						
