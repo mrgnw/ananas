@@ -19,7 +19,9 @@
 		DropdownMenuTrigger,
 		DropdownMenuSeparator,
 		DropdownMenuCheckboxItem,
-		DropdownMenuLabel
+		DropdownMenuLabel,
+		DropdownMenuRadioGroup,
+		DropdownMenuRadioItem
 	} from '$lib/components/ui/dropdown-menu';
 
 	let example_translation = {
@@ -72,24 +74,29 @@
 
 	let text = $state('');
 	let show_original = $state(true);
-
+	let show_language_codes = $state(browser ? window.innerWidth > 640 : true);
+	let truncate_lines = $state(true);
+	// Badge display format: 'name', 'code', or 'flag'
+	let badge_display = $state(browser ? localStorage.getItem('badgeDisplay') || 'name' : 'name');
+	
 	// Use the shared language store
 	let user_langs = $derived(translateLanguages.languages);
-	console.log('user_langs updated:', user_langs);
-
+	
 	// All available languages that can be toggled
 	let available_langs = $derived(Object.keys(user_langs));
-	console.log('available_langs:', available_langs);
-
+	
 	// Languages that should appear in translation cards
 	let show_langs = $derived(
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
-	console.log('show_langs:', show_langs);
-	let show_language_codes = $state(browser ? window.innerWidth > 640 : true);
-	let truncate_lines = $state(true);
+	
+	$effect(() => {
+		if (browser) {
+			localStorage.setItem('badgeDisplay', badge_display);
+		}
+	});
 	
 	function toggleLanguageCodes() {
 		show_language_codes = !show_language_codes;
@@ -299,7 +306,13 @@
 										role="button"
 										aria-pressed={meta.display}
 									>
-										{meta.native}
+										{#if badge_display === 'name'}
+											{meta.native}
+										{:else if badge_display === 'code'}
+											{key}
+										{:else if badge_display === 'flag'}
+											{meta.emoji || '🏳️'}
+										{/if}
 									</Badge>
 								{/each}
 							</div>
@@ -315,6 +328,16 @@
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Display Settings</DropdownMenuLabel>
+						
+						<!-- Language badge display options -->
+						<DropdownMenuLabel class="text-xs text-gray-500 pt-0">Badge Display</DropdownMenuLabel>
+						<DropdownMenuRadioGroup value={badge_display} onValueChange={(value) => badge_display = value}>
+							<DropdownMenuRadioItem value="name">Language Name</DropdownMenuRadioItem>
+							<DropdownMenuRadioItem value="code">Language Code</DropdownMenuRadioItem>
+							<DropdownMenuRadioItem value="flag">Flag</DropdownMenuRadioItem>
+						</DropdownMenuRadioGroup>
+						
+						<DropdownMenuSeparator />
 						
 						<!-- Display options -->
 						<DropdownMenuCheckboxItem 
@@ -382,44 +405,35 @@
 										{translation.text}
 									</div>
 								{/if}
-								{#each show_langs as langKey}
-									{#if translation.translations[langKey]}
-										<button
-											class="group/item flex w-full text-left cursor-pointer items-center rounded-md px-1.5 py-1 hover:bg-gray-50"
-											onclick={() => copyToClipboard(translation.translations[langKey])}
-											aria-label="Copy translation"
-										>
-											<div class="flex w-full items-center gap-1.5 overflow-hidden justify-between">
-												<div class="flex items-center gap-1.5 overflow-hidden">
-													{#if show_language_codes}
-														<span class="flex-shrink-0 text-xs text-gray-400 w-8">{langKey}</span>
-													{/if}
-													<p
-														class="text-sm {truncate_lines ? 'truncate' : ''}"
-														class:font-medium={translation.translations[langKey] === translation.text}
-														title={translation.translations[langKey]}
-													>
-														{translation.translations[langKey]}
-													</p>
-												</div>
-												<div
-													class="flex-shrink-0 opacity-0 group-hover/item:opacity-100 transition-opacity hover:text-blue-500 cursor-pointer"
+								{#each show_langs as lang}
+									{#if translation.translations[lang]}
+										<div class="text-sm border-t first:border-t-0 pt-1.5 first:pt-0 relative">
+											<div class="flex items-center gap-1 text-xs text-gray-500 mb-0.5">
+												{#if badge_display === 'name'}
+													{user_langs[lang]?.native || lang}
+												{:else if badge_display === 'code'}
+													{lang}
+												{:else if badge_display === 'flag'}
+													{user_langs[lang]?.emoji || '🏳️'}
+												{/if}
+												
+												{#if show_language_codes && badge_display !== 'code'}
+													<span class="text-gray-400 text-xs">({lang})</span>
+												{/if}
+												
+												<button
+													class="ml-auto text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
 													aria-label="Copy translation"
-													role="button"
-													tabindex="0"
-													onclick={(e) => {
-														e.stopPropagation();
-														copyToClipboard(translation.translations[langKey]);
-													}}
-													onkeydown={(e) => handleKeyDown(e, () => {
-														e.stopPropagation();
-														copyToClipboard(translation.translations[langKey]);
-													})}
+													onclick={() => copyToClipboard(translation.translations[lang])}
 												>
-													<Copy class="h-3.5 w-3.5" />
-												</div>
+													<Copy class="h-3 w-3" />
+												</button>
 											</div>
-										</button>
+											
+											<div class={truncate_lines ? "line-clamp-3" : ""}>
+												{translation.translations[lang]}
+											</div>
+										</div>
 									{/if}
 								{/each}
 							</div>
