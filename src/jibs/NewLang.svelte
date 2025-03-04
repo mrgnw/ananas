@@ -200,6 +200,22 @@
 			callback();
 		}
 	}
+	
+	// State for language dropdown
+	let languageDropdownOpen = $state(false);
+	let languageDropdownHoverTimeout;
+	
+	function setLanguageDropdownOpen(isOpen) {
+		clearTimeout(languageDropdownHoverTimeout);
+		languageDropdownOpen = isOpen;
+	}
+	
+	function handleLanguageDropdownMouseleave() {
+		// Set a short timeout before closing to make it feel natural
+		languageDropdownHoverTimeout = setTimeout(() => {
+			languageDropdownOpen = false;
+		}, 300);
+	}
 </script>
 
 <div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto">
@@ -267,24 +283,33 @@
 					{#if available_langs.length > 0}
 						<div class="flex items-center gap-2">
 							<!-- Language visibility dropdown -->
-							<DropdownMenu>
-								<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
-									<Eye class="h-4 w-4" />
-									<span class="sr-only">Toggle language visibility</span>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent align="start">
-									<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
-									
-									<!-- Language visibility toggles -->
-									{#each Object.entries(user_langs) as [key, meta]}
-										<DropdownMenuCheckboxItem 
-											checked={meta.display}
-											onCheckedChange={() => toggle_display(key)}
-										>
-											{meta.native} ({key})
-										</DropdownMenuCheckboxItem>
-									{/each}
-								</DropdownMenuContent>
+							<DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen}>
+								<div onmouseleave={handleLanguageDropdownMouseleave}>
+									<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
+										<Eye class="h-4 w-4" />
+										<span class="sr-only">Toggle language visibility</span>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent align="start">
+										<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
+										
+										<!-- Language visibility toggles -->
+										<div class="max-h-[200px] overflow-y-auto">
+											{#each Object.entries(user_langs) as [key, meta]}
+												<div 
+													class="flex items-center px-2 py-1.5 cursor-pointer hover:bg-gray-100"
+													onclick={() => toggle_display(key)}
+												>
+													<div class="w-4 h-4 mr-2 flex items-center justify-center">
+														{#if meta.display}
+															<Check class="h-4 w-4" />
+														{/if}
+													</div>
+													<span>{meta.native} ({key})</span>
+												</div>
+											{/each}
+										</div>
+									</DropdownMenuContent>
+								</div>
 							</DropdownMenu>
 							
 							<!-- Language management link -->
