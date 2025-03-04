@@ -45,7 +45,8 @@
 		DropdownMenuSeparator,
 		DropdownMenuLabel,
 		DropdownMenuRadioGroup,
-		DropdownMenuRadioItem
+		DropdownMenuRadioItem,
+		DropdownMenuCheckboxItem
 	} from '$lib/components/ui/dropdown-menu';
 
 	let example_translation = {
@@ -269,10 +270,15 @@
 	// State for language dropdown
 	let languageDropdownOpen = $state(false);
 	let languageDropdownHoverTimeout;
+	let settingsDropdownOpen = $state(false);
 	
 	function setLanguageDropdownOpen(isOpen) {
 		clearTimeout(languageDropdownHoverTimeout);
 		languageDropdownOpen = isOpen;
+	}
+	
+	function setSettingsDropdownOpen(isOpen) {
+		settingsDropdownOpen = isOpen;
 	}
 	
 
@@ -416,7 +422,7 @@
 					</DropdownMenu>
 					
 					<!-- Settings dropdown for translation review -->
-					<DropdownMenu>
+					<DropdownMenu open={settingsDropdownOpen} onOpenChange={setSettingsDropdownOpen}>
 						<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
 							<Sliders class="h-4 w-4" />
 							<span class="sr-only">Translation review settings</span>
