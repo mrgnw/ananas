@@ -280,8 +280,8 @@
 
 <div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto pb-[80px] md:pb-0">
 	<!-- Site title and info at the top of the page -->
-	<h1 class="text-3xl font-bold text-gray-900 mb-2">Translate to Multiple Languages at Once</h1>
-<p class="text-gray-600 max-w-2xl mx-auto">Type your text below and instantly see translations in all your selected languages.</p>
+	<h1 class="text-3xl font-bold text-gray-900 mb-2 text-center max-w-2xl mx-auto">Translate to Multiple Languages at Once</h1>
+	<p class="text-gray-600 max-w-2xl mx-auto text-center">Type your text below and instantly see translations in all your selected languages.</p>
 
 	<!-- Desktop Input - Hidden on Mobile -->
 	<div class="relative hidden md:block max-w-2xl mx-auto">
