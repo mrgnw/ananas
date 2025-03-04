@@ -6,10 +6,21 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import { Search, Trash2, Copy, Languages } from 'lucide-svelte';
+	import { Search, Trash2, Copy, Languages, MoreVertical, Check, Sliders } from 'lucide-svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import _ from 'underscore';
 	import { browser } from '$app/environment';
+	
+	// Import dropdown menu components
+	import {
+		DropdownMenu,
+		DropdownMenuContent,
+		DropdownMenuItem,
+		DropdownMenuTrigger,
+		DropdownMenuSeparator,
+		DropdownMenuCheckboxItem,
+		DropdownMenuLabel
+	} from '$lib/components/ui/dropdown-menu';
 
 	let example_translation = {
 		text: 'Ahoy',
@@ -41,6 +52,16 @@
 		history = history.filter((_, i) => i !== index);
 		if (browser) {
 			localStorage.setItem('translationHistory', JSON.stringify(history));
+		}
+	}
+
+	function clearAllHistory() {
+		if (confirm('Are you sure you want to clear all translation history?')) {
+			history = [example_translation];
+			if (browser) {
+				localStorage.setItem('translationHistory', JSON.stringify(history));
+			}
+			toast.success('Translation history cleared');
 		}
 	}
 
@@ -171,9 +192,17 @@
 			toast.error('Failed to copy text. Please copy manually.');
 		}
 	};
+	
+	// Keyboard event handlers for accessibility
+	function handleKeyDown(event, callback) {
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			callback();
+		}
+	}
 </script>
 
-<div class="space-y-4">
+<div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto">
 	<div class="relative">
 		<Input 
 			type="text" 
@@ -192,62 +221,107 @@
 	</div>
 
 	<div class="space-y-4">
-		<!-- Language badges section -->
-		<div class="space-y-2">
-			<div class="flex items-center justify-between">
-				<div class="text-sm font-medium text-gray-600">Active Languages</div>
-				<a
-					href="/languages"
-					class="flex items-center gap-1 rounded-md border border-gray-200 bg-white p-1.5 text-xs shadow-sm hover:bg-gray-50"
-					title="Manage languages"
-				>
-					<Languages class="h-3.5 w-3.5" />
-					<span class="hidden sm:inline">Languages</span>
-				</a>
-			</div>
-			
-			<div class="scrollbar-thin flex space-x-2 overflow-x-auto pb-2 snap-x">
-				{#each Object.entries(user_langs) as [key, meta]}
-					<Badge
-						variant={meta.display ? 'default' : 'outline'}
-						class="cursor-pointer whitespace-nowrap snap-start flex-shrink-0"
-						onclick={() => toggle_display(key)}
+		<!-- Language badges section - only shown if needed -->
+		{#if available_langs.length > 0}
+			<div class="space-y-2">
+				<div class="flex items-center justify-between">
+					<div class="text-sm font-medium text-gray-600">Active Languages</div>
+					<a
+						href="/languages"
+						class="flex items-center gap-1 rounded-md border border-gray-200 bg-white p-1.5 text-xs shadow-sm hover:bg-gray-50"
+						title="Manage languages"
 					>
-						{meta.native}
-					</Badge>
-				{/each}
-				<Badge
-					variant="secondary"
-					class="cursor-pointer whitespace-nowrap snap-start flex-shrink-0"
-					onclick={() => show_original = !show_original}
-				>
-					{show_original ? 'Hide' : 'Show'} Original
-				</Badge>
+						<Languages class="h-3.5 w-3.5" />
+						<span class="hidden sm:inline">Languages</span>
+					</a>
+				</div>
+				
+				<div class="scrollbar-thin flex space-x-2 overflow-x-auto pb-2 snap-x">
+					{#each Object.entries(user_langs) as [key, meta]}
+						<Badge
+							variant={meta.display ? 'default' : 'outline'}
+							class="cursor-pointer whitespace-nowrap snap-start flex-shrink-0"
+							onclick={() => toggle_display(key)}
+							onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
+							tabindex="0"
+							role="button"
+							aria-pressed={meta.display}
+						>
+							{meta.native}
+						</Badge>
+					{/each}
+				</div>
 			</div>
-		</div>
+		{:else}
+			<div class="text-center py-4">
+				<a href="/languages" class="text-blue-500 hover:underline">Add languages to get started</a>
+			</div>
+		{/if}
 		
 		<!-- Translation history section -->
 		<div class="space-y-4">
 			<div class="flex items-center justify-between">
 				<h2 class="text-xl font-semibold">Translation History</h2>
-				<div class="flex items-center gap-2">
-					<button
-						class="rounded-md border border-gray-200 bg-white p-1.5 text-xs shadow-sm hover:bg-gray-50"
-						onclick={() => toggleLanguageCodes()}
-						title="Toggle language code labels"
-					>
-						{show_language_codes ? 'Hide' : 'Show'} Labels
-					</button>
-					<button
-						class="rounded-md border border-gray-200 bg-white p-1.5 text-xs shadow-sm hover:bg-gray-50"
-						onclick={() => truncate_lines = !truncate_lines}
-						title="Toggle text truncation"
-					>
-						{truncate_lines ? 'Show Full Text' : 'Truncate Text'}
-					</button>
-				</div>
+				
+				<!-- Settings dropdown for translation history -->
+				<DropdownMenu>
+					<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
+						<Sliders class="h-4 w-4" />
+						<span class="sr-only">Translation history settings</span>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>Display Settings</DropdownMenuLabel>
+						
+						<!-- Display options -->
+						<DropdownMenuCheckboxItem 
+							checked={show_original}
+							onCheckedChange={(value) => { show_original = value; }}
+						>
+							Show Original Text
+						</DropdownMenuCheckboxItem>
+						
+						<DropdownMenuCheckboxItem 
+							checked={show_language_codes}
+							onCheckedChange={(value) => { show_language_codes = value; }}
+						>
+							Show Language Codes
+						</DropdownMenuCheckboxItem>
+						
+						<DropdownMenuCheckboxItem 
+							checked={truncate_lines}
+							onCheckedChange={(value) => { truncate_lines = value; }}
+						>
+							Truncate Text
+						</DropdownMenuCheckboxItem>
+						
+						<DropdownMenuSeparator />
+						<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
+						
+						<!-- Language visibility toggles -->
+						{#each Object.entries(user_langs) as [key, meta]}
+							<DropdownMenuCheckboxItem 
+								checked={meta.display}
+								onCheckedChange={() => toggle_display(key)}
+							>
+								{meta.native} ({key})
+							</DropdownMenuCheckboxItem>
+						{/each}
+						
+						<DropdownMenuSeparator />
+						
+						<!-- Clear history option -->
+						<DropdownMenuItem 
+							class="text-red-500 focus:text-red-500" 
+							onclick={clearAllHistory}
+						>
+							Clear History
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
-			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+			
+			<!-- Translation cards with improved responsive grid -->
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
 				{#each history as translation, i}
 					<div class="group w-full">
 						<Card class="h-full hover:shadow-md transition-shadow">
@@ -273,15 +347,16 @@
 										</button>
 									</div>
 								{#if show_original}
-									<div class="text-sm font-medium text-gray-500 mb-2 border-b pb-2 pr-6 truncate" title={translation.text}>
+									<div class="text-sm font-medium text-gray-600 mb-2 border-b pb-2 pr-6 truncate" title={translation.text}>
 										{translation.text}
 									</div>
 								{/if}
 								{#each show_langs as langKey}
 									{#if translation.translations[langKey]}
-										<div
-											class="group/item flex cursor-pointer items-center rounded-md px-1.5 py-1 hover:bg-gray-50"
+										<button
+											class="group/item flex w-full text-left cursor-pointer items-center rounded-md px-1.5 py-1 hover:bg-gray-50"
 											onclick={() => copyToClipboard(translation.translations[langKey])}
+											aria-label="Copy translation"
 										>
 											<div class="flex w-full items-center gap-1.5 overflow-hidden justify-between">
 												<div class="flex items-center gap-1.5 overflow-hidden">
@@ -296,32 +371,41 @@
 														{translation.translations[langKey]}
 													</p>
 												</div>
-												<button
-													class="flex-shrink-0 opacity-0 group-hover/item:opacity-100 transition-opacity hover:text-blue-500"
+												<div
+													class="flex-shrink-0 opacity-0 group-hover/item:opacity-100 transition-opacity hover:text-blue-500 cursor-pointer"
 													aria-label="Copy translation"
+													role="button"
+													tabindex="0"
 													onclick={(e) => {
 														e.stopPropagation();
 														copyToClipboard(translation.translations[langKey]);
 													}}
+													onkeydown={(e) => handleKeyDown(e, () => {
+														e.stopPropagation();
+														copyToClipboard(translation.translations[langKey]);
+													})}
 												>
 													<Copy class="h-3.5 w-3.5" />
-												</button>
+												</div>
 											</div>
-										</div>
+										</button>
 									{/if}
 								{/each}
+								
+								<!-- Show hidden languages as small badges -->
 								{#if langs_not_shown(translation).length > 0}
 									<div class="mt-1.5 text-center">
 										<div
 											class="inline-flex flex-wrap gap-1 justify-center"
 										>
 											{#each langs_not_shown(translation) as langCode}
-												<span
-													class="cursor-pointer text-[10px] px-1 py-0.5 bg-gray-100 text-gray-500 rounded hover:bg-gray-200"
+												<button
+													class="text-[10px] px-1 py-0.5 bg-gray-100 text-gray-500 rounded hover:bg-gray-200"
 													onclick={() => toggle_display(langCode)}
+													aria-label={`Show ${langCode} language`}
 												>
 													{langCode}
-												</span>
+												</button>
 											{/each}
 										</div>
 									</div>
@@ -331,79 +415,8 @@
 						</Card>
 					</div>
 				{:else}
-					<div class="group w-full">
-						<Card class="h-full hover:shadow-md transition-shadow">
-							<CardContent class="p-3">
-								<div class="relative space-y-2">
-									<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-										<button
-											class="text-gray-400 hover:text-blue-500 p-1 rounded-full"
-											aria-label="Copy all translations"
-											onclick={() => {
-												const allTranslations = Object.values(example_translation.translations).join('\n');
-												copyToClipboard(allTranslations);
-											}}
-										>
-											<Copy class="h-3.5 w-3.5" />
-										</button>
-									</div>
-									{#if show_original}
-										<div class="text-sm font-medium text-gray-500 mb-2 border-b pb-2 pr-6 truncate" title={example_translation.text}>
-											{example_translation.text}
-										</div>
-									{/if}
-									{#each show_langs as langKey}
-										{#if example_translation.translations[langKey]}
-											<div
-												class="group/item flex cursor-pointer items-center rounded-md px-1.5 py-1 hover:bg-gray-50"
-												onclick={() => copyToClipboard(example_translation.translations[langKey])}
-											>
-												<div class="flex w-full items-center gap-1.5 overflow-hidden justify-between">
-													<div class="flex items-center gap-1.5 overflow-hidden">
-														{#if show_language_codes}
-															<span class="flex-shrink-0 text-xs text-gray-400 w-8">{langKey}</span>
-														{/if}
-														<p
-															class="text-sm {truncate_lines ? 'truncate' : ''}"
-															class:font-medium={example_translation.translations[langKey] === example_translation.text}
-															title={example_translation.translations[langKey]}
-														>
-															{example_translation.translations[langKey]}
-														</p>
-													</div>
-													<button
-														class="flex-shrink-0 opacity-0 group-hover/item:opacity-100 transition-opacity hover:text-blue-500"
-														aria-label="Copy translation"
-														onclick={(e) => {
-															e.stopPropagation();
-															copyToClipboard(example_translation.translations[langKey]);
-														}}
-													>
-														<Copy class="h-3.5 w-3.5" />
-													</button>
-												</div>
-											</div>
-										{/if}
-									{/each}
-									{#if langs_not_shown(example_translation).length > 0}
-										<div class="mt-1.5 text-center">
-											<div
-												class="inline-flex flex-wrap gap-1 justify-center"
-											>
-												{#each langs_not_shown(example_translation) as langCode}
-													<span
-														class="cursor-pointer text-[10px] px-1 py-0.5 bg-gray-100 text-gray-500 rounded hover:bg-gray-200"
-														onclick={() => toggle_display(langCode)}
-													>
-														{langCode}
-													</span>
-												{/each}
-											</div>
-										</div>
-									{/if}
-								</div>
-							</CardContent>
-						</Card>
+					<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-8 text-gray-500">
+						No translations yet. Enter text above to translate.
 					</div>
 				{/each}
 			</div>
@@ -412,3 +425,31 @@
 </div>
 
 <Toaster />
+
+<style>
+	/* Add smooth scrolling for language badges */
+	.scrollbar-thin {
+		scrollbar-width: thin;
+		-ms-overflow-style: none;
+	}
+	
+	.scrollbar-thin::-webkit-scrollbar {
+		height: 6px;
+	}
+	
+	.scrollbar-thin::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	
+	.scrollbar-thin::-webkit-scrollbar-thumb {
+		background-color: rgba(0, 0, 0, 0.1);
+		border-radius: 6px;
+	}
+	
+	/* Touch-friendly tap targets */
+	@media (max-width: 640px) {
+		button {
+			min-height: 36px;
+		}
+	}
+</style>
