@@ -371,7 +371,7 @@
 					<div class="group w-full">
 						<Card class="h-full hover:shadow-md transition-shadow">
 							<CardContent class="p-3">
-								<div class="relative space-y-2">
+								<div class="relative">
 									<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
 										<button
 											class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
@@ -382,26 +382,23 @@
 										</button>
 									</div>
 									{#if show_original}
-										<div class="text-sm font-medium text-gray-600 mb-2 pr-6 truncate" title={translation.text}>
+										<div class="text-sm font-medium text-gray-700 mb-3 pr-8 line-clamp-2" title={translation.text}>
 											{translation.text}
 										</div>
 									{/if}
 									{#each show_langs as lang}
 										{#if translation.translations[lang]}
-											<div class="text-sm pt-1.5 relative">
-												<div class="flex items-center gap-1 text-xs text-gray-500 mb-0.5">
-													<button
-														class="ml-auto text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
-														aria-label="Copy translation"
-														onclick={() => copyToClipboard(translation.translations[lang])}
-													>
-														<Copy class="h-3 w-3" />
-													</button>
-												</div>
-												
-												<div class={truncate_lines ? "line-clamp-3" : ""}>
+											<div class="group relative pl-2.5 border-l-2 border-gray-100 hover:border-blue-200 transition-colors mb-2 last:mb-0">
+												<div class="text-sm text-gray-800 pr-6 pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}">
 													{translation.translations[lang]}
 												</div>
+												<button
+													class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
+													aria-label="Copy translation"
+													onclick={() => copyToClipboard(translation.translations[lang])}
+												>
+													<Copy class="h-3 w-3" />
+												</button>
 											</div>
 										{/if}
 									{/each}
