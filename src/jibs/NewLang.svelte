@@ -254,36 +254,6 @@
 					
 					{#if available_langs.length > 0}
 						<div class="flex items-center gap-2">
-							<!-- Language visibility dropdown -->
-							<DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen}>
-								<div onmouseleave={handleLanguageDropdownMouseleave}>
-									<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
-										<Eye class="h-4 w-4" />
-										<span class="sr-only">Toggle language visibility</span>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent align="start">
-										<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
-										
-										<!-- Language visibility toggles -->
-										<div class="max-h-[200px] overflow-y-auto">
-											{#each Object.entries(user_langs) as [key, meta]}
-												<div 
-													class="flex items-center px-2 py-1.5 cursor-pointer hover:bg-gray-100"
-													onclick={() => toggle_display(key)}
-												>
-													<div class="w-4 h-4 mr-2 flex items-center justify-center">
-														{#if meta.display}
-															<Check class="h-4 w-4" />
-														{/if}
-													</div>
-													<span>{meta.native} ({key})</span>
-												</div>
-											{/each}
-										</div>
-									</DropdownMenuContent>
-								</div>
-							</DropdownMenu>
-							
 							<!-- Language management link -->
 							<a
 								href="/languages"
@@ -320,58 +290,90 @@
 					{/if}
 				</div>
 				
-				<!-- Settings dropdown for translation review -->
-				<DropdownMenu>
-					<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
-						<Sliders class="h-4 w-4" />
-						<span class="sr-only">Translation review settings</span>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>Display Settings</DropdownMenuLabel>
-						
-						<!-- Language badge display options -->
-						<DropdownMenuLabel class="text-xs text-gray-500 pt-0">Badge Display</DropdownMenuLabel>
-						<DropdownMenuRadioGroup value={badge_display} onValueChange={(value) => badge_display = value}>
-							<DropdownMenuRadioItem value="name">Language Name</DropdownMenuRadioItem>
-							<DropdownMenuRadioItem value="code">Language Code</DropdownMenuRadioItem>
-							<DropdownMenuRadioItem value="flag">Flag</DropdownMenuRadioItem>
-						</DropdownMenuRadioGroup>
-						
-						<DropdownMenuSeparator />
-						
-						<!-- Display options -->
-						<DropdownMenuCheckboxItem 
-							checked={show_original}
-							onCheckedChange={(value) => { show_original = value; }}
-						>
-							Show Original Text
-						</DropdownMenuCheckboxItem>
-						
-						<DropdownMenuCheckboxItem 
-							checked={show_language_codes}
-							onCheckedChange={(value) => { show_language_codes = value; }}
-						>
-							Show Language Codes
-						</DropdownMenuCheckboxItem>
-						
-						<DropdownMenuCheckboxItem 
-							checked={truncate_lines}
-							onCheckedChange={(value) => { truncate_lines = value; }}
-						>
-							Truncate Text
-						</DropdownMenuCheckboxItem>
-						
-						<DropdownMenuSeparator />
-						
-						<!-- Clear history option -->
-						<DropdownMenuItem 
-							class="text-red-500 focus:text-red-500" 
-							onclick={clearAllHistory}
-						>
-							Clear History
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<div class="flex items-center gap-2">
+					<!-- Language visibility dropdown -->
+					<DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen} class="sm:hidden">
+						<div onmouseleave={handleLanguageDropdownMouseleave}>
+							<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
+								<Eye class="h-4 w-4" />
+								<span class="sr-only">Toggle language visibility</span>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent align="start">
+								<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
+								
+								<!-- Language visibility toggles -->
+								<div class="max-h-[200px] overflow-y-auto">
+									{#each Object.entries(user_langs) as [key, meta]}
+										<div 
+											class="flex items-center px-2 py-1.5 cursor-pointer hover:bg-gray-100"
+											onclick={() => toggle_display(key)}
+										>
+											<div class="w-4 h-4 mr-2 flex items-center justify-center">
+												{#if meta.display}
+													<Check class="h-4 w-4" />
+												{/if}
+											</div>
+											<span>{meta.native} ({key})</span>
+										</div>
+									{/each}
+								</div>
+							</DropdownMenuContent>
+						</div>
+					</DropdownMenu>
+					
+					<!-- Settings dropdown for translation review -->
+					<DropdownMenu>
+						<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
+							<Sliders class="h-4 w-4" />
+							<span class="sr-only">Translation review settings</span>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuLabel>Display Settings</DropdownMenuLabel>
+							
+							<!-- Language badge display options -->
+							<DropdownMenuLabel class="text-xs text-gray-500 pt-0">Badge Display</DropdownMenuLabel>
+							<DropdownMenuRadioGroup value={badge_display} onValueChange={(value) => badge_display = value}>
+								<DropdownMenuRadioItem value="name">Language Name</DropdownMenuRadioItem>
+								<DropdownMenuRadioItem value="code">Language Code</DropdownMenuRadioItem>
+								<DropdownMenuRadioItem value="flag">Flag</DropdownMenuRadioItem>
+							</DropdownMenuRadioGroup>
+							
+							<DropdownMenuSeparator />
+							
+							<!-- Display options -->
+							<DropdownMenuCheckboxItem 
+								checked={show_original}
+								onCheckedChange={(value) => { show_original = value; }}
+							>
+								Show Original Text
+							</DropdownMenuCheckboxItem>
+							
+							<DropdownMenuCheckboxItem 
+								checked={show_language_codes}
+								onCheckedChange={(value) => { show_language_codes = value; }}
+							>
+								Show Language Codes
+							</DropdownMenuCheckboxItem>
+							
+							<DropdownMenuCheckboxItem 
+								checked={truncate_lines}
+								onCheckedChange={(value) => { truncate_lines = value; }}
+							>
+								Truncate Text
+							</DropdownMenuCheckboxItem>
+							
+							<DropdownMenuSeparator />
+							
+							<!-- Clear history option -->
+							<DropdownMenuItem 
+								class="text-red-500 focus:text-red-500" 
+								onclick={clearAllHistory}
+							>
+								Clear History
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 			</div>
 			
 			<!-- Translation cards with improved responsive grid -->
