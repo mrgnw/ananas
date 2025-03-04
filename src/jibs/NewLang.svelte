@@ -545,7 +545,7 @@
 													</div>
 													
 													{#each Object.entries(example.translations) as [langCode, translation], i}
-														{#if Object.keys(user_langs).includes(langCode)}
+														{#if show_langs.includes(langCode)}
 															<div class="group relative pl-2.5 border-l-2 border-gray-100 hover:border-blue-200 transition-colors mb-2 {i === Object.entries(example.translations).length - 1 ? 'last:mb-0' : ''}">
 																<div class="text-sm {colorPalette[i % colorPalette.length].text} pr-6 pt-0.5 line-clamp-3">
 																	{translation}
