@@ -9,10 +9,6 @@
 	let { data }: Props = $props();
 </script>
 
-<div class="container mx-auto space-y-6 p-4">
-	<div class="flex justify-between items-center">
-		<h1 class="text-3xl font-bold">Translate</h1>
-	</div>
-
+<div class="container mx-auto p-4 max-w-5xl">
 	<NewLang />
 </div>

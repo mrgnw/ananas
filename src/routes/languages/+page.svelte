@@ -5,7 +5,8 @@
 		getEnglishName,
 		searchLanguages,
 		getLanguageInfo,
-		defaultLanguages
+		defaultLanguages,
+		getCountryInfo
 	} from '$lib/utils/languages.js';
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import { Button } from '$lib/components/ui/button';
@@ -24,7 +25,7 @@
 	import { fade } from 'svelte/transition';
 	import m2mSupport from '$lib/data/m2m-support.json';
 	import wikidataLanguages from '$lib/data/wikidata-languages.json';
-	import { Palmtree } from 'lucide-svelte';
+	import { Palmtree, Globe } from 'lucide-svelte';
 
 	const data = $props<PageData>();
 
@@ -91,6 +92,14 @@
 		})
 	);
 
+	// Get country info if available
+	const countryInfo = $derived(getCountryInfo(data.country));
+
+	// Add console logs for debugging
+	console.log('[Languages] Country from Cloudflare:', data.country);
+	console.log('[Languages] Country data:', data.countryData);
+	console.log('[Languages] Country info:', countryInfo);
+
 	function resetLanguages() {
 		translateLanguages.resetToDefaults();
 	}
@@ -113,17 +122,24 @@
 	}
 </script>
 
-<div class="container mx-auto p-4" in:fade>
+<div class="container mx-auto p-4 max-w-full" in:fade>
 	<div class="mb-6 flex items-center justify-between">
 		<div class="flex items-center gap-3">
 			<a
 				href="/"
-				class="flex items-center gap-2 text-2xl font-bold transition-colors hover:text-yellow-500"
+				class="flex items-center gap-2 text-xl sm:text-2xl font-bold transition-colors hover:text-yellow-500"
 			>
-				<Palmtree class="h-8 w-8" />
+				<Palmtree class="h-6 w-6 sm:h-8 sm:w-8" />
 				<span>Languages</span>
 			</a>
 		</div>
+		
+		{#if data.country && countryInfo}
+			<div class="flex items-center gap-2 rounded bg-blue-50 px-3 py-1.5 text-sm">
+				<Globe class="h-4 w-4 text-blue-500" />
+				<span>Your location: {countryInfo.name} {countryInfo.flag}</span>
+			</div>
+		{/if}
 	</div>
 
 	<div class="mb-6">
@@ -135,16 +151,16 @@
 		/>
 	</div>
 
-	<div class="flex justify-center">
-		<table class="w-[48rem] border-collapse bg-white">
+	<div class="overflow-x-auto">
+		<table class="w-full border-collapse bg-white">
 			<thead class="border-b bg-gray-50">
 				<tr>
 					<th class="w-12 px-2 py-1.5 text-center">
 						<Checkbox />
 					</th>
-					<th class="w-24 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Speakers (M)</th>
-					<th class="w-20 px-2 py-1.5 text-center font-mono text-sm text-gray-600">Code</th>
-					<th class="px-2 py-1.5 text-left text-sm text-gray-600">Name</th>
+					<th class="px-2 py-1.5 text-center text-xs sm:text-sm text-gray-600">Speakers (M)</th>
+					<th class="px-2 py-1.5 text-center text-xs sm:text-sm text-gray-600">Code</th>
+					<th class="px-2 py-1.5 text-left text-xs sm:text-sm text-gray-600">Name</th>
 				</tr>
 			</thead>
 			<tbody class="divide-y">
@@ -159,13 +175,13 @@
 								onCheckedChange={() => toggleLanguage(lang.code)}
 							/>
 						</td>
-						<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
+						<td class="px-2 py-1.5 text-center text-xs sm:text-sm" class:text-gray-400={!supported}
 							>{formatSpeakers(info?.nativeSpeakers_k)}</td
 						>
-						<td class="px-2 py-1.5 text-center font-mono" class:text-gray-400={!supported}
+						<td class="px-2 py-1.5 text-center text-xs sm:text-sm" class:text-gray-400={!supported}
 							>{lang.code}</td
 						>
-						<td class="px-2 py-1.5 text-left" class:text-gray-400={!supported}
+						<td class="px-2 py-1.5 text-left text-xs sm:text-sm" class:text-gray-400={!supported}
 							>{formatName(lang)}</td
 						>
 					</tr>
