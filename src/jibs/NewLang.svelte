@@ -525,7 +525,7 @@
 								<div class="relative">
 									<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
 										<button
-											class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
+											class="text-gray-400 hover:text-red-500 p-1"
 											aria-label="Delete translation"
 											onclick={() => deleteTranslation(i)}
 										>
@@ -544,7 +544,7 @@
 													{translation.translations[lang]}
 												</div>
 												<button
-													class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
+													class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
 													aria-label="Copy translation"
 													onclick={() => copyToClipboard(translation.translations[lang])}
 												>
@@ -571,7 +571,7 @@
 												<div class="relative">
 													<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
 														<button
-															class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
+															class="text-gray-400 hover:text-red-500 p-1"
 															aria-label="Delete translation"
 														>
 															<Trash2 class="h-3.5 w-3.5" />
@@ -588,7 +588,7 @@
 																	{translation}
 																</div>
 																<button
-																	class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
+																	class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
 																	aria-label="Copy translation"
 																	onclick={() => copyToClipboard(translation)}
 																>
