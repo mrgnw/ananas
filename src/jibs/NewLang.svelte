@@ -352,14 +352,14 @@
 								<Eye class="h-4 w-4" />
 								<span class="sr-only">Toggle language visibility</span>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent align="start">
+							<DropdownMenuContent align="start" class="dropdown-menu-content">
 								<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
 								
 								<!-- Language visibility toggles -->
 								<div class="max-h-[200px] overflow-y-auto">
 									{#each Object.entries(user_langs) as [key, meta]}
 									  <div 
-									    class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground {getLanguageColors(key, meta.display, 'dropdown')}"
+									    class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-item {getLanguageColors(key, meta.display, 'dropdown')}"
 									    onclick={(e) => handleCheckboxClick(e, key)}
 									  >
 									    <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -551,19 +551,22 @@
 		height: 6px;
 	}
 	
-	.scrollbar-thin::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	
 	.scrollbar-thin::-webkit-scrollbar-thumb {
-		background-color: rgba(0, 0, 0, 0.1);
-		border-radius: 6px;
+		background-color: rgba(0, 0, 0, 0.2);
+		border-radius: 3px;
 	}
 	
-	/* Touch-friendly tap targets */
-	@media (max-width: 640px) {
-		button {
-			min-height: 36px;
-		}
+	.scrollbar-thin::-webkit-scrollbar-track {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+	
+	/* Disable double-tap zoom on mobile */
+	:global(html) {
+		touch-action: manipulation;
+	}
+	
+	/* Specifically disable double-tap zoom in the dropdown */
+	:global(.dropdown-menu-content) {
+		touch-action: manipulation;
 	}
 </style>
