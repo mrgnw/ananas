@@ -6,7 +6,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import { Search, Trash2, Copy, Languages, MoreVertical, Check, Sliders, Eye } from 'lucide-svelte';
+	import { Search, Trash2, Copy, Languages, MoreVertical, Check, Sliders, Eye, Inbox } from 'lucide-svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import _ from 'underscore';
 	import { browser } from '$app/environment';
@@ -75,7 +75,7 @@
 	let text = $state('');
 	let show_original = $state(true);
 	let truncate_lines = $state(true);
-	// Badge display format: 'name', 'code', or 'none'
+	// Badge display format: 'name', 'code'
 	let badge_display = $state(browser ? localStorage.getItem('badgeDisplay') || 'name' : 'name');
 	
 	// Use the shared language store
@@ -268,7 +268,7 @@
 								{#each Object.entries(user_langs) as [key, meta]}
 									<Badge
 										variant={meta.display ? 'default' : 'outline'}
-										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0"
+										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0 h-6"
 										onclick={() => toggle_display(key)}
 										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
 										tabindex="0"
@@ -332,7 +332,6 @@
 							<DropdownMenuRadioGroup value={badge_display} onValueChange={(value) => badge_display = value}>
 								<DropdownMenuRadioItem value="name">Language Name</DropdownMenuRadioItem>
 								<DropdownMenuRadioItem value="code">Language Code</DropdownMenuRadioItem>
-								<DropdownMenuRadioItem value="none">None</DropdownMenuRadioItem>
 							</DropdownMenuRadioGroup>
 							
 							<DropdownMenuSeparator />
@@ -375,7 +374,7 @@
 								<div class="relative space-y-2">
 									<div class="absolute right-0 top-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
 										<button
-											class="text-gray-400 hover:text-blue-500 p-1 rounded-full"
+											class="text-gray-400 hover:text-blue-500 p-1 rounded-full hover:bg-gray-100"
 											aria-label="Copy all translations"
 											onclick={() => {
 												const allTranslations = Object.values(translation.translations).join('\n');
@@ -385,47 +384,47 @@
 											<Copy class="h-3.5 w-3.5" />
 										</button>
 										<button
-											class="text-gray-400 hover:text-red-500 p-1 rounded-full"
+											class="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100"
 											aria-label="Delete translation"
 											onclick={() => deleteTranslation(i)}
 										>
 											<Trash2 class="h-3.5 w-3.5" />
 										</button>
 									</div>
-								{#if show_original}
-									<div class="text-sm font-medium text-gray-600 mb-2 border-b pb-2 pr-6 truncate" title={translation.text}>
-										{translation.text}
-									</div>
-								{/if}
-								{#each show_langs as lang}
-									{#if translation.translations[lang]}
-										<div class="text-sm border-t first:border-t-0 pt-1.5 first:pt-0 relative">
-											<div class="flex items-center gap-1 text-xs text-gray-500 mb-0.5">
-												
-												
-												
-												<button
-													class="ml-auto text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-													aria-label="Copy translation"
-													onclick={() => copyToClipboard(translation.translations[lang])}
-												>
-													<Copy class="h-3 w-3" />
-												</button>
-											</div>
-											
-											<div class={truncate_lines ? "line-clamp-3" : ""}>
-												{translation.translations[lang]}
-											</div>
+									{#if show_original}
+										<div class="text-sm font-medium text-gray-600 mb-2 border-b pb-2 pr-6 truncate" title={translation.text}>
+											{translation.text}
 										</div>
 									{/if}
-								{/each}
-							</div>
-						</CardContent>
-					</Card>
-				</div>
+									{#each show_langs as lang}
+										{#if translation.translations[lang]}
+											<div class="text-sm border-t first:border-t-0 pt-1.5 first:pt-0 relative">
+												<div class="flex items-center gap-1 text-xs text-gray-500 mb-0.5">
+													<button
+														class="ml-auto text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-full"
+														aria-label="Copy translation"
+														onclick={() => copyToClipboard(translation.translations[lang])}
+													>
+														<Copy class="h-3 w-3" />
+													</button>
+												</div>
+												
+												<div class={truncate_lines ? "line-clamp-3" : ""}>
+													{translation.translations[lang]}
+												</div>
+											</div>
+										{/if}
+									{/each}
+								</div>
+							</CardContent>
+						</Card>
+					</div>
 				{:else}
-					<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-8 text-gray-500">
-						No translations yet. Enter text above to translate.
+					<div class="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 text-gray-500 bg-gray-50 rounded-lg">
+						<div class="flex flex-col items-center gap-3">
+							<Inbox class="h-10 w-10 text-gray-400" />
+							<p>No translations yet. Enter text above to translate.</p>
+						</div>
 					</div>
 				{/each}
 			</div>
