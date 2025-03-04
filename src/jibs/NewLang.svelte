@@ -237,42 +237,7 @@
 	</div>
 
 	<div class="space-y-4">
-		<!-- Language badges section - only shown if needed -->
-		{#if available_langs.length > 0 && false}
-			<div class="space-y-2">
-				<div class="flex items-center justify-between">
-					<div class="text-sm font-medium text-gray-600">Active Languages</div>
-					<a
-						href="/languages"
-						class="flex items-center gap-1 rounded-md border border-gray-200 bg-white p-1.5 text-xs shadow-sm hover:bg-gray-50"
-						title="Manage languages"
-					>
-						<Languages class="h-3.5 w-3.5" />
-						<span class="hidden sm:inline">Languages</span>
-					</a>
-				</div>
-				
-				<div class="scrollbar-thin flex space-x-2 overflow-x-auto pb-2 snap-x">
-					{#each Object.entries(user_langs) as [key, meta]}
-						<Badge
-							variant={meta.display ? 'default' : 'outline'}
-							class="cursor-pointer whitespace-nowrap snap-start flex-shrink-0"
-							onclick={() => toggle_display(key)}
-							onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
-							tabindex="0"
-							role="button"
-							aria-pressed={meta.display}
-						>
-							{meta.native}
-						</Badge>
-					{/each}
-				</div>
-			</div>
-		{:else if !available_langs.length}
-			<div class="text-center py-4">
-				<a href="/languages" class="text-blue-500 hover:underline">Add languages to get started</a>
-			</div>
-		{/if}
+
 		
 		<!-- Translation review section -->
 		<div class="space-y-4">
@@ -325,14 +290,17 @@
 							<!-- Compact language badges -->
 							<div class="hidden sm:flex flex-wrap gap-1.5 overflow-x-auto max-w-[300px] md:max-w-none">
 								{#each Object.entries(user_langs) as [key, meta]}
-									{#if meta.display}
-										<Badge
-											variant="default"
-											class="whitespace-nowrap text-xs px-2 py-0"
-										>
-											{meta.native}
-										</Badge>
-									{/if}
+									<Badge
+										variant={meta.display ? 'default' : 'outline'}
+										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0"
+										onclick={() => toggle_display(key)}
+										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
+										tabindex="0"
+										role="button"
+										aria-pressed={meta.display}
+									>
+										{meta.native}
+									</Badge>
 								{/each}
 							</div>
 						</div>
