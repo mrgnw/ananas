@@ -241,12 +241,12 @@
 					{#if tgt_langs.length > 0}
 						<div class="flex items-center gap-2">
 							<!-- language visibility badges -->
-							<div class="flex flex-row flex-nowrap gap-2 overflow-x-auto scrollbar-thin max-w-full">
+							<div class="flex flex-row flex-nowrap gap-1.5 overflow-x-auto scrollbar-thin max-w-full py-1">
 								{#each Object.entries(user_langs) as [key, meta], index}
 									<!-- class = {getLanguageColors(key, meta.display)} -->
 									<Badge
 										variant={meta.display ? 'default' : 'outline'}
-										class="h-6 cursor-pointer whitespace-nowrap px-2 py-0 text-xs "
+										class="h-5 cursor-pointer whitespace-nowrap px-1.5 py-0 text-xs shrink-0"
 										onclick={() => translateLanguages.toggleLanguageDisplay(key)}
 										onkeydown={(e) =>
 											handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
@@ -357,34 +357,7 @@
 		</div>
 
 		<div class="gap-0.5.5 flex items-center">
-			<!-- Example button -->
-			<button
-				onclick={() => {
-					text = getRandomExample();
-					document.querySelector('input').focus();
-				}}
-				class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 transition-colors hover:bg-purple-200"
-				title="Try an example"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="20"
-					height="20"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="text-purple-700"
-					><path
-						d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
-					/></svg
-				>
-				<span class="sr-only">Try an example</span>
-			</button>
-
-			<!-- Languages Quick Access -->
+			<!-- Select Languages -->
 			<a
 				href="/languages"
 				class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"

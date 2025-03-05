@@ -40,7 +40,7 @@
 	}
 </script>
 
-<DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen} class="sm:hidden">
+<DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen}>
 	<DropdownMenuTrigger
 		class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
 	>
