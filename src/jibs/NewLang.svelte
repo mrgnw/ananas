@@ -51,18 +51,12 @@
 
 	// Use the shared language store
 	let user_langs = $derived(translateLanguages.languages);
-
-	// All available languages that can be toggled
 	let tgt_langs = $derived(Object.keys(user_langs));
-
 	let show_langs = $derived(
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
-	function toggleLanguageCodes() {
-		// Removed this function as it's no longer needed
-	}
 
 	let is_loading = $state(false);
 	let is_ready = $derived(text.length > 0 && !is_loading);
