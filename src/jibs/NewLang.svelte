@@ -15,7 +15,7 @@
 	import { toast } from 'svelte-sonner';
 	import { Languages } from 'lucide-svelte';
 	import { browser } from '$app/environment';
-	
+
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 	function loadHistory() {
@@ -44,8 +44,6 @@
 			toast.success('Translation history cleared');
 		}
 	}
-
-	
 
 	let text = $state('');
 	let truncate_lines = $state(true);
@@ -76,10 +74,7 @@
 			.filter((lang) => lang != 'metadata');
 	}
 
-	function toggle_display(key) {
-		console.log('toggle_display called for:', key);
-		translateLanguages.toggleLanguageDisplay(key);
-	}
+	// Using toggleLanguageDisplay directly from the store
 
 	async function handleSubmit() {
 		is_loading = true;
@@ -245,17 +240,7 @@
 
 					{#if tgt_langs.length > 0}
 						<div class="flex items-center gap-2">
-							<!-- Language management link -->
-							<a
-								href="/languages"
-								class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
-								title="Manage languages"
-							>
-								<Languages class="h-4 w-4" />
-								<span class="sr-only">Manage languages</span>
-							</a>
-
-							<!-- Compact language badges -->
+							<!-- language visibility badges -->
 							<div
 								class="hidden max-w-[300px] flex-wrap gap-2 overflow-x-auto sm:flex md:max-w-none"
 							>
@@ -264,8 +249,8 @@
 									<Badge
 										variant={meta.display ? 'default' : 'outline'}
 										class="h-6 cursor-pointer whitespace-nowrap px-2 py-0 text-xs "
-										onclick={() => toggle_display(key)}
-										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
+										onclick={() => translateLanguages.toggleLanguageDisplay(key)}
+										onkeydown={(e) => handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
 										tabindex="0"
 										role="button"
 										aria-pressed={meta.display}

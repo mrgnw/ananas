@@ -28,7 +28,7 @@
 		// Prevent the default behavior which would close the dropdown
 		event.stopPropagation();
 		// Toggle the language display
-		toggle_display(key);
+		translateLanguages.toggleLanguageDisplay(key);
 	}
 	function handleKeyDown(event, callback) {
 		if (event.key === 'Enter' || event.key === ' ') {
