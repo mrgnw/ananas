@@ -15,6 +15,7 @@
 	import { toast } from 'svelte-sonner';
 	import { Languages } from 'lucide-svelte';
 	import { browser } from '$app/environment';
+	import TranslationInput from './TranslationInput.svelte';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -140,90 +141,15 @@
 		Type your text below and instantly see translations in all your selected languages.
 	</p>
 
-	<!-- Desktop Input - Hidden on Mobile -->
 	<div class="relative mx-auto hidden max-w-2xl md:block">
-		<div class="flex items-center gap-2">
-			<div
-				class="relative flex-1 overflow-hidden rounded-full border border border-gray-100 border-gray-200 shadow-md"
-			>
-				<div class="flex items-center">
-					<Input
-						type="text"
-						placeholder="Enter text from any language..."
-						bind:value={text}
-						disabled={is_loading}
-						class="w-full rounded-full border-0 bg-white py-2.5 pl-4 pr-4 focus:ring-0 {is_loading ? 'opacity-75' : ''}"
-						onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
-					/>
-
-					<Button
-						onclick={handleSubmit}
-						disabled={!is_ready}
-						class="mr-1 h-auto rounded-full p-2"
-						variant={is_ready ? 'default' : 'ghost'}
-						type="submit"
-					>
-						{#if is_loading}
-							<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
-						{:else}
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="20"
-								height="20"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								class="lucide lucide-send"
-								><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg
-							>
-						{/if}
-						<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
-					</Button>
-				</div>
-			</div>
-
-			<div class="gap-0.5.5 flex items-center">
-				<!-- Example button -->
-				<button
-					onclick={() => {
-						text = getRandomExample();
-						document.querySelector('input').focus();
-					}}
-					class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 transition-colors hover:bg-purple-200"
-					title="Try an example"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="text-purple-700"
-						><path
-							d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
-						/></svg
-					>
-					<span class="sr-only">Try an example</span>
-				</button>
-
-				<!-- Languages Quick Access -->
-				<a
-					href="/languages"
-					class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
-					title="Manage languages"
-				>
-					<Languages class="h-5 w-5 text-gray-700" />
-					<span class="sr-only">Manage languages</span>
-				</a>
-			</div>
-		</div>
+		<TranslationInput
+			bind:text
+			{is_loading}
+			{is_ready}
+			{handleSubmit}
+			{getRandomExample}
+			variant="desktop"
+		/>
 	</div>
 
 	<div class="space-y-4">
@@ -306,64 +232,18 @@
 	</div>
 </div>
 
-<!-- Mobile Input Bar (fixed at bottom) with enhanced UX -->
 <div
 	class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white p-4 shadow-lg md:hidden"
 >
-	<div class="mx-auto flex max-w-md items-center gap-2">
-		<div
-			class="relative flex-1 overflow-hidden rounded-full border border border-gray-100 border-gray-200 shadow-md"
-		>
-			<div class="flex items-center">
-				<Input
-					type="text"
-					placeholder="Enter text from any language..."
-					bind:value={text}
-					disabled={is_loading}
-					class="w-full rounded-full border-0 bg-white py-3 pl-4 pr-4 focus:ring-0 {is_loading ? 'opacity-75' : ''}"
-					onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
-				/>
-
-				<Button
-					onclick={handleSubmit}
-					disabled={!is_ready}
-					class="mr-1 h-auto rounded-full p-2"
-					variant={is_ready ? 'default' : 'ghost'}
-					type="submit"
-				>
-					{#if is_loading}
-						<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
-					{:else}
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20"
-							height="20"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							class="lucide lucide-send"
-							><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg
-						>
-					{/if}
-					<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
-				</Button>
-			</div>
-		</div>
-
-		<div class="gap-0.5.5 flex items-center">
-			<!-- Select Languages -->
-			<a
-				href="/languages"
-				class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
-				title="Manage languages"
-			>
-				<Languages class="h-5 w-5 text-gray-700" />
-				<span class="sr-only">Manage languages</span>
-			</a>
-		</div>
+	<div class="mx-auto flex max-w-md">
+		<TranslationInput
+			bind:text
+			{is_loading}
+			{is_ready}
+			{handleSubmit}
+			{getRandomExample}
+			variant="mobile"
+		/>
 	</div>
 </div>
 
