@@ -1,60 +1,5 @@
 <script>
-	let exampleTranslations = [
-		{
-			text: 'Hello, how are you today?',
-			translations: {
-				eng: 'Hello, how are you today?',
-				spa: 'Hola, ¿cómo estás hoy?',
-				rus: 'Привет, как ты сегодня?',
-				jpn: 'こんにちは、今日の調子はどうですか？',
-				ita: 'Ciao, come stai oggi?',
-				cat: 'Hola, com estàs avui?'
-			}
-		},
-		{
-			text: 'I love learning new languages!',
-			translations: {
-				eng: 'I love learning new languages!',
-				spa: '¡Me encanta aprender nuevos idiomas!',
-				rus: 'Я люблю изучать новые языки!',
-				jpn: '新しい言語を学ぶのが大好きです！',
-				ita: 'Adoro imparare nuove lingue!',
-				cat: 'M\'encanta aprendre nous idiomes!'
-			}
-		}
-	];
-
-	// Example phrases in different languages for the "Try an Example" button
-	let examplePhrases = [
-		"あなたの名前は?", // Japanese: What is your name?
-		"¿Cómo estás hoy?", // Spanish: How are you today?
-		"Ich liebe Sprachen", // German: I love languages
-		"Où est la bibliothèque?", // French: Where is the library?
-		"Quanto costa questo?", // Italian: How much does this cost?
-		"Что ты любишь делать?", // Russian: What do you like to do?
-		"我想学习新语言", // Chinese: I want to learn new languages
-		"Tudo bem com você?", // Portuguese: Are you doing well?
-		"Hvad er klokken?", // Danish: What time is it?
-		"Jag älskar att resa", // Swedish: I love to travel
-		"Mikä on lempiruokasi?", // Finnish: What is your favorite food?
-		"Πού είναι το ξενοδοχείο;", // Greek: Where is the hotel?
-		"Dziękuję bardzo", // Polish: Thank you very much
-		"Szeretnék egy kávét", // Hungarian: I would like a coffee
-		"Jak se máš?", // Czech: How are you?
-		"Koliko je sati?", // Croatian: What time is it?
-		"Merhaba, nasılsın?", // Turkish: Hello, how are you?
-		"저는 한국어를 배우고 있어요", // Korean: I am learning Korean
-		"أين المطعم؟", // Arabic: Where is the restaurant?
-		"מה השעה עכשיו?", // Hebrew: What time is it now?
-		"Saya suka musik", // Indonesian: I like music
-		"Cảm ơn rất nhiều", // Vietnamese: Thank you very much
-		"Mahal kita", // Filipino/Tagalog: I love you
-		"Kia ora", // Maori: Hello/Be well
-		"Mình rất thích ẩm thực Việt Nam", // Vietnamese: I really like Vietnamese cuisine
-		"Ik spreek een beetje Nederlands", // Dutch: I speak a little Dutch
-		"Hvar er næsti strætó?", // Icelandic: Where is the next bus?
-		"मुझे भारतीय खाना पसंद है", // Hindi: I like Indian food
-	];
+	import { examplePhrases, exampleTranslations } from '$lib/example';
 	
 	function getRandomExample() {
 		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
@@ -69,8 +14,6 @@
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
 	import { Search, Trash2, Copy, Languages, MoreVertical, Check, Sliders, Eye, Inbox, History } from 'lucide-svelte';
-	import { dndzone } from 'svelte-dnd-action';
-	import _ from 'underscore';
 	import { browser } from '$app/environment';
 	import {
 		Tooltip,
@@ -103,34 +46,6 @@
 		},
 		timestamp: new Date().toISOString()
 	};
-	
-	const colorPalette = [
-		{ bg: 'bg-blue-100', text: 'text-blue-800' },
-		{ bg: 'bg-red-100', text: 'text-red-800' },
-		{ bg: 'bg-green-100', text: 'text-green-800' },
-		{ bg: 'bg-yellow-100', text: 'text-yellow-800' },
-		{ bg: 'bg-purple-100', text: 'text-purple-800' },
-		{ bg: 'bg-pink-100', text: 'text-pink-800' },
-		{ bg: 'bg-indigo-100', text: 'text-indigo-800' },
-		{ bg: 'bg-cyan-100', text: 'text-cyan-800' },
-		{ bg: 'bg-orange-100', text: 'text-orange-800' },
-		{ bg: 'bg-teal-100', text: 'text-teal-800' },
-		{ bg: 'bg-lime-100', text: 'text-lime-800' },
-		{ bg: 'bg-amber-100', text: 'text-amber-800' }
-	];
-
-	// Helper function to get language colors
-	function getLanguageColors(key, display, type) {
-		if (colors_enabled === false) {
-			return '';
-		}
-		const index = Object.keys(user_langs).indexOf(key);
-		const colors = colorPalette[index % colorPalette.length];
-		if (type === 'dropdown') {
-			return display ? colors.text : '';
-		}
-		return display ? `${colors.bg} ${colors.text}` : '';
-	}
 
 	function loadHistory() {
 		if (browser) {
@@ -163,6 +78,7 @@
 
 	// Import the shared language store
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+	import MultiLangCard from './MultiLangCard.svelte';
 
 	let text = $state('');
 	let truncate_lines = $state(true);
@@ -269,31 +185,6 @@
 		}
 	}
 
-	const copyToClipboard = async (text) => {
-		try {
-			if (browser && navigator.clipboard && navigator.clipboard.writeText) {
-				await navigator.clipboard.writeText(text);
-				toast.success('Copied to clipboard!');
-			} else {
-				// Fallback for environments where Clipboard API is not available
-				const textArea = document.createElement('textarea');
-				textArea.value = text;
-				document.body.appendChild(textArea);
-				textArea.select();
-				try {
-					document.execCommand('copy');
-					toast.success('Copied to clipboard!');
-				} catch (err) {
-					console.error('Failed to copy text:', err);
-					toast.error('Failed to copy text. Please copy manually.');
-				}
-				document.body.removeChild(textArea);
-			}
-		} catch (err) {
-			console.error('Failed to copy text:', err);
-			toast.error('Failed to copy text. Please copy manually.');
-		}
-	};
 	
 	// Keyboard event handlers for accessibility
 	function handleKeyDown(event, callback) {
@@ -406,9 +297,11 @@
 							<!-- Compact language badges -->
 							<div class="hidden sm:flex flex-wrap gap-2 overflow-x-auto max-w-[300px] md:max-w-none">
 								{#each Object.entries(user_langs) as [key, meta], index}
-									<Badge
+								<!-- class = {getLanguageColors(key, meta.display)} -->	
+								<Badge
 										variant={meta.display ? 'default' : 'outline'}
-										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0 h-6 {getLanguageColors(key, meta.display)}"
+										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0 h-6 " 
+										
 										onclick={() => toggle_display(key)}
 										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
 										tabindex="0"
@@ -440,8 +333,9 @@
 								<!-- Language visibility toggles -->
 								<div class="max-h-[200px] overflow-y-auto">
 									{#each Object.entries(user_langs) as [key, meta]}
-									  <div 
-									    class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-item {getLanguageColors(key, meta.display, 'dropdown')}"
+									  <!-- class {getLanguageColors(key, meta.display, 'dropdown')} -->
+									<div 
+									    class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-item"
 									    onclick={(e) => handleCheckboxClick(e, key)}
 									  >
 									    <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
@@ -511,47 +405,9 @@
 			<!-- Translation cards with improved responsive grid -->
 			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
 				{#each history as translation, i}
-					<div class="group w-full">
-						<Card class="h-full hover:shadow-md transition-shadow">
-							<CardContent class="p-3">
-								<div class="relative">
-									{#each show_langs as lang}
-										{#if translation.translations[lang]}
-											{@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
-											{@const isSourceLang = lang === sourceLang}
-											
-											<div class="group relative pl-2.5 border-l-2 {isSourceLang ? 'border-blue-300' : 'border-gray-100'} hover:border-blue-200 transition-colors mb-2 last:mb-0">
-												<div class="text-sm {getLanguageColors(lang, true, 'dropdown')} pr-6 pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}"
-												>
-													{translation.translations[lang]}
-												</div>
-												<button
-													class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-													aria-label="Copy translation"
-													onclick={() => copyToClipboard(translation.translations[lang])}
-												>
-													<Copy class="h-2.5 w-2.5" />
-												</button>
-											</div>
-										{/if}
-									{/each}
-									
-									
-									
-									<!-- Delete button remains in bottom-right corner -->
-									<div class="absolute -bottom-4 -right-4 z-10">
-										<button
-											class="text-gray-400 hover:text-red-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
-											aria-label="Delete translation"
-											onclick={() => deleteTranslation(i)}
-										>
-											<Trash2 class="h-2.5 w-2.5" />
-										</button>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					</div>
+					<!-- MultiLangCard.svelte -->
+					 <MultiLangCard {translation} {show_langs} {truncate_lines} />
+					 
 				{:else}
 					<div class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl">
 						<div class="flex flex-col items-center gap-6 max-w-xl mx-auto">
@@ -570,7 +426,8 @@
 															{@const isSourceLang = langCode === sourceLang}
 															
 															<div class="group relative pl-2.5 border-l-2 {isSourceLang ? 'border-blue-300' : 'border-gray-100'} hover:border-blue-200 transition-colors mb-2 {i === Object.entries(example.translations).length - 1 ? 'last:mb-0' : ''}">
-																<div class="text-sm {colorPalette[i % colorPalette.length].text} pr-6 pt-0.5 line-clamp-3"
+																<!-- class = {colorPalette[i % colorPalette.length].text} -->
+																<div class="text-sm pr-6 pt-0.5 line-clamp-3"
 																>
 																	{translation}
 																</div>
