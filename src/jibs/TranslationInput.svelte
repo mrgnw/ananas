@@ -3,13 +3,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Languages } from 'lucide-svelte';
 
-	// Props
-	export let text;
-	export let is_loading;
-	export let is_ready;
-	export let handleSubmit;
-	export let getRandomExample;
-	export let variant = 'desktop'; // 'desktop' or 'mobile'
+	// Props using Svelte 5 runes
+	let { text = $bindable(), is_loading, is_ready, handleSubmit, getRandomExample, variant = 'desktop' } = $props();
 
 	// Keyboard event handler for accessibility
 	function handleKeyDown(event) {
@@ -18,9 +13,12 @@
 			handleSubmit();
 		}
 	}
+
+	// Determine if we're on mobile view
+	let isMobile = $derived(variant === 'mobile');
 </script>
 
-<div class="flex items-center gap-2">
+<div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
 	<div class="relative flex-1 overflow-hidden rounded-full border border-gray-100 border-gray-200 shadow-md">
 		<div class="flex items-center">
 			<Input
@@ -28,7 +26,7 @@
 				placeholder="Enter text from any language..."
 				bind:value={text}
 				disabled={is_loading}
-				class="w-full rounded-full border-0 bg-white py-{variant === 'mobile' ? '3' : '2.5'} pl-4 pr-4 focus:ring-0 {is_loading ? 'opacity-75' : ''}"
+				class="w-full rounded-full border-0 bg-white py-{isMobile ? '3' : '2.5'} pl-4 pr-4 focus:ring-0 {is_loading ? 'opacity-75' : ''}"
 				onkeydown={handleKeyDown}
 			/>
 
@@ -63,15 +61,13 @@
 		</div>
 	</div>
 
-	<div class="flex items-center gap-0.5">
-		<!-- Languages Quick Access -->
-		<a
-			href="/languages"
-			class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
-			title="Manage languages"
-		>
-			<Languages class="h-5 w-5 text-gray-700" />
-			<span class="sr-only">Manage languages</span>
-		</a>
-	</div>
+	<!-- Languages button with more prominence now that it's alone -->
+	<a
+		href="/languages"
+		class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 transition-colors hover:bg-blue-200"
+		title="Manage languages"
+	>
+		<Languages class="h-5 w-5 text-blue-700" />
+		<span class="sr-only">Manage languages</span>
+	</a>
 </div>
