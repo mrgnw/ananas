@@ -246,7 +246,6 @@
 								class="scrollbar-thin flex max-w-full flex-row flex-nowrap gap-1.5 overflow-x-auto py-1"
 							>
 								{#each Object.entries(user_langs) as [key, meta], index}
-									<!-- class = {getLanguageColors(key, meta.display)} -->
 									<Badge
 										variant={meta.display ? 'default' : 'outline'}
 										class="h-5 shrink-0 cursor-pointer whitespace-nowrap px-1.5 py-0 text-xs"

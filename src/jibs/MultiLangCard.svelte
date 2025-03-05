@@ -41,7 +41,7 @@
 </script>
 
 <div class="group w-full">
-	<Card class="h-full transition-shadow hover:shadow-md">
+	<Card class="h-full transition-shadow hover:shadow-md relative">
 		<CardContent class="p-3">
 			<div class="relative">
 				{#each show_langs as lang}
@@ -73,18 +73,18 @@
 						</div>
 					{/if}
 				{/each}
-
-				<!-- Delete button -->
-				<div class="absolute -bottom-4 -right-4 z-10">
-					<button
-						class="icon-button rounded-full border border-gray-100 bg-white p-1 text-gray-400 shadow-md hover:text-red-500"
-						aria-label="Delete translation"
-						onclick={deleteTranslation}
-					>
-						<Trash2 class="h-2.5 w-2.5" />
-					</button>
-				</div>
 			</div>
 		</CardContent>
+		
+		<!-- Delete button - moved outside the translations container -->
+		<div class="absolute bottom-1 right-1 z-10">
+			<button
+				class="icon-button rounded-full border border-gray-100 bg-white p-1 text-gray-400 shadow-md hover:text-red-500"
+				aria-label="Delete translation"
+				onclick={deleteTranslation}
+			>
+				<Trash2 class="h-2.5 w-2.5" />
+			</button>
+		</div>
 	</Card>
 </div>
