@@ -1,8 +1,13 @@
 ## docs/svelte/index.md
 
 ---
-title: Svelte
+title: Svelte 5
 ---
+
+We use svelte 5. Do not mistake it for svelte 4.
+- Always use `onclick` etc for event handlers. `on:click` etc is wrong
+- Always use $derived for reactivity, never `$:`
+
 
 ## docs/svelte/01-introduction/index.md
 
