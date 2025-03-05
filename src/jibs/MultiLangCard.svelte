@@ -5,7 +5,7 @@
 	import { getLanguageColors } from '$lib/colors';
 	import { Copy, Trash2 } from 'lucide-svelte';
 
-	let { translation, show_langs, truncate_lines, onDelete, ...props } = $props();
+	let { translation, show_langs, truncate_lines, onDelete = null, ...props } = $props();
 
 	const deleteTranslation = () => {
 		if (onDelete) {
