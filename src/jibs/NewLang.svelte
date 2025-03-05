@@ -387,7 +387,7 @@
 			<div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 				{#each history as translation, i}
 					<!-- MultiLangCard.svelte -->
-					<MultiLangCard {translation} {show_langs} {truncate_lines} />
+					<MultiLangCard {translation} {show_langs} {truncate_lines} onDelete={() => deleteTranslation(i)} />
 				{:else}
 					<div
 						class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl"

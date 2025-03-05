@@ -5,7 +5,13 @@
 	import { getLanguageColors } from '$lib/colors';
 	import { Copy, Trash2 } from 'lucide-svelte';
 
-	let { translation, show_langs, truncate_lines, ...props } = $props();
+	let { translation, show_langs, truncate_lines, onDelete, ...props } = $props();
+
+	const deleteTranslation = () => {
+		if (onDelete) {
+			onDelete(translation);
+		}
+	};
 
 	// colors_enabled | getLanguageColors
 
@@ -75,7 +81,7 @@
 					<button
 						class="icon-button rounded-full border border-gray-100 bg-white p-1 text-gray-400 shadow-md hover:text-red-500"
 						aria-label="Delete translation"
-						onclick={() => deleteTranslation(i)}
+						onclick={deleteTranslation}
 					>
 						<Trash2 class="h-2.5 w-2.5" />
 					</button>
