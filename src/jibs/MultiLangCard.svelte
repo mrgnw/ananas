@@ -41,7 +41,7 @@
 </script>
 
 <div class="group w-full">
-	<Card class="h-full transition-shadow hover:shadow-md relative">
+	<Card class="transition-shadow hover:shadow-md relative">
 		<CardContent class="p-3">
 			<div class="relative">
 				{#each show_langs as lang}
