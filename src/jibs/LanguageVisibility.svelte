@@ -10,6 +10,7 @@
 		DropdownMenuRadioItem,
 		DropdownMenuCheckboxItem
 	} from '$lib/components/ui/dropdown-menu';
+	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 
 	import DropdownMenuLabel from '@/components/ui/dropdown-menu/dropdown-menu-label.svelte';
 	import { DropdownMenu, DropdownMenu } from 'bits-ui';
@@ -23,6 +24,7 @@
 		clearTimeout(languageDropdownHoverTimeout);
 		languageDropdownOpen = isOpen;
 	}
+
 	// Add this function to handle checkbox clicks without closing the dropdown
 	function handleCheckboxClick(event, key) {
 		// Prevent the default behavior which would close the dropdown

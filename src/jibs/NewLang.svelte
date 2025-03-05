@@ -241,9 +241,7 @@
 					{#if tgt_langs.length > 0}
 						<div class="flex items-center gap-2">
 							<!-- language visibility badges -->
-							<div
-								class="hidden max-w-[300px] flex-wrap gap-2 overflow-x-auto sm:flex md:max-w-none"
-							>
+							<div class="flex flex-row flex-nowrap gap-2 overflow-x-auto scrollbar-thin max-w-full">
 								{#each Object.entries(user_langs) as [key, meta], index}
 									<!-- class = {getLanguageColors(key, meta.display)} -->
 									<Badge
@@ -430,6 +428,8 @@
 	:global(.dropdown-menu-content) {
 		touch-action: manipulation;
 	}
+
+	
 
 	/* Mobile-optimized styles */
 	@media (max-width: 768px) {
