@@ -1,6 +1,6 @@
 <script>
 	import { examplePhrases, exampleTranslations } from '$lib/example';
-	
+
 	function getRandomExample() {
 		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
 		return examplePhrases[randomIndex];
@@ -13,13 +13,20 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import { Search, Trash2, Copy, Languages, MoreVertical, Check, Sliders, Eye, Inbox, History } from 'lucide-svelte';
-	import { browser } from '$app/environment';
 	import {
-		Tooltip,
-		TooltipTrigger,
-		TooltipContent
-	} from '$lib/components/ui/tooltip';
+		Search,
+		Trash2,
+		Copy,
+		Languages,
+		MoreVertical,
+		Check,
+		Sliders,
+		Eye,
+		Inbox,
+		History
+	} from 'lucide-svelte';
+	import { browser } from '$app/environment';
+	import { Tooltip, TooltipTrigger, TooltipContent } from '$lib/components/ui/tooltip';
 
 	// Import dropdown menu components
 	import {
@@ -86,30 +93,30 @@
 
 	// Badge display format: 'name', 'code'
 	let badge_display = $state(browser ? localStorage.getItem('badgeDisplay') || 'name' : 'name');
-	
+
 	// Use the shared language store
 	let user_langs = $derived(translateLanguages.languages);
-	
+
 	// All available languages that can be toggled
 	let available_langs = $derived(Object.keys(user_langs));
-	
+
 	// Languages that should appear in translation cards
 	let show_langs = $derived(
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
-	
+
 	$effect(() => {
 		if (browser) {
 			localStorage.setItem('badgeDisplay', badge_display);
 		}
 	});
-	
+
 	function toggleLanguageCodes() {
 		// Removed this function as it's no longer needed
 	}
-	
+
 	let is_loading = $state(false);
 	let is_ready = $derived(text.length > 0 && available_langs.length > 0 && !is_loading);
 
@@ -185,7 +192,6 @@
 		}
 	}
 
-	
 	// Keyboard event handlers for accessibility
 	function handleKeyDown(event, callback) {
 		if (event.key === 'Enter' || event.key === ' ') {
@@ -193,77 +199,107 @@
 			callback();
 		}
 	}
-	
+
 	// State for language dropdown
 	let languageDropdownOpen = $state(false);
 	let languageDropdownHoverTimeout;
 	let settingsDropdownOpen = $state(false);
-	
+
 	function setLanguageDropdownOpen(isOpen) {
 		clearTimeout(languageDropdownHoverTimeout);
 		languageDropdownOpen = isOpen;
 	}
-	
+
 	function setSettingsDropdownOpen(isOpen) {
 		settingsDropdownOpen = isOpen;
 	}
-	
-
 </script>
 
-<div class="space-y-4 px-2 sm:px-0 max-w-screen-lg mx-auto pb-[80px] md:pb-0">
+<div class="mx-auto max-w-screen-lg space-y-4 px-2 pb-[80px] sm:px-0 md:pb-0">
 	<!-- Site title and info at the top of the page -->
-	<h1 class="text-3xl font-bold text-gray-900 mb-2 text-center max-w-2xl mx-auto">Translate to Multiple Languages at Once</h1>
-	<p class="text-gray-600 max-w-2xl mx-auto text-center">Type your text below and instantly see translations in all your selected languages.</p>
+	<h1 class="mx-auto mb-2 max-w-2xl text-center text-3xl font-bold text-gray-900">
+		Translate to Multiple Languages at Once
+	</h1>
+	<p class="mx-auto max-w-2xl text-center text-gray-600">
+		Type your text below and instantly see translations in all your selected languages.
+	</p>
 
 	<!-- Desktop Input - Hidden on Mobile -->
-	<div class="relative hidden md:block max-w-2xl mx-auto">
+	<div class="relative mx-auto hidden max-w-2xl md:block">
 		<div class="flex items-center gap-2">
-			<div class="relative flex-1 rounded-full overflow-hidden shadow-md border border-gray-100 border border-gray-200">
+			<div
+				class="relative flex-1 overflow-hidden rounded-full border border border-gray-100 border-gray-200 shadow-md"
+			>
 				<div class="flex items-center">
-					<Input 
-						type="text" 
-						placeholder="Enter text from any language..." 
-						bind:value={text} 
-						class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-2.5 bg-white"
+					<Input
+						type="text"
+						placeholder="Enter text from any language..."
+						bind:value={text}
+						class="w-full rounded-full border-0 bg-white py-2.5 pl-4 pr-4 focus:ring-0"
 						onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
 					/>
-					
-					<Button 
+
+					<Button
 						onclick={handleSubmit}
 						disabled={!is_ready}
-						class="rounded-full p-2 mr-1 h-auto"
-						variant={is_ready ? "default" : "ghost"}
+						class="mr-1 h-auto rounded-full p-2"
+						variant={is_ready ? 'default' : 'ghost'}
 						type="submit"
 					>
 						{#if is_loading}
 							<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
 						{:else}
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="lucide lucide-send"
+								><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg
+							>
 						{/if}
 						<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
 					</Button>
 				</div>
 			</div>
-			
-			<div class="flex items-center gap-0.5.5">
+
+			<div class="gap-0.5.5 flex items-center">
 				<!-- Example button -->
 				<button
 					onclick={() => {
 						text = getRandomExample();
 						document.querySelector('input').focus();
 					}}
-					class="flex items-center justify-center h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 transition-colors"
+					class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 transition-colors hover:bg-purple-200"
 					title="Try an example"
 				>
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-700"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="text-purple-700"
+						><path
+							d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+						/></svg
+					>
 					<span class="sr-only">Try an example</span>
 				</button>
-				
+
 				<!-- Languages Quick Access -->
 				<a
 					href="/languages"
-					class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+					class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
 					title="Manage languages"
 				>
 					<Languages class="h-5 w-5 text-gray-700" />
@@ -274,34 +310,33 @@
 	</div>
 
 	<div class="space-y-4">
-
-		
 		<!-- Translation review section -->
 		<div class="space-y-4">
 			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-2">
 					<h2 class="text-xl font-semibold">Review</h2>
-					
+
 					{#if available_langs.length > 0}
 						<div class="flex items-center gap-2">
 							<!-- Language management link -->
 							<a
 								href="/languages"
-								class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100"
+								class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
 								title="Manage languages"
 							>
 								<Languages class="h-4 w-4" />
 								<span class="sr-only">Manage languages</span>
 							</a>
-							
+
 							<!-- Compact language badges -->
-							<div class="hidden sm:flex flex-wrap gap-2 overflow-x-auto max-w-[300px] md:max-w-none">
+							<div
+								class="hidden max-w-[300px] flex-wrap gap-2 overflow-x-auto sm:flex md:max-w-none"
+							>
 								{#each Object.entries(user_langs) as [key, meta], index}
-								<!-- class = {getLanguageColors(key, meta.display)} -->	
-								<Badge
+									<!-- class = {getLanguageColors(key, meta.display)} -->
+									<Badge
 										variant={meta.display ? 'default' : 'outline'}
-										class="cursor-pointer whitespace-nowrap text-xs px-2 py-0 h-6 " 
-										
+										class="h-6 cursor-pointer whitespace-nowrap px-2 py-0 text-xs "
 										onclick={() => toggle_display(key)}
 										onkeydown={(e) => handleKeyDown(e, () => toggle_display(key))}
 										tabindex="0"
@@ -319,67 +354,80 @@
 						</div>
 					{/if}
 				</div>
-				
+
 				<div class="flex items-center gap-2">
 					<!-- Language visibility dropdown -->
-					<DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen} class="sm:hidden">
-							<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
-								<Eye class="h-4 w-4" />
-								<span class="sr-only">Toggle language visibility</span>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="start" class="dropdown-menu-content">
-								<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
-								
-								<!-- Language visibility toggles -->
-								<div class="max-h-[200px] overflow-y-auto">
-									{#each Object.entries(user_langs) as [key, meta]}
-									  <!-- class {getLanguageColors(key, meta.display, 'dropdown')} -->
-									<div 
-									    class="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-item"
-									    onclick={(e) => handleCheckboxClick(e, key)}
-									  >
-									    <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-									      {#if meta.display}
-									        <Check class="h-4 w-4" />
-									      {/if}
-									    </span>
-									    <span>{meta.native} ({key})</span>
-									  </div>
-									{/each}
-								</div>
-							</DropdownMenuContent>
+					<DropdownMenu
+						open={languageDropdownOpen}
+						onOpenChange={setLanguageDropdownOpen}
+						class="sm:hidden"
+					>
+						<DropdownMenuTrigger
+							class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
+						>
+							<Eye class="h-4 w-4" />
+							<span class="sr-only">Toggle language visibility</span>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="start" class="dropdown-menu-content">
+							<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
 
+							<!-- Language visibility toggles -->
+							<div class="max-h-[200px] overflow-y-auto">
+								{#each Object.entries(user_langs) as [key, meta]}
+									<!-- class {getLanguageColors(key, meta.display, 'dropdown')} -->
+									<div
+										class="touch-item relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+										onclick={(e) => handleCheckboxClick(e, key)}
+									>
+										<span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+											{#if meta.display}
+												<Check class="h-4 w-4" />
+											{/if}
+										</span>
+										<span>{meta.native} ({key})</span>
+									</div>
+								{/each}
+							</div>
+						</DropdownMenuContent>
 					</DropdownMenu>
-					
+
 					<!-- Settings dropdown for translation review -->
 					<DropdownMenu open={settingsDropdownOpen} onOpenChange={setSettingsDropdownOpen}>
-						<DropdownMenuTrigger class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-100">
+						<DropdownMenuTrigger
+							class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
+						>
 							<Sliders class="h-4 w-4" />
 							<span class="sr-only">Translation review settings</span>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
 							<DropdownMenuLabel>Display Settings</DropdownMenuLabel>
-							
+
 							<!-- Language badge display options -->
-							<DropdownMenuLabel class="text-xs text-gray-500 pt-0">Badge Display</DropdownMenuLabel>
-							<DropdownMenuRadioGroup value={badge_display} onValueChange={(value) => badge_display = value}>
+							<DropdownMenuLabel class="pt-0 text-xs text-gray-500">Badge Display</DropdownMenuLabel
+							>
+							<DropdownMenuRadioGroup
+								value={badge_display}
+								onValueChange={(value) => (badge_display = value)}
+							>
 								<DropdownMenuRadioItem value="name">Language Name</DropdownMenuRadioItem>
 								<DropdownMenuRadioItem value="code">Language Code</DropdownMenuRadioItem>
 							</DropdownMenuRadioGroup>
-							
+
 							<DropdownMenuSeparator />
-							
+
 							<!-- Display options -->
-							<DropdownMenuCheckboxItem 
+							<DropdownMenuCheckboxItem
 								checked={truncate_lines}
-								onCheckedChange={(value) => { truncate_lines = value; }}
+								onCheckedChange={(value) => {
+									truncate_lines = value;
+								}}
 							>
 								Truncate Text
 							</DropdownMenuCheckboxItem>
-							<DropdownMenuCheckboxItem 
+							<DropdownMenuCheckboxItem
 								checked={colors_enabled}
-								onCheckedChange={(value) => { 
-									colors_enabled = value; 
+								onCheckedChange={(value) => {
+									colors_enabled = value;
 									if (browser) {
 										localStorage.setItem('colorsEnabled', value);
 									}
@@ -387,42 +435,41 @@
 							>
 								Enable Colors
 							</DropdownMenuCheckboxItem>
-							
+
 							<DropdownMenuSeparator />
-							
+
 							<!-- Clear history option -->
-							<DropdownMenuItem 
-								class="text-red-500 focus:text-red-500" 
-								onclick={clearAllHistory}
-							>
+							<DropdownMenuItem class="text-red-500 focus:text-red-500" onclick={clearAllHistory}>
 								Clear History
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
 			</div>
-			
+
 			<!-- Translation cards with improved responsive grid -->
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
+			<div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 				{#each history as translation, i}
 					<!-- MultiLangCard.svelte -->
-					 <MultiLangCard {translation} {show_langs} {truncate_lines} />
+					<MultiLangCard {translation} {show_langs} {truncate_lines} />
 				{:else}
-					<div class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl">
+					<div
+						class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl"
+					>
 						<div class="flex flex-col items-center gap-6 max-w-xl mx-auto">
 							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
 								{#each exampleTranslations as example, exampleIndex}
 									<MultiLangCard translation={example} {show_langs} {truncate_lines} />
 								{/each}
 							</div>
-							
+
 							<div class="text-center mb-6">
 								<h3 class="text-lg font-medium text-gray-700 mb-2">No translations yet</h3>
 								<p class="text-gray-500 mb-4">Enter text in any language to translate.</p>
 							</div>
-							
-							<Button 
-								class="mt-2" 
+
+							<Button
+								class="mt-2"
 								onclick={() => {
 									text = getRandomExample();
 									document.querySelector('input').focus();
@@ -439,53 +486,83 @@
 </div>
 
 <!-- Mobile Input Bar (fixed at bottom) with enhanced UX -->
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
-	<div class="flex items-center gap-2 max-w-md mx-auto">
-		<div class="relative flex-1 rounded-full overflow-hidden shadow-md border border-gray-100 border border-gray-200">
+<div
+	class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white p-4 shadow-lg md:hidden"
+>
+	<div class="mx-auto flex max-w-md items-center gap-2">
+		<div
+			class="relative flex-1 overflow-hidden rounded-full border border border-gray-100 border-gray-200 shadow-md"
+		>
 			<div class="flex items-center">
-				<Input 
-					type="text" 
-					placeholder="Enter text from any language..." 
-					bind:value={text} 
-					class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-3 bg-white"
+				<Input
+					type="text"
+					placeholder="Enter text from any language..."
+					bind:value={text}
+					class="w-full rounded-full border-0 bg-white py-3 pl-4 pr-4 focus:ring-0"
 					onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
 				/>
-				
-				<Button 
+
+				<Button
 					onclick={handleSubmit}
 					disabled={!is_ready}
-					class="rounded-full p-2 mr-1 h-auto"
-					variant={is_ready ? "default" : "ghost"}
+					class="mr-1 h-auto rounded-full p-2"
+					variant={is_ready ? 'default' : 'ghost'}
 					type="submit"
 				>
 					{#if is_loading}
 						<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
 					{:else}
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="20"
+							height="20"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="lucide lucide-send"
+							><path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" /></svg
+						>
 					{/if}
 					<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
 				</Button>
 			</div>
 		</div>
-		
-		<div class="flex items-center gap-0.5.5">
+
+		<div class="gap-0.5.5 flex items-center">
 			<!-- Example button -->
 			<button
 				onclick={() => {
 					text = getRandomExample();
 					document.querySelector('input').focus();
 				}}
-				class="flex items-center justify-center h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 transition-colors"
+				class="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 transition-colors hover:bg-purple-200"
 				title="Try an example"
 			>
-				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-700"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="text-purple-700"
+					><path
+						d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+					/></svg
+				>
 				<span class="sr-only">Try an example</span>
 			</button>
-			
+
 			<!-- Languages Quick Access -->
 			<a
 				href="/languages"
-				class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+				class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
 				title="Manage languages"
 			>
 				<Languages class="h-5 w-5 text-gray-700" />
@@ -503,41 +580,41 @@
 		scrollbar-width: thin;
 		-ms-overflow-style: none;
 	}
-	
+
 	.scrollbar-thin::-webkit-scrollbar {
 		height: 6px;
 	}
-	
+
 	.scrollbar-thin::-webkit-scrollbar-thumb {
 		background-color: rgba(0, 0, 0, 0.2);
 		border-radius: 3px;
 	}
-	
+
 	.scrollbar-thin::-webkit-scrollbar-track {
 		background-color: rgba(0, 0, 0, 0.05);
 	}
-	
+
 	/* Disable double-tap zoom on mobile */
 	:global(html) {
 		touch-action: manipulation;
 	}
-	
+
 	/* Specifically disable double-tap zoom in the dropdown */
 	:global(.dropdown-menu-content) {
 		touch-action: manipulation;
 	}
-	
+
 	/* Mobile-optimized styles */
 	@media (max-width: 768px) {
 		:global(body) {
 			padding-bottom: 80px; /* Space for the fixed input bar */
 		}
-		
+
 		/* Add a subtle animation for the mobile input bar */
 		:global(.fixed.bottom-0) {
 			animation: slide-up 0.2s ease-out;
 		}
-		
+
 		/* Custom animation for a smoother feel */
 		@keyframes slide-up {
 			from {
@@ -549,13 +626,14 @@
 				opacity: 1;
 			}
 		}
-		
+
 		/* Improve tap target sizes for mobile */
-		:global(button:not(.icon-button)), :global(a:not(.icon-button)) {
+		:global(button:not(.icon-button)),
+		:global(a:not(.icon-button)) {
 			min-height: 44px;
 			min-width: 44px;
 		}
-		
+
 		/* Icon buttons should keep their small size */
 		:global(.icon-button) {
 			min-height: unset;
@@ -563,7 +641,7 @@
 			height: auto;
 			width: auto;
 		}
-		
+
 		/* Ensure debug and settings buttons don't overlap with the input bar */
 		:global(.fixed.bottom-4.right-4) {
 			bottom: 80px !important; /* Move above the input bar */
