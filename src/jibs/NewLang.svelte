@@ -250,7 +250,8 @@
 										variant={meta.display ? 'default' : 'outline'}
 										class="h-6 cursor-pointer whitespace-nowrap px-2 py-0 text-xs "
 										onclick={() => translateLanguages.toggleLanguageDisplay(key)}
-										onkeydown={(e) => handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
+										onkeydown={(e) =>
+											handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
 										tabindex="0"
 										role="button"
 										aria-pressed={meta.display}
