@@ -541,7 +541,7 @@
 										<Tooltip>
 											<TooltipTrigger>
 												<button
-													class="text-gray-400 hover:text-blue-500 p-1 bg-white rounded-full shadow-md border border-gray-100"
+													class="text-gray-400 hover:text-blue-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
 													aria-label="View original text"
 													onclick={() => {
 														// This ensures tooltip stays visible on click
@@ -560,7 +560,7 @@
 									<!-- Delete button remains in bottom-right corner -->
 									<div class="absolute -bottom-4 -right-4 z-10">
 										<button
-											class="text-gray-400 hover:text-red-500 p-1 bg-white rounded-full shadow-md border border-gray-100"
+											class="text-gray-400 hover:text-red-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
 											aria-label="Delete translation"
 											onclick={() => deleteTranslation(i)}
 										>
@@ -609,7 +609,7 @@
 														<Tooltip>
 															<TooltipTrigger>
 																<button
-																	class="text-gray-400 hover:text-blue-500 p-1 bg-white rounded-full shadow-md border border-gray-100"
+																	class="text-gray-400 hover:text-blue-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
 																	aria-label="View original text"
 																	onclick={() => {
 																		// This ensures tooltip stays visible on click
@@ -628,7 +628,7 @@
 													<!-- Delete button remains in bottom-right corner -->
 													<div class="absolute -bottom-4 -right-4 z-10">
 														<button
-															class="text-gray-400 hover:text-red-500 p-1 bg-white rounded-full shadow-md border border-gray-100"
+															class="text-gray-400 hover:text-red-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
 															aria-label="Delete translation"
 														>
 															<Trash2 class="h-2.5 w-2.5" />
@@ -664,7 +664,7 @@
 </div>
 
 <!-- Mobile Input Bar (fixed at bottom) with enhanced UX -->
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 shadow-lg z-50">
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
 	<div class="flex items-center gap-2 max-w-md mx-auto">
 		<div class="relative flex-1 rounded-full overflow-hidden shadow-md border border-gray-100 border border-gray-200">
 			<div class="flex items-center">
@@ -672,7 +672,7 @@
 					type="text" 
 					placeholder="Enter text from any language..." 
 					bind:value={text} 
-					class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-2.5 bg-white"
+					class="w-full border-0 focus:ring-0 rounded-full pl-4 pr-4 py-3 bg-white"
 					onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
 				/>
 				
@@ -720,7 +720,7 @@
 	</div>
 </div>
 
-<Toaster />
+<Toaster position="top-center" />
 
 <style>
 	/* Add smooth scrolling for language badges */
@@ -776,9 +776,17 @@
 		}
 		
 		/* Improve tap target sizes for mobile */
-		:global(button), :global(a) {
+		:global(button:not(.icon-button)), :global(a:not(.icon-button)) {
 			min-height: 44px;
 			min-width: 44px;
+		}
+		
+		/* Icon buttons should keep their small size */
+		:global(.icon-button) {
+			min-height: unset;
+			min-width: unset;
+			height: auto;
+			width: auto;
 		}
 		
 		/* Ensure debug and settings buttons don't overlap with the input bar */
