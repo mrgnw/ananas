@@ -9,11 +9,9 @@
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import { Languages } from 'lucide-svelte';
 	import { browser } from '$app/environment';
 	import TranslationInput from './TranslationInput.svelte';
 
