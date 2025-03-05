@@ -60,15 +60,6 @@
 	let is_loading = $state(false);
 	let is_ready = $derived(text.length > 0 && !is_loading);
 
-	function langs_not_shown(translation) {
-		// Show languages that are in the translation but not currently displayed
-		return Object.keys(translation.translations)
-			.filter((lang) => !show_langs.includes(lang))
-			.filter((lang) => lang != 'metadata');
-	}
-
-	// Using toggleLanguageDisplay directly from the store
-
 	async function handleSubmit() {
 		is_loading = true;
 		const apiUrl = 'https://ananas-api.xces.workers.dev';
