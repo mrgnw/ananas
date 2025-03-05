@@ -1,16 +1,15 @@
 <script>
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
-    import { toast } from 'svelte-sonner';
-    import { browser } from '$app/environment';
-    import { getLanguageColors } from '$lib/colors';
+	import { toast } from 'svelte-sonner';
+	import { browser } from '$app/environment';
+	import { getLanguageColors } from '$lib/colors';
 	import { Copy, Trash2 } from 'lucide-svelte';
 
 	let { translation, show_langs, truncate_lines, ...props } = $props();
 
-    // colors_enabled | getLanguageColors
-    
+	// colors_enabled | getLanguageColors
 
-    const copyToClipboard = async (text) => {
+	const copyToClipboard = async (text) => {
 		try {
 			if (browser && navigator.clipboard && navigator.clipboard.writeText) {
 				await navigator.clipboard.writeText(text);
@@ -35,10 +34,7 @@
 			toast.error('Failed to copy text. Please copy manually.');
 		}
 	};
-
-	
 </script>
-
 
 <div class="group w-full">
 	<Card class="h-full transition-shadow hover:shadow-md">
