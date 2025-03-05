@@ -13,8 +13,6 @@
 		}
 	};
 
-	// colors_enabled | getLanguageColors
-
 	const copyToClipboard = async (text) => {
 		try {
 			if (browser && navigator.clipboard && navigator.clipboard.writeText) {

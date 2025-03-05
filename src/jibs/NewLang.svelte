@@ -157,7 +157,8 @@
 						type="text"
 						placeholder="Enter text from any language..."
 						bind:value={text}
-						class="w-full rounded-full border-0 bg-white py-2.5 pl-4 pr-4 focus:ring-0"
+						disabled={is_loading}
+						class="w-full rounded-full border-0 bg-white py-2.5 pl-4 pr-4 focus:ring-0 {is_loading ? 'opacity-75' : ''}"
 						onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
 					/>
 
@@ -241,12 +242,14 @@
 					{#if tgt_langs.length > 0}
 						<div class="flex items-center gap-2">
 							<!-- language visibility badges -->
-							<div class="flex flex-row flex-nowrap gap-1.5 overflow-x-auto scrollbar-thin max-w-full py-1">
+							<div
+								class="scrollbar-thin flex max-w-full flex-row flex-nowrap gap-1.5 overflow-x-auto py-1"
+							>
 								{#each Object.entries(user_langs) as [key, meta], index}
 									<!-- class = {getLanguageColors(key, meta.display)} -->
 									<Badge
 										variant={meta.display ? 'default' : 'outline'}
-										class="h-5 cursor-pointer whitespace-nowrap px-1.5 py-0 text-xs shrink-0"
+										class="h-5 shrink-0 cursor-pointer whitespace-nowrap px-1.5 py-0 text-xs"
 										onclick={() => translateLanguages.toggleLanguageDisplay(key)}
 										onkeydown={(e) =>
 											handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
@@ -323,7 +326,8 @@
 					type="text"
 					placeholder="Enter text from any language..."
 					bind:value={text}
-					class="w-full rounded-full border-0 bg-white py-3 pl-4 pr-4 focus:ring-0"
+					disabled={is_loading}
+					class="w-full rounded-full border-0 bg-white py-3 pl-4 pr-4 focus:ring-0 {is_loading ? 'opacity-75' : ''}"
 					onkeydown={(e) => e.key === 'Enter' && is_ready && handleSubmit()}
 				/>
 
@@ -401,8 +405,6 @@
 	:global(.dropdown-menu-content) {
 		touch-action: manipulation;
 	}
-
-	
 
 	/* Mobile-optimized styles */
 	@media (max-width: 768px) {
