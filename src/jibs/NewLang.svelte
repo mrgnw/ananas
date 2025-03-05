@@ -404,7 +404,7 @@
 							</a>
 							
 							<!-- Compact language badges -->
-							<div class="hidden sm:flex flex-wrap gap-0.5.5 overflow-x-auto max-w-[300px] md:max-w-none">
+							<div class="hidden sm:flex flex-wrap gap-2 overflow-x-auto max-w-[300px] md:max-w-none">
 								{#each Object.entries(user_langs) as [key, meta], index}
 									<Badge
 										variant={meta.display ? 'default' : 'outline'}
@@ -536,26 +536,7 @@
 										{/if}
 									{/each}
 									
-									<!-- History button in top-left corner -->
-									<div class="absolute -top-4 -left-4 z-10">
-										<Tooltip>
-											<TooltipTrigger>
-												<button
-													class="text-gray-400 hover:text-blue-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
-													aria-label="View original text"
-													onclick={() => {
-														// This ensures tooltip stays visible on click
-														const tooltipVisible = true;
-													}}
-												>
-													<History class="h-2.5 w-2.5" />
-												</button>
-											</TooltipTrigger>
-											<TooltipContent side="top">
-												<p class="text-xs max-w-[200px] break-words">{translation.text}</p>
-											</TooltipContent>
-										</Tooltip>
-									</div>
+									
 									
 									<!-- Delete button remains in bottom-right corner -->
 									<div class="absolute -bottom-4 -right-4 z-10">

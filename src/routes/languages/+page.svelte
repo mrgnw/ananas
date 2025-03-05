@@ -20,6 +20,7 @@
 		DropdownMenuTrigger,
 		DropdownMenuSeparator
 	} from '$lib/components/ui/dropdown-menu';
+	import FancyIlluminatedInput from '$lib/components/ui/illuminated-input/fancy.svelte';
 	import type { PageData } from './$types';
 	import type { Language } from '$lib/types';
 	import { fade } from 'svelte/transition';
@@ -143,11 +144,11 @@
 	</div>
 
 	<div class="mb-6">
-		<input
+		<FancyIlluminatedInput
 			type="text"
 			placeholder="Search languages..."
 			bind:value={searchQuery}
-			class="w-full rounded border p-2"
+			class="w-full"
 		/>
 	</div>
 
@@ -199,9 +200,20 @@
 		padding: 1rem;
 	}
 
-	label {
+	/* Style the checkbox container */
+	.language-item {
 		display: flex;
-		gap: 0.5rem;
 		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem;
+		border-radius: 0.25rem;
+	}
+
+	.language-item.supported {
+		background-color: #f0f9ff;
+	}
+
+	.language-item.not-supported {
+		opacity: 0.7;
 	}
 </style>
