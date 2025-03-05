@@ -6,53 +6,17 @@
 		return examplePhrases[randomIndex];
 	}
 
-	import { languages } from 'countries-list';
+	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+	import MultiLangCard from './MultiLangCard.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
 	import { toast } from 'svelte-sonner';
-	import {
-		Search,
-		Trash2,
-		Copy,
-		Languages,
-		MoreVertical,
-		Check,
-		Sliders,
-		Eye,
-		Inbox,
-		History
-	} from 'lucide-svelte';
+	import { Languages } from 'lucide-svelte';
 	import { browser } from '$app/environment';
-	import { Tooltip, TooltipTrigger, TooltipContent } from '$lib/components/ui/tooltip';
-
-	// Import dropdown menu components
-	import {
-		DropdownMenu,
-		DropdownMenuContent,
-		DropdownMenuItem,
-		DropdownMenuTrigger,
-		DropdownMenuSeparator,
-		DropdownMenuLabel,
-		DropdownMenuRadioGroup,
-		DropdownMenuRadioItem,
-		DropdownMenuCheckboxItem
-	} from '$lib/components/ui/dropdown-menu';
-
-	let example_translation = {
-		text: 'Ahoy',
-		translations: {
-			eng: 'Hello',
-			spa: 'Hola',
-			rus: 'Привет',
-			ita: 'Ciao',
-			deu: 'Hallo',
-			cat: 'Hola'
-		},
-		timestamp: new Date().toISOString()
-	};
+	
+	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 	function loadHistory() {
 		if (browser) {
@@ -81,11 +45,7 @@
 		}
 	}
 
-	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-
-	// Import the shared language store
-	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
-	import MultiLangCard from './MultiLangCard.svelte';
+	
 
 	let text = $state('');
 	let truncate_lines = $state(true);
@@ -95,9 +55,8 @@
 	let user_langs = $derived(translateLanguages.languages);
 
 	// All available languages that can be toggled
-	let available_langs = $derived(Object.keys(user_langs));
+	let tgt_langs = $derived(Object.keys(user_langs));
 
-	// Languages that should appear in translation cards
 	let show_langs = $derived(
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
@@ -108,7 +67,7 @@
 	}
 
 	let is_loading = $state(false);
-	let is_ready = $derived(text.length > 0 && available_langs.length > 0 && !is_loading);
+	let is_ready = $derived(text.length > 0 && !is_loading);
 
 	function langs_not_shown(translation) {
 		// Show languages that are in the translation but not currently displayed
@@ -122,20 +81,12 @@
 		translateLanguages.toggleLanguageDisplay(key);
 	}
 
-	// Add this function to handle checkbox clicks without closing the dropdown
-	function handleCheckboxClick(event, key) {
-		// Prevent the default behavior which would close the dropdown
-		event.stopPropagation();
-		// Toggle the language display
-		toggle_display(key);
-	}
-
 	async function handleSubmit() {
 		is_loading = true;
 		const apiUrl = 'https://ananas-api.xces.workers.dev';
 
 		try {
-			console.log('Target languages:', available_langs);
+			console.log('Target languages:', tgt_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
@@ -144,7 +95,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs: available_langs // Use all selected languages, not just displayed ones
+					tgt_langs: tgt_langs // Use all selected languages, not just displayed ones
 				})
 			});
 
@@ -188,20 +139,6 @@
 			event.preventDefault();
 			callback();
 		}
-	}
-
-	// State for language dropdown
-	let languageDropdownOpen = $state(false);
-	let languageDropdownHoverTimeout;
-	let settingsDropdownOpen = $state(false);
-
-	function setLanguageDropdownOpen(isOpen) {
-		clearTimeout(languageDropdownHoverTimeout);
-		languageDropdownOpen = isOpen;
-	}
-
-	function setSettingsDropdownOpen(isOpen) {
-		settingsDropdownOpen = isOpen;
 	}
 </script>
 
@@ -306,7 +243,7 @@
 				<div class="flex items-center gap-2">
 					<h2 class="text-xl font-semibold">Review</h2>
 
-					{#if available_langs.length > 0}
+					{#if tgt_langs.length > 0}
 						<div class="flex items-center gap-2">
 							<!-- Language management link -->
 							<a
@@ -343,43 +280,6 @@
 
 				<div class="flex items-center gap-2">
 					<!-- Language visibility dropdown -->
-					<DropdownMenu
-						open={languageDropdownOpen}
-						onOpenChange={setLanguageDropdownOpen}
-						class="sm:hidden"
-					>
-						<DropdownMenuTrigger
-							class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
-						>
-							<Eye class="h-4 w-4" />
-							<span class="sr-only">Toggle language visibility</span>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="start" class="dropdown-menu-content">
-							<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
-
-							<!-- Language visibility toggles -->
-							<div class="max-h-[200px] overflow-y-auto">
-								{#each Object.entries(user_langs) as [key, meta]}
-									<!-- class {getLanguageColors(key, meta.display, 'dropdown')} -->
-									<div
-										class="touch-item relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-										onclick={(e) => handleCheckboxClick(e, key)}
-										onkeydown={(e) => handleKeyDown(e, () => handleCheckboxClick(e, key))}
-										tabindex="0"
-										role="checkbox"
-										aria-checked={meta.display}
-									>
-										<span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-											{#if meta.display}
-												<Check class="h-4 w-4" />
-											{/if}
-										</span>
-										<span>{meta.native} ({key})</span>
-									</div>
-								{/each}
-							</div>
-						</DropdownMenuContent>
-					</DropdownMenu>
 				</div>
 			</div>
 
@@ -387,7 +287,12 @@
 			<div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 				{#each history as translation, i}
 					<!-- MultiLangCard.svelte -->
-					<MultiLangCard {translation} {show_langs} {truncate_lines} onDelete={() => deleteTranslation(i)} />
+					<MultiLangCard
+						{translation}
+						{show_langs}
+						{truncate_lines}
+						onDelete={() => deleteTranslation(i)}
+					/>
 				{:else}
 					<div
 						class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl"
