@@ -407,75 +407,12 @@
 				{#each history as translation, i}
 					<!-- MultiLangCard.svelte -->
 					 <MultiLangCard {translation} {show_langs} {truncate_lines} />
-					 
 				{:else}
 					<div class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl">
 						<div class="flex flex-col items-center gap-6 max-w-xl mx-auto">
-							
-							
-							
 							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
 								{#each exampleTranslations as example, exampleIndex}
-									<div class="group w-full">
-										<Card class="h-full hover:shadow-md transition-shadow">
-											<CardContent class="p-3">
-												<div class="relative">
-													{#each Object.entries(example.translations) as [langCode, translation], i}
-														{#if show_langs.includes(langCode)}
-															{@const sourceLang = Object.entries(example.translations).find(([_, text]) => text === example.text)?.[0] || 'eng'}
-															{@const isSourceLang = langCode === sourceLang}
-															
-															<div class="group relative pl-2.5 border-l-2 {isSourceLang ? 'border-blue-300' : 'border-gray-100'} hover:border-blue-200 transition-colors mb-2 {i === Object.entries(example.translations).length - 1 ? 'last:mb-0' : ''}">
-																<!-- class = {colorPalette[i % colorPalette.length].text} -->
-																<div class="text-sm pr-6 pt-0.5 line-clamp-3"
-																>
-																	{translation}
-																</div>
-																<button
-																	class="absolute top-0 right-0 text-gray-400 hover:text-blue-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-																	aria-label="Copy translation"
-																	onclick={() => copyToClipboard(translation)}
-																>
-																	<Copy class="h-2.5 w-2.5" />
-																</button>
-															</div>
-														{/if}
-													{/each}
-													
-													<!-- History button in top-left corner -->
-													<div class="absolute -top-4 -left-4 z-10">
-														<Tooltip>
-															<TooltipTrigger>
-																<button
-																	class="text-gray-400 hover:text-blue-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
-																	aria-label="View original text"
-																	onclick={() => {
-																		// This ensures tooltip stays visible on click
-																		const tooltipVisible = true;
-																	}}
-																>
-																	<History class="h-2.5 w-2.5" />
-																</button>
-															</TooltipTrigger>
-															<TooltipContent side="top">
-																<p class="text-xs max-w-[200px] break-words">{example.text}</p>
-															</TooltipContent>
-														</Tooltip>
-													</div>
-													
-													<!-- Delete button remains in bottom-right corner -->
-													<div class="absolute -bottom-4 -right-4 z-10">
-														<button
-															class="text-gray-400 hover:text-red-500 p-1 bg-white rounded-full shadow-md border border-gray-100 icon-button"
-															aria-label="Delete translation"
-														>
-															<Trash2 class="h-2.5 w-2.5" />
-														</button>
-													</div>
-												</div>
-											</CardContent>
-										</Card>
-									</div>
+									<MultiLangCard translation={example} {show_langs} {truncate_lines} />
 								{/each}
 							</div>
 							
