@@ -91,9 +91,6 @@
 	let truncate_lines = $state(true);
 	let colors_enabled = $state(browser ? localStorage.getItem('colorsEnabled') !== 'false' : true);
 
-	// Badge display format: 'name', 'code'
-	let badge_display = $state(browser ? localStorage.getItem('badgeDisplay') || 'name' : 'name');
-
 	// Use the shared language store
 	let user_langs = $derived(translateLanguages.languages);
 
@@ -106,13 +103,6 @@
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
 	);
-
-	$effect(() => {
-		if (browser) {
-			localStorage.setItem('badgeDisplay', badge_display);
-		}
-	});
-
 	function toggleLanguageCodes() {
 		// Removed this function as it's no longer needed
 	}
@@ -343,11 +333,7 @@
 										role="button"
 										aria-pressed={meta.display}
 									>
-										{#if badge_display === 'name'}
-											{meta.native}
-										{:else if badge_display === 'code'}
-											{key}
-										{/if}
+										{key}
 									</Badge>
 								{/each}
 							</div>
@@ -378,6 +364,10 @@
 									<div
 										class="touch-item relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
 										onclick={(e) => handleCheckboxClick(e, key)}
+										onkeydown={(e) => handleKeyDown(e, () => handleCheckboxClick(e, key))}
+										tabindex="0"
+										role="checkbox"
+										aria-checked={meta.display}
 									>
 										<span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
 											{#if meta.display}
@@ -388,60 +378,6 @@
 									</div>
 								{/each}
 							</div>
-						</DropdownMenuContent>
-					</DropdownMenu>
-
-					<!-- Settings dropdown for translation review -->
-					<DropdownMenu open={settingsDropdownOpen} onOpenChange={setSettingsDropdownOpen}>
-						<DropdownMenuTrigger
-							class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
-						>
-							<Sliders class="h-4 w-4" />
-							<span class="sr-only">Translation review settings</span>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>Display Settings</DropdownMenuLabel>
-
-							<!-- Language badge display options -->
-							<DropdownMenuLabel class="pt-0 text-xs text-gray-500">Badge Display</DropdownMenuLabel
-							>
-							<DropdownMenuRadioGroup
-								value={badge_display}
-								onValueChange={(value) => (badge_display = value)}
-							>
-								<DropdownMenuRadioItem value="name">Language Name</DropdownMenuRadioItem>
-								<DropdownMenuRadioItem value="code">Language Code</DropdownMenuRadioItem>
-							</DropdownMenuRadioGroup>
-
-							<DropdownMenuSeparator />
-
-							<!-- Display options -->
-							<DropdownMenuCheckboxItem
-								checked={truncate_lines}
-								onCheckedChange={(value) => {
-									truncate_lines = value;
-								}}
-							>
-								Truncate Text
-							</DropdownMenuCheckboxItem>
-							<DropdownMenuCheckboxItem
-								checked={colors_enabled}
-								onCheckedChange={(value) => {
-									colors_enabled = value;
-									if (browser) {
-										localStorage.setItem('colorsEnabled', value);
-									}
-								}}
-							>
-								Enable Colors
-							</DropdownMenuCheckboxItem>
-
-							<DropdownMenuSeparator />
-
-							<!-- Clear history option -->
-							<DropdownMenuItem class="text-red-500 focus:text-red-500" onclick={clearAllHistory}>
-								Clear History
-							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
