@@ -59,8 +59,8 @@
 	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
 </script>
 
-<div class="flex w-full items-center gap-2 {isMobile ? 'max-w-full' : ''}">
-	<div class="input-container flex-1 {animationState} {needsAttention ? 'prominent' : ''}">
+<div class="flex w-full items-center gap-4 {isMobile ? 'max-w-full' : ''}">
+	<div class="input-container flex-1 {animationState} {needsAttention ? 'prominent' : ''} {!isMobile && needsAttention ? 'desktop-prominent' : ''}">
 		<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
 			<input
 				type="text"
@@ -196,8 +196,18 @@
 	/* Prominent state for when no translations and showing examples */
 	.input-container.prominent {
 		padding: 3px;
-		transform: scale(1.05);
+		transform: scale(1.03);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	}
+	
+	/* Desktop-specific prominent state additions */
+	.input-container.desktop-prominent {
+		padding: 4px;
+	}
+	
+	.input-container.desktop-prominent input {
+		padding-top: 0.75rem;
+		padding-bottom: 0.75rem;
 	}
 	
 	/* Style for input field text */
