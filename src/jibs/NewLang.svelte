@@ -81,12 +81,41 @@
 	// Handle input focus event from TranslationInput
 	function handleInputFocus() {
 		console.log('Input focus event received in NewLang');
-		// If currently typing, stop the animation
+		// If currently typing, complete the current word very quickly
 		if (isTyping && typingInterval) {
-			console.log('Stopping typing animation');
+			console.log('Completing current word quickly before stopping typing animation');
+			
 			// Clear current interval
 			clearInterval(typingInterval);
-			isTyping = false;
+			
+			// Get current text and target text
+			const currentText = text;
+			const targetText = examplePhrases[currentExampleIndex];
+			
+			// Find the next space after current position
+			let nextSpaceIndex = targetText.indexOf(' ', currentText.length);
+			
+			// If we're at the end or no more spaces, complete to the end
+			if (nextSpaceIndex === -1) {
+				nextSpaceIndex = targetText.length;
+			}
+			
+			// Complete the current word very quickly (up to the next space)
+			const ULTRA_FAST_TYPING_SPEED = 5; // milliseconds between characters
+			let i = currentText.length;
+			
+			// Set up a new interval that types very quickly
+			typingInterval = setInterval(() => {
+				if (i <= nextSpaceIndex) {
+					// Add the next letter at ultra fast speed
+					text = targetText.substring(0, i);
+					i++;
+				} else {
+					// Once we've completed the word, stop typing
+					clearInterval(typingInterval);
+					isTyping = false;
+				}
+			}, ULTRA_FAST_TYPING_SPEED);
 		} else {
 			console.log('No typing animation to stop');
 		}
