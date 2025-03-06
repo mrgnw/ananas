@@ -47,14 +47,11 @@
 		console.log('Starting typing interval');
 		// Set up interval to add one letter at a time
 		typingInterval = setInterval(() => {
-			console.log(`Typing letter ${i+1} of ${newText.length}`);
 			if (i < newText.length) {
 				// Add the next letter
 				text = newText.substring(0, i + 1);
 				i++;
 			} else {
-				// Typing complete
-				console.log('Typing complete');
 				clearInterval(typingInterval);
 				isTyping = false;
 			}

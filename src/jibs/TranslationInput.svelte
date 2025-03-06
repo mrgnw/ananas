@@ -1,7 +1,7 @@
 <script>
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
-	import { Languages } from 'lucide-svelte';
+	import { Languages, Send } from 'lucide-svelte';
 
 	// Props using Svelte 5 runes
 	let { 
@@ -36,12 +36,12 @@
 		'idle'
 	);
 	
-	// For debugging
-	// $effect(() => {
-	// 	console.log('Animation state:', animationState, { is_loading, isInputFocused, needsAttention });
-	// });
+	// Debug with effect to see state changes
+	$effect(() => {
+		console.log('Input state:', { isInputFocused, is_loading, is_ready });
+	});
 	
-	// Debug focus events specifically
+	// Focus event handlers
 	function handleFocus() {
 		console.log('Input focused!');
 		isInputFocused = true;
@@ -52,45 +52,34 @@
 		isInputFocused = false;
 	}
 
+	// Show send button when input is focused or loading
+	let showSendButton = $derived(isInputFocused || is_loading);
 </script>
 <div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
 	<div class="input-container flex-1 {animationState}">
-		<div class="w-full overflow-hidden rounded-full bg-white flex items-center">
+		<div class="w-full overflow-hidden rounded-full bg-white flex items-center relative">
 		<input
 			type="text"
 			placeholder="Enter text from any language..."
 			bind:value={text}
 			disabled={is_loading}
-			class="flex-grow py-{isMobile ? '3' : '2.5'} pl-4 pr-1 bg-transparent border-none focus:outline-none focus:ring-0 {is_loading ? 'opacity-75' : ''}"
+			class="flex-grow py-{isMobile ? '3' : '2.5'} pl-4 pr-12 bg-transparent border-none focus:outline-none focus:ring-0 {is_loading ? 'opacity-75' : ''}"
 			onkeydown={handleKeyDown}
-			onfocus={() => isInputFocused = true}
-			onblur={() => isInputFocused = false}
+			onfocus={handleFocus}
+			onblur={handleBlur}
 		/>
 
+		<!-- Always render the button but control visibility with CSS -->
 		<button
 			onclick={handleSubmit}
 			disabled={!is_ready}
-			class="mr-1 h-auto p-2 text-white {is_ready ? 'text-blue-600 hover:text-blue-700' : 'text-gray-400'} transition-colors"
+			class="absolute right-2 h-8 w-8 flex items-center justify-center rounded-full {showSendButton ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 {is_ready ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50' : 'text-gray-400'}"
 			type="submit"
 		>
 			{#if is_loading}
 				<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600"></div>
 			{:else}
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="20"
-					height="20"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="lucide lucide-send"
-				>
-					<path d="m22 2-7 20-4-9-9-4Z" />
-					<path d="M22 2 11 13" />
-				</svg>
+				<Send size={18} />
 			{/if}
 			<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
 		</button>
