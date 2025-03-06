@@ -16,10 +16,62 @@
 
 	// Determine if we're on mobile view
 	let isMobile = $derived(variant === 'mobile');
+	
+	// Control for the animation
+	let isInputFocused = false;
 </script>
 
+<style>
+	@keyframes gradientBorder {
+		0% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
+		100% {
+			background-position: 0% 50%;
+		}
+	}
+	
+	.input-container {
+		position: relative;
+	}
+	
+	.input-container::before {
+		content: '';
+		position: absolute;
+		top: -2px;
+		left: -2px;
+		right: -2px;
+		bottom: -2px;
+		z-index: -1;
+		border-radius: 9999px;
+		background: linear-gradient(90deg, #ff0000, #ffa500, #ffff00, #008000, #0000ff, #4b0082, #ee82ee);
+		background-size: 400% 400%;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+	
+	.input-container.animate::before {
+		animation: gradientBorder 3s ease infinite;
+		opacity: 0.7;
+	}
+	
+	/* Only show the animation when focused or hovered */
+	.input-container:hover::before {
+		opacity: 0.4;
+	}
+	
+	.input-container:focus-within::before {
+		opacity: 0.7;
+		animation: gradientBorder 3s ease infinite;
+	}
+</style>
+
 <div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
-	<div class="relative flex-1 overflow-hidden rounded-full border border-gray-200 shadow-md bg-white flex items-center transition-colors hover:border-blue-200 focus-within:border-blue-300 focus-within:ring-1 focus-within:ring-blue-200">
+	<div class="input-container flex-1 {isInputFocused ? 'animate' : ''}">
+		<div class="relative w-full overflow-hidden rounded-full border border-gray-200 shadow-md bg-white flex items-center">
 		<input
 			type="text"
 			placeholder="Enter text from any language..."
@@ -27,6 +79,8 @@
 			disabled={is_loading}
 			class="flex-grow py-{isMobile ? '3' : '2.5'} pl-4 pr-1 bg-transparent border-none focus:outline-none focus:ring-0 {is_loading ? 'opacity-75' : ''}"
 			onkeydown={handleKeyDown}
+			onfocus={() => isInputFocused = true}
+			onblur={() => isInputFocused = false}
 		/>
 
 		<button
@@ -56,6 +110,7 @@
 			{/if}
 			<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
 		</button>
+		</div>
 	</div>
 
 	<!-- Languages button with more prominence now that it's alone -->
