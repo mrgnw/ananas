@@ -2,8 +2,9 @@
 	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
-	import { getLanguageColors } from '$lib/colors';
+	import { getColorByIndex } from '$lib/colors';
 	import { Copy, Trash2 } from 'lucide-svelte';
+	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 
 	let { translation, show_langs, truncate_lines, onDelete = null, ...props } = $props();
 
@@ -55,11 +56,7 @@
 								: 'border-gray-100'} mb-2 transition-colors last:mb-0 hover:border-blue-200"
 						>
 							<div
-								class="text-sm {getLanguageColors(
-									lang,
-									true,
-									'dropdown'
-								)} pr-6 pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}"
+								class="text-sm {getColorByIndex(Object.keys(translateLanguages.languages).indexOf(lang), true)} pr-6 pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}"
 							>
 								{translation.translations[lang]}
 							</div>

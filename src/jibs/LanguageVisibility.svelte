@@ -15,7 +15,7 @@
 	import DropdownMenuLabel from '@/components/ui/dropdown-menu/dropdown-menu-label.svelte';
 	import { DropdownMenu, DropdownMenu } from 'bits-ui';
 	import { Check, Eye, Globe } from 'lucide-svelte';
-	import { getLanguageColors } from '$lib/colors';
+	import { getColorByIndex } from '$lib/colors';
 
 	let { user_langs } = $props();
 
@@ -62,16 +62,16 @@
 
 		<!-- Language visibility toggles -->
 		<div class="max-h-[250px] overflow-y-auto">
-			{#each Object.entries(user_langs) as [key, meta]}
+			{#each Object.entries(user_langs) as [key, meta], index}
 				<div
-					class="touch-item relative flex cursor-pointer select-none items-center py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-gray-50 {meta.display ? getLanguageColors(key, true, 'dropdown') : 'text-gray-700'}"
+					class="touch-item relative flex cursor-pointer select-none items-center py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-gray-50 {meta.display ? getColorByIndex(index, true) : 'text-gray-700'}"
 					onclick={(e) => handleCheckboxClick(e, key)}
 					onkeydown={(e) => handleKeyDown(e, () => handleCheckboxClick(e, key))}
 					tabindex="0"
 					role="checkbox"
 					aria-checked={meta.display}
 				>
-					<span class="absolute left-2 flex h-4 w-4 items-center justify-center {meta.display ? getLanguageColors(key, true, 'dropdown') : 'text-gray-300'}">
+					<span class="absolute left-2 flex h-4 w-4 items-center justify-center {meta.display ? getColorByIndex(index, true) : 'text-gray-300'}">
 						<Check class="h-4 w-4" />
 					</span>
 					<span>{meta.native} <span class="text-xs text-gray-500">({key})</span></span>

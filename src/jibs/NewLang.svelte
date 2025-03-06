@@ -14,7 +14,7 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import TranslationInput from './TranslationInput.svelte';
-	import { getLanguageColors } from '$lib/colors';
+	import { getColorByIndex } from '$lib/colors';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -159,7 +159,7 @@
 									{#each Object.entries(user_langs) as [key, meta], index}
 										<Badge
 											variant={meta.display ? 'default' : 'outline'}
-											class="h-6 shrink-0 cursor-pointer whitespace-nowrap px-2 py-0.5 text-xs font-medium hover:scale-105 transition-transform {meta.display ? getLanguageColors(key, true, '') : 'hover:bg-gray-100'}"
+											class="h-6 shrink-0 cursor-pointer whitespace-nowrap px-2 py-0.5 text-xs font-medium hover:scale-105 transition-transform {meta.display ? getColorByIndex(index) : 'hover:bg-gray-100'}"
 											onclick={() => translateLanguages.toggleLanguageDisplay(key)}
 											onkeydown={(e) =>
 												handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
