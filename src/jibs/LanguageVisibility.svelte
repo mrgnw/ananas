@@ -71,7 +71,7 @@
 					role="checkbox"
 					aria-checked={meta.display}
 				>
-					<span class="absolute left-2 flex h-4 w-4 items-center justify-center {meta.display ? 'text-blue-500' : 'text-gray-300'}">
+					<span class="absolute left-2 flex h-4 w-4 items-center justify-center {meta.display ? getLanguageColors(key, true, 'dropdown') : 'text-gray-300'}">
 						<Check class="h-4 w-4" />
 					</span>
 					<span>{meta.native} <span class="text-xs text-gray-500">({key})</span></span>
