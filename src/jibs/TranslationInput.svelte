@@ -60,7 +60,7 @@
 </script>
 
 <div class="flex w-full items-center gap-2 {isMobile ? 'max-w-full' : ''}">
-	<div class="input-container flex-1 {animationState}">
+	<div class="input-container flex-1 {animationState} {needsAttention ? 'prominent' : ''}">
 		<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
 			<input
 				type="text"
@@ -71,7 +71,7 @@
 					? '3'
 					: '2.5'} border-none bg-transparent pl-4 pr-12 focus:outline-none focus:ring-0 {is_loading
 					? 'cursor-not-allowed opacity-75'
-					: ''}"
+					: ''} {needsAttention ? 'text-lg' : 'text-base'}"
 				onkeydown={handleKeyDown}
 				onfocus={handleFocus}
 				onblur={handleBlur}
@@ -131,7 +131,7 @@
 		background-origin: border-box;
 		background-clip: padding-box, border-box;
 		background-size: 400% 400%;
-		transition: background 0.3s ease;
+		transition: all 0.3s ease;
 	}
 
 	/* Default state: just a border */
@@ -191,5 +191,17 @@
 	.input-container.idle:hover {
 		background: white;
 		border: 1px solid #d1d5db;
+	}
+	
+	/* Prominent state for when no translations and showing examples */
+	.input-container.prominent {
+		padding: 3px;
+		transform: scale(1.05);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	}
+	
+	/* Style for input field text */
+	input {
+		transition: all 0.3s ease;
 	}
 </style>
