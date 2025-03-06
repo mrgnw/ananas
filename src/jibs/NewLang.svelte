@@ -296,7 +296,7 @@
 		Type your text below and instantly see translations in all your selected languages.
 	</p>
 
-	<div class="relative mx-auto max-w-2xl">
+	<div class="relative mx-auto max-w-2xl hidden md:block">
 		<TranslationInput
 			bind:text
 			{is_loading}
@@ -318,7 +318,6 @@
 				<div class="flex flex-wrap items-center justify-between gap-2 pb-2">
 					<div class="flex items-center gap-3">
 						<h2 class="text-xl font-semibold text-gray-800">Review</h2>
-						<p class="text-sm text-gray-600">Review all of your languages together</p>
 
 						{#if tgt_langs.length > 0}
 							<div class="flex items-center">
