@@ -123,12 +123,13 @@
 		}
 	}
 	
-	// Initialize examples when browser is available
+	// Initialize examples when browser is available and history is loaded
 	$effect(() => {
-		if (browser) {
-			console.log('Browser available, initializing examples');
+		// Only start examples if browser is available AND history is loaded AND history is empty
+		if (browser && history !== undefined && history.length === 0) {
+			console.log('Page fully loaded with empty history, initializing examples');
 			
-			// Type the first example after a short delay
+			// Type the first example after a short delay to ensure page is fully rendered
 			const timeout = setTimeout(() => {
 				console.log('Starting first example');
 				typeLetters(examplePhrases[currentExampleIndex], NORMAL_TYPING_SPEED);
