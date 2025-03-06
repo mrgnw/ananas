@@ -155,14 +155,22 @@
 		border: 2px solid transparent;
 	}
 
-	/* Translating state: Vibrant pink/purple animation */
+	/* Additional keyframes for translating state */
+	@keyframes shimmerBorder {
+		0% { background-position: 0% 50%; border-width: 2px; }
+		50% { background-position: 100% 50%; border-width: 3px; }
+		100% { background-position: 0% 50%; border-width: 2px; }
+	}
+
+	/* Translating state: Magical cosmic animation */
 	.input-container.translating {
 		background: 
 			linear-gradient(white, white) padding-box,
-			linear-gradient(90deg, #ec4899, #a855f7, #d946ef, #ec4899) border-box;
-		background-size: 400% 400%;
-		animation: gradientBorder 2.5s ease infinite;
+			linear-gradient(90deg, #4f46e5, #7e22ce, #0ea5e9, #6366f1, #4f46e5) border-box;
+		background-size: 300% 300%;
+		animation: shimmerBorder 3s ease infinite;
 		border: 2px solid transparent;
+		box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
 	}
 
 	/* Very subtle hover effect for idle state */
