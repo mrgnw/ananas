@@ -4,7 +4,15 @@
 	import { Languages } from 'lucide-svelte';
 
 	// Props using Svelte 5 runes
-	let { text = $bindable(), is_loading, is_ready, handleSubmit, getRandomExample, variant = 'desktop' } = $props();
+	let { 
+		text = $bindable(), 
+		is_loading, 
+		is_ready, 
+		handleSubmit, 
+		getRandomExample, 
+		variant = 'desktop',
+		needsAttention = false 
+	} = $props();
 
 	// Keyboard event handler for accessibility
 	function handleKeyDown(event) {
@@ -17,61 +25,26 @@
 	// Determine if we're on mobile view
 	let isMobile = $derived(variant === 'mobile');
 	
-	// Control for the animation
+	// Input state tracking
 	let isInputFocused = false;
+
+	// Animation state using $derived properly
+	let animationState = $derived(
+		is_loading ? 'translating' : 
+		isInputFocused ? 'focused' : 
+		needsAttention ? 'attention' : 
+		'idle'
+	);
+	
+	// For debugging
+	$effect(() => {
+		console.log('Animation state:', animationState, { is_loading, isInputFocused, needsAttention });
+	});
 </script>
-
-<style>
-	@keyframes gradientBorder {
-		0% {
-			background-position: 0% 50%;
-		}
-		50% {
-			background-position: 100% 50%;
-		}
-		100% {
-			background-position: 0% 50%;
-		}
-	}
-	
-	.input-container {
-		position: relative;
-	}
-	
-	.input-container::before {
-		content: '';
-		position: absolute;
-		top: -2px;
-		left: -2px;
-		right: -2px;
-		bottom: -2px;
-		z-index: -1;
-		border-radius: 9999px;
-		background: linear-gradient(90deg, #ff0000, #ffa500, #ffff00, #008000, #0000ff, #4b0082, #ee82ee);
-		background-size: 400% 400%;
-		opacity: 0;
-		transition: opacity 0.3s ease;
-	}
-	
-	.input-container.animate::before {
-		animation: gradientBorder 3s ease infinite;
-		opacity: 0.7;
-	}
-	
-	/* Only show the animation when focused or hovered */
-	.input-container:hover::before {
-		opacity: 0.4;
-	}
-	
-	.input-container:focus-within::before {
-		opacity: 0.7;
-		animation: gradientBorder 3s ease infinite;
-	}
-</style>
-
 <div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
-	<div class="input-container flex-1 {isInputFocused ? 'animate' : ''}">
-		<div class="relative w-full overflow-hidden rounded-full border border-gray-200 shadow-md bg-white flex items-center">
+	<div class="input-container flex-1 {animationState}">
+		<div class="text-xs text-gray-400 absolute -top-5 left-0 z-10">State: {animationState}</div>
+		<div class="w-full overflow-hidden rounded-full shadow-sm bg-white flex items-center">
 		<input
 			type="text"
 			placeholder="Enter text from any language..."
@@ -123,3 +96,69 @@
 		<span class="sr-only">Manage languages</span>
 	</a>
 </div>
+
+
+<style>
+	/* Base animation keyframes */
+	@keyframes gradientBorder {
+		0% { background-position: 0% 50%; }
+		50% { background-position: 100% 50%; }
+		100% { background-position: 0% 50%; }
+	}
+	
+	/* Base styles for all input containers */
+	.input-container {
+		position: relative;
+		padding: 2px;
+		border-radius: 9999px;
+		background-origin: border-box;
+		background-clip: padding-box, border-box;
+		background-size: 400% 400%;
+		transition: background 0.3s ease;
+	}
+	
+	/* Default state: just a border */
+	.input-container {
+		background: white;
+		border: 1px solid #e5e7eb;
+	}
+
+	/* Focused state: Calm blue/purple with slow animation */
+	.input-container.focused {
+		background: 
+			linear-gradient(white, white) padding-box,
+			linear-gradient(90deg, #3b82f6, #8b5cf6, #6366f1, #3b82f6) border-box;
+		background-size: 400% 400%;
+		animation: gradientBorder 4s ease infinite;
+		border: 2px solid transparent;
+	}
+
+	/* Attention state: Bright vivid animation to grab attention */
+	.input-container.attention {
+		background: 
+			linear-gradient(white, white) padding-box,
+			linear-gradient(90deg, #3b82f6, #ec4899, #8b5cf6, #4f46e5, #3b82f6) border-box;
+		background-size: 300% 300%;
+		animation: gradientBorder 2s ease infinite;
+		border: 2px solid transparent;
+	}
+
+	/* Translating state: Pulsing yellow/green animation */
+	.input-container.translating {
+		background: 
+			linear-gradient(white, white) padding-box,
+			linear-gradient(90deg, #059669, #84cc16, #059669) border-box;
+		background-size: 400% 400%;
+		animation: gradientBorder 2.5s ease infinite;
+		border: 2px solid transparent;
+	}
+
+	/* Subtle hover effect for idle state */
+	.input-container.idle:hover {
+		background: 
+			linear-gradient(white, white) padding-box,
+			linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6) border-box;
+		background-size: 400% 400%;
+		border: 2px solid transparent;
+	}
+</style>

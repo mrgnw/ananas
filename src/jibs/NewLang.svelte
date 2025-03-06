@@ -139,6 +139,7 @@
 			{handleSubmit}
 			{getRandomExample}
 			variant="desktop"
+			needsAttention={history.length === 0}
 		/>
 	</div>
 
@@ -236,6 +237,7 @@
 			{handleSubmit}
 			{getRandomExample}
 			variant="mobile"
+			needsAttention={history.length === 0}
 		/>
 	</div>
 </div>
