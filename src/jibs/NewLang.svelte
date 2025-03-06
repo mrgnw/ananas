@@ -6,6 +6,54 @@
 		return examplePhrases[randomIndex];
 	}
 
+	// Import Typewriter component correctly
+	import Typewriter from 'svelte-typewriter';
+
+	// Track the current example index for cycling through examples
+	let currentExampleIndex = $state(0);
+	
+	// Track if typewriter is currently typing
+	let isTyping = $state(false);
+	
+	// Track when typing is complete
+	let typingComplete = $state(false);
+	
+	// Function to cycle to the next example
+	function cycleExamples() {
+		if (history.length === 0) {
+			// Reset typing states
+			isTyping = false;
+			typingComplete = false;
+			
+			// Move to next example
+			currentExampleIndex = (currentExampleIndex + 1) % examplePhrases.length;
+			
+			// Start typing after a short delay
+			setTimeout(() => {
+				isTyping = true;
+			}, 300);
+		}
+	}
+	
+	// Set up interval to cycle examples
+	$effect(() => {
+		if (browser && history.length === 0) {
+			// Initialize first example
+			isTyping = true;
+			
+			// Set up cycling interval
+			const interval = setInterval(cycleExamples, 5000);
+			return () => clearInterval(interval);
+		}
+	});
+	
+	// When typing is complete, update the text binding
+	$effect(() => {
+		if (typingComplete && history.length === 0) {
+			text = examplePhrases[currentExampleIndex];
+		}
+	});
+
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -140,6 +188,7 @@
 			{getRandomExample}
 			variant="desktop"
 			needsAttention={history.length === 0}
+			class="desktop-input"
 		/>
 	</div>
 
@@ -209,15 +258,30 @@
 								<p class="text-gray-500 mb-4">Enter text in any language to translate.</p>
 							</div>
 
-							<Button
-								class="mt-2"
-								onclick={() => {
-									text = getRandomExample();
-									document.querySelector('input').focus();
-								}}
-							>
-								Try an Example
-							</Button>
+							<div class="w-full max-w-md mx-auto mb-4">
+								<div class="input-container relative rounded-full bg-white border border-gray-200 overflow-hidden shadow-sm hover:shadow transition-shadow duration-300">
+									{#if isTyping}
+										<Typewriter
+											mode="cascade"
+											cursor={false}
+											interval={50}
+											on:done={() => typingComplete = true}
+										>
+											<div class="py-2.5 px-4">{examplePhrases[currentExampleIndex]}</div>
+										</Typewriter>
+									{:else}
+										<input
+											id="example-input"
+											type="text"
+											placeholder="Try an example..."
+											bind:value={text}
+											class="w-full py-2.5 px-4 bg-transparent border-none focus:outline-none focus:ring-0"
+											onfocus={() => document.querySelector('.desktop-input')?.focus()}
+										/>
+									{/if}
+								</div>
+								<p class="text-xs text-center text-gray-500 mt-2">Examples will cycle automatically, or click to try one</p>
+							</div>
 						</div>
 					</div>
 				{/each}
