@@ -5,14 +5,18 @@
   // Props definition with bindable value
   const { value = $bindable(''), class: className = "", ...props } = $props();
 
-  // Pass all regular input props to the actual input element
+  // Handle input changes
+  function handleInput(e) {
+    value = e.target.value;
+  }
 </script>
 
 <div class="fancy-input-container">
   <input 
     class="fancy-input {className}" 
     {...props}
-    {value}
+    value={value}
+    on:input={handleInput}
     aria-label={props['aria-label'] || 'Search input'}
   />
   <div class="glow-border"></div>
