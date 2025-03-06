@@ -37,9 +37,9 @@
 	);
 	
 	// For debugging
-	$effect(() => {
-		console.log('Animation state:', animationState, { is_loading, isInputFocused, needsAttention });
-	});
+	// $effect(() => {
+	// 	console.log('Animation state:', animationState, { is_loading, isInputFocused, needsAttention });
+	// });
 	
 	// Debug focus events specifically
 	function handleFocus() {

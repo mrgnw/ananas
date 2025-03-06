@@ -6,51 +6,107 @@
 		return examplePhrases[randomIndex];
 	}
 
-	// Import Typewriter component correctly
-	import Typewriter from 'svelte-typewriter';
-
 	// Track the current example index for cycling through examples
 	let currentExampleIndex = $state(0);
 	
-	// Track if typewriter is currently typing
+	// Track if currently typing
 	let isTyping = $state(false);
 	
-	// Track when typing is complete
-	let typingComplete = $state(false);
+	// Interval ID for cleanup
+	let typingInterval = $state(null);
+	
+	/**
+	 * Simple typewriter function that updates a variable one letter at a time
+	 * @param {string} newText - The new text to type
+	 * @param {number} speed - Typing speed in milliseconds
+	 */
+	function typeLetters(newText, speed = 100) {
+		console.log('typeLetters called with:', newText);
+		
+		// Don't start a new typing operation if one is in progress
+		if (isTyping) {
+			console.log('Already typing, canceling');
+			return;
+		}
+		
+		// Set typing state
+		isTyping = true;
+		
+		// Clear any existing interval
+		if (typingInterval) {
+			console.log('Clearing existing interval');
+			clearInterval(typingInterval);
+		}
+		
+		// Start with empty string
+		text = "";
+		
+		// Current position in the text
+		let i = 0;
+		
+		console.log('Starting typing interval');
+		// Set up interval to add one letter at a time
+		typingInterval = setInterval(() => {
+			console.log(`Typing letter ${i+1} of ${newText.length}`);
+			if (i < newText.length) {
+				// Add the next letter
+				text = newText.substring(0, i + 1);
+				i++;
+			} else {
+				// Typing complete
+				console.log('Typing complete');
+				clearInterval(typingInterval);
+				isTyping = false;
+			}
+		}, speed);
+	}
+	
+	// Interval for cycling examples
+	let cycleInterval = $state(null);
 	
 	// Function to cycle to the next example
 	function cycleExamples() {
+		console.log('Cycling to next example');
 		if (history.length === 0) {
-			// Reset typing states
-			isTyping = false;
-			typingComplete = false;
-			
 			// Move to next example
 			currentExampleIndex = (currentExampleIndex + 1) % examplePhrases.length;
+			console.log('New example index:', currentExampleIndex);
 			
-			// Start typing after a short delay
-			setTimeout(() => {
-				isTyping = true;
-			}, 300);
+			// Type the new example text
+			typeLetters(examplePhrases[currentExampleIndex], 100);
 		}
 	}
 	
-	// Set up interval to cycle examples
+	// Initialize examples when browser is available
 	$effect(() => {
-		if (browser && history.length === 0) {
-			// Initialize first example
-			isTyping = true;
+		if (browser) {
+			console.log('Browser available, initializing examples');
 			
-			// Set up cycling interval
-			const interval = setInterval(cycleExamples, 5000);
-			return () => clearInterval(interval);
-		}
-	});
-	
-	// When typing is complete, update the text binding
-	$effect(() => {
-		if (typingComplete && history.length === 0) {
-			text = examplePhrases[currentExampleIndex];
+			// Type the first example after a short delay
+			const timeout = setTimeout(() => {
+				console.log('Starting first example');
+				typeLetters(examplePhrases[currentExampleIndex], 100);
+				
+				// Set up cycling interval
+				if (!cycleInterval) {
+					console.log('Setting up cycling interval');
+					cycleInterval = setInterval(cycleExamples, 5000);
+				}
+			}, 1000);
+			
+			// Cleanup function
+			return () => {
+				console.log('Cleaning up intervals');
+				clearTimeout(timeout);
+				if (cycleInterval) {
+					clearInterval(cycleInterval);
+					cycleInterval = null;
+				}
+				if (typingInterval) {
+					clearInterval(typingInterval);
+					typingInterval = null;
+				}
+			};
 		}
 	});
 
@@ -260,25 +316,20 @@
 
 							<div class="w-full max-w-md mx-auto mb-4">
 								<div class="input-container relative rounded-full bg-white border border-gray-200 overflow-hidden shadow-sm hover:shadow transition-shadow duration-300">
-									{#if isTyping}
-										<Typewriter
-											mode="cascade"
-											cursor={false}
-											interval={50}
-											on:done={() => typingComplete = true}
-										>
-											<div class="py-2.5 px-4">{examplePhrases[currentExampleIndex]}</div>
-										</Typewriter>
-									{:else}
-										<input
-											id="example-input"
-											type="text"
-											placeholder="Try an example..."
-											bind:value={text}
-											class="w-full py-2.5 px-4 bg-transparent border-none focus:outline-none focus:ring-0"
-											onfocus={() => document.querySelector('.desktop-input')?.focus()}
-										/>
-									{/if}
+									<input
+										id="example-input"
+										type="text"
+										placeholder="Try an example..."
+										bind:value={text}
+										class="w-full py-2.5 px-4 bg-transparent border-none focus:outline-none focus:ring-0"
+										onfocus={() => document.querySelector('.desktop-input')?.focus()}
+										onclick={() => {
+											// Type the current example
+											typeLetters(examplePhrases[currentExampleIndex], 100);
+											// Focus the main input
+											document.querySelector('.desktop-input')?.focus();
+										}}
+									/>
 								</div>
 								<p class="text-xs text-center text-gray-500 mt-2">Examples will cycle automatically, or click to try one</p>
 							</div>
