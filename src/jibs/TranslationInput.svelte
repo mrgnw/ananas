@@ -40,11 +40,18 @@
 	$effect(() => {
 		console.log('Animation state:', animationState, { is_loading, isInputFocused, needsAttention });
 	});
+
+	// Reset needsAttention when input is focused
+	$effect(() => {
+		if (isInputFocused && needsAttention) {
+			needsAttention = false;
+		}
+	});
 </script>
 <div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
 	<div class="input-container flex-1 {animationState}">
 		<div class="text-xs text-gray-400 absolute -top-5 left-0 z-10">State: {animationState}</div>
-		<div class="w-full overflow-hidden rounded-full shadow-sm bg-white flex items-center">
+		<div class="w-full overflow-hidden rounded-full bg-white flex items-center">
 		<input
 			type="text"
 			placeholder="Enter text from any language..."
@@ -153,12 +160,9 @@
 		border: 2px solid transparent;
 	}
 
-	/* Subtle hover effect for idle state */
+	/* Very subtle hover effect for idle state */
 	.input-container.idle:hover {
-		background: 
-			linear-gradient(white, white) padding-box,
-			linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6) border-box;
-		background-size: 400% 400%;
-		border: 2px solid transparent;
+		background: white;
+		border: 1px solid #d1d5db;
 	}
 </style>
