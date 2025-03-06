@@ -122,7 +122,7 @@
 	}
 </script>
 
-<div class="mx-auto max-w-screen-lg space-y-4 px-2 pb-[80px] sm:px-0 md:pb-0">
+<div class="mx-auto max-w-screen-lg space-y-4 px-2 pb-[100px] sm:pb-[80px] md:pb-0 env-ios:pb-[120px]">
 	<!-- Site title and info at the top of the page -->
 	<h1 class="mx-auto mb-2 max-w-2xl text-center text-3xl font-bold text-gray-900">
 		Translate to Multiple Languages at Once
