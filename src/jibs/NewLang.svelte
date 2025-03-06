@@ -15,12 +15,16 @@
 	// Interval ID for cleanup
 	let typingInterval = $state(null);
 	
+	// Normal and fast typing speeds
+	const NORMAL_TYPING_SPEED = 100;
+	const FAST_TYPING_SPEED = 20;
+	
 	/**
 	 * Simple typewriter function that updates a variable one letter at a time
 	 * @param {string} newText - The new text to type
 	 * @param {number} speed - Typing speed in milliseconds
 	 */
-	function typeLetters(newText, speed = 100) {
+	function typeLetters(newText, speed = NORMAL_TYPING_SPEED) {
 		console.log('typeLetters called with:', newText);
 		
 		// Don't start a new typing operation if one is in progress
@@ -70,7 +74,34 @@
 			console.log('New example index:', currentExampleIndex);
 			
 			// Type the new example text
-			typeLetters(examplePhrases[currentExampleIndex], 100);
+			typeLetters(examplePhrases[currentExampleIndex], NORMAL_TYPING_SPEED);
+		}
+	}
+	
+	// Handle input focus event from TranslationInput
+	function handleInputFocus() {
+		// If currently typing, speed up the animation
+		if (isTyping && typingInterval) {
+			// Get current text and position
+			const currentText = text;
+			const targetText = examplePhrases[currentExampleIndex];
+			
+			// Clear current interval
+			clearInterval(typingInterval);
+			
+			// Continue typing but at a faster speed
+			let i = currentText.length;
+			
+			typingInterval = setInterval(() => {
+				if (i < targetText.length) {
+					// Add the next letter at faster speed
+					text = targetText.substring(0, i + 1);
+					i++;
+				} else {
+					clearInterval(typingInterval);
+					isTyping = false;
+				}
+			}, FAST_TYPING_SPEED);
 		}
 	}
 	
@@ -82,7 +113,7 @@
 			// Type the first example after a short delay
 			const timeout = setTimeout(() => {
 				console.log('Starting first example');
-				typeLetters(examplePhrases[currentExampleIndex], 100);
+				typeLetters(examplePhrases[currentExampleIndex], NORMAL_TYPING_SPEED);
 				
 				// Set up cycling interval
 				if (!cycleInterval) {
@@ -163,6 +194,13 @@
 	let is_ready = $derived(text.length > 0 && !is_loading);
 
 	async function handleSubmit() {
+		// Stop typing animation if it's running
+		if (isTyping) {
+			clearInterval(typingInterval);
+			isTyping = false;
+		}
+		
+		// Set loading state
 		is_loading = true;
 		const apiUrl = 'https://ananas-api.xces.workers.dev';
 
@@ -243,6 +281,7 @@
 			variant="desktop"
 			needsAttention={history.length === 0}
 			class="desktop-input"
+			onInputFocus={handleInputFocus}
 		/>
 	</div>
 

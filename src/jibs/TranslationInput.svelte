@@ -12,7 +12,8 @@
 		getRandomExample, 
 		variant = 'desktop',
 		needsAttention = false,
-		isTyping = false
+		isTyping = false,
+		onInputFocus
 	} = $props();
 
 	// Keyboard event handler for accessibility
@@ -46,6 +47,8 @@
 	function handleFocus() {
 		console.log('Input focused!');
 		isInputFocused = true;
+		// Emit the focus event to parent component
+		onInputFocus();
 	}
 	
 	function handleBlur() {
@@ -61,10 +64,10 @@
 		<div class="w-full overflow-hidden rounded-full bg-white flex items-center relative">
 		<input
 			type="text"
-			placeholder="Enter text from any language..."
+			placeholder={is_loading ? 'Translating...' : 'Enter text from any language...'}
 			bind:value={text}
 			disabled={is_loading}
-			class="flex-grow py-{isMobile ? '3' : '2.5'} pl-4 pr-12 bg-transparent border-none focus:outline-none focus:ring-0 {is_loading ? 'opacity-75' : ''}"
+			class="flex-grow py-{isMobile ? '3' : '2.5'} pl-4 pr-12 bg-transparent border-none focus:outline-none focus:ring-0 {is_loading ? 'opacity-75 cursor-not-allowed' : ''}"
 			onkeydown={handleKeyDown}
 			onfocus={handleFocus}
 			onblur={handleBlur}
