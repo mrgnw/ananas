@@ -366,6 +366,7 @@
 						class="col-span-1 sm:col-span-2 lg:col-span-3 p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl"
 					>
 						<div class="flex flex-col items-center gap-6 max-w-xl mx-auto">
+							<h2 class="text-center text-xl md:text-2xl font-semibold text-gray-800 mb-6">Study all of your languages together</h2>
 							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
 								{#each exampleTranslations as example, exampleIndex}
 									<MultiLangCard translation={example} {show_langs} {truncate_lines} />
