@@ -81,38 +81,42 @@
 	// Handle input focus event from TranslationInput
 	function handleInputFocus() {
 		console.log('Input focus event received in NewLang');
-		// If currently typing, complete the current word very quickly
+		
+		// If currently typing, complete the entire example quickly
 		if (isTyping && typingInterval) {
-			console.log('Completing current word quickly before stopping typing animation');
+			console.log('Completing entire example quickly');
 			
-			// Clear current interval
+			// Clear current interval to stop normal typing
 			clearInterval(typingInterval);
+			typingInterval = null;
 			
 			// Get current text and target text
 			const currentText = text;
 			const targetText = examplePhrases[currentExampleIndex];
 			
-			// Find the next space after current position
-			let nextSpaceIndex = targetText.indexOf(' ', currentText.length);
-			
-			// If we're at the end or no more spaces, complete to the end
-			if (nextSpaceIndex === -1) {
-				nextSpaceIndex = targetText.length;
+			// Make sure we have text to work with
+			if (!currentText || !targetText) {
+				isTyping = false;
+				return;
 			}
 			
-			// Complete the current word very quickly (up to the next space)
+			// Complete the entire remaining text quickly
 			const ULTRA_FAST_TYPING_SPEED = 5; // milliseconds between characters
 			let i = currentText.length;
 			
-			// Set up a new interval that types very quickly
+			console.log(`Typing from index ${i} to the end in text: "${targetText}"`); 
+			
+			// Set up a new interval that types very quickly to complete the entire example
 			typingInterval = setInterval(() => {
-				if (i <= nextSpaceIndex) {
+				if (i < targetText.length) {
 					// Add the next letter at ultra fast speed
-					text = targetText.substring(0, i);
+					text = targetText.substring(0, i + 1);
 					i++;
 				} else {
-					// Once we've completed the word, stop typing
+					// Once we've completed the entire example, stop typing
+					console.log('Finished typing entire example');
 					clearInterval(typingInterval);
+					typingInterval = null;
 					isTyping = false;
 				}
 			}, ULTRA_FAST_TYPING_SPEED);
