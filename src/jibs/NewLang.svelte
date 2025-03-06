@@ -14,6 +14,7 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import TranslationInput from './TranslationInput.svelte';
+	import { getLanguageColors } from '$lib/colors';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -144,38 +145,41 @@
 	<div class="space-y-4">
 		<!-- Translation review section -->
 		<div class="space-y-4">
-			<div class="flex items-center justify-between">
-				<div class="flex items-center gap-2">
-					<h2 class="text-xl font-semibold">Review</h2>
+			<div class="sticky top-0 z-10 bg-white pt-4 pb-2">
+				<div class="flex flex-wrap items-center justify-between gap-2 pb-2">
+					<div class="flex items-center gap-3">
+						<h2 class="text-xl font-semibold text-gray-800">Review</h2>
 
-					{#if tgt_langs.length > 0}
-						<div class="flex items-center gap-2">
-							<!-- language visibility badges -->
-							<div
-								class="scrollbar-thin flex max-w-full flex-row flex-nowrap gap-1.5 overflow-x-auto py-1"
-							>
-								{#each Object.entries(user_langs) as [key, meta], index}
-									<Badge
-										variant={meta.display ? 'default' : 'outline'}
-										class="h-5 shrink-0 cursor-pointer whitespace-nowrap px-1.5 py-0 text-xs"
-										onclick={() => translateLanguages.toggleLanguageDisplay(key)}
-										onkeydown={(e) =>
-											handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
-										tabindex="0"
-										role="button"
-										aria-pressed={meta.display}
-									>
-										{key}
-									</Badge>
-								{/each}
+						{#if tgt_langs.length > 0}
+							<div class="flex items-center">
+								<!-- language visibility badges -->
+								<div
+									class="scrollbar-thin flex max-w-[calc(100vw-180px)] sm:max-w-[400px] md:max-w-[500px] flex-row flex-nowrap gap-1.5 overflow-x-auto py-1.5"
+								>
+									{#each Object.entries(user_langs) as [key, meta], index}
+										<Badge
+											variant={meta.display ? 'default' : 'outline'}
+											class="h-6 shrink-0 cursor-pointer whitespace-nowrap px-2 py-0.5 text-xs font-medium hover:scale-105 transition-transform {meta.display ? getLanguageColors(key, true, '') : 'hover:bg-gray-100'}"
+											onclick={() => translateLanguages.toggleLanguageDisplay(key)}
+											onkeydown={(e) =>
+												handleKeyDown(e, () => translateLanguages.toggleLanguageDisplay(key))}
+											tabindex="0"
+											role="button"
+											aria-pressed={meta.display}
+										>
+											{key}
+										</Badge>
+									{/each}
+								</div>
 							</div>
-						</div>
-					{/if}
-				</div>
+						{/if}
+					</div>
 
-				<div class="flex items-center gap-2">
-					<!-- Language visibility dropdown -->
+					<div class="flex items-center gap-2">
+						<!-- Language visibility dropdown -->
+					</div>
 				</div>
+				<div class="h-px w-full bg-gray-200"></div>
 			</div>
 
 			<!-- Translation cards with improved responsive grid -->

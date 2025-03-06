@@ -14,7 +14,8 @@
 
 	import DropdownMenuLabel from '@/components/ui/dropdown-menu/dropdown-menu-label.svelte';
 	import { DropdownMenu, DropdownMenu } from 'bits-ui';
-	import { Check, Eye } from 'lucide-svelte';
+	import { Check, Eye, Globe } from 'lucide-svelte';
+	import { getLanguageColors } from '$lib/colors';
 
 	let { user_langs } = $props();
 
@@ -38,36 +39,42 @@
 			callback();
 		}
 	}
+
+	// Count visible languages
+	let visibleCount = $derived(
+		Object.values(user_langs).filter(lang => lang.display).length
+	);
 </script>
 
 <DropdownMenu open={languageDropdownOpen} onOpenChange={setLanguageDropdownOpen}>
 	<DropdownMenuTrigger
-		class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
+		class="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors relative"
 	>
-		<Eye class="h-4 w-4" />
+		<Globe class="h-4 w-4 text-gray-700" />
+		{#if visibleCount > 0}
+			<span class="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-semibold text-white">{visibleCount}</span>
+		{/if}
 		<span class="sr-only">Toggle language visibility</span>
 	</DropdownMenuTrigger>
-	<DropdownMenuContent align="start" class="dropdown-menu-content">
-		<DropdownMenuLabel>Visible Languages</DropdownMenuLabel>
+	<DropdownMenuContent align="end" class="dropdown-menu-content w-64">
+		<DropdownMenuLabel class="px-2 py-1.5 text-sm font-medium text-gray-700">Visible Languages</DropdownMenuLabel>
+		<DropdownMenuSeparator />
 
 		<!-- Language visibility toggles -->
-		<div class="max-h-[200px] overflow-y-auto">
+		<div class="max-h-[250px] overflow-y-auto">
 			{#each Object.entries(user_langs) as [key, meta]}
-				<!-- class {getLanguageColors(key, meta.display, 'dropdown')} -->
 				<div
-					class="touch-item relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+					class="touch-item relative flex cursor-pointer select-none items-center py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-gray-50 {meta.display ? getLanguageColors(key, true, 'dropdown') : 'text-gray-700'}"
 					onclick={(e) => handleCheckboxClick(e, key)}
 					onkeydown={(e) => handleKeyDown(e, () => handleCheckboxClick(e, key))}
 					tabindex="0"
 					role="checkbox"
 					aria-checked={meta.display}
 				>
-					<span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-						{#if meta.display}
-							<Check class="h-4 w-4" />
-						{/if}
+					<span class="absolute left-2 flex h-4 w-4 items-center justify-center {meta.display ? 'text-blue-500' : 'text-gray-300'}">
+						<Check class="h-4 w-4" />
 					</span>
-					<span>{meta.native} ({key})</span>
+					<span>{meta.native} <span class="text-xs text-gray-500">({key})</span></span>
 				</div>
 			{/each}
 		</div>
