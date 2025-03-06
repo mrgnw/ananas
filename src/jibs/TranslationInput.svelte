@@ -143,11 +143,11 @@
 		border: 2px solid transparent;
 	}
 
-	/* Translating state: Pulsing yellow/green animation */
+	/* Translating state: Vibrant pink/purple animation */
 	.input-container.translating {
 		background: 
 			linear-gradient(white, white) padding-box,
-			linear-gradient(90deg, #059669, #84cc16, #059669) border-box;
+			linear-gradient(90deg, #ec4899, #a855f7, #d946ef, #ec4899) border-box;
 		background-size: 400% 400%;
 		animation: gradientBorder 2.5s ease infinite;
 		border: 2px solid transparent;
