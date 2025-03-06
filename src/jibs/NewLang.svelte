@@ -392,6 +392,7 @@
 			{getRandomExample}
 			variant="mobile"
 			needsAttention={history.length === 0}
+			onInputFocus={handleInputFocus}
 		/>
 	</div>
 </div>
