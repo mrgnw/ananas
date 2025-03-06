@@ -26,7 +26,7 @@
 	let isMobile = $derived(variant === 'mobile');
 	
 	// Input state tracking
-	let isInputFocused = false;
+	let isInputFocused = $state(false);
 
 	// Animation state using $derived properly
 	let animationState = $derived(
@@ -40,13 +40,18 @@
 	$effect(() => {
 		console.log('Animation state:', animationState, { is_loading, isInputFocused, needsAttention });
 	});
+	
+	// Debug focus events specifically
+	function handleFocus() {
+		console.log('Input focused!');
+		isInputFocused = true;
+	}
+	
+	function handleBlur() {
+		console.log('Input blurred!');
+		isInputFocused = false;
+	}
 
-	// Reset needsAttention when input is focused
-	$effect(() => {
-		if (isInputFocused && needsAttention) {
-			needsAttention = false;
-		}
-	});
 </script>
 <div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
 	<div class="input-container flex-1 {animationState}">
