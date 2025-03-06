@@ -48,7 +48,12 @@
 		console.log('Input focused!');
 		isInputFocused = true;
 		// Emit the focus event to parent component
-		onInputFocus();
+		if (typeof onInputFocus === 'function') {
+			console.log('Calling onInputFocus handler');
+			onInputFocus();
+		} else {
+			console.warn('onInputFocus is not a function:', onInputFocus);
+		}
 	}
 	
 	function handleBlur() {

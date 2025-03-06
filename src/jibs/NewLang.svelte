@@ -80,11 +80,15 @@
 	
 	// Handle input focus event from TranslationInput
 	function handleInputFocus() {
+		console.log('Input focus event received in NewLang');
 		// If currently typing, stop the animation
 		if (isTyping && typingInterval) {
+			console.log('Stopping typing animation');
 			// Clear current interval
 			clearInterval(typingInterval);
 			isTyping = false;
+		} else {
+			console.log('No typing animation to stop');
 		}
 	}
 	
