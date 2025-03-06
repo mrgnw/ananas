@@ -158,19 +158,19 @@
 	/* Additional keyframes for translating state */
 	@keyframes shimmerBorder {
 		0% { background-position: 0% 50%; border-width: 2px; }
-		50% { background-position: 100% 50%; border-width: 3px; }
+		50% { background-position: 100% 50%; border-width: 2.5px; }
 		100% { background-position: 0% 50%; border-width: 2px; }
 	}
 
-	/* Translating state: Magical cosmic animation */
+	/* Translating state: Magical cosmic animation - smoother version */
 	.input-container.translating {
 		background: 
 			linear-gradient(white, white) padding-box,
 			linear-gradient(90deg, #4f46e5, #7e22ce, #0ea5e9, #6366f1, #4f46e5) border-box;
 		background-size: 300% 300%;
-		animation: shimmerBorder 3s ease infinite;
+		animation: shimmerBorder 4s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
 		border: 2px solid transparent;
-		box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+		box-shadow: 0 0 8px rgba(99, 102, 241, 0.15);
 	}
 
 	/* Very subtle hover effect for idle state */
