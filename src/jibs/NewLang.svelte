@@ -239,6 +239,7 @@
 			{is_ready}
 			{handleSubmit}
 			{getRandomExample}
+			{isTyping}
 			variant="desktop"
 			needsAttention={history.length === 0}
 			class="desktop-input"

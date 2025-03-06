@@ -11,7 +11,8 @@
 		handleSubmit, 
 		getRandomExample, 
 		variant = 'desktop',
-		needsAttention = false 
+		needsAttention = false,
+		isTyping = false
 	} = $props();
 
 	// Keyboard event handler for accessibility
@@ -52,8 +53,8 @@
 		isInputFocused = false;
 	}
 
-	// Show send button when input is focused or loading
-	let showSendButton = $derived(isInputFocused || is_loading);
+	// Show send button when input is focused, loading, or text is being typed
+	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
 </script>
 <div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
 	<div class="input-container flex-1 {animationState}">
