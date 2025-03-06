@@ -55,7 +55,6 @@
 </script>
 <div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
 	<div class="input-container flex-1 {animationState}">
-		<div class="text-xs text-gray-400 absolute -top-5 left-0 z-10">State: {animationState}</div>
 		<div class="w-full overflow-hidden rounded-full bg-white flex items-center">
 		<input
 			type="text"
