@@ -80,28 +80,11 @@
 	
 	// Handle input focus event from TranslationInput
 	function handleInputFocus() {
-		// If currently typing, speed up the animation
+		// If currently typing, stop the animation
 		if (isTyping && typingInterval) {
-			// Get current text and position
-			const currentText = text;
-			const targetText = examplePhrases[currentExampleIndex];
-			
 			// Clear current interval
 			clearInterval(typingInterval);
-			
-			// Continue typing but at a faster speed
-			let i = currentText.length;
-			
-			typingInterval = setInterval(() => {
-				if (i < targetText.length) {
-					// Add the next letter at faster speed
-					text = targetText.substring(0, i + 1);
-					i++;
-				} else {
-					clearInterval(typingInterval);
-					isTyping = false;
-				}
-			}, FAST_TYPING_SPEED);
+			isTyping = false;
 		}
 	}
 	
@@ -270,7 +253,7 @@
 		Type your text below and instantly see translations in all your selected languages.
 	</p>
 
-	<div class="relative mx-auto hidden max-w-2xl md:block">
+	<div class="relative mx-auto max-w-2xl">
 		<TranslationInput
 			bind:text
 			{is_loading}
@@ -292,6 +275,7 @@
 				<div class="flex flex-wrap items-center justify-between gap-2 pb-2">
 					<div class="flex items-center gap-3">
 						<h2 class="text-xl font-semibold text-gray-800">Review</h2>
+						<p class="text-sm text-gray-600">Review all of your languages together</p>
 
 						{#if tgt_langs.length > 0}
 							<div class="flex items-center">
@@ -344,31 +328,6 @@
 								{#each exampleTranslations as example, exampleIndex}
 									<MultiLangCard translation={example} {show_langs} {truncate_lines} />
 								{/each}
-							</div>
-
-							<div class="text-center mb-6">
-								<h3 class="text-lg font-medium text-gray-700 mb-2">No translations yet</h3>
-								<p class="text-gray-500 mb-4">Enter text in any language to translate.</p>
-							</div>
-
-							<div class="w-full max-w-md mx-auto mb-4">
-								<div class="input-container relative rounded-full bg-white border border-gray-200 overflow-hidden shadow-sm hover:shadow transition-shadow duration-300">
-									<input
-										id="example-input"
-										type="text"
-										placeholder="Try an example..."
-										bind:value={text}
-										class="w-full py-2.5 px-4 bg-transparent border-none focus:outline-none focus:ring-0"
-										onfocus={() => document.querySelector('.desktop-input')?.focus()}
-										onclick={() => {
-											// Type the current example
-											typeLetters(examplePhrases[currentExampleIndex], 100);
-											// Focus the main input
-											document.querySelector('.desktop-input')?.focus();
-										}}
-									/>
-								</div>
-								<p class="text-xs text-center text-gray-500 mt-2">Examples will cycle automatically, or click to try one</p>
 							</div>
 						</div>
 					</div>
