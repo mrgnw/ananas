@@ -20,7 +20,7 @@
 		DropdownMenuTrigger,
 		DropdownMenuSeparator
 	} from '$lib/components/ui/dropdown-menu';
-	import FancyIlluminatedInput from '$lib/components/ui/illuminated-input/fancy.svelte';
+	import { Input } from '$lib/components/ui/input';
 	import type { PageData } from './$types';
 	import type { Language } from '$lib/types';
 	import { fade } from 'svelte/transition';
@@ -80,7 +80,14 @@
 		return code2 && code2 in m2mSupport;
 	}
 
+	// Use $derived for reactive filtering based on search query
 	let filteredLanguages = $derived(searchLanguages(searchQuery, data.country));
+
+	// Debug filtering
+	$effect(() => {
+		console.log('[Languages] Search query:', searchQuery);
+		console.log('[Languages] Filtered languages count:', filteredLanguages.length);
+	});
 
 	let sortedLanguages = $derived(
 		[...filteredLanguages].sort((a, b) => {
@@ -144,11 +151,12 @@
 	</div>
 
 	<div class="mb-6">
-		<FancyIlluminatedInput
+		<Input
 			type="text"
 			placeholder="Search languages..."
-			bind:value={searchQuery}
-			class="w-full"
+			value={searchQuery}
+			on:input={(e) => searchQuery = e.target.value}
+			class="w-full rounded-full"
 		/>
 	</div>
 
@@ -157,7 +165,7 @@
 			<thead class="border-b bg-gray-50">
 				<tr>
 					<th class="w-12 px-2 py-1.5 text-center">
-						<Checkbox />
+						<!-- Header checkbox removed as it shouldn't be selectable -->
 					</th>
 					<th class="px-2 py-1.5 text-center text-xs sm:text-sm text-gray-600">Speakers (M)</th>
 					<th class="px-2 py-1.5 text-center text-xs sm:text-sm text-gray-600">Code</th>
