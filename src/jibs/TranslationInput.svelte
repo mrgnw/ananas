@@ -4,12 +4,12 @@
 	import { Languages, Send } from 'lucide-svelte';
 
 	// Props using Svelte 5 runes
-	let { 
-		text = $bindable(), 
-		is_loading, 
-		is_ready, 
-		handleSubmit, 
-		getRandomExample, 
+	let {
+		text = $bindable(),
+		is_loading,
+		is_ready,
+		handleSubmit,
+		getRandomExample,
 		variant = 'desktop',
 		needsAttention = false,
 		isTyping = false,
@@ -26,23 +26,17 @@
 
 	// Determine if we're on mobile view
 	let isMobile = $derived(variant === 'mobile');
-	
+
 	// Input state tracking
 	let isInputFocused = $state(false);
 
 	// Animation state using $derived properly
 	let animationState = $derived(
-		is_loading ? 'translating' : 
-		isInputFocused ? 'focused' : 
-		needsAttention ? 'attention' : 
-		'idle'
+		is_loading ? 'translating' : isInputFocused ? 'focused' : needsAttention ? 'attention' : 'idle'
 	);
-	
-	// Debug with effect to see state changes
-	$effect(() => {
-		console.log('Input state:', { isInputFocused, is_loading, is_ready });
-	});
-	
+
+	$effect(() => console.log('Input state:', animationState));
+
 	// Focus event handlers
 	function handleFocus() {
 		console.log('Input focused!');
@@ -55,7 +49,7 @@
 			console.warn('onInputFocus is not a function:', onInputFocus);
 		}
 	}
-	
+
 	function handleBlur() {
 		console.log('Input blurred!');
 		isInputFocused = false;
@@ -64,34 +58,43 @@
 	// Show send button when input is focused, loading, or text is being typed
 	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
 </script>
-<div class="flex items-center gap-2 w-full {isMobile ? 'max-w-full' : ''}">
-	<div class="input-container flex-1 {animationState}">
-		<div class="w-full overflow-hidden rounded-full bg-white flex items-center relative">
-		<input
-			type="text"
-			placeholder={is_loading ? 'Translating...' : 'Enter text from any language...'}
-			bind:value={text}
-			disabled={is_loading}
-			class="flex-grow py-{isMobile ? '3' : '2.5'} pl-4 pr-12 bg-transparent border-none focus:outline-none focus:ring-0 {is_loading ? 'opacity-75 cursor-not-allowed' : ''}"
-			onkeydown={handleKeyDown}
-			onfocus={handleFocus}
-			onblur={handleBlur}
-		/>
 
-		<!-- Always render the button but control visibility with CSS -->
-		<button
-			onclick={handleSubmit}
-			disabled={!is_ready}
-			class="absolute right-2 h-8 w-8 flex items-center justify-center rounded-full {showSendButton ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200 {is_ready ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50' : 'text-gray-400'}"
-			type="submit"
-		>
-			{#if is_loading}
-				<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600"></div>
-			{:else}
-				<Send size={18} />
-			{/if}
-			<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
-		</button>
+<div class="flex w-full items-center gap-2 {isMobile ? 'max-w-full' : ''}">
+	<div class="input-container flex-1 {animationState}">
+		<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
+			<input
+				type="text"
+				placeholder={is_loading ? 'Translating...' : 'Enter text from any language...'}
+				bind:value={text}
+				disabled={is_loading}
+				class="flex-grow py-{isMobile
+					? '3'
+					: '2.5'} border-none bg-transparent pl-4 pr-12 focus:outline-none focus:ring-0 {is_loading
+					? 'cursor-not-allowed opacity-75'
+					: ''}"
+				onkeydown={handleKeyDown}
+				onfocus={handleFocus}
+				onblur={handleBlur}
+			/>
+
+			<!-- Always render the button but control visibility with CSS -->
+			<button
+				onclick={handleSubmit}
+				disabled={!is_ready}
+				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full {showSendButton
+					? 'opacity-100'
+					: 'opacity-0'} transition-opacity duration-200 {is_ready
+					? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
+					: 'text-gray-400'}"
+				type="submit"
+			>
+				{#if is_loading}
+					<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600"></div>
+				{:else}
+					<Send size={18} />
+				{/if}
+				<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
+			</button>
 		</div>
 	</div>
 
@@ -106,15 +109,20 @@
 	</a>
 </div>
 
-
 <style>
 	/* Base animation keyframes */
 	@keyframes gradientBorder {
-		0% { background-position: 0% 50%; }
-		50% { background-position: 100% 50%; }
-		100% { background-position: 0% 50%; }
+		0% {
+			background-position: 0% 50%;
+		}
+		50% {
+			background-position: 100% 50%;
+		}
+		100% {
+			background-position: 0% 50%;
+		}
 	}
-	
+
 	/* Base styles for all input containers */
 	.input-container {
 		position: relative;
@@ -125,7 +133,7 @@
 		background-size: 400% 400%;
 		transition: background 0.3s ease;
 	}
-	
+
 	/* Default state: just a border */
 	.input-container {
 		background: white;
@@ -134,7 +142,7 @@
 
 	/* Focused state: Calm blue/purple with slow animation */
 	.input-container.focused {
-		background: 
+		background:
 			linear-gradient(white, white) padding-box,
 			linear-gradient(90deg, #3b82f6, #8b5cf6, #6366f1, #3b82f6) border-box;
 		background-size: 400% 400%;
@@ -144,7 +152,7 @@
 
 	/* Attention state: Bright vivid animation to grab attention */
 	.input-container.attention {
-		background: 
+		background:
 			linear-gradient(white, white) padding-box,
 			linear-gradient(90deg, #3b82f6, #ec4899, #8b5cf6, #4f46e5, #3b82f6) border-box;
 		background-size: 300% 300%;
@@ -154,18 +162,27 @@
 
 	/* Additional keyframes for translating state */
 	@keyframes shimmerBorder {
-		0% { background-position: 0% 50%; border-width: 2px; }
-		50% { background-position: 100% 50%; border-width: 2.5px; }
-		100% { background-position: 0% 50%; border-width: 2px; }
+		0% {
+			background-position: 0% 50%;
+			border-width: 2px;
+		}
+		50% {
+			background-position: 100% 50%;
+			border-width: 2.5px;
+		}
+		100% {
+			background-position: 0% 50%;
+			border-width: 2px;
+		}
 	}
 
 	/* Translating state: Magical cosmic animation - smoother version */
 	.input-container.translating {
-		background: 
+		background:
 			linear-gradient(white, white) padding-box,
 			linear-gradient(90deg, #4f46e5, #7e22ce, #0ea5e9, #6366f1, #4f46e5) border-box;
 		background-size: 300% 300%;
-		animation: shimmerBorder 4s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+		animation: shimmerBorder 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 		border: 2px solid transparent;
 		box-shadow: 0 0 8px rgba(99, 102, 241, 0.15);
 	}

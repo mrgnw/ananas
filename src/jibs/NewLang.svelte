@@ -25,7 +25,7 @@
 	 * @param {number} speed - Typing speed in milliseconds
 	 */
 	function typeLetters(newText, speed = NORMAL_TYPING_SPEED) {
-		console.log('typeLetters called with:', newText);
+		console.log('typing:', newText);
 		
 		// Don't start a new typing operation if one is in progress
 		if (isTyping) {
@@ -38,7 +38,6 @@
 		
 		// Clear any existing interval
 		if (typingInterval) {
-			console.log('Clearing existing interval');
 			clearInterval(typingInterval);
 		}
 		
@@ -48,7 +47,6 @@
 		// Current position in the text
 		let i = 0;
 		
-		console.log('Starting typing interval');
 		// Set up interval to add one letter at a time
 		typingInterval = setInterval(() => {
 			if (i < newText.length) {
