@@ -6,6 +6,158 @@
 		return examplePhrases[randomIndex];
 	}
 
+	// Track the current example index for cycling through examples
+	let currentExampleIndex = $state(0);
+	
+	// Track if currently typing
+	let isTyping = $state(false);
+	
+	// Interval ID for cleanup
+	let typingInterval = $state(null);
+	
+	// Normal and fast typing speeds
+	const NORMAL_TYPING_SPEED = 100;
+	const FAST_TYPING_SPEED = 20;
+	
+	/**
+	 * Simple typewriter function that updates a variable one letter at a time
+	 * @param {string} newText - The new text to type
+	 * @param {number} speed - Typing speed in milliseconds
+	 */
+	function typeLetters(newText, speed = NORMAL_TYPING_SPEED) {
+		console.log('typeLetters called with:', newText);
+		
+		// Don't start a new typing operation if one is in progress
+		if (isTyping) {
+			console.log('Already typing, canceling');
+			return;
+		}
+		
+		// Set typing state
+		isTyping = true;
+		
+		// Clear any existing interval
+		if (typingInterval) {
+			console.log('Clearing existing interval');
+			clearInterval(typingInterval);
+		}
+		
+		// Start with empty string
+		text = "";
+		
+		// Current position in the text
+		let i = 0;
+		
+		console.log('Starting typing interval');
+		// Set up interval to add one letter at a time
+		typingInterval = setInterval(() => {
+			if (i < newText.length) {
+				// Add the next letter
+				text = newText.substring(0, i + 1);
+				i++;
+			} else {
+				clearInterval(typingInterval);
+				isTyping = false;
+			}
+		}, speed);
+	}
+	
+	// Interval for cycling examples
+	let cycleInterval = $state(null);
+	
+	// Function to cycle to the next example
+	function cycleExamples() {
+		console.log('Cycling to next example');
+		if (history.length === 0) {
+			// Move to next example
+			currentExampleIndex = (currentExampleIndex + 1) % examplePhrases.length;
+			console.log('New example index:', currentExampleIndex);
+			
+			// Type the new example text
+			typeLetters(examplePhrases[currentExampleIndex], NORMAL_TYPING_SPEED);
+		}
+	}
+	
+	// Handle input focus event from TranslationInput
+	function handleInputFocus() {
+		console.log('Input focus event received in NewLang');
+		
+		// If currently typing, complete the entire example quickly
+		if (isTyping && typingInterval) {
+			console.log('Completing entire example quickly');
+			
+			// Clear current interval to stop normal typing
+			clearInterval(typingInterval);
+			typingInterval = null;
+			
+			// Get current text and target text
+			const currentText = text;
+			const targetText = examplePhrases[currentExampleIndex];
+			
+			// Make sure we have text to work with
+			if (!currentText || !targetText) {
+				isTyping = false;
+				return;
+			}
+			
+			// Complete the entire remaining text quickly
+			const ULTRA_FAST_TYPING_SPEED = 5; // milliseconds between characters
+			let i = currentText.length;
+			
+			console.log(`Typing from index ${i} to the end in text: "${targetText}"`); 
+			
+			// Set up a new interval that types very quickly to complete the entire example
+			typingInterval = setInterval(() => {
+				if (i < targetText.length) {
+					// Add the next letter at ultra fast speed
+					text = targetText.substring(0, i + 1);
+					i++;
+				} else {
+					// Once we've completed the entire example, stop typing
+					console.log('Finished typing entire example');
+					clearInterval(typingInterval);
+					typingInterval = null;
+					isTyping = false;
+				}
+			}, ULTRA_FAST_TYPING_SPEED);
+		} else {
+			console.log('No typing animation to stop');
+		}
+	}
+	
+	// Initialize examples when browser is available
+	$effect(() => {
+		if (browser) {
+			console.log('Browser available, initializing examples');
+			
+			// Type the first example after a short delay
+			const timeout = setTimeout(() => {
+				console.log('Starting first example');
+				typeLetters(examplePhrases[currentExampleIndex], NORMAL_TYPING_SPEED);
+				
+				// Set up cycling interval
+				if (!cycleInterval) {
+					console.log('Setting up cycling interval');
+					cycleInterval = setInterval(cycleExamples, 5000);
+				}
+			}, 1000);
+			
+			// Cleanup function
+			return () => {
+				console.log('Cleaning up intervals');
+				clearTimeout(timeout);
+				if (cycleInterval) {
+					clearInterval(cycleInterval);
+					cycleInterval = null;
+				}
+				if (typingInterval) {
+					clearInterval(typingInterval);
+					typingInterval = null;
+				}
+			};
+		}
+	});
+
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -62,6 +214,13 @@
 	let is_ready = $derived(text.length > 0 && !is_loading);
 
 	async function handleSubmit() {
+		// Stop typing animation if it's running
+		if (isTyping) {
+			clearInterval(typingInterval);
+			isTyping = false;
+		}
+		
+		// Set loading state
 		is_loading = true;
 		const apiUrl = 'https://ananas-api.xces.workers.dev';
 
@@ -131,15 +290,18 @@
 		Type your text below and instantly see translations in all your selected languages.
 	</p>
 
-	<div class="relative mx-auto hidden max-w-2xl md:block">
+	<div class="relative mx-auto max-w-2xl">
 		<TranslationInput
 			bind:text
 			{is_loading}
 			{is_ready}
 			{handleSubmit}
 			{getRandomExample}
+			{isTyping}
 			variant="desktop"
 			needsAttention={history.length === 0}
+			class="desktop-input"
+			onInputFocus={handleInputFocus}
 		/>
 	</div>
 
@@ -150,6 +312,7 @@
 				<div class="flex flex-wrap items-center justify-between gap-2 pb-2">
 					<div class="flex items-center gap-3">
 						<h2 class="text-xl font-semibold text-gray-800">Review</h2>
+						<p class="text-sm text-gray-600">Review all of your languages together</p>
 
 						{#if tgt_langs.length > 0}
 							<div class="flex items-center">
@@ -203,21 +366,6 @@
 									<MultiLangCard translation={example} {show_langs} {truncate_lines} />
 								{/each}
 							</div>
-
-							<div class="text-center mb-6">
-								<h3 class="text-lg font-medium text-gray-700 mb-2">No translations yet</h3>
-								<p class="text-gray-500 mb-4">Enter text in any language to translate.</p>
-							</div>
-
-							<Button
-								class="mt-2"
-								onclick={() => {
-									text = getRandomExample();
-									document.querySelector('input').focus();
-								}}
-							>
-								Try an Example
-							</Button>
 						</div>
 					</div>
 				{/each}

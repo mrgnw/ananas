@@ -15,6 +15,7 @@
     "prettier-plugin-tailwindcss": "^0.5.14",
     "svelte-check": "^4.1.1",
     "svelte-headless-table": "^0.18.3",
+    "svelte-typewriter": "^3.2.3",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
     "vite": "^5.4.11"
