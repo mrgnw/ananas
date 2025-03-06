@@ -154,7 +154,7 @@
 							<div class="flex items-center">
 								<!-- language visibility badges -->
 								<div
-									class="scrollbar-thin flex max-w-[calc(100vw-180px)] sm:max-w-[400px] md:max-w-[500px] flex-row flex-nowrap gap-1.5 overflow-x-auto py-1.5"
+									class="scrollbar-thin flex max-w-[calc(100vw-120px)] sm:max-w-[400px] md:max-w-[500px] flex-row flex-nowrap gap-1.5 overflow-x-auto py-1.5"
 								>
 									{#each Object.entries(user_langs) as [key, meta], index}
 										<Badge
