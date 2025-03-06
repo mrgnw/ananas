@@ -217,7 +217,14 @@
 		// Stop typing animation if it's running
 		if (isTyping) {
 			clearInterval(typingInterval);
+			typingInterval = null;
 			isTyping = false;
+		}
+		
+		// Also clear cycling interval to prevent new examples from starting
+		if (cycleInterval) {
+			clearInterval(cycleInterval);
+			cycleInterval = null;
 		}
 		
 		// Set loading state
