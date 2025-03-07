@@ -8,6 +8,7 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import TranslationInput from './TranslationInput.svelte';
+	import PlayPauseButton from './PlayPauseButton.svelte';
 	import { getColorByIndex } from '$lib/colors';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
@@ -289,16 +290,26 @@
 
 	<!-- Input on desktop -->
 	<div class="relative mx-auto hidden max-w-2xl md:block">
-		<TranslationInput
-			bind:text
-			{is_loading}
-			{handleSubmit}
-			needsAttention={history.length === 0}
-			onInputFocus={handleInputFocus}
-			onInputBlur={handleInputBlur}
-			inputClass="px-1 font-medium py-2.5"
-			containerClass="desktop-input w-full"
-		/>
+		<div class="flex items-center gap-2">
+			<TranslationInput
+				bind:text
+				{is_loading}
+				{handleSubmit}
+				needsAttention={history.length === 0}
+				onInputFocus={handleInputFocus}
+				onInputBlur={handleInputBlur}
+				inputClass="px-1 font-medium py-2.5"
+				containerClass="desktop-input w-full"
+			/>
+			
+			{#if history.length === 0}
+				<PlayPauseButton 
+					isPaused={examplesPaused} 
+					onClick={toggleExamples} 
+					size="md"
+				/>
+			{/if}
+		</div>
 	</div>
 
 	<div class="space-y-4">
@@ -309,20 +320,7 @@
 					<div class="flex items-center gap-3">
 						<h2 class="text-xl font-semibold text-gray-800">Review</h2>
 						
-						{#if history.length === 0}
-							<!-- Play/Pause button for examples -->
-							<button
-								class="flex h-7 w-7 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-								onclick={toggleExamples}
-								title={examplesPaused ? 'Play examples' : 'Pause examples'}
-							>
-								{#if examplesPaused}
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-								{:else}
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-								{/if}
-							</button>
-						{/if}
+						
 
 						{#if tgt_langs.length > 0}
 							<div class="flex items-center">
@@ -393,16 +391,25 @@
 	class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white p-4 shadow-lg md:hidden"
 >
 	<!-- input on mobile -->
-	<div class="mx-auto flex max-w-md">
+	<div class="mx-auto flex max-w-md items-center gap-2">
 		<TranslationInput
 			bind:text
 			{is_loading}
 			{handleSubmit}
 			onInputFocus={handleInputFocus}
+			onInputBlur={handleInputBlur}
 			needsAttention={history.length === 0}
 			inputClass="text-gray-900 py-3"
 			containerClass="mobile-input w-full max-w-full"
 		/>
+		
+		{#if history.length === 0}
+			<PlayPauseButton 
+				isPaused={examplesPaused} 
+				onClick={toggleExamples} 
+				size="lg"
+			/>
+		{/if}
 	</div>
 </div>
 
