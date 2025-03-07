@@ -181,16 +181,6 @@
 		}
 	}
 
-	function clearAllHistory() {
-		if (confirm('Are you sure you want to clear all translation history?')) {
-			history = [];
-			if (browser) {
-				localStorage.setItem('translationHistory', JSON.stringify(history));
-			}
-			toast.success('Translation history cleared');
-		}
-	}
-
 	let text = $state('');
 	let truncate_lines = $state(true);
 	let colors_enabled = $state(browser ? localStorage.getItem('colorsEnabled') !== 'false' : true);
@@ -284,9 +274,6 @@
 	<h1 class="mx-auto mb-2 max-w-2xl text-center text-3xl font-bold text-gray-900">
 		Translate to Multiple Languages at Once
 	</h1>
-	<p class="mx-auto max-w-2xl text-center text-gray-600">
-		Type your text below and instantly see translations in all your selected languages.
-	</p>
 
 	<!-- Input on desktop -->
 	<div class="relative mx-auto hidden max-w-2xl md:block">
