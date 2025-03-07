@@ -12,6 +12,15 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
+// Helper function to safely clear intervals
+function clearTimer(timer) {
+	if (timer) {
+		clearInterval(timer);
+		return null;
+	}
+	return timer;
+}
+
 	function getRandomExample() {
 		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
 		return examplePhrases[randomIndex];
@@ -46,9 +55,7 @@
 		isTyping = true;
 
 		// Clear any existing interval
-		if (typingInterval) {
-			clearInterval(typingInterval);
-		}
+		typingInterval = clearTimer(typingInterval);
 
 		// Start with empty string
 		text = '';
@@ -63,7 +70,7 @@
 				text = newText.substring(0, i + 1);
 				i++;
 			} else {
-				clearInterval(typingInterval);
+				typingInterval = clearTimer(typingInterval);
 				isTyping = false;
 			}
 		}, speed);
@@ -90,8 +97,7 @@
 		if (isTyping && typingInterval) {
 			console.log('Completing entire example quickly');
 
-			clearInterval(typingInterval);
-			typingInterval = null;
+			typingInterval = clearTimer(typingInterval);
 			// Find matching example or use current text
 			const targetText = text && examplePhrases.find(ex => ex.startsWith(text)) || '';
 			if (!targetText) return isTyping = false;
@@ -109,8 +115,7 @@
 				} else {
 					// Once we've completed the entire example, stop typing
 					console.log('Finished typing entire example');
-					clearInterval(typingInterval);
-					typingInterval = null;
+					typingInterval = clearTimer(typingInterval);
 					isTyping = false;
 				}
 			}, 5);
@@ -141,14 +146,8 @@
 			return () => {
 				console.log('Cleaning up intervals');
 				clearTimeout(timeout);
-				if (cycleInterval) {
-					clearInterval(cycleInterval);
-					cycleInterval = null;
-				}
-				if (typingInterval) {
-					clearInterval(typingInterval);
-					typingInterval = null;
-				}
+				cycleInterval = clearTimer(cycleInterval);
+				typingInterval = clearTimer(typingInterval);
 			};
 		}
 	});
@@ -198,16 +197,12 @@
 	async function handleSubmit() {
 		// Stop typing animation if it's running
 		if (isTyping) {
-			clearInterval(typingInterval);
-			typingInterval = null;
+			typingInterval = clearTimer(typingInterval);
 			isTyping = false;
 		}
 
 		// Also clear cycling interval to prevent new examples from starting
-		if (cycleInterval) {
-			clearInterval(cycleInterval);
-			cycleInterval = null;
-		}
+		cycleInterval = clearTimer(cycleInterval);
 
 		// Set loading state
 		is_loading = true;
