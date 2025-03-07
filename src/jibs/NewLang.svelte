@@ -12,10 +12,10 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
-// Helper function to safely clear intervals
+// Helper function to safely clear timers (both intervals and timeouts)
 function clearTimer(timer) {
 	if (timer) {
-		clearInterval(timer);
+		clearTimeout(timer); // Works for both setTimeout and setInterval
 		return null;
 	}
 	return timer;
@@ -33,16 +33,12 @@ function clearTimer(timer) {
 	// Interval ID for cleanup
 	let typingInterval = $state(null);
 
-	// Normal and fast typing speeds
-	const NORMAL_TYPING_SPEED = 100;
-	const FAST_TYPING_SPEED = 20;
-
 	/**
 	 * Simple typewriter function that updates a variable one letter at a time
 	 * @param {string} newText - The new text to type
 	 * @param {number} speed - Typing speed in milliseconds
 	 */
-	function typeLetters(newText, speed = NORMAL_TYPING_SPEED) {
+	function typeLetters(newText) {
 		console.log('typing:', newText);
 
 		// Don't start a new typing operation if one is in progress
@@ -63,17 +59,23 @@ function clearTimer(timer) {
 		// Current position in the text
 		let i = 0;
 
-		// Set up interval to add one letter at a time
-		typingInterval = setInterval(() => {
-			if (i < newText.length) {
-				// Add the next letter
-				text = newText.substring(0, i + 1);
-				i++;
-			} else {
-				typingInterval = clearTimer(typingInterval);
-				isTyping = false;
-			}
-		}, speed);
+		// Set up function to add one letter at a time with realistic random speed
+		const typeNextChar = () => {
+			typingInterval = setTimeout(() => {
+				if (i < newText.length) {
+					text = newText.substring(0, i + 1);
+					i++;
+					typeNextChar();
+				} else {
+					typingInterval = clearTimer(typingInterval);
+					isTyping = false;
+				}
+			// semi-randomized typing time
+			}, Math.floor(Math.random() * 40) + 30);
+		};
+		
+		// Start typing
+		typeNextChar();
 	}
 
 	// Interval for cycling examples
@@ -85,7 +87,7 @@ function clearTimer(timer) {
 		if (history.length === 0) {
 			const randomExample = getRandomExample();
 			console.log('New random example:', randomExample);
-			typeLetters(randomExample, NORMAL_TYPING_SPEED);
+			typeLetters(randomExample);
 		}
 	}
 
@@ -133,7 +135,7 @@ function clearTimer(timer) {
 			// Type the first example after a short delay to ensure page is fully rendered
 			const timeout = setTimeout(() => {
 				console.log('Starting first example');
-				typeLetters(getRandomExample(), NORMAL_TYPING_SPEED);
+				typeLetters(getRandomExample());
 
 				// Set up cycling interval
 				if (!cycleInterval) {
