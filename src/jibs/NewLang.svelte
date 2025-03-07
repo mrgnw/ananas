@@ -1,6 +1,18 @@
 <script>
 	import { examplePhrases, exampleTranslations } from '$lib/example';
 
+	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+	import MultiLangCard from './MultiLangCard.svelte';
+	import { Badge } from '$lib/components/ui/badge';
+	import { Toaster } from 'svelte-sonner';
+	import { toast } from 'svelte-sonner';
+	import { browser } from '$app/environment';
+	import TranslationInput from './TranslationInput.svelte';
+	import { getColorByIndex } from '$lib/colors';
+
+	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+
+
 	function getRandomExample() {
 		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
 		return examplePhrases[randomIndex];
@@ -84,11 +96,8 @@
 		if (isTyping && typingInterval) {
 			console.log('Completing entire example quickly');
 			
-			// Clear current interval to stop normal typing
 			clearInterval(typingInterval);
 			typingInterval = null;
-			
-			// Get current text and target text
 			const currentText = text;
 			const targetText = examplePhrases[currentExampleIndex];
 			
@@ -104,7 +113,7 @@
 			
 			console.log(`Typing from index ${i} to the end in text: "${targetText}"`); 
 			
-			// Set up a new interval that types very quickly to complete the entire example
+			// finish typing quickly
 			typingInterval = setInterval(() => {
 				if (i < targetText.length) {
 					// Add the next letter at ultra fast speed
@@ -157,18 +166,6 @@
 		}
 	});
 
-	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
-	import MultiLangCard from './MultiLangCard.svelte';
-	import { Button } from '$lib/components/ui/button';
-	import { Badge } from '$lib/components/ui/badge';
-	import { Toaster } from 'svelte-sonner';
-	import { toast } from 'svelte-sonner';
-	import { browser } from '$app/environment';
-	import TranslationInput from './TranslationInput.svelte';
-	import { getColorByIndex } from '$lib/colors';
-
-	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-
 	function loadHistory() {
 		if (browser) {
 			const stored = localStorage.getItem('translationHistory');
@@ -210,7 +207,6 @@
 	);
 
 	let is_loading = $state(false);
-	let is_ready = $derived(text.length > 0 && !is_loading);
 
 	async function handleSubmit() {
 		// Stop typing animation if it's running
@@ -296,16 +292,16 @@
 		Type your text below and instantly see translations in all your selected languages.
 	</p>
 
+	<!-- Input on desktop -->
 	<div class="relative mx-auto max-w-2xl hidden md:block">
 		<TranslationInput
 			bind:text
 			{is_loading}
-			{is_ready}
 			{handleSubmit}
 			needsAttention={history.length === 0}
+			onInputFocus={handleInputFocus}
 			inputClass="px-1 font-medium py-2.5"
 			containerClass="desktop-input w-full"
-			onInputFocus={handleInputFocus}
 		/>
 	</div>
 
@@ -381,12 +377,13 @@
 <div
 	class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white p-4 shadow-lg md:hidden"
 >
+	<!-- input on mobile -->
 	<div class="mx-auto flex max-w-md">
 		<TranslationInput
 			bind:text
 			{is_loading}
-			{is_ready}
 			{handleSubmit}
+			onInputFocus={handleInputFocus}
 			needsAttention={history.length === 0}
 			inputClass="text-gray-900 py-3"
 			containerClass="mobile-input w-full max-w-full"

@@ -5,18 +5,17 @@
 	let {
 		text = $bindable(),
 		is_loading,
-		is_ready,
 		handleSubmit,
 		needsAttention = false,
 		onInputFocus,
 		inputClass = '',
 		containerClass = ''
 	} = $props();
+	
+	let is_ready = $derived(text.length > 0 && !is_loading);
 
-	// State using runes
 	let isInputFocused = $state(false);
 	
-	// Derived values
 	let animationState = $derived(is_loading ? 'translating' : isInputFocused ? 'focused' : needsAttention ? 'attention' : 'idle');
 	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
 	let inputClasses = $derived(`
