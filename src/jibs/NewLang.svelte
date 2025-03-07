@@ -92,22 +92,15 @@
 
 			clearInterval(typingInterval);
 			typingInterval = null;
-			const currentText = text;
-			const targetText = examplePhrases[currentExampleIndex];
+			// Find matching example or use current text
+			const targetText = text && examplePhrases.find(ex => ex.startsWith(text)) || '';
+			if (!targetText) return isTyping = false;
+			
+			// Type remaining text at 5ms per character
+			let i = text.length;
+			console.log(`Fast-typing: ${targetText.slice(i)}`);
 
-			// Make sure we have text to work with
-			if (!currentText || !targetText) {
-				isTyping = false;
-				return;
-			}
-
-			// Complete the entire remaining text quickly
-			const ULTRA_FAST_TYPING_SPEED = 5; // milliseconds between characters
-			let i = currentText.length;
-
-			console.log(`Typing from index ${i} to the end in text: "${targetText}"`);
-
-			// finish typing quickly
+			// finish typing quickly (5ms per character)
 			typingInterval = setInterval(() => {
 				if (i < targetText.length) {
 					// Add the next letter at ultra fast speed
@@ -120,7 +113,7 @@
 					typingInterval = null;
 					isTyping = false;
 				}
-			}, ULTRA_FAST_TYPING_SPEED);
+			}, 5);
 		} else {
 			console.log('No typing animation to stop');
 		}
