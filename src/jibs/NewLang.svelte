@@ -21,11 +21,6 @@
 		return timer;
 	}
 
-	function getRandomExample() {
-		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
-		return examplePhrases[randomIndex];
-	}
-
 	let isTyping = $state(false);
 	// Interval ID for cleanup
 	let typingInterval = $state(null);
@@ -65,9 +60,7 @@
 	function cycleExamples() {
 		console.log('Cycling to next example');
 		if (history.length === 0) {
-			const randomExample = getRandomExample();
-			console.log('New random example:', randomExample);
-			typeLetters(randomExample);
+			typeLetters(examplePhrases[Math.floor(Math.random() * examplePhrases.length)]);
 		}
 	}
 
@@ -115,7 +108,7 @@
 			// Type the first example after a short delay to ensure page is fully rendered
 			const timeout = setTimeout(() => {
 				console.log('Starting first example');
-				typeLetters(getRandomExample());
+				cycleExamples();
 
 				// Set up cycling interval
 				if (!cycleInterval) {
