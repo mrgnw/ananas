@@ -12,50 +12,49 @@
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
-// Helper function to safely clear timers (both intervals and timeouts)
-function clearTimer(timer) {
-	if (timer) {
-		clearTimeout(timer); // Works for both setTimeout and setInterval
-		return null;
+	// Helper function to safely clear timers (both intervals and timeouts)
+	function clearTimer(timer) {
+		if (timer) {
+			clearTimeout(timer); // Works for both setTimeout and setInterval
+			return null;
+		}
+		return timer;
 	}
-	return timer;
-}
 
 	function getRandomExample() {
 		const randomIndex = Math.floor(Math.random() * examplePhrases.length);
 		return examplePhrases[randomIndex];
 	}
 
-	// Track the current example index for cycling through examples
-	let currentExampleIndex = $state(0);
 	let isTyping = $state(false);
-
 	// Interval ID for cleanup
 	let typingInterval = $state(null);
 
 	/**
 	 * Simple typewriter function that updates a variable one letter at a time
 	 * @param {string} newText - The new text to type
-	 * @param {number} speed - Typing speed in milliseconds
 	 */
 	function typeLetters(newText) {
 		if (isTyping) return;
-		
+
 		isTyping = true;
 		typingInterval = clearTimer(typingInterval);
 		text = '';
 		let i = 0;
-		
+
 		(function typeNext() {
-			typingInterval = setTimeout(() => {
-				if (i < newText.length) {
-					text = newText.substring(0, ++i);
-					typeNext();
-				} else {
-					typingInterval = clearTimer(typingInterval);
-					isTyping = false;
-				}
-			}, 30 + Math.floor(Math.random() * 40));
+			typingInterval = setTimeout(
+				() => {
+					if (i < newText.length) {
+						text = newText.substring(0, ++i);
+						typeNext();
+					} else {
+						typingInterval = clearTimer(typingInterval);
+						isTyping = false;
+					}
+				},
+				30 + Math.floor(Math.random() * 40)
+			);
 		})();
 	}
 
@@ -82,9 +81,9 @@ function clearTimer(timer) {
 
 			typingInterval = clearTimer(typingInterval);
 			// Find matching example or use current text
-			const targetText = text && examplePhrases.find(ex => ex.startsWith(text)) || '';
-			if (!targetText) return isTyping = false;
-			
+			const targetText = (text && examplePhrases.find((ex) => ex.startsWith(text))) || '';
+			if (!targetText) return (isTyping = false);
+
 			// Type remaining text at 5ms per character
 			let i = text.length;
 			console.log(`Fast-typing: ${targetText.slice(i)}`);
