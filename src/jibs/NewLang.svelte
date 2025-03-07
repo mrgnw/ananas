@@ -55,31 +55,36 @@
 
 	// Interval for cycling examples
 	let cycleInterval = $state(null);
+	// Track if examples are paused or playing
+	let examplesPaused = $state(false);
 
 	// Function to cycle to the next example
 	function cycleExamples() {
-		console.log('Cycling to next example');
-		if (history.length === 0) {
+		// Only show examples if not paused and no history
+		if (!examplesPaused && history.length === 0) {
 			typeLetters(examplePhrases[Math.floor(Math.random() * examplePhrases.length)]);
 		}
 	}
 
 	// Handle input focus event from TranslationInput
 	function handleInputFocus() {
-		console.log('Input focus event received in NewLang');
-
-		// If currently typing, complete the entire example quickly
+		// Pause examples during input focus
+		examplesPaused = true;
+		
+		// Clear the cycling interval to prevent new examples
+		cycleInterval = clearTimer(cycleInterval);
+		
+		// If currently typing, complete the current example quickly
 		if (isTyping && typingInterval) {
-			console.log('Completing entire example quickly');
-
+			console.log('Completing typing animation quickly');
 			typingInterval = clearTimer(typingInterval);
+			
 			// Find matching example or use current text
 			const targetText = (text && examplePhrases.find((ex) => ex.startsWith(text))) || '';
 			if (!targetText) return (isTyping = false);
 
 			// Type remaining text at 5ms per character
 			let i = text.length;
-			console.log(`Fast-typing: ${targetText.slice(i)}`);
 
 			// finish typing quickly (5ms per character)
 			typingInterval = setInterval(() => {
@@ -89,13 +94,38 @@
 					i++;
 				} else {
 					// Once we've completed the entire example, stop typing
-					console.log('Finished typing entire example');
 					typingInterval = clearTimer(typingInterval);
 					isTyping = false;
 				}
 			}, 5);
+		}
+	}
+	
+	// Handle input blur event
+	function handleInputBlur() {
+		// If the user hasn't added text, resume examples
+		if (!text && history.length === 0) {
+			examplesPaused = false;
+			// Resume cycling if not already cycling
+			if (!cycleInterval) {
+				cycleInterval = setInterval(cycleExamples, 5000);
+			}
+		}
+	}
+	
+	// Toggle play/pause for examples
+	function toggleExamples() {
+		examplesPaused = !examplesPaused;
+		
+		if (examplesPaused) {
+			// Pause examples
+			cycleInterval = clearTimer(cycleInterval);
 		} else {
-			console.log('No typing animation to stop');
+			// Resume examples
+			if (!cycleInterval && history.length === 0) {
+				cycleExamples(); // Show one immediately
+				cycleInterval = setInterval(cycleExamples, 5000);
+			}
 		}
 	}
 
@@ -259,6 +289,7 @@
 			{handleSubmit}
 			needsAttention={history.length === 0}
 			onInputFocus={handleInputFocus}
+			onInputBlur={handleInputBlur}
 			inputClass="px-1 font-medium py-2.5"
 			containerClass="desktop-input w-full"
 		/>
@@ -271,6 +302,21 @@
 				<div class="flex flex-wrap items-center justify-between gap-2 pb-2">
 					<div class="flex items-center gap-3">
 						<h2 class="text-xl font-semibold text-gray-800">Review</h2>
+						
+						{#if history.length === 0}
+							<!-- Play/Pause button for examples -->
+							<button
+								class="flex h-7 w-7 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+								onclick={toggleExamples}
+								title={examplesPaused ? 'Play examples' : 'Pause examples'}
+							>
+								{#if examplesPaused}
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+								{:else}
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+								{/if}
+							</button>
+						{/if}
 
 						{#if tgt_langs.length > 0}
 							<div class="flex items-center">

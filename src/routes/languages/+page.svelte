@@ -160,6 +160,10 @@
 		/>
 	</div>
 
+	<div class="mb-4 text-sm text-gray-600">
+		<p>Greyed out languages are not supported by our translation model.</p>
+	</div>
+
 	<div class="overflow-x-auto">
 		<table class="w-full border-collapse bg-white">
 			<thead class="border-b bg-gray-50">

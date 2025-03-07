@@ -8,6 +8,7 @@
 		handleSubmit,
 		needsAttention = false,
 		onInputFocus,
+		onInputBlur,
 		inputClass = '',
 		containerClass = ''
 	} = $props();
@@ -74,7 +75,10 @@
 				onkeydown={handleKeyDown}
 				onfocus={handleFocus}
 				onclick={handleFocus}
-				onblur={() => (isInputFocused = false)}
+				onblur={() => {
+					isInputFocused = false;
+					if (typeof onInputBlur === 'function') onInputBlur();
+				}}
 			/>
 
 			<button
