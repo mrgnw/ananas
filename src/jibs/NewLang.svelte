@@ -39,43 +39,24 @@ function clearTimer(timer) {
 	 * @param {number} speed - Typing speed in milliseconds
 	 */
 	function typeLetters(newText) {
-		console.log('typing:', newText);
-
-		// Don't start a new typing operation if one is in progress
-		if (isTyping) {
-			console.log('Already typing, canceling');
-			return;
-		}
-
-		// Set typing state
+		if (isTyping) return;
+		
 		isTyping = true;
-
-		// Clear any existing interval
 		typingInterval = clearTimer(typingInterval);
-
-		// Start with empty string
 		text = '';
-
-		// Current position in the text
 		let i = 0;
-
-		// Set up function to add one letter at a time with realistic random speed
-		const typeNextChar = () => {
+		
+		(function typeNext() {
 			typingInterval = setTimeout(() => {
 				if (i < newText.length) {
-					text = newText.substring(0, i + 1);
-					i++;
-					typeNextChar();
+					text = newText.substring(0, ++i);
+					typeNext();
 				} else {
 					typingInterval = clearTimer(typingInterval);
 					isTyping = false;
 				}
-			// semi-randomized typing time
-			}, Math.floor(Math.random() * 40) + 30);
-		};
-		
-		// Start typing
-		typeNextChar();
+			}, 30 + Math.floor(Math.random() * 40));
+		})();
 	}
 
 	// Interval for cycling examples
