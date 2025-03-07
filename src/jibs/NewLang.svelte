@@ -103,13 +103,19 @@
 	
 	// Handle input blur event
 	function handleInputBlur() {
-		// If the user hasn't added text, resume examples
-		if (!text && history.length === 0) {
+		// If there's no history (no translations yet), resume examples
+		if (history.length === 0) {
 			examplesPaused = false;
-			// Resume cycling if not already cycling
-			if (!cycleInterval) {
-				cycleInterval = setInterval(cycleExamples, 5000);
-			}
+			// Start one example immediately
+			setTimeout(() => {
+				if (!isTyping && history.length === 0) {
+					cycleExamples();
+					// Start cycling if not already cycling
+					if (!cycleInterval) {
+						cycleInterval = setInterval(cycleExamples, 5000);
+					}
+				}
+			}, 500); // Small delay to prevent immediate restart if user is interacting
 		}
 	}
 	
