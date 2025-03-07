@@ -11,14 +11,17 @@
 		inputClass = '',
 		containerClass = ''
 	} = $props();
-	
+
 	let is_ready = $derived(text.length > 0 && !is_loading);
 
 	let isInputFocused = $state(false);
-	
-	let animationState = $derived(is_loading ? 'translating' : isInputFocused ? 'focused' : needsAttention ? 'attention' : 'idle');
+
+	let animationState = $derived(
+		is_loading ? 'translating' : isInputFocused ? 'focused' : needsAttention ? 'attention' : 'idle'
+	);
 	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
-	let inputClasses = $derived(`
+	let inputClasses = $derived(
+		`
 		flex-grow 
 		border-none 
 		bg-transparent 
@@ -29,14 +32,21 @@
 		${is_loading ? 'cursor-not-allowed opacity-75' : ''} 
 		${needsAttention ? 'text-lg' : 'text-base'}
 		${inputClass ? ' ' + inputClass : ''}
-	`.replace(/\s+/g, ' ').trim());
-	let containerClasses = $derived(`
+	`
+			.replace(/\s+/g, ' ')
+			.trim()
+	);
+	let containerClasses = $derived(
+		`
 		input-container 
 		flex-1 
 		${animationState} 
 		${needsAttention ? 'prominent' : ''} 
 		${containerClass ? ' ' + containerClass : ''}
-	`.replace(/\s+/g, ' ').trim());
+	`
+			.replace(/\s+/g, ' ')
+			.trim()
+	);
 
 	// Event handlers
 	function handleKeyDown(event) {
@@ -63,13 +73,17 @@
 				class={inputClasses}
 				onkeydown={handleKeyDown}
 				onfocus={handleFocus}
-				onblur={() => isInputFocused = false}
+				onblur={() => (isInputFocused = false)}
 			/>
 
 			<button
 				onclick={handleSubmit}
 				disabled={!is_ready}
-				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full transition-opacity duration-200 {showSendButton ? 'opacity-100' : 'opacity-0'} {is_ready ? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700' : 'text-gray-400'}"
+				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full transition-opacity duration-200 {showSendButton
+					? 'opacity-100'
+					: 'opacity-0'} {is_ready
+					? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
+					: 'text-gray-400'}"
 				type="submit"
 			>
 				{#if is_loading}
@@ -175,21 +189,21 @@
 		background: white;
 		border: 1px solid #d1d5db;
 	}
-	
+
 	/* Prominent state for when no translations and showing examples */
 	.input-container.prominent {
 		padding: 3px;
 		transform: scale(1.03);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 	}
-	
+
 	/* Prominent state additional styling in CSS instead of component logic */
 	.input-container.prominent {
 		padding: 3px;
 		transform: scale(1.03);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 	}
-	
+
 	/* Style for input field text */
 	input {
 		transition: all 0.3s ease;
