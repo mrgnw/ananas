@@ -302,11 +302,9 @@
 			{is_loading}
 			{is_ready}
 			{handleSubmit}
-			{getRandomExample}
-			{isTyping}
-			variant="desktop"
 			needsAttention={history.length === 0}
-			class="desktop-input"
+			inputClass="px-1 font-medium py-2.5"
+			containerClass="desktop-input w-full"
 			onInputFocus={handleInputFocus}
 		/>
 	</div>
@@ -389,9 +387,9 @@
 			{is_loading}
 			{is_ready}
 			{handleSubmit}
-			{getRandomExample}
-			variant="mobile"
 			needsAttention={history.length === 0}
+			inputClass="text-gray-900 py-3"
+			containerClass="mobile-input w-full max-w-full"
 		/>
 	</div>
 </div>
