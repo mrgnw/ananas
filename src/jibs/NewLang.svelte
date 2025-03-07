@@ -19,8 +19,6 @@
 
 	// Track the current example index for cycling through examples
 	let currentExampleIndex = $state(0);
-
-	// Track if currently typing
 	let isTyping = $state(false);
 
 	// Interval ID for cleanup
@@ -78,12 +76,9 @@
 	function cycleExamples() {
 		console.log('Cycling to next example');
 		if (history.length === 0) {
-			// Move to next example
-			currentExampleIndex = (currentExampleIndex + 1) % examplePhrases.length;
-			console.log('New example index:', currentExampleIndex);
-
-			// Type the new example text
-			typeLetters(examplePhrases[currentExampleIndex], NORMAL_TYPING_SPEED);
+			const randomExample = getRandomExample();
+			console.log('New random example:', randomExample);
+			typeLetters(randomExample, NORMAL_TYPING_SPEED);
 		}
 	}
 
@@ -140,7 +135,7 @@
 			// Type the first example after a short delay to ensure page is fully rendered
 			const timeout = setTimeout(() => {
 				console.log('Starting first example');
-				typeLetters(examplePhrases[currentExampleIndex], NORMAL_TYPING_SPEED);
+				typeLetters(getRandomExample(), NORMAL_TYPING_SPEED);
 
 				// Set up cycling interval
 				if (!cycleInterval) {
