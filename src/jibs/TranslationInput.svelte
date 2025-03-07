@@ -1,22 +1,54 @@
 <script>
-	import { Input } from '$lib/components/ui/input';
-	import { Button } from '$lib/components/ui/button';
 	import { Languages, Send } from 'lucide-svelte';
 
 	// Props using Svelte 5 runes
 	let {
 		text = $bindable(),
 		is_loading,
-		is_ready,
 		handleSubmit,
-		getRandomExample,
-		variant = 'desktop',
 		needsAttention = false,
-		isTyping = false,
-		onInputFocus
+		onInputFocus,
+		inputClass = '',
+		containerClass = ''
 	} = $props();
 
-	// Keyboard event handler for accessibility
+	let is_ready = $derived(text.length > 0 && !is_loading);
+
+	let isInputFocused = $state(false);
+
+	let animationState = $derived(
+		is_loading ? 'translating' : isInputFocused ? 'focused' : needsAttention ? 'attention' : 'idle'
+	);
+	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
+	let inputClasses = $derived(
+		`
+		flex-grow 
+		border-none 
+		bg-transparent 
+		pl-4 
+		pr-12 
+		focus:outline-none 
+		focus:ring-0 
+		${is_loading ? 'cursor-not-allowed opacity-75' : ''} 
+		${needsAttention ? 'text-lg' : 'text-base'}
+		${inputClass ? ' ' + inputClass : ''}
+	`
+			.replace(/\s+/g, ' ')
+			.trim()
+	);
+	let containerClasses = $derived(
+		`
+		input-container 
+		flex-1 
+		${animationState} 
+		${needsAttention ? 'prominent' : ''} 
+		${containerClass ? ' ' + containerClass : ''}
+	`
+			.replace(/\s+/g, ' ')
+			.trim()
+	);
+
+	// Event handlers
 	function handleKeyDown(event) {
 		if (event.key === 'Enter' && is_ready) {
 			event.preventDefault();
@@ -24,66 +56,34 @@
 		}
 	}
 
-	// Determine if we're on mobile view
-	let isMobile = $derived(variant === 'mobile');
-
-	// Input state tracking
-	let isInputFocused = $state(false);
-
-	// Animation state using $derived properly
-	let animationState = $derived(
-		is_loading ? 'translating' : isInputFocused ? 'focused' : needsAttention ? 'attention' : 'idle'
-	);
-
-	$effect(() => console.log('Input state:', animationState));
-
-	// Focus event handlers
 	function handleFocus() {
-		console.log('Input focused!');
 		isInputFocused = true;
-		// Emit the focus event to parent component
-		if (typeof onInputFocus === 'function') {
-			console.log('Calling onInputFocus handler');
-			onInputFocus();
-		} else {
-			console.warn('onInputFocus is not a function:', onInputFocus);
-		}
+		if (typeof onInputFocus === 'function') onInputFocus();
 	}
-
-	function handleBlur() {
-		console.log('Input blurred!');
-		isInputFocused = false;
-	}
-
-	// Show send button when input is focused, loading, or text is being typed
-	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
 </script>
 
-<div class="flex w-full items-center gap-2 {isMobile ? 'max-w-full' : ''}">
-	<div class="input-container flex-1 {animationState}">
+<div class="flex w-full items-center gap-4">
+	<div class={containerClasses}>
 		<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
 			<input
 				type="text"
 				placeholder={is_loading ? 'Translating...' : 'Enter text from any language...'}
 				bind:value={text}
 				disabled={is_loading}
-				class="flex-grow py-{isMobile
-					? '3'
-					: '2.5'} border-none bg-transparent pl-4 pr-12 focus:outline-none focus:ring-0 {is_loading
-					? 'cursor-not-allowed opacity-75'
-					: ''}"
+				class={inputClasses}
 				onkeydown={handleKeyDown}
 				onfocus={handleFocus}
-				onblur={handleBlur}
+				onclick={handleFocus}
+				onblur={() => (isInputFocused = false)}
 			/>
 
-			<!-- Always render the button but control visibility with CSS -->
 			<button
 				onclick={handleSubmit}
+				onmouseenter={() => typeof onInputFocus === 'function' && onInputFocus()}
 				disabled={!is_ready}
-				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full {showSendButton
+				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full transition-opacity duration-200 {showSendButton
 					? 'opacity-100'
-					: 'opacity-0'} transition-opacity duration-200 {is_ready
+					: 'opacity-0'} {is_ready
 					? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
 					: 'text-gray-400'}"
 				type="submit"
@@ -98,7 +98,6 @@
 		</div>
 	</div>
 
-	<!-- Languages button with more prominence now that it's alone -->
 	<a
 		href="/languages"
 		class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 transition-colors hover:bg-blue-200"
@@ -131,7 +130,7 @@
 		background-origin: border-box;
 		background-clip: padding-box, border-box;
 		background-size: 400% 400%;
-		transition: background 0.3s ease;
+		transition: all 0.3s ease;
 	}
 
 	/* Default state: just a border */
@@ -191,5 +190,24 @@
 	.input-container.idle:hover {
 		background: white;
 		border: 1px solid #d1d5db;
+	}
+
+	/* Prominent state for when no translations and showing examples */
+	.input-container.prominent {
+		padding: 3px;
+		transform: scale(1.03);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	}
+
+	/* Prominent state additional styling in CSS instead of component logic */
+	.input-container.prominent {
+		padding: 3px;
+		transform: scale(1.03);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	}
+
+	/* Style for input field text */
+	input {
+		transition: all 0.3s ease;
 	}
 </style>
