@@ -73,11 +73,13 @@
 				class={inputClasses}
 				onkeydown={handleKeyDown}
 				onfocus={handleFocus}
+				onclick={handleFocus}
 				onblur={() => (isInputFocused = false)}
 			/>
 
 			<button
 				onclick={handleSubmit}
+				onmouseenter={() => typeof onInputFocus === 'function' && onInputFocus()}
 				disabled={!is_ready}
 				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full transition-opacity duration-200 {showSendButton
 					? 'opacity-100'
