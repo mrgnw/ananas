@@ -45,6 +45,7 @@
     "lucide-svelte": "^0.344.0",
     "svelte": "^5.10.1",
     "svelte-dnd-action": "^0.9.52",
+    "svelte-inspect-value": "^0.4.0",
     "svelte-radix": "^1.1.1",
     "svelte-sonner": "^0.3.28",
     "tailwind-merge": "^2.5.5",
