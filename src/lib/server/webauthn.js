@@ -4,6 +4,7 @@ import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse
 } from '@simplewebauthn/server';
+import { isoUint8Array } from '@simplewebauthn/server/helpers';
 import { dev } from '$app/environment';
 
 // Relying Party configuration
@@ -64,7 +65,7 @@ export async function generateRegOptions(username) {
   const options = await generateRegistrationOptions({
     rpName,
     rpID,
-    userID: user.id,
+    userID: isoUint8Array.fromUTF8String(user.id), // Convert string to Uint8Array
     userName: user.username,
     attestationType: 'none',
     excludeCredentials,
