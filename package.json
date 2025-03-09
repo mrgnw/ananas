@@ -35,6 +35,8 @@
   },
   "type": "module",
   "dependencies": {
+    "@simplewebauthn/browser": "^13.1.0",
+    "@simplewebauthn/server": "^13.1.1",
     "@sveltejs/adapter-cloudflare": "^3.0.2",
     "animotion": "^0.1.2",
     "bits-ui": "0.22.0",
