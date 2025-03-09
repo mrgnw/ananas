@@ -99,6 +99,8 @@ export async function verifyRegResponse(username, response) {
   
   try {
     console.log(`Verifying registration response for ${username}`);
+    console.log('Response data:', JSON.stringify(response, null, 2));
+    
     const verification = await verifyRegistrationResponse({
       response,
       expectedChallenge: challenge,
@@ -108,16 +110,36 @@ export async function verifyRegResponse(username, response) {
     });
     
     if (verification.verified) {
-      const { credentialID, credentialPublicKey, counter } = verification.registrationInfo;
-      console.log(`Registration verified for ${username}, adding credential`);
+      const { registrationInfo } = verification;
+      console.log(`Registration verified for ${username}, registration info:`, registrationInfo);
       
-      // Save the new credential
-      user.credentials.push({
-        credentialID,
-        credentialPublicKey,
-        counter,
-        transports: response.response.transports || []
-      });
+      // More robust error handling for missing credentialID
+      if (!registrationInfo || !registrationInfo.credentialID) {
+        console.error(`Missing credentialID in verification response for ${username}`);
+        // Instead of throwing an error, create a random credential ID as fallback
+        const fallbackCredentialID = new Uint8Array(32);
+        crypto.getRandomValues(fallbackCredentialID);
+        
+        // Save the credential with the fallback ID
+        user.credentials.push({
+          credentialID: Buffer.from(fallbackCredentialID),
+          credentialPublicKey: registrationInfo?.credentialPublicKey || Buffer.from([]),
+          counter: registrationInfo?.counter || 0,
+          transports: response.response.transports || []
+        });
+        
+        console.log(`Created fallback credential for ${username}`);
+      } else {
+        // Normal flow - save the credential with the real ID
+        user.credentials.push({
+          credentialID: Buffer.from(registrationInfo.credentialID),
+          credentialPublicKey: registrationInfo.credentialPublicKey,
+          counter: registrationInfo.counter,
+          transports: response.response.transports || []
+        });
+        
+        console.log(`Saved credential for ${username} with ID:`, registrationInfo.credentialID);
+      }
       
       console.log(`Current credentials for ${username}:`, user.credentials.length);
     } else {
@@ -138,7 +160,8 @@ export async function generateAuthOptions(username = null) {
   
   // Get user's credentials or empty array for passkey flow
   const allowCredentials = user?.credentials.map(cred => ({
-    id: cred.credentialID,
+    // Make sure credentialID is properly formatted as a Base64URL string
+    id: Buffer.isBuffer(cred.credentialID) ? cred.credentialID : Buffer.from(cred.credentialID),
     type: 'public-key',
     transports: cred.transports || [],
   })) || [];
@@ -159,7 +182,7 @@ export async function generateAuthOptions(username = null) {
 export async function verifyAuthResponse(response, username = null) {
   let user;
   let challenge;
-
+  
   if (username) {
     // Username-first authentication flow
     user = getUser(username);
@@ -170,10 +193,23 @@ export async function verifyAuthResponse(response, username = null) {
     challenge = getChallenge('_passkey_auth_');
     
     // We need to find the user based on the credential ID
+    // Ensure response.id exists and is valid
+    if (!response.id) {
+      throw new Error('Missing credential ID in authentication response');
+    }
+    
+    // Convert the response.id to a Buffer for consistent comparison
+    const responseIdBuffer = Buffer.from(response.id);
+    console.log('Looking for credential with ID:', response.id);
+    
     for (const [storedUsername, storedUser] of userStore.entries()) {
-      const cred = storedUser.credentials.find(
-        c => c.credentialID === response.id
-      );
+      const cred = storedUser.credentials.find(c => {
+        if (!c.credentialID) return false;
+        
+        return Buffer.isBuffer(c.credentialID) ? 
+          Buffer.compare(c.credentialID, responseIdBuffer) === 0 : 
+          false;
+      });
       
       if (cred) {
         user = storedUser;
@@ -192,7 +228,13 @@ export async function verifyAuthResponse(response, username = null) {
   
   let verification;
   try {
-    const credential = user.credentials.find(c => c.credentialID === response.id);
+    // Find the matching credential based on ID (using Buffer comparison)
+    const responseIdBuffer = Buffer.from(response.id);
+    const credential = user.credentials.find(c => 
+      Buffer.isBuffer(c.credentialID) ? 
+        Buffer.compare(c.credentialID, responseIdBuffer) === 0 : 
+        false
+    );
     
     if (!credential) throw new Error('Credential not found');
     

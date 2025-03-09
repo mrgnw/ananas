@@ -26,14 +26,30 @@ export async function registerPasskey(username) {
 
     // Get the options from the server response
     const { options } = await optionsResponse.json();
-    console.log('Registration options received:', { ...options, challenge: '...' });
+    console.log('Registration options received:', { 
+      ...options, 
+      challenge: '...',  // Don't log the challenge directly
+      user: options.user ? { 
+        ...options.user, 
+        id: typeof options.user.id === 'string' ? options.user.id.substring(0, 10) + '...' : 'invalid' 
+      } : null 
+    });
     
     // Start the WebAuthn registration process
     console.log('Starting browser registration flow');
     const credential = await startRegistration(options);
-    console.log('Registration credential received from browser');
+    
+    // More detailed logging about the credential
+    console.log('Registration credential received from browser:', {
+      id: credential.id,
+      type: credential.type,
+      clientDataJSON: credential.response.clientDataJSON ? credential.response.clientDataJSON.substring(0, 20) + '...' : null,
+      attestationObject: credential.response.attestationObject ? credential.response.attestationObject.substring(0, 20) + '...' : null,
+      transports: credential.response.transports
+    });
     
     // Send the credential to the server for verification
+    console.log('Sending credential to server for verification:', credential);
     const verificationResponse = await fetch('/api/auth/register/verify', {
       method: 'POST',
       headers: {
