@@ -42,7 +42,7 @@
 <div class="register-form">
   <h2>Register with a Passkey</h2>
   
-  <form on:submit={handleRegister}>
+  <form onsubmit={handleRegister}>
     <div class="form-group">
       <label for="username">Username</label>
       <input 

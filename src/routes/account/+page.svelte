@@ -30,13 +30,13 @@
       <div class="tab-header">
         <button 
           class={activeTab === 'login' ? 'active' : ''} 
-          on:click={() => switchTab('login')}
+          onclick={() => switchTab('login')}
         >
           Sign In
         </button>
         <button 
           class={activeTab === 'register' ? 'active' : ''} 
-          on:click={() => switchTab('register')}
+          onclick={() => switchTab('register')}
         >
           Register
         </button>

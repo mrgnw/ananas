@@ -13,7 +13,7 @@
     <p>You are successfully authenticated with a passkey.</p>
   </div>
   
-  <button class="logout-button" on:click={handleLogout}>
+  <button class="logout-button" onclick={handleLogout}>
     Sign Out
   </button>
 </div>

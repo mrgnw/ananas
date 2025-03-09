@@ -51,13 +51,13 @@
 <div class="login-form">
   <h2>Sign In</h2>
   
-  <form on:submit={handleLogin}>
+  <form onsubmit={handleLogin}>
     <div class="passkey-toggle">
       <label>
         <input 
           type="checkbox" 
           bind:checked={usePasskeyOnly}
-          on:change={togglePasskeyOnly}
+          onchange={togglePasskeyOnly}
         />
         Sign in with passkey only
       </label>
