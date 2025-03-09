@@ -11,7 +11,7 @@ import { dev } from '$app/environment';
 const rpName = 'Ananas Passkeys';
 const rpID = dev ? 'localhost' : 'your-production-domain.com'; // Update this with your domain
 const expectedOrigin = dev 
-  ? ['http://localhost:5173', 'http://localhost:4173'] 
+  ? ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:5179'] 
   : [`https://${rpID}`];
 
 // In-memory storage for demo purposes - replace with a database in production
@@ -54,6 +54,7 @@ export function removeChallenge(username) {
 // WebAuthn registration functions
 export async function generateRegOptions(username) {
   const user = getUser(username) || createUser(username);
+  console.log(`Generating registration options for ${username}, user ID: ${user.id}`);
   
   // Get existing credentials to exclude
   const excludeCredentials = user.credentials.map(cred => ({
@@ -77,21 +78,27 @@ export async function generateRegOptions(username) {
   
   // Store challenge for verification later
   storeChallenge(username, options.challenge);
+  console.log(`Stored challenge for ${username}`);
   
   return options;
 }
 
 export async function verifyRegResponse(username, response) {
   const user = getUser(username);
+  console.log(`Verifying registration for ${username}`, user ? 'User found' : 'User not found');
+  
   if (!user) throw new Error("User not found");
   
   const challenge = getChallenge(username);
+  console.log(`Challenge for ${username}:`, challenge ? 'Found' : 'Not found');
+  
   if (!challenge) throw new Error("Challenge not found");
   
   // Remove challenge to prevent replay attacks
   removeChallenge(username);
   
   try {
+    console.log(`Verifying registration response for ${username}`);
     const verification = await verifyRegistrationResponse({
       response,
       expectedChallenge: challenge,
@@ -102,6 +109,7 @@ export async function verifyRegResponse(username, response) {
     
     if (verification.verified) {
       const { credentialID, credentialPublicKey, counter } = verification.registrationInfo;
+      console.log(`Registration verified for ${username}, adding credential`);
       
       // Save the new credential
       user.credentials.push({
@@ -110,11 +118,15 @@ export async function verifyRegResponse(username, response) {
         counter,
         transports: response.response.transports || []
       });
+      
+      console.log(`Current credentials for ${username}:`, user.credentials.length);
+    } else {
+      console.log(`Registration verification failed for ${username}`);
     }
     
     return verification;
   } catch (error) {
-    console.error(error);
+    console.error(`Error during registration verification for ${username}:`, error);
     throw error;
   }
 }

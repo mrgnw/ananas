@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { verifyAuthResponse } from '$lib/server/webauthn';
+import { verifyAuthResponse, getUser } from '$lib/server/webauthn';
 import { getSessionData, removeSessionData } from '$lib/server/auth';
 
 export async function POST({ request, cookies }) {
@@ -18,7 +18,7 @@ export async function POST({ request, cookies }) {
     // Clear the challenge after use
     removeSessionData(sessionId, 'challenge');
     
-    if (verification.verified) {
+    if (verification.verified && user) {
       // Set authenticated session
       cookies.set('user_session', user.id, {
         path: '/',
@@ -32,7 +32,10 @@ export async function POST({ request, cookies }) {
         username: user.username
       });
     } else {
-      return json({ verified: false, error: 'Verification failed' }, { status: 400 });
+      return json({ 
+        verified: false, 
+        error: user ? 'Verification failed' : 'User not found' 
+      }, { status: 400 });
     }
   } catch (error) {
     console.error(error);

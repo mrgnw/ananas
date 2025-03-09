@@ -23,7 +23,21 @@ export async function POST({ request, cookies }) {
     removeSessionData(sessionId, 'challenge');
     
     if (verification.verified) {
-      return json({ verified: true, username });
+      // Set authenticated session immediately after successful registration
+      const user = verification.registrationInfo?.userHandle || username;
+      
+      // Create a user session
+      cookies.set('user_session', user, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 // 1 day
+      });
+      
+      return json({ 
+        verified: true, 
+        username 
+      });
     } else {
       return json({ verified: false, error: 'Verification failed' }, { status: 400 });
     }

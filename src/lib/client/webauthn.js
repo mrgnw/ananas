@@ -7,6 +7,8 @@ import { startRegistration, startAuthentication } from '@simplewebauthn/browser'
  */
 export async function registerPasskey(username) {
   try {
+    console.log(`Starting registration for user: ${username}`);
+    
     // Get registration options from server
     const optionsResponse = await fetch('/api/auth/register/options', {
       method: 'POST',
@@ -18,14 +20,18 @@ export async function registerPasskey(username) {
     
     if (!optionsResponse.ok) {
       const error = await optionsResponse.json();
+      console.error('Failed to get registration options:', error);
       throw new Error(error.error || 'Failed to get registration options');
     }
 
     // Get the options from the server response
     const { options } = await optionsResponse.json();
+    console.log('Registration options received:', { ...options, challenge: '...' });
     
     // Start the WebAuthn registration process
+    console.log('Starting browser registration flow');
     const credential = await startRegistration(options);
+    console.log('Registration credential received from browser');
     
     // Send the credential to the server for verification
     const verificationResponse = await fetch('/api/auth/register/verify', {
@@ -36,8 +42,12 @@ export async function registerPasskey(username) {
       body: JSON.stringify(credential),
     });
 
+    // Get verification result
+    const result = await verificationResponse.json();
+    console.log('Registration verification result:', result);
+
     // Return the verification result
-    return await verificationResponse.json();
+    return result;
   } catch (error) {
     console.error('Error during registration:', error);
     throw error;
