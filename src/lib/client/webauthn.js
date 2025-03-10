@@ -37,16 +37,33 @@ export async function registerPasskey(username) {
     
     // Start the WebAuthn registration process
     console.log('Starting browser registration flow');
-    const credential = await startRegistration(options);
+    let credential;
+    try {
+      credential = await startRegistration(options);
+    } catch (err) {
+      // Log more details about browser registration errors
+      console.error('Browser registration error:', err);
+      if (err.name === 'NotAllowedError') {
+        throw new Error('Registration was denied by the user or device');
+      }
+      throw err;
+    }
     
     // More detailed logging about the credential
     console.log('Registration credential received from browser:', {
       id: credential.id,
       type: credential.type,
-      clientDataJSON: credential.response.clientDataJSON ? credential.response.clientDataJSON.substring(0, 20) + '...' : null,
-      attestationObject: credential.response.attestationObject ? credential.response.attestationObject.substring(0, 20) + '...' : null,
-      transports: credential.response.transports
+      hasClientDataJSON: !!credential.response.clientDataJSON,
+      hasAttestationObject: !!credential.response.attestationObject,
+      transports: credential.response.transports,
+      hasPublicKey: !!credential.response.publicKey
     });
+    
+    // Add the raw attestation object for debugging
+    if (credential.response.attestationObject) {
+      console.log('First 64 chars of attestationObject:', 
+        credential.response.attestationObject.substring(0, 64));
+    }
     
     // Send the credential to the server for verification
     console.log('Sending credential to server for verification:', credential);

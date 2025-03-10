@@ -16,8 +16,29 @@ export async function POST({ request, cookies }) {
     
     const credential = await request.json();
     
+    // Log more details about received credential before verification
+    console.log('Received registration credential for verification:', {
+      id: credential.id,
+      type: credential.type,
+      hasClientDataJSON: !!credential.response?.clientDataJSON,
+      hasAttestationObject: !!credential.response?.attestationObject,
+      responseKeys: credential.response ? Object.keys(credential.response) : []
+    });
+    
     // Verify registration response
-    const verification = await verifyRegResponse(username, credential);
+    let verification;
+    try {
+      verification = await verifyRegResponse(username, credential);
+    } catch (error) {
+      console.error('Registration verification error:', error);
+      if (error.message === 'Invalid credential public key received from authenticator') {
+        return json({ 
+          verified: false, 
+          error: 'Registration failed: Could not obtain valid credential from your device. Please try again or use a different device.' 
+        }, { status: 400 });
+      }
+      throw error;
+    }
     
     // Clear the challenge after use
     removeSessionData(sessionId, 'challenge');

@@ -9,98 +9,92 @@ import { dev } from '$app/environment';
 
 // Relying Party configuration
 const rpName = 'Ananas Passkeys';
-const rpID = dev ? 'localhost' : 'your-production-domain.com'; // Update this with your domain
+const rpID = dev ? 'localhost' : 'your-production-domain.com';
 const expectedOrigin = dev 
   ? ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:5179'] 
   : [`https://${rpID}`];
 
-// In-memory storage for demo purposes - replace with a database in production
-const userStore = new Map();
-const challengeStore = new Map();
+// In-memory user storage - completely simplified structure
+const users = new Map();
+const challenges = new Map();
 
-// User management functions
+// User and challenge management functions
 export function getUser(username) {
-  return userStore.get(username);
+  return users.get(username);
 }
 
 export function createUser(username) {
-  if (userStore.has(username)) {
-    return userStore.get(username);
+  if (users.has(username)) {
+    return users.get(username);
   }
   
-  const user = {
+  const newUser = {
     id: crypto.randomUUID(),
     username,
     credentials: []
   };
   
-  userStore.set(username, user);
-  return user;
+  users.set(username, newUser);
+  return newUser;
 }
 
-// Challenge management functions
-export function storeChallenge(username, challenge) {
-  challengeStore.set(username, challenge);
+export function storeChallenge(key, challenge) {
+  challenges.set(key, challenge);
 }
 
-export function getChallenge(username) {
-  return challengeStore.get(username);
+export function getChallenge(key) {
+  return challenges.get(key);
 }
 
-export function removeChallenge(username) {
-  challengeStore.delete(username);
+export function removeChallenge(key) {
+  challenges.delete(key);
 }
 
 // WebAuthn registration functions
 export async function generateRegOptions(username) {
   const user = getUser(username) || createUser(username);
-  console.log(`Generating registration options for ${username}, user ID: ${user.id}`);
-  
-  // Get existing credentials to exclude
-  const excludeCredentials = user.credentials.map(cred => ({
-    id: cred.credentialID,
-    type: 'public-key',
-    transports: cred.transports || [],
-  }));
+  console.log(`Generating registration options for ${username}`);
   
   const options = await generateRegistrationOptions({
     rpName,
     rpID,
     userID: isoUint8Array.fromUTF8String(user.id), // Convert string to Uint8Array
-    userName: user.username,
+    userName: username,
     attestationType: 'none',
-    excludeCredentials,
+    // Default to recommended passkey settings
     authenticatorSelection: {
       residentKey: 'preferred',
       userVerification: 'preferred',
-    }
+    },
+    // No excluded credentials for simplicity
+    excludeCredentials: []
   });
   
-  // Store challenge for verification later
+  // Store challenge for verification
   storeChallenge(username, options.challenge);
-  console.log(`Stored challenge for ${username}`);
+  console.log(`Registration challenge stored for ${username}`);
   
   return options;
 }
 
 export async function verifyRegResponse(username, response) {
   const user = getUser(username);
-  console.log(`Verifying registration for ${username}`, user ? 'User found' : 'User not found');
-  
-  if (!user) throw new Error("User not found");
-  
   const challenge = getChallenge(username);
-  console.log(`Challenge for ${username}:`, challenge ? 'Found' : 'Not found');
   
-  if (!challenge) throw new Error("Challenge not found");
+  if (!user) throw new Error('User not found');
+  if (!challenge) throw new Error('Challenge not found');
   
   // Remove challenge to prevent replay attacks
   removeChallenge(username);
   
+  // Log the raw response for debugging
+  console.log('Raw registration response:', JSON.stringify({
+    id: response.id,
+    type: response.type,
+    transports: response.response.transports
+  }, null, 2));
+  
   try {
-    console.log(`Verifying registration response for ${username}`);
-    console.log('Response data:', JSON.stringify(response, null, 2));
-    
     const verification = await verifyRegistrationResponse({
       response,
       expectedChallenge: challenge,
@@ -109,102 +103,139 @@ export async function verifyRegResponse(username, response) {
       requireUserVerification: false,
     });
     
-    if (verification.verified) {
+    if (verification.verified && verification.registrationInfo) {
       const { registrationInfo } = verification;
-      console.log(`Registration verified for ${username}, registration info:`, registrationInfo);
       
-      // More robust error handling for missing credentialID
-      if (!registrationInfo || !registrationInfo.credentialID) {
-        console.error(`Missing credentialID in verification response for ${username}`);
-        // Use the response.id instead of creating a random ID
-        const credentialID = response.id ? 
-          Buffer.from(response.id, 'base64url') : 
-          Buffer.alloc(32).fill(0); // Safe fallback if even response.id is missing
+      // Add more detailed logging about the registration info
+      console.log('Registration info raw structure:', {
+        hasCredentialID: !!registrationInfo.credentialID,
+        hasCredentialPublicKey: !!registrationInfo.credentialPublicKey,
+        publicKeyType: typeof registrationInfo.credentialPublicKey,
+        // Only try to access properties if it exists
+        publicKeyLength: registrationInfo.credentialPublicKey ? registrationInfo.credentialPublicKey.length : 'N/A'
+      });
+      
+      // Extract credential data with safer handling
+      const { credentialID, credentialPublicKey, counter } = registrationInfo;
+      
+      // Handle potentially problematic public key with a more robust approach
+      if (!credentialPublicKey) {
+        console.warn('No credentialPublicKey in registration response, attempting to extract from raw response');
         
-        if (!registrationInfo?.credentialPublicKey) {
-          console.error('Missing credentialPublicKey in verification response');
+        // Try to extract public key from the raw response if available
+        let fallbackPublicKey;
+        try {
+          if (response.response && response.response.publicKey) {
+            console.log('Found publicKey in raw response');
+            fallbackPublicKey = Buffer.from(response.response.publicKey, 'base64');
+          }
+        } catch (e) {
+          console.error('Failed to extract fallback public key:', e);
         }
         
-        // Log what we're storing
-        console.log('Storing credential with:', {
-          credentialIDExists: !!credentialID,
-          credentialIDLength: credentialID?.length,
-          publicKeyExists: !!registrationInfo?.credentialPublicKey,
-          publicKeyType: typeof registrationInfo?.credentialPublicKey
-        });
-        
-        // Save the credential with the parsed ID from the response
-        user.credentials.push({
-          credentialID,
-          credentialPublicKey: registrationInfo?.credentialPublicKey || Buffer.from([]),
-          counter: 0, // Initialize counter to 0
+        // Create a minimal credential with what we have
+        const credential = {
+          credentialID: credentialID || Buffer.from(response.id, 'base64url'),
+          credentialPublicKey: fallbackPublicKey || Buffer.alloc(0),
+          counter: counter || 0,
           transports: response.response.transports || []
+        };
+        
+        console.log('Using fallback credential data:', {
+          idLength: credential.credentialID.length,
+          hasPublicKey: !!credential.credentialPublicKey,
+          publicKeyLength: credential.credentialPublicKey.length
         });
         
-        console.log(`Created credential from response ID for ${username}`);
+        // Add credential to user without validation (may not work for authentication)
+        user.credentials.push(credential);
+        console.warn(`Added credential with potentially invalid public key for ${username}`);
+        
+      } else if (credentialPublicKey.length === 0) {
+        console.error('Error: Empty credential public key in registration response');
+        throw new Error('Empty credential public key received from authenticator');
       } else {
-        // Normal flow - save the credential with the real ID
-        // Log what we're storing
-        console.log('Storing credential with:', {
-          credentialIDExists: !!registrationInfo.credentialID,
-          credentialIDLength: registrationInfo.credentialID?.length,
-          publicKeyExists: !!registrationInfo.credentialPublicKey,
-          publicKeyType: typeof registrationInfo.credentialPublicKey
+        // Normal flow with complete data
+        // Log the actual public key content for debugging
+        console.log('Public key details:', {
+          length: credentialPublicKey.length,
+          firstBytes: credentialPublicKey.slice(0, 10).toString('hex'),
+          isBuffer: Buffer.isBuffer(credentialPublicKey)
         });
         
-        user.credentials.push({
-          credentialID: Buffer.from(registrationInfo.credentialID),
-          credentialPublicKey: registrationInfo.credentialPublicKey,
-          counter: registrationInfo.counter || 0, // Ensure counter has a default value
+        // Store credential using a very simple structure - no nesting or complexity
+        const credential = {
+          credentialID: credentialID, // This is already a Buffer from SimpleWebAuthn
+          credentialPublicKey: credentialPublicKey, // This is already a Buffer from SimpleWebAuthn
+          counter: counter || 0,
           transports: response.response.transports || []
+        };
+        
+        // Log detailed info about what we're storing
+        console.log('Storing credential with ID:', Buffer.from(credentialID).toString('base64url'));
+        console.log('Credential structure:', {
+          hasID: !!credential.credentialID,
+          idType: typeof credential.credentialID,
+          idIsBuffer: Buffer.isBuffer(credential.credentialID),
+          idLength: credential.credentialID.length,
+          hasPublicKey: !!credential.credentialPublicKey,
+          publicKeyType: typeof credential.credentialPublicKey,
+          publicKeyIsBuffer: Buffer.isBuffer(credential.credentialPublicKey),
+          counter: credential.counter,
+          transports: credential.transports
         });
         
-        console.log(`Saved credential for ${username} with ID:`, registrationInfo.credentialID);
+        // Add credential to user
+        user.credentials.push(credential);
+        console.log(`User ${username} now has ${user.credentials.length} credential(s)`);
       }
-      
-      console.log(`Current credentials for ${username}:`, user.credentials.length);
-    } else {
-      console.log(`Registration verification failed for ${username}`);
     }
     
     return verification;
   } catch (error) {
-    console.error(`Error during registration verification for ${username}:`, error);
+    console.error('Error during registration verification:', error);
     throw error;
   }
 }
 
 // WebAuthn authentication functions
 export async function generateAuthOptions(username = null) {
-  // For passkey (discoverable credential) flow, username can be null
-  const user = username ? getUser(username) : null;
-  
-  // Get user's credentials or empty array for passkey flow
-  const allowCredentials = user?.credentials.map(cred => {
-    // Convert credentialID to base64url string for authentication options
-    const credentialIdBuffer = Buffer.isBuffer(cred.credentialID) ? 
-      cred.credentialID : 
-      Buffer.from(cred.credentialID || []);
+  // For passkey authentication with no username
+  if (!username) {
+    const options = await generateAuthenticationOptions({
+      rpID,
+      userVerification: 'preferred',
+      // Allow any credential (passkey mode)
+      allowCredentials: []
+    });
     
-    return {
-      // SimpleWebAuthn expects a base64url string here, not a raw Buffer
-      id: Buffer.from(credentialIdBuffer).toString('base64url'),
-      type: 'public-key',
-      transports: cred.transports || [],
-    };
-  }) || [];
+    storeChallenge('_passkey_auth_', options.challenge);
+    console.log('Passkey auth challenge stored');
+    
+    return options;
+  }
   
-  console.log('Credential IDs for authentication:', allowCredentials.map(c => c.id));
+  // For username-first authentication
+  const user = getUser(username);
+  if (!user) throw new Error('User not found');
+  
+  // Format credentials properly for authentication
+  const allowCredentials = user.credentials.map(cred => ({
+    id: Buffer.from(cred.credentialID).toString('base64url'),
+    type: 'public-key',
+    transports: cred.transports || []
+  }));
+  
+  console.log('Authentication allowCredentials:', allowCredentials);
   
   const options = await generateAuthenticationOptions({
     rpID,
-    allowCredentials: allowCredentials.length ? allowCredentials : undefined,
+    allowCredentials,
     userVerification: 'preferred',
   });
   
-  // Store challenge for later verification
-  // Use a special key for passkey auth when username is not known
-  storeChallenge(username || '_passkey_auth_', options.challenge);
+  storeChallenge(username, options.challenge);
+  console.log(`Auth challenge stored for ${username}`);
   
   return options;
 }
@@ -214,132 +245,106 @@ export async function verifyAuthResponse(response, username = null) {
   let challenge;
   
   if (username) {
-    // Username-first authentication flow
+    // Username-first flow
     user = getUser(username);
     if (!user) throw new Error('User not found');
     challenge = getChallenge(username);
   } else {
-    // Passkey authentication flow (username not known yet)
+    // Passkey flow - we need to find the user by credential ID
     challenge = getChallenge('_passkey_auth_');
     
-    // We need to find the user based on the credential ID
-    // Ensure response.id exists and is valid
     if (!response.id) {
       throw new Error('Missing credential ID in authentication response');
     }
     
-    console.log('Looking up credential with ID:', response.id);
+    // Find the user with this credential
+    const credentialIdBase64 = response.id;
+    const credentialIdBuffer = Buffer.from(credentialIdBase64, 'base64url');
     
-    // Convert the response.id to a Buffer for consistent comparison
-    const responseIdBuffer = Buffer.from(response.id, 'base64url');
+    console.log('Looking for credential with ID:', credentialIdBase64);
     
-    for (const [storedUsername, storedUser] of userStore.entries()) {
-      console.log(`Checking credentials for user ${storedUsername}, has ${storedUser.credentials.length} credentials`);
-      
-      const cred = storedUser.credentials.find(c => {
-        if (!c.credentialID) {
-          console.log('- Skipping credential with null credentialID');
-          return false;
-        }
-        
-        const credBuffer = Buffer.isBuffer(c.credentialID) ? 
-          c.credentialID : 
-          Buffer.from(c.credentialID);
-          
-        const matches = Buffer.compare(credBuffer, responseIdBuffer) === 0;
-        console.log(`- Credential check: ${matches ? 'MATCH' : 'no match'}`);
-        return matches;
+    for (const [storedUsername, storedUser] of users.entries()) {
+      const credential = storedUser.credentials.find(c => {
+        // Ensure consistent comparison by converting both to Buffers
+        return Buffer.isBuffer(c.credentialID) && 
+               Buffer.compare(c.credentialID, credentialIdBuffer) === 0;
       });
       
-      if (cred) {
+      if (credential) {
         user = storedUser;
         username = storedUsername;
+        console.log(`Found matching credential for user: ${username}`);
         break;
       }
     }
     
-    if (!user) throw new Error('Unknown credential');
+    if (!user) {
+      console.error('No user found with credential ID:', credentialIdBase64);
+      throw new Error('Unknown credential');
+    }
   }
-
-  if (!challenge) throw new Error('Challenge not found');
+  
+  if (!challenge) {
+    throw new Error('Challenge not found');
+  }
   
   // Remove challenge to prevent replay attacks
-  removeChallenge(username || '_passkey_auth_');
+  if (username) {
+    removeChallenge(username);
+  } else {
+    removeChallenge('_passkey_auth_');
+  }
   
-  let verification;
   try {
-    // Find the matching credential based on ID (using Buffer comparison)
-    const responseIdBuffer = Buffer.from(response.id, 'base64url');
-    console.log(`Looking for credential with ID buffer length:`, responseIdBuffer.length);
+    // Find the specific credential to use
+    const credentialIdBuffer = Buffer.from(response.id, 'base64url');
     
-    // Find user credential with more detailed logging
-    const credential = user.credentials.find(c => {
-      if (!c.credentialID) {
-        console.log('- Found credential without credentialID');
-        return false;
-      }
-      
-      const credBuffer = Buffer.isBuffer(c.credentialID) ? 
-        c.credentialID : 
-        Buffer.from(c.credentialID);
-      
-      // Log credential buffer details
-      console.log('- Comparing credential:', {
-        storedLength: credBuffer.length,
-        responseLength: responseIdBuffer.length,
-        storedType: typeof c.credentialID,
-        isBuffer: Buffer.isBuffer(c.credentialID)
-      });
-          
-      const matches = Buffer.compare(credBuffer, responseIdBuffer) === 0;
-      console.log(`- Credential check: ${matches ? 'MATCH' : 'no match'}`);
-      return matches;
-    });
+    const credential = user.credentials.find(c => 
+      Buffer.isBuffer(c.credentialID) && 
+      Buffer.compare(c.credentialID, credentialIdBuffer) === 0
+    );
     
     if (!credential) {
-      console.error('No matching credential found for', response.id);
+      console.error('Credential not found in user credentials');
       throw new Error('Credential not found');
     }
     
-    // Ensure credentials have all required properties
-    if (!credential.counter && credential.counter !== 0) {
-      console.log('Adding missing counter property to credential');
-      credential.counter = 0;
-    }
-    
+    // Enhanced validation for the credential public key
     if (!credential.credentialPublicKey) {
       console.error('Credential missing public key');
       throw new Error('Invalid credential: missing public key');
     }
     
-    // Log detailed information about the credential for debugging
-    console.log('Credential public key:', {
-      type: typeof credential.credentialPublicKey,
-      isBuffer: Buffer.isBuffer(credential.credentialPublicKey),
-      length: credential.credentialPublicKey.length,
-      bufferData: Buffer.isBuffer(credential.credentialPublicKey) ? 
-        credential.credentialPublicKey.toString('hex').substring(0, 20) + '...' : 'not a buffer'
-    });
+    if (credential.credentialPublicKey.length === 0) {
+      console.error('Credential has empty public key');
+      throw new Error('Invalid credential: empty public key');
+    }
     
-    console.log('Using credential for verification:', {
-      idLength: credential.credentialID.length,
+    console.log('Authenticating with credential:', {
+      id: Buffer.from(credential.credentialID).toString('base64url'),
+      counter: credential.counter, 
       hasPublicKey: !!credential.credentialPublicKey,
-      credentialPublicKeyType: typeof credential.credentialPublicKey,
-      isPublicKeyBuffer: Buffer.isBuffer(credential.credentialPublicKey),
-      counter: credential.counter
+      publicKeyLength: credential.credentialPublicKey.length,
+      firstBytesOfPublicKey: credential.credentialPublicKey.slice(0, 10).toString('hex')
     });
     
-    // Create an authenticator object with all required properties
+    // Create a CLEAN authenticator object for verification
     const authenticator = {
       credentialID: credential.credentialID,
       credentialPublicKey: credential.credentialPublicKey,
-      counter: credential.counter || 0
+      counter: credential.counter
     };
+    
+    // Double check all required properties
+    if (!authenticator.credentialID || !authenticator.credentialPublicKey || typeof authenticator.counter !== 'number') {
+      console.error('Invalid authenticator object:', authenticator);
+      throw new Error('Invalid authenticator object for verification');
+    }
     
     console.log('Authenticator object keys:', Object.keys(authenticator));
     
-    // Make sure we're passing the right data to the verification function
-    verification = await verifyAuthenticationResponse({
+    // Full, explicit configuration
+    const verification = await verifyAuthenticationResponse({
       response,
       expectedChallenge: challenge,
       expectedOrigin,
@@ -349,26 +354,30 @@ export async function verifyAuthResponse(response, username = null) {
     });
     
     if (verification.verified) {
-      // Update the stored signature counter
+      // Update the signature counter
       credential.counter = verification.authenticationInfo.newCounter;
+      console.log('Updated counter to:', credential.counter);
     }
     
-    return { 
-      verification, 
-      user 
-    };
+    return { verification, user };
   } catch (error) {
     console.error('Authentication error:', error);
     console.error('Error details:', {
       name: error.name,
       message: error.message,
-      stack: error.stack,
+      stack: error.stack
     });
     throw error;
   }
 }
 
-// For development and testing - get all users
+// For development and testing
 export function getAllUsers() {
-  return Array.from(userStore.values());
+  return Array.from(users.values());
+}
+
+// For debugging
+export function clearAllData() {
+  users.clear();
+  challenges.clear();
 }
