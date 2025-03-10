@@ -272,7 +272,8 @@ export async function verifyAuthResponse(response, username = null) {
       });
           
       const matches = Buffer.compare(credBuffer, responseIdBuffer) === 0;
-      console.log(`- Credential check: ${matches} ? 'MATCH' : 'no match'`);
+      // Fix the template string to properly evaluate the ternary
+      console.log(`- Credential check: ${matches ? 'MATCH' : 'no match'}`);
       return matches;
     });
     
@@ -295,9 +296,12 @@ export async function verifyAuthResponse(response, username = null) {
     console.log('Using credential for verification:', {
       idLength: credential.credentialID.length,
       hasPublicKey: !!credential.credentialPublicKey,
+      credentialPublicKeyType: typeof credential.credentialPublicKey,
+      isPublicKeyBuffer: Buffer.isBuffer(credential.credentialPublicKey),
       counter: credential.counter
     });
     
+    // Make sure we're passing the right data to the verification function
     verification = await verifyAuthenticationResponse({
       response,
       expectedChallenge: challenge,
@@ -306,7 +310,7 @@ export async function verifyAuthResponse(response, username = null) {
       authenticator: {
         credentialID: credential.credentialID,
         credentialPublicKey: credential.credentialPublicKey,
-        counter: credential.counter || 0, // Ensure counter has a default value
+        counter: typeof credential.counter === 'number' ? credential.counter : 0,
       },
       requireUserVerification: false,
     });
@@ -322,6 +326,11 @@ export async function verifyAuthResponse(response, username = null) {
     };
   } catch (error) {
     console.error('Authentication error:', error);
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    });
     throw error;
   }
 }
