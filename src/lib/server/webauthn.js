@@ -18,6 +18,16 @@ const expectedOrigin = dev
 const users = new Map();
 const challenges = new Map();
 
+// Generate a UUID compatible with Cloudflare Workers environment
+function generateUUID() {
+  // Use Web Crypto API instead of Node's crypto.randomUUID
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  
+  // Format as UUID string (matching the format of randomUUID)
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
 // User and challenge management functions
 export function getUser(username) {
   return users.get(username);
@@ -29,7 +39,7 @@ export function createUser(username) {
   }
   
   const newUser = {
-    id: crypto.randomUUID(),
+    id: generateUUID(), // Use our Cloudflare-compatible UUID function
     username,
     credentials: []
   };
