@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { verifyAuthResponse, getUser } from '$lib/server/webauthn';
+import { verifyAuthResponse } from '$lib/server/webauthn';
 import { getSessionData, removeSessionData } from '$lib/server/auth';
 
 export async function POST({ request, cookies }) {
@@ -12,33 +12,38 @@ export async function POST({ request, cookies }) {
     const username = getSessionData(sessionId, 'username');
     const credential = await request.json();
     
+    console.log('Login verification request:', {
+      username: username || 'passkey flow (no username)',
+      credentialId: credential.id
+    });
+    
     // Verify authentication response
-    const { verification, user } = await verifyAuthResponse(credential, username);
+    const result = await verifyAuthResponse(credential, username);
     
     // Clear the challenge after use
     removeSessionData(sessionId, 'challenge');
     
-    if (verification.verified && user) {
+    if (result.verification.verified && result.user) {
       // Set authenticated session
-      cookies.set('user_session', user.id, {
+      cookies.set('user_session', result.user.id, {
         path: '/',
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'lax', // Changed to lax for better compatibility
         maxAge: 60 * 60 * 24 // 1 day
       });
       
       return json({ 
         verified: true, 
-        username: user.username
+        username: result.user.username
       });
     } else {
       return json({ 
         verified: false, 
-        error: user ? 'Verification failed' : 'User not found' 
+        error: result.user ? 'Verification failed' : 'User not found' 
       }, { status: 400 });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Login verification error:', error);
     return json({ verified: false, error: error.message }, { status: 500 });
   }
 }
