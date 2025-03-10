@@ -63,27 +63,63 @@
         loading = false;
       }
     }
+
+    async function repairAllCredentials() {
+      try {
+        loading = true;
+        error = null;
+        resetResult = null;
+        
+        const response = await fetch('/api/auth/repair-credentials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to repair credentials');
+        }
+        
+        resetResult = await response.json();
+        await fetchCredentials(); // Refresh the data
+      } catch (err) {
+        error = err.message || 'An error occurred';
+        console.error(err);
+      } finally {
+        loading = false;
+      }
+    }
   </script>
   
   <div class="container p-4">
     <h1 class="text-2xl font-bold mb-4">Credential Inspection Tool</h1>
     
-    <div class="filter-form mb-4">
-      <label>
-        Filter by username:
-        <input 
-          bind:value={username} 
-          type="text" 
-          class="border p-2 ml-2" 
-          placeholder="Enter username"
-        />
-      </label>
+    <div class="flex justify-between items-center mb-4">
+      <div class="filter-form">
+        <label>
+          Filter by username:
+          <input 
+            bind:value={username} 
+            type="text" 
+            class="border p-2 ml-2" 
+            placeholder="Enter username"
+          />
+        </label>
+        <button 
+          onclick={fetchCredentials} 
+          class="bg-blue-500 text-white p-2 ml-2 rounded"
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Filter'}
+        </button>
+      </div>
+      
       <button 
-        onclick={fetchCredentials} 
-        class="bg-blue-500 text-white p-2 ml-2 rounded"
+        onclick={repairAllCredentials} 
+        class="bg-green-500 text-white p-2 rounded"
         disabled={loading}
       >
-        {loading ? 'Loading...' : 'Filter'}
+        Repair All Credentials
       </button>
     </div>
     
@@ -194,4 +230,3 @@
       <p>No credential data available.</p>
     {/if}
   </div>
-  

@@ -65,14 +65,28 @@ export async function registerPasskey(username) {
         credential.response.attestationObject.substring(0, 64));
     }
     
+    // Add extensive logging of credential details to help troubleshoot
+    console.log('Client data JSON length:', credential.response.clientDataJSON?.length || 0);
+    console.log('Attestation object length:', credential.response.attestationObject?.length || 0);
+    
+    // Include all response properties in the verification request
+    const verificationData = {
+      ...credential,
+      // Ensure we pass along any additional properties that might be helpful
+      extraData: {
+        browserInfo: navigator.userAgent,
+        platform: navigator.platform
+      }
+    };
+    
     // Send the credential to the server for verification
-    console.log('Sending credential to server for verification:', credential);
+    console.log('Sending credential to server for verification');
     const verificationResponse = await fetch('/api/auth/register/verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credential),
+      body: JSON.stringify(verificationData),
     });
 
     // Get verification result
@@ -113,6 +127,21 @@ export async function authenticateWithPasskey(username = null) {
     
     // Start the WebAuthn authentication process
     const credential = await startAuthentication(options);
+    
+    // Add detailed logging for authentication credential
+    console.log('Authentication credential received from browser:', {
+      id: credential.id,
+      type: credential.type,
+      responseProperties: Object.keys(credential.response)
+    });
+    
+    // Log the specific response properties needed for verification
+    console.log('Authentication response details:', {
+      clientDataJSONLength: credential.response.clientDataJSON?.length || 0,
+      authenticatorDataLength: credential.response.authenticatorData?.length || 0,
+      signatureLength: credential.response.signature?.length || 0,
+      userHandlePresent: !!credential.response.userHandle
+    });
     
     // Send the credential to the server for verification
     const verificationResponse = await fetch('/api/auth/login/verify', {

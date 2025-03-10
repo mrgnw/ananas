@@ -127,15 +127,58 @@ export async function verifyRegResponse(username, response) {
         try {
           if (response.response && response.response.publicKey) {
             console.log('Found publicKey in raw response');
-            fallbackPublicKey = Buffer.from(response.response.publicKey, 'base64');
+            
+            // Log more details about the raw public key
+            console.log('Raw public key info:', {
+              type: typeof response.response.publicKey,
+              length: response.response.publicKey.length
+            });
+            
+            // Try to decode the public key with different formats
+            try {
+              fallbackPublicKey = Buffer.from(response.response.publicKey, 'base64');
+              console.log('Decoded public key (base64):', {
+                length: fallbackPublicKey.length,
+                firstBytes: fallbackPublicKey.slice(0, 10).toString('hex')
+              });
+            } catch (e) {
+              console.error('Failed to decode as base64:', e);
+            }
+            
+            // If that didn't work, try other formats
+            if (!fallbackPublicKey || fallbackPublicKey.length === 0) {
+              fallbackPublicKey = Buffer.from(response.response.publicKey, 'base64url');
+              console.log('Decoded public key (base64url):', {
+                length: fallbackPublicKey.length,
+                firstBytes: fallbackPublicKey.length > 0 ? fallbackPublicKey.slice(0, 10).toString('hex') : 'empty'
+              });
+            }
+            
+            // If still not working, try using the raw bytes
+            if (!fallbackPublicKey || fallbackPublicKey.length === 0) {
+              console.warn('Failed to decode public key from string, trying direct buffer creation');
+              fallbackPublicKey = Buffer.from(response.response.authenticatorData || []);
+            }
+          } else if (response.response && response.response.authenticatorData) {
+            console.log('No publicKey in response, trying authenticatorData');
+            fallbackPublicKey = Buffer.from(response.response.authenticatorData);
           }
         } catch (e) {
           console.error('Failed to extract fallback public key:', e);
         }
         
+        // Only proceed if we have a valid fallback credential ID
+        const fallbackCredentialID = 
+          credentialID || (response.id ? Buffer.from(response.id, 'base64url') : null);
+        
+        if (!fallbackCredentialID) {
+          console.error('Could not obtain valid credential ID from response');
+          throw new Error('Invalid credential: missing credential ID');
+        }
+        
         // Create a minimal credential with what we have
         const credential = {
-          credentialID: credentialID || Buffer.from(response.id, 'base64url'),
+          credentialID: fallbackCredentialID,
           credentialPublicKey: fallbackPublicKey || Buffer.alloc(0),
           counter: counter || 0,
           transports: response.response.transports || []
@@ -144,12 +187,19 @@ export async function verifyRegResponse(username, response) {
         console.log('Using fallback credential data:', {
           idLength: credential.credentialID.length,
           hasPublicKey: !!credential.credentialPublicKey,
-          publicKeyLength: credential.credentialPublicKey.length
+          publicKeyLength: credential.credentialPublicKey?.length || 0
         });
         
-        // Add credential to user without validation (may not work for authentication)
-        user.credentials.push(credential);
-        console.warn(`Added credential with potentially invalid public key for ${username}`);
+        // Only add the credential if we have BOTH id and key
+        if (credential.credentialID && credential.credentialID.length > 0 && 
+            credential.credentialPublicKey && credential.credentialPublicKey.length > 0) {
+          // Add credential to user
+          user.credentials.push(credential);
+          console.log(`Added credential with fallback public key for ${username}`);
+        } else {
+          console.error('Cannot create credential with missing ID or empty public key');
+          throw new Error('Invalid credential: missing required components');
+        }
         
       } else if (credentialPublicKey.length === 0) {
         console.error('Error: Empty credential public key in registration response');
@@ -309,57 +359,128 @@ export async function verifyAuthResponse(response, username = null) {
       throw new Error('Credential not found');
     }
     
-    // Enhanced validation for the credential public key
-    if (!credential.credentialPublicKey) {
-      console.error('Credential missing public key');
-      throw new Error('Invalid credential: missing public key');
+    // Enhanced validation and debugging for credential
+    console.log('Raw credential data dump:', JSON.stringify({
+      id: Buffer.from(credential.credentialID).toString('base64url'),
+      credentialID: {
+        type: typeof credential.credentialID,
+        isBuffer: Buffer.isBuffer(credential.credentialID),
+        length: credential.credentialID?.length,
+        bytesHex: Buffer.isBuffer(credential.credentialID) ? 
+          credential.credentialID.slice(0, 10).toString('hex') : 'not a buffer'
+      },
+      credentialPublicKey: {
+        type: typeof credential.credentialPublicKey,
+        isBuffer: Buffer.isBuffer(credential.credentialPublicKey),
+        length: credential.credentialPublicKey?.length,
+        bytesHex: Buffer.isBuffer(credential.credentialPublicKey) ? 
+          credential.credentialPublicKey.slice(0, 10).toString('hex') : 'not a buffer'
+      },
+      counter: credential.counter,
+      hasCounter: 'counter' in credential,
+      counterType: typeof credential.counter
+    }, null, 2));
+    
+    // Ensure all required fields are present and have the correct types
+    if (!Buffer.isBuffer(credential.credentialID) || credential.credentialID.length === 0) {
+      throw new Error('Invalid credential: credentialID must be a non-empty Buffer');
     }
     
-    if (credential.credentialPublicKey.length === 0) {
-      console.error('Credential has empty public key');
-      throw new Error('Invalid credential: empty public key');
+    if (!Buffer.isBuffer(credential.credentialPublicKey) || credential.credentialPublicKey.length === 0) {
+      throw new Error('Invalid credential: credentialPublicKey must be a non-empty Buffer');
+    }
+    
+    // Ensure counter exists and is a number (very important!)
+    if (credential.counter === undefined || credential.counter === null) {
+      console.log('Missing counter in credential, setting to 0');
+      credential.counter = 0;
+    }
+    
+    // Ensure counter is a number type
+    if (typeof credential.counter !== 'number') {
+      console.log(`Converting counter from ${typeof credential.counter} to number`);
+      credential.counter = Number(credential.counter) || 0;
     }
     
     console.log('Authenticating with credential:', {
       id: Buffer.from(credential.credentialID).toString('base64url'),
       counter: credential.counter, 
       hasPublicKey: !!credential.credentialPublicKey,
-      publicKeyLength: credential.credentialPublicKey.length,
-      firstBytesOfPublicKey: credential.credentialPublicKey.slice(0, 10).toString('hex')
+      publicKeyLength: credential.credentialPublicKey?.length || 0,
+      firstBytesOfPublicKey: credential.credentialPublicKey ? 
+        credential.credentialPublicKey.slice(0, 10).toString('hex') : 'none'
     });
     
-    // Create a CLEAN authenticator object for verification
+    // Create a fresh authenticator object with EXACTLY the required properties
     const authenticator = {
-      credentialID: credential.credentialID,
-      credentialPublicKey: credential.credentialPublicKey,
+      credentialID: Buffer.from(credential.credentialID), // Ensure it's a buffer
+      credentialPublicKey: Buffer.from(credential.credentialPublicKey), // Ensure it's a buffer
       counter: credential.counter
     };
     
-    // Double check all required properties
-    if (!authenticator.credentialID || !authenticator.credentialPublicKey || typeof authenticator.counter !== 'number') {
-      console.error('Invalid authenticator object:', authenticator);
-      throw new Error('Invalid authenticator object for verification');
+    // Double check all required properties with more detailed validation
+    if (!authenticator.credentialID || authenticator.credentialID.length === 0) {
+      throw new Error('Invalid authenticator: missing or empty credentialID');
     }
     
-    console.log('Authenticator object keys:', Object.keys(authenticator));
+    if (!authenticator.credentialPublicKey || authenticator.credentialPublicKey.length === 0) {
+      throw new Error('Invalid authenticator: missing or empty credentialPublicKey');
+    }
     
-    // Full, explicit configuration
-    const verification = await verifyAuthenticationResponse({
-      response,
-      expectedChallenge: challenge,
-      expectedOrigin,
-      expectedRPID: rpID,
-      authenticator,
-      requireUserVerification: false,
+    if (typeof authenticator.counter !== 'number') {
+      throw new Error(`Invalid authenticator: counter must be a number, got ${typeof authenticator.counter}`);
+    }
+    
+    console.log('Final authenticator object:', {
+      credentialIDLength: authenticator.credentialID.length,
+      credentialPublicKeyLength: authenticator.credentialPublicKey.length,
+      counter: authenticator.counter,
+      objectKeys: Object.keys(authenticator)
     });
     
-    if (verification.verified) {
-      // Update the signature counter
-      credential.counter = verification.authenticationInfo.newCounter;
-      console.log('Updated counter to:', credential.counter);
+    // Full, explicit configuration (use a try/catch to get better error info)
+    try {
+      const verification = await verifyAuthenticationResponse({
+        response,
+        expectedChallenge: challenge,
+        expectedOrigin,
+        expectedRPID: rpID,
+        authenticator,
+        requireUserVerification: false,
+      });
+      
+      if (verification.verified) {
+        // Update the signature counter
+        credential.counter = verification.authenticationInfo.newCounter;
+        console.log('Updated counter to:', credential.counter);
+      }
+      
+      return { verification, user };
+    } catch (verifyError) {
+      // Log the detailed error information
+      console.error('SimpleWebAuthn verification error:', verifyError);
+      console.error('Verification error details:', {
+        name: verifyError.name,
+        message: verifyError.message,
+        stack: verifyError.stack
+      });
+      
+      // Additional debugging for the exact point of failure
+      try {
+        console.log('Inspecting response data:');
+        console.log('- clientDataJSON present:', !!response.response.clientDataJSON);
+        console.log('- authenticatorData present:', !!response.response.authenticatorData);
+        console.log('- signature present:', !!response.response.signature);
+        
+        if (response.response.authenticatorData) {
+          console.log('- authenticatorData length:', response.response.authenticatorData.length);
+        }
+      } catch (e) {
+        console.error('Error during response inspection:', e);
+      }
+      
+      throw verifyError;
     }
-    
-    return { verification, user };
   } catch (error) {
     console.error('Authentication error:', error);
     console.error('Error details:', {
