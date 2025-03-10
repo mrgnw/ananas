@@ -121,6 +121,18 @@ export async function verifyRegResponse(username, response) {
           Buffer.from(response.id, 'base64url') : 
           Buffer.alloc(32).fill(0); // Safe fallback if even response.id is missing
         
+        if (!registrationInfo?.credentialPublicKey) {
+          console.error('Missing credentialPublicKey in verification response');
+        }
+        
+        // Log what we're storing
+        console.log('Storing credential with:', {
+          credentialIDExists: !!credentialID,
+          credentialIDLength: credentialID?.length,
+          publicKeyExists: !!registrationInfo?.credentialPublicKey,
+          publicKeyType: typeof registrationInfo?.credentialPublicKey
+        });
+        
         // Save the credential with the parsed ID from the response
         user.credentials.push({
           credentialID,
@@ -132,6 +144,14 @@ export async function verifyRegResponse(username, response) {
         console.log(`Created credential from response ID for ${username}`);
       } else {
         // Normal flow - save the credential with the real ID
+        // Log what we're storing
+        console.log('Storing credential with:', {
+          credentialIDExists: !!registrationInfo.credentialID,
+          credentialIDLength: registrationInfo.credentialID?.length,
+          publicKeyExists: !!registrationInfo.credentialPublicKey,
+          publicKeyType: typeof registrationInfo.credentialPublicKey
+        });
+        
         user.credentials.push({
           credentialID: Buffer.from(registrationInfo.credentialID),
           credentialPublicKey: registrationInfo.credentialPublicKey,
@@ -272,7 +292,6 @@ export async function verifyAuthResponse(response, username = null) {
       });
           
       const matches = Buffer.compare(credBuffer, responseIdBuffer) === 0;
-      // Fix the template string to properly evaluate the ternary
       console.log(`- Credential check: ${matches ? 'MATCH' : 'no match'}`);
       return matches;
     });
@@ -293,6 +312,15 @@ export async function verifyAuthResponse(response, username = null) {
       throw new Error('Invalid credential: missing public key');
     }
     
+    // Log detailed information about the credential for debugging
+    console.log('Credential public key:', {
+      type: typeof credential.credentialPublicKey,
+      isBuffer: Buffer.isBuffer(credential.credentialPublicKey),
+      length: credential.credentialPublicKey.length,
+      bufferData: Buffer.isBuffer(credential.credentialPublicKey) ? 
+        credential.credentialPublicKey.toString('hex').substring(0, 20) + '...' : 'not a buffer'
+    });
+    
     console.log('Using credential for verification:', {
       idLength: credential.credentialID.length,
       hasPublicKey: !!credential.credentialPublicKey,
@@ -301,17 +329,22 @@ export async function verifyAuthResponse(response, username = null) {
       counter: credential.counter
     });
     
+    // Create an authenticator object with all required properties
+    const authenticator = {
+      credentialID: credential.credentialID,
+      credentialPublicKey: credential.credentialPublicKey,
+      counter: credential.counter || 0
+    };
+    
+    console.log('Authenticator object keys:', Object.keys(authenticator));
+    
     // Make sure we're passing the right data to the verification function
     verification = await verifyAuthenticationResponse({
       response,
       expectedChallenge: challenge,
       expectedOrigin,
       expectedRPID: rpID,
-      authenticator: {
-        credentialID: credential.credentialID,
-        credentialPublicKey: credential.credentialPublicKey,
-        counter: typeof credential.counter === 'number' ? credential.counter : 0,
-      },
+      authenticator,
       requireUserVerification: false,
     });
     
