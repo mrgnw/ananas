@@ -125,7 +125,7 @@ export async function verifyRegResponse(username, response) {
         user.credentials.push({
           credentialID,
           credentialPublicKey: registrationInfo?.credentialPublicKey || Buffer.from([]),
-          counter: registrationInfo?.counter || 0,
+          counter: 0, // Initialize counter to 0
           transports: response.response.transports || []
         });
         
@@ -135,7 +135,7 @@ export async function verifyRegResponse(username, response) {
         user.credentials.push({
           credentialID: Buffer.from(registrationInfo.credentialID),
           credentialPublicKey: registrationInfo.credentialPublicKey,
-          counter: registrationInfo.counter,
+          counter: registrationInfo.counter || 0, // Ensure counter has a default value
           transports: response.response.transports || []
         });
         
@@ -250,13 +250,53 @@ export async function verifyAuthResponse(response, username = null) {
   try {
     // Find the matching credential based on ID (using Buffer comparison)
     const responseIdBuffer = Buffer.from(response.id, 'base64url');
-    const credential = user.credentials.find(c => 
-      Buffer.isBuffer(c.credentialID) ? 
-        Buffer.compare(c.credentialID, responseIdBuffer) === 0 : 
-        false
-    );
+    console.log(`Looking for credential with ID buffer length:`, responseIdBuffer.length);
     
-    if (!credential) throw new Error('Credential not found');
+    // Find user credential with more detailed logging
+    const credential = user.credentials.find(c => {
+      if (!c.credentialID) {
+        console.log('- Found credential without credentialID');
+        return false;
+      }
+      
+      const credBuffer = Buffer.isBuffer(c.credentialID) ? 
+        c.credentialID : 
+        Buffer.from(c.credentialID);
+      
+      // Log credential buffer details
+      console.log('- Comparing credential:', {
+        storedLength: credBuffer.length,
+        responseLength: responseIdBuffer.length,
+        storedType: typeof c.credentialID,
+        isBuffer: Buffer.isBuffer(c.credentialID)
+      });
+          
+      const matches = Buffer.compare(credBuffer, responseIdBuffer) === 0;
+      console.log(`- Credential check: ${matches} ? 'MATCH' : 'no match'`);
+      return matches;
+    });
+    
+    if (!credential) {
+      console.error('No matching credential found for', response.id);
+      throw new Error('Credential not found');
+    }
+    
+    // Ensure credentials have all required properties
+    if (!credential.counter && credential.counter !== 0) {
+      console.log('Adding missing counter property to credential');
+      credential.counter = 0;
+    }
+    
+    if (!credential.credentialPublicKey) {
+      console.error('Credential missing public key');
+      throw new Error('Invalid credential: missing public key');
+    }
+    
+    console.log('Using credential for verification:', {
+      idLength: credential.credentialID.length,
+      hasPublicKey: !!credential.credentialPublicKey,
+      counter: credential.counter
+    });
     
     verification = await verifyAuthenticationResponse({
       response,
@@ -266,7 +306,7 @@ export async function verifyAuthResponse(response, username = null) {
       authenticator: {
         credentialID: credential.credentialID,
         credentialPublicKey: credential.credentialPublicKey,
-        counter: credential.counter,
+        counter: credential.counter || 0, // Ensure counter has a default value
       },
       requireUserVerification: false,
     });
@@ -281,7 +321,7 @@ export async function verifyAuthResponse(response, username = null) {
       user 
     };
   } catch (error) {
-    console.error(error);
+    console.error('Authentication error:', error);
     throw error;
   }
 }
