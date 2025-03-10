@@ -411,36 +411,7 @@ export async function verifyAuthResponse(response, username = null) {
         credential.credentialPublicKey.slice(0, 10).toString('hex') : 'none'
     });
     
-    // Create a fresh authenticator object with EXACTLY the required properties
-    // This is the critical part that needs fixing
-    const authenticator = {
-      credentialID: credential.credentialID,
-      credentialPublicKey: credential.credentialPublicKey,
-      counter: credential.counter || 0
-    };
-    
-    // Double check all required properties with more detailed validation
-    if (!authenticator.credentialID || authenticator.credentialID.length === 0) {
-      throw new Error('Invalid authenticator: missing or empty credentialID');
-    }
-    
-    if (!authenticator.credentialPublicKey || authenticator.credentialPublicKey.length === 0) {
-      throw new Error('Invalid authenticator: missing or empty credentialPublicKey');
-    }
-    
-    if (typeof authenticator.counter !== 'number') {
-      console.log(`Converting counter from ${typeof authenticator.counter} to number`);
-      authenticator.counter = Number(authenticator.counter) || 0;
-    }
-    
-    console.log('Final authenticator object:', {
-      credentialIDLength: authenticator.credentialID.length,
-      credentialPublicKeyLength: authenticator.credentialPublicKey.length,
-      counter: authenticator.counter,
-      objectKeys: Object.keys(authenticator)
-    });
-    
-    // Full, explicit configuration (use a try/catch to get better error info)
+    // Full, explicit configuration with direct values
     try {
       const verification = await verifyAuthenticationResponse({
         response,
@@ -448,10 +419,12 @@ export async function verifyAuthResponse(response, username = null) {
         expectedOrigin,
         expectedRPID: rpID,
         authenticator: {
-          // Create a completely fresh object with exactly these properties
-          credentialID: Buffer.from(authenticator.credentialID),
-          credentialPublicKey: Buffer.from(authenticator.credentialPublicKey),
-          counter: authenticator.counter
+          // IMPORTANT: Don't wrap these in another Buffer.from() call
+          // as they should already be buffers
+          credentialID: credential.credentialID,
+          credentialPublicKey: credential.credentialPublicKey,
+          counter: typeof credential.counter === 'number' ? 
+            credential.counter : 0
         },
         requireUserVerification: false,
       });
@@ -464,12 +437,30 @@ export async function verifyAuthResponse(response, username = null) {
       
       return { verification, user };
     } catch (verifyError) {
-      // Log the detailed error information
+      // Add more specific detailed debugging for the authenticator data
       console.error('SimpleWebAuthn verification error:', verifyError);
       console.error('Verification error details:', {
         name: verifyError.name,
         message: verifyError.message,
         stack: verifyError.stack
+      });
+      
+      // CHANGE: Add more specific debugging for credential data
+      console.error('Credential data being used:', {
+        credentialID: {
+          type: typeof credential.credentialID,
+          isBuffer: Buffer.isBuffer(credential.credentialID),
+          byteLength: credential.credentialID?.byteLength,
+          constructor: credential.credentialID?.constructor?.name
+        },
+        credentialPublicKey: {
+          type: typeof credential.credentialPublicKey,
+          isBuffer: Buffer.isBuffer(credential.credentialPublicKey),
+          byteLength: credential.credentialPublicKey?.byteLength,
+          constructor: credential.credentialPublicKey?.constructor?.name
+        },
+        counter: credential.counter,
+        counterType: typeof credential.counter
       });
       
       // Additional debugging for the exact point of failure
@@ -485,6 +476,17 @@ export async function verifyAuthResponse(response, username = null) {
       } catch (e) {
         console.error('Error during response inspection:', e);
       }
+      
+      // Add more diagnostic information to debug the authenticator object
+      console.error('Authenticator object that failed:', {
+        hasProperties: credential !== undefined,
+        properties: credential ? Object.keys(credential) : 'undefined',
+        credentialIDExists: credential && credential.credentialID !== undefined,
+        credentialPublicKeyExists: credential && credential.credentialPublicKey !== undefined,
+        counterExists: credential && credential.counter !== undefined,
+        counterValue: credential ? credential.counter : 'N/A',
+        counterType: credential ? typeof credential.counter : 'N/A'
+      });
       
       throw verifyError;
     }
