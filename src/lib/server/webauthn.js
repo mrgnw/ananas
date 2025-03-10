@@ -116,19 +116,20 @@ export async function verifyRegResponse(username, response) {
       // More robust error handling for missing credentialID
       if (!registrationInfo || !registrationInfo.credentialID) {
         console.error(`Missing credentialID in verification response for ${username}`);
-        // Instead of throwing an error, create a random credential ID as fallback
-        const fallbackCredentialID = new Uint8Array(32);
-        crypto.getRandomValues(fallbackCredentialID);
+        // Use the response.id instead of creating a random ID
+        const credentialID = response.id ? 
+          Buffer.from(response.id, 'base64url') : 
+          Buffer.alloc(32).fill(0); // Safe fallback if even response.id is missing
         
-        // Save the credential with the fallback ID
+        // Save the credential with the parsed ID from the response
         user.credentials.push({
-          credentialID: Buffer.from(fallbackCredentialID),
+          credentialID,
           credentialPublicKey: registrationInfo?.credentialPublicKey || Buffer.from([]),
           counter: registrationInfo?.counter || 0,
           transports: response.response.transports || []
         });
         
-        console.log(`Created fallback credential for ${username}`);
+        console.log(`Created credential from response ID for ${username}`);
       } else {
         // Normal flow - save the credential with the real ID
         user.credentials.push({
@@ -159,12 +160,21 @@ export async function generateAuthOptions(username = null) {
   const user = username ? getUser(username) : null;
   
   // Get user's credentials or empty array for passkey flow
-  const allowCredentials = user?.credentials.map(cred => ({
-    // Make sure credentialID is properly formatted as a Base64URL string
-    id: Buffer.isBuffer(cred.credentialID) ? cred.credentialID : Buffer.from(cred.credentialID),
-    type: 'public-key',
-    transports: cred.transports || [],
-  })) || [];
+  const allowCredentials = user?.credentials.map(cred => {
+    // Convert credentialID to base64url string for authentication options
+    const credentialIdBuffer = Buffer.isBuffer(cred.credentialID) ? 
+      cred.credentialID : 
+      Buffer.from(cred.credentialID || []);
+    
+    return {
+      // SimpleWebAuthn expects a base64url string here, not a raw Buffer
+      id: Buffer.from(credentialIdBuffer).toString('base64url'),
+      type: 'public-key',
+      transports: cred.transports || [],
+    };
+  }) || [];
+  
+  console.log('Credential IDs for authentication:', allowCredentials.map(c => c.id));
   
   const options = await generateAuthenticationOptions({
     rpID,
@@ -198,17 +208,27 @@ export async function verifyAuthResponse(response, username = null) {
       throw new Error('Missing credential ID in authentication response');
     }
     
+    console.log('Looking up credential with ID:', response.id);
+    
     // Convert the response.id to a Buffer for consistent comparison
-    const responseIdBuffer = Buffer.from(response.id);
-    console.log('Looking for credential with ID:', response.id);
+    const responseIdBuffer = Buffer.from(response.id, 'base64url');
     
     for (const [storedUsername, storedUser] of userStore.entries()) {
+      console.log(`Checking credentials for user ${storedUsername}, has ${storedUser.credentials.length} credentials`);
+      
       const cred = storedUser.credentials.find(c => {
-        if (!c.credentialID) return false;
+        if (!c.credentialID) {
+          console.log('- Skipping credential with null credentialID');
+          return false;
+        }
         
-        return Buffer.isBuffer(c.credentialID) ? 
-          Buffer.compare(c.credentialID, responseIdBuffer) === 0 : 
-          false;
+        const credBuffer = Buffer.isBuffer(c.credentialID) ? 
+          c.credentialID : 
+          Buffer.from(c.credentialID);
+          
+        const matches = Buffer.compare(credBuffer, responseIdBuffer) === 0;
+        console.log(`- Credential check: ${matches ? 'MATCH' : 'no match'}`);
+        return matches;
       });
       
       if (cred) {
@@ -229,7 +249,7 @@ export async function verifyAuthResponse(response, username = null) {
   let verification;
   try {
     // Find the matching credential based on ID (using Buffer comparison)
-    const responseIdBuffer = Buffer.from(response.id);
+    const responseIdBuffer = Buffer.from(response.id, 'base64url');
     const credential = user.credentials.find(c => 
       Buffer.isBuffer(c.credentialID) ? 
         Buffer.compare(c.credentialID, responseIdBuffer) === 0 : 
