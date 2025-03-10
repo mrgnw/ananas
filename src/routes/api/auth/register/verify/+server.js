@@ -14,7 +14,9 @@ export async function POST({ request, cookies }) {
       return json({ error: 'Session data is missing username' }, { status: 400 });
     }
     
-    const credential = await request.json();
+    // Support both direct credential or passkey_info format
+    const body = await request.json();
+    const credential = body.passkey_info || body;
     
     // Log more details about received credential before verification
     console.log('Received registration credential for verification:', {
@@ -31,7 +33,12 @@ export async function POST({ request, cookies }) {
       verification = await verifyRegResponse(username, credential);
     } catch (error) {
       console.error('Registration verification error:', error);
-      if (error.message === 'Invalid credential public key received from authenticator') {
+      if (error.name === 'InvalidStateError') {
+        return json({ 
+          verified: false, 
+          error: 'This passkey appears to be registered already' 
+        }, { status: 400 });
+      } else if (error.message === 'Invalid credential public key received from authenticator') {
         return json({ 
           verified: false, 
           error: 'Registration failed: Could not obtain valid credential from your device. Please try again or use a different device.' 

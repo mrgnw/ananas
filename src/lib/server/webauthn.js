@@ -412,10 +412,11 @@ export async function verifyAuthResponse(response, username = null) {
     });
     
     // Create a fresh authenticator object with EXACTLY the required properties
+    // This is the critical part that needs fixing
     const authenticator = {
-      credentialID: Buffer.from(credential.credentialID), // Ensure it's a buffer
-      credentialPublicKey: Buffer.from(credential.credentialPublicKey), // Ensure it's a buffer
-      counter: credential.counter
+      credentialID: credential.credentialID,
+      credentialPublicKey: credential.credentialPublicKey,
+      counter: credential.counter || 0
     };
     
     // Double check all required properties with more detailed validation
@@ -428,7 +429,8 @@ export async function verifyAuthResponse(response, username = null) {
     }
     
     if (typeof authenticator.counter !== 'number') {
-      throw new Error(`Invalid authenticator: counter must be a number, got ${typeof authenticator.counter}`);
+      console.log(`Converting counter from ${typeof authenticator.counter} to number`);
+      authenticator.counter = Number(authenticator.counter) || 0;
     }
     
     console.log('Final authenticator object:', {
@@ -445,7 +447,12 @@ export async function verifyAuthResponse(response, username = null) {
         expectedChallenge: challenge,
         expectedOrigin,
         expectedRPID: rpID,
-        authenticator,
+        authenticator: {
+          // Create a completely fresh object with exactly these properties
+          credentialID: Buffer.from(authenticator.credentialID),
+          credentialPublicKey: Buffer.from(authenticator.credentialPublicKey),
+          counter: authenticator.counter
+        },
         requireUserVerification: false,
       });
       

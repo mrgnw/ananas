@@ -35,16 +35,20 @@ export async function registerPasskey(username) {
       } : null 
     });
     
-    // Start the WebAuthn registration process
+    // Start the WebAuthn registration process using optionsJSON for more reliable passing
     console.log('Starting browser registration flow');
     let credential;
     try {
-      credential = await startRegistration(options);
+      credential = await startRegistration({ optionsJSON: options });
     } catch (err) {
-      // Log more details about browser registration errors
+      // Improved error handling with specific error codes
       console.error('Browser registration error:', err);
-      if (err.name === 'NotAllowedError') {
+      if (err.name === 'InvalidStateError') {
+        throw new Error('This passkey may already be registered. Please try a different one.');
+      } else if (err.name === 'NotAllowedError') {
         throw new Error('Registration was denied by the user or device');
+      } else if (err.name === 'AbortError') {
+        throw new Error('Registration was canceled');
       }
       throw err;
     }
@@ -86,7 +90,10 @@ export async function registerPasskey(username) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(verificationData),
+      body: JSON.stringify({
+        passkey_info: credential, // Match the blog post format
+        username
+      }),
     });
 
     // Get verification result
@@ -125,8 +132,20 @@ export async function authenticateWithPasskey(username = null) {
     // Get the options from the server response
     const { options } = await optionsResponse.json();
     
-    // Start the WebAuthn authentication process
-    const credential = await startAuthentication(options);
+    // Start the WebAuthn authentication process with optionsJSON
+    let credential;
+    try {
+      // Using optionsJSON as per the blog post example
+      credential = await startAuthentication({ optionsJSON: options });
+    } catch (err) {
+      console.error('Authentication browser error:', err);
+      if (err.name === 'NotAllowedError') {
+        throw new Error('Authentication was denied by the user or device');
+      } else if (err.name === 'AbortError') {
+        throw new Error('Authentication was canceled');
+      }
+      throw err;
+    }
     
     // Add detailed logging for authentication credential
     console.log('Authentication credential received from browser:', {
@@ -143,13 +162,16 @@ export async function authenticateWithPasskey(username = null) {
       userHandlePresent: !!credential.response.userHandle
     });
     
-    // Send the credential to the server for verification
+    // Send the credential to the server for verification with improved naming
     const verificationResponse = await fetch('/api/auth/login/verify', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credential),
+      body: JSON.stringify({
+        passkey_info: credential, // Use passkey_info as per the blog post example
+        username
+      }),
     });
 
     // Return the verification result

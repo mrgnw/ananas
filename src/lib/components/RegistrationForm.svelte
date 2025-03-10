@@ -27,6 +27,11 @@
       if (result.verified) {
         registerStatus.success = true;
         setAuthenticatedUser(result.username);
+        
+        // Redirect after successful registration like in the blog post example
+        setTimeout(() => {
+          window.location.href = '/account/profile';
+        }, 1000);
       } else {
         registerStatus.error = result.error || 'Registration failed';
       }
