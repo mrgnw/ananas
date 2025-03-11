@@ -25,6 +25,15 @@
 	let isTyping = $state(false);
 	// Interval ID for cleanup
 	let typingInterval = $state(null);
+	// Track if user has manually entered anything
+	let userHasTyped = $state(false);
+	// Track if user has EVER typed anything since page load
+	let userHasEverTyped = $state(false);
+
+	$effect(() => {
+		// Log whenever userHasEverTyped changes
+		console.log('userHasEverTyped state changed:', userHasEverTyped);
+	});
 
 	/**
 	 * Simple typewriter function that updates a variable one letter at a time
@@ -61,8 +70,8 @@
 
 	// Function to cycle to the next example
 	function cycleExamples() {
-		// Only show examples if not paused and no history
-		if (!examplesPaused && history.length === 0) {
+		// Only show examples if not paused and no history and user hasn't typed
+		if (!examplesPaused && history.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
 			typeLetters(examplePhrases[Math.floor(Math.random() * examplePhrases.length)]);
 		}
 	}
@@ -104,32 +113,43 @@
 	
 	// Handle input blur event
 	function handleInputBlur() {
-		// If there's no history (no translations yet), resume examples
-		if (history.length === 0) {
-			examplesPaused = false;
-			// Start one example immediately
-			setTimeout(() => {
-				if (!isTyping && history.length === 0) {
-					cycleExamples();
-					// Start cycling if not already cycling
-					if (!cycleInterval) {
-						cycleInterval = setInterval(cycleExamples, 5000);
-					}
-				}
-			}, 500); // Small delay to prevent immediate restart if user is interacting
-		}
+        // Only resume examples if there's no history AND text is empty AND user hasn't typed
+		// AND the user has never typed anything or has submitted the form (clearing userHasEverTyped)
+        if (history.length === 0 && text.trim().length === 0 && !userHasTyped && !userHasEverTyped) {
+            examplesPaused = false;
+            // Start one example immediately
+            setTimeout(() => {
+                if (!isTyping && history.length === 0 && !userHasTyped && !userHasEverTyped) {
+                    cycleExamples();
+                    // Start cycling if not already cycling
+                    if (!cycleInterval) {
+                        cycleInterval = setInterval(cycleExamples, 5000);
+                    }
+                }
+            }, 500); // Small delay to prevent immediate restart if user is interacting
+        } else {
+            // If user has typed, ensure examples remain paused
+            examplesPaused = true;
+        }
 	}
 	
 	// Toggle play/pause for examples
 	function toggleExamples() {
+		// If user has ever typed and input is not empty, don't allow unpausing
+		if (userHasEverTyped && text.trim().length > 0) {
+			console.log('Toggle blocked - userHasEverTyped:', userHasEverTyped, 'text length:', text.trim().length);
+			examplesPaused = true;
+			return;
+		}
+		
 		examplesPaused = !examplesPaused;
 		
 		if (examplesPaused) {
 			// Pause examples
 			cycleInterval = clearTimer(cycleInterval);
 		} else {
-			// Resume examples
-			if (!cycleInterval && history.length === 0) {
+			// Resume examples only if allowed
+			if (!cycleInterval && history.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
 				cycleExamples(); // Show one immediately
 				cycleInterval = setInterval(cycleExamples, 5000);
 			}
@@ -138,8 +158,10 @@
 
 	// Initialize examples when browser is available and history is loaded
 	$effect(() => {
-		// Only start examples if browser is available AND history is loaded AND history is empty
-		if (browser && history !== undefined && history.length === 0) {
+		// Only start examples if browser is available AND history is loaded AND history is empty AND user hasn't typed
+		// AND the user has never typed anything or input is empty
+		if (browser && history !== undefined && history.length === 0 && !userHasTyped && 
+			(!userHasEverTyped || text.trim() === '')) {
 			console.log('Page fully loaded with empty history, initializing examples');
 
 			// Type the first example after a short delay to ensure page is fully rendered
@@ -162,6 +184,46 @@
 				typingInterval = clearTimer(typingInterval);
 			};
 		}
+	});
+
+	// Track user input to detect when they start typing
+	function handleUserInput(event) {
+		// If this is user-initiated input (not our example typing), 
+		// mark that the user has typed
+		if (!isTyping) {
+			userHasTyped = true;
+			userHasEverTyped = true;
+			console.log('User input detected - userHasEverTyped:', userHasEverTyped, 'Event type:', event.type);
+			examplesPaused = true;
+			cycleInterval = clearTimer(cycleInterval);
+			console.log('User has typed:', event.type);
+		}
+	}
+	
+
+	// Reset the user has typed flag when text is empty but preserve userHasEverTyped
+	$effect(() => {
+		if (text.trim().length === 0 && !isTyping) {
+			// If text was cleared through submission or manual clearing
+			// and not because we're in the middle of typing an example
+			userHasTyped = false;
+			console.log('Text is empty - userHasTyped reset, userHasEverTyped unchanged:', userHasEverTyped);
+			// Note: we don't reset userHasEverTyped here
+		} else if (text.trim().length > 0 && !isTyping) {
+			userHasTyped = true;
+			userHasEverTyped = true;
+			console.log('Text has content - userHasEverTyped set to true:', userHasEverTyped);
+			examplesPaused = true;
+		}
+	});
+
+	$effect(() => {
+		if (text.trim().length > 0 && !isTyping) {
+			userHasTyped = true;
+			userHasEverTyped = true;
+			examplesPaused = true;
+		}
+		// ...
 	});
 
 	function loadHistory() {
@@ -226,6 +288,11 @@
 		// Also clear cycling interval to prevent new examples from starting
 		cycleInterval = clearTimer(cycleInterval);
 
+		// Reset user typing flags after submission
+		userHasTyped = false;
+		userHasEverTyped = false; // Reset this flag on successful submission
+		console.log('Form submitted - userHasEverTyped reset to:', userHasEverTyped);
+
 		// Set loading state
 		is_loading = true;
 		const apiUrl = 'https://ananas-api.xces.workers.dev';
@@ -282,13 +349,23 @@
 		}
 	}
 
-	// Keyboard event handlers for accessibility
+	// Keyboard event handlers for accessibility and user typing detection
 	function handleKeyDown(event, callback) {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			callback();
+			callback?.(); // Optional callback for accessibility
 		}
-	}
+		
+        // Only mark as user typed if it's not during our automatic example typing
+        if (!isTyping) {
+            userHasTyped = true;
+            userHasEverTyped = true;
+            console.log('Key pressed - userHasEverTyped:', userHasEverTyped, 'Key:', event.key);
+            examplesPaused = true;
+            cycleInterval = clearTimer(cycleInterval);
+            console.log('Key pressed, userHasTyped set to true');
+        }
+    }
 </script>
 
 <div
@@ -309,6 +386,9 @@
 				needsAttention={history.length === 0}
 				onInputFocus={handleInputFocus}
 				onInputBlur={handleInputBlur}
+				onInput={handleUserInput}
+				onKeyDown={handleKeyDown} 
+				onKeyPress={handleKeyDown} 
 				inputClass="px-1 font-medium py-2.5"
 				containerClass="desktop-input w-full"
 			/>
@@ -409,6 +489,9 @@
 			{handleSubmit}
 			onInputFocus={handleInputFocus}
 			onInputBlur={handleInputBlur}
+			onInput={handleUserInput}
+			onKeyDown={handleKeyDown}
+			onKeyPress={handleKeyDown}
 			needsAttention={history.length === 0}
 			inputClass="text-gray-900 py-3"
 			containerClass="mobile-input w-full max-w-full"
