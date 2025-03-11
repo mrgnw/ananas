@@ -5,6 +5,7 @@
 	import { page } from "$app/stores";
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
+	import { initializeFromStorage } from '$lib/stores/translationStore';
 	
 	/** @type {{children?: import('svelte').Snippet}} */
 	let { children } = $props();
@@ -15,6 +16,11 @@
 			console.log('[CLIENT] Page data:', page.data);
 		}
 	});
+
+	// Initialize store from localStorage if in browser
+	if (browser) {
+		initializeFromStorage();
+	}
 </script>
 <svelte:head>
 	<link rel="icon" href="/favicon.ico" sizes="32x32">

@@ -172,6 +172,22 @@
 		return [];
 	}
 
+	function loadSavedText() {
+		if (browser) {
+			// Use sessionStorage instead of localStorage for text input
+			const savedText = sessionStorage.getItem('translationInputText');
+			return savedText || '';
+		}
+		return '';
+	}
+
+	function saveText(currentText) {
+		if (browser) {
+			// Store in sessionStorage instead of localStorage
+			sessionStorage.setItem('translationInputText', currentText);
+		}
+	}
+
 	let history = $state(loadHistory());
 
 	function deleteTranslation(index) {
@@ -181,9 +197,8 @@
 		}
 	}
 
-	let text = $state('');
+	let text = $state(loadSavedText());
 	let truncate_lines = $state(true);
-	let colors_enabled = $state(browser ? localStorage.getItem('colorsEnabled') !== 'false' : true);
 
 	// Use the shared language store
 	let user_langs = $derived(translateLanguages.languages);
@@ -195,6 +210,11 @@
 	);
 
 	let is_loading = $state(false);
+
+	// Save text when it changes
+	$effect(() => {
+		saveText(text);
+	});
 
 	async function handleSubmit() {
 		// Stop typing animation if it's running
@@ -233,6 +253,8 @@
 			if (history.some((item) => item.text === text)) {
 				toast.info('This text has already been translated!');
 				text = '';
+				// Clear from sessionStorage instead of localStorage
+				sessionStorage.removeItem('translationInputText'); 
 				return;
 			}
 
@@ -250,6 +272,8 @@
 			}
 			toast.success('Translation successful!');
 			text = '';
+			// Clear from sessionStorage instead of localStorage
+			sessionStorage.removeItem('translationInputText');
 		} catch (error) {
 			console.error('Error fetching translation:', error);
 			toast.error('Translation failed. Please try again.');
