@@ -1,6 +1,5 @@
 <script>
 	import { examplePhrases, exampleTranslations } from '$lib/example';
-
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Badge } from '$lib/components/ui/badge';
@@ -12,6 +11,9 @@
 	import { getColorByIndex } from '$lib/colors';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+
+	// Add debug mode flag
+	let debugMode = $state(true);
 
 	// Helper function to safely clear timers (both intervals and timeouts)
 	function clearTimer(timer) {
@@ -29,6 +31,28 @@
 	let userHasTyped = $state(false);
 	// Track if user has EVER typed anything since page load
 	let userHasEverTyped = $state(false);
+
+	// Use $inspect to debug reactivity without relying on console logs
+	// This will show updates in React DevTools or Svelte devtools
+	$inspect(userHasEverTyped).with((type, value) => {
+		if (debugMode) console.log(`[INSPECT] userHasEverTyped ${type}: ${value}`);
+	});
+
+	// Simple direct update function for userHasEverTyped
+	function markUserTyped() {
+		userHasTyped = true;
+		userHasEverTyped = true;
+		examplesPaused = true;
+		cycleInterval = clearTimer(cycleInterval);
+		
+		// Force immediate UI update
+		if (debugMode) {
+			// This is just to ensure the code is executed
+			setTimeout(() => {
+				console.log("User has typed - userHasEverTyped:", userHasEverTyped);
+			}, 0);
+		}
+	}
 
 	$effect(() => {
 		// Log whenever userHasEverTyped changes
@@ -133,24 +157,22 @@
         }
 	}
 	
-	// Toggle play/pause for examples
+	// Toggle play/pause for examples - simplify logic
 	function toggleExamples() {
-		// If user has ever typed and input is not empty, don't allow unpausing
-		if (userHasEverTyped && text.trim().length > 0) {
-			console.log('Toggle blocked - userHasEverTyped:', userHasEverTyped, 'text length:', text.trim().length);
+		// If user has ever typed, don't allow unpausing
+		if (userHasEverTyped) {
 			examplesPaused = true;
 			return;
 		}
 		
+		// Normal toggle behavior only if user has never typed
 		examplesPaused = !examplesPaused;
 		
 		if (examplesPaused) {
-			// Pause examples
 			cycleInterval = clearTimer(cycleInterval);
 		} else {
-			// Resume examples only if allowed
-			if (!cycleInterval && history.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
-				cycleExamples(); // Show one immediately
+			if (!cycleInterval && history.length === 0) {
+				cycleExamples();
 				cycleInterval = setInterval(cycleExamples, 5000);
 			}
 		}
@@ -191,12 +213,7 @@
 		// If this is user-initiated input (not our example typing), 
 		// mark that the user has typed
 		if (!isTyping) {
-			userHasTyped = true;
-			userHasEverTyped = true;
-			console.log('User input detected - userHasEverTyped:', userHasEverTyped, 'Event type:', event.type);
-			examplesPaused = true;
-			cycleInterval = clearTimer(cycleInterval);
-			console.log('User has typed:', event.type);
+			markUserTyped();
 		}
 	}
 	
@@ -351,21 +368,17 @@
 
 	// Keyboard event handlers for accessibility and user typing detection
 	function handleKeyDown(event, callback) {
-		if (event.key === 'Enter' || event.key === ' ') {
+		// Handle the callback first (for accessibility)
+		if ((event.key === 'Enter' || event.key === ' ') && callback) {
 			event.preventDefault();
-			callback?.(); // Optional callback for accessibility
+			callback();
 		}
 		
-        // Only mark as user typed if it's not during our automatic example typing
-        if (!isTyping) {
-            userHasTyped = true;
-            userHasEverTyped = true;
-            console.log('Key pressed - userHasEverTyped:', userHasEverTyped, 'Key:', event.key);
-            examplesPaused = true;
-            cycleInterval = clearTimer(cycleInterval);
-            console.log('Key pressed, userHasTyped set to true');
-        }
-    }
+		// Always mark user as typed for any key press when not in automatic typing
+		if (!isTyping) {
+			markUserTyped();
+		}
+	}
 </script>
 
 <div
