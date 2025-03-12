@@ -24,17 +24,12 @@
 
 	// Store example typer state
 	let isTyping = $state(false);
-	let textIsFromExample = $state(false);
-	let userHasTyped = $state(false);
-	let userHasEverTyped = $state(false);
+	
 	let examplesPaused = $state(false);
 	
 	// Subscribe to the store values directly
 	const unsubscribe = exampleTyper.subscribe(state => {
 		isTyping = state.isTyping;
-		textIsFromExample = state.textIsFromExample;
-		userHasTyped = state.userHasTyped;
-		userHasEverTyped = state.userHasEverTyped;
 		examplesPaused = state.examplesPaused;
 	});
 	
