@@ -1,6 +1,7 @@
 <script>
 	import { examplePhrases, exampleTranslations } from '$lib/example';
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+	import { translationHistory } from '$lib/stores/translationHistory.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
@@ -9,11 +10,6 @@
 	import TranslationInput from './TranslationInput.svelte';
 	import PlayPauseButton from './PlayPauseButton.svelte';
 	import { getColorByIndex } from '$lib/colors';
-
-	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-
-	// Add debug mode flag
-	let debugMode = $state(true);
 
 	// Helper function to safely clear timers (both intervals and timeouts)
 	function clearTimer(timer) {
@@ -77,7 +73,7 @@
 	// Function to cycle to the next example
 	function cycleExamples() {
 		// Only show examples if not paused and no history and user hasn't typed
-		if (!examplesPaused && history.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
+		if (!examplesPaused && $translationHistory.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
 			typeLetters(examplePhrases[Math.floor(Math.random() * examplePhrases.length)]);
 		}
 	}
@@ -120,7 +116,7 @@
 	// Add a function to restart examples when appropriate
 	function restartExamplesIfNeeded() {
 		// Only restart examples if there's no history and text is empty
-		if (history.length === 0 && text.trim().length === 0) {
+		if ($translationHistory.length === 0 && text.trim().length === 0) {
 			// Reset all flags that might prevent examples from showing
 			userHasTyped = false;
 			userHasEverTyped = false;  // Reset this flag to allow examples to run again
@@ -129,7 +125,7 @@
 			
 			// Start one example after a 4-second delay
 			setTimeout(() => {
-				if (!isTyping && history.length === 0) {
+				if (!isTyping && $translationHistory.length === 0) {
 					cycleExamples();
 					// Set up cycling interval if not already cycling
 					if (!cycleInterval) {
@@ -145,7 +141,7 @@
 	// Handle input blur event - update to use the new restart function
 	function handleInputBlur() {
 		// If there's no history AND text is empty, try to restart examples
-		if (history.length === 0 && text.trim().length === 0) {
+		if ($translationHistory.length === 0 && text.trim().length === 0) {
 			restartExamplesIfNeeded();
 		} else {
 			// If user has typed, ensure examples remain paused
@@ -167,7 +163,7 @@
 		if (examplesPaused) {
 			cycleInterval = clearTimer(cycleInterval);
 		} else {
-			if (!cycleInterval && history.length === 0) {
+			if (!cycleInterval && $translationHistory.length === 0) {
 				cycleExamples();
 				cycleInterval = setInterval(cycleExamples, 5000);
 			}
@@ -178,7 +174,7 @@
 	$effect(() => {
 		// Only start examples if browser is available AND history is loaded AND history is empty AND user hasn't typed
 		// AND the user has never typed anything or input is empty
-		if (browser && history !== undefined && history.length === 0 && !userHasTyped && 
+		if (browser && $translationHistory !== undefined && $translationHistory.length === 0 && !userHasTyped && 
 			(!userHasEverTyped || text.trim() === '')) {
 			console.log('Page fully loaded with empty history, initializing examples');
 
@@ -226,7 +222,7 @@
 			console.log('Text is empty - userHasTyped reset, userHasEverTyped unchanged:', userHasEverTyped);
 			
 			// If there's no history, consider restarting the examples
-			if (history.length === 0) {
+			if ($translationHistory.length === 0) {
 				restartExamplesIfNeeded();
 			}
 		}
@@ -247,13 +243,7 @@
 		}
 	});
 
-	function loadHistory() {
-		if (browser) {
-			const stored = localStorage.getItem('translationHistory');
-			return stored ? JSON.parse(stored) : [];
-		}
-		return [];
-	}
+	// Remove loadHistory function - now handled by the store
 
 	function loadSavedText() {
 		if (browser) {
@@ -269,13 +259,12 @@
 		}
 	}
 
-	let history = $state(loadHistory());
-
+	// Use the store value instead of local state
+	// Replace let history = $state(loadHistory());
+	
+	// The deleteTranslation function now calls the store method
 	function deleteTranslation(index) {
-		history = history.filter((_, i) => i !== index);
-		if (browser) {
-			localStorage.setItem('translationHistory', JSON.stringify(history));
-		}
+		translationHistory.deleteTranslation(index);
 	}
 
 	let text = $state(loadSavedText());
@@ -327,8 +316,10 @@
 			}
 
 			const data = await response.json();
+			console.log('Translation API response:', data); // Log the response data
 
-			if (history.some((item) => item.text === text)) {
+			// Fix: Use the non-reactive store object to access methods
+			if (translationHistory.get().some((item) => item.text === text)) {
 				toast.info('This text has already been translated!');
 				text = '';
 				// Clear from sessionStorage instead of localStorage
@@ -338,23 +329,19 @@
 				return;
 			}
 
-			history = [
-				{
-					text,
-					translations: data,
-					timestamp: new Date().toISOString()
-				},
-				...history
-			];
-
-			if (browser) {
-				localStorage.setItem('translationHistory', JSON.stringify(history));
+			try {
+				// Add to history using the store method instead of directly manipulating state
+				translationHistory.addTranslation(text, data);
+				
+				toast.success('Translation successful!');
+				text = '';
+				// Clear from sessionStorage instead of localStorage
+				sessionStorage.removeItem('translationInputText');
+				// No need to restart examples here as we've likely added to history
+			} catch (storeError) {
+				console.error('Error adding translation to history:', storeError);
+				toast.error('Failed to save translation');
 			}
-			toast.success('Translation successful!');
-			text = '';
-			// Clear from sessionStorage instead of localStorage
-			sessionStorage.removeItem('translationInputText');
-			// No need to restart examples here as we've likely added to history
 		} catch (error) {
 			console.error('Error fetching translation:', error);
 			toast.error('Translation failed. Please try again.');
@@ -393,7 +380,7 @@
 				bind:text
 				{is_loading}
 				{handleSubmit}
-				needsAttention={history.length === 0}
+				needsAttention={$translationHistory.length === 0}
 				onInputFocus={handleInputFocus}
 				onInputBlur={handleInputBlur}
 				onInput={handleUserInput}
@@ -403,7 +390,7 @@
 				containerClass="desktop-input w-full"
 			/>
 			
-			{#if history.length === 0}
+			{#if $translationHistory.length === 0}
 				<PlayPauseButton 
 					isPaused={examplesPaused} 
 					onClick={toggleExamples} 
@@ -459,7 +446,7 @@
 
 			<!-- Translation cards with improved responsive grid -->
 			<div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-				{#each history as translation, i}
+				{#each $translationHistory as translation, i}
 					<!-- MultiLangCard.svelte -->
 					<MultiLangCard
 						{translation}
@@ -502,12 +489,12 @@
 			onInput={handleUserInput}
 			onKeyDown={handleKeyDown}
 			onKeyPress={handleKeyDown}
-			needsAttention={history.length === 0}
+			needsAttention={$translationHistory.length === 0}
 			inputClass="text-gray-900 py-3"
 			containerClass="mobile-input w-full max-w-full"
 		/>
 		
-		{#if history.length === 0}
+		{#if $translationHistory.length === 0}
 			<PlayPauseButton 
 				isPaused={examplesPaused} 
 				onClick={toggleExamples} 
