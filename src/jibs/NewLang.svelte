@@ -174,7 +174,6 @@
 
 	function loadSavedText() {
 		if (browser) {
-			// Use sessionStorage instead of localStorage for text input
 			const savedText = sessionStorage.getItem('translationInputText');
 			return savedText || '';
 		}
@@ -183,7 +182,6 @@
 
 	function saveText(currentText) {
 		if (browser) {
-			// Store in sessionStorage instead of localStorage
 			sessionStorage.setItem('translationInputText', currentText);
 		}
 	}
@@ -200,7 +198,7 @@
 	let text = $state(loadSavedText());
 	let truncate_lines = $state(true);
 
-	// Use the shared language store
+	// language management
 	let user_langs = $derived(translateLanguages.languages);
 	let tgt_langs = $derived(Object.keys(user_langs));
 	let show_langs = $derived(
@@ -222,21 +220,18 @@
 			typingInterval = clearTimer(typingInterval);
 			isTyping = false;
 		}
-
-		// Also clear cycling interval to prevent new examples from starting
+		// prevent new examples from starting
 		cycleInterval = clearTimer(cycleInterval);
 
-		// Set loading state
 		is_loading = true;
-		const apiUrl = 'https://ananas-api.xces.workers.dev';
+		const apiUrl = '/api/translate';
 
 		try {
 			console.log('Target languages:', tgt_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
-					api_key: OPENAI_API_KEY
+					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
 					text,
