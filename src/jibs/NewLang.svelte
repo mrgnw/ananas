@@ -27,38 +27,15 @@
 	let isTyping = $state(false);
 	// Interval ID for cleanup
 	let typingInterval = $state(null);
-	// Track if user has manually entered anything
 	let userHasTyped = $state(false);
-	// Track if user has EVER typed anything since page load
 	let userHasEverTyped = $state(false);
 
-	// Use $inspect to debug reactivity without relying on console logs
-	// This will show updates in React DevTools or Svelte devtools
-	$inspect(userHasEverTyped).with((type, value) => {
-		if (debugMode) console.log(`[INSPECT] userHasEverTyped ${type}: ${value}`);
-	});
-
-	// Simple direct update function for userHasEverTyped
 	function markUserTyped() {
 		userHasTyped = true;
 		userHasEverTyped = true;
 		examplesPaused = true;
 		cycleInterval = clearTimer(cycleInterval);
-		
-		// Force immediate UI update
-		if (debugMode) {
-			// This is just to ensure the code is executed
-			setTimeout(() => {
-				console.log("User has typed - userHasEverTyped:", userHasEverTyped);
-			}, 0);
-		}
 	}
-
-	$effect(() => {
-		// Log whenever userHasEverTyped changes
-		console.log('userHasEverTyped state changed:', userHasEverTyped);
-	});
-
 	/**
 	 * Simple typewriter function that updates a variable one letter at a time
 	 * @param {string} newText - The new text to type
