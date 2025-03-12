@@ -117,26 +117,40 @@
 		}
 	}
 	
-	// Handle input blur event
+	// Add a function to restart examples when appropriate
+	function restartExamplesIfNeeded() {
+		// Only restart examples if there's no history and text is empty
+		if (history.length === 0 && text.trim().length === 0) {
+			// Reset all flags that might prevent examples from showing
+			userHasTyped = false;
+			userHasEverTyped = false;  // Reset this flag to allow examples to run again
+			textIsFromExample = false;
+			examplesPaused = false;
+			
+			// Start one example after a 4-second delay
+			setTimeout(() => {
+				if (!isTyping && history.length === 0) {
+					cycleExamples();
+					// Set up cycling interval if not already cycling
+					if (!cycleInterval) {
+						cycleInterval = setInterval(cycleExamples, 5000);
+					}
+				}
+			}, 4000); // Changed from 500ms to 4000ms (4 seconds)
+			
+			console.log('Examples restarted - all typing flags reset - examples will start in 4 seconds');
+		}
+	}
+
+	// Handle input blur event - update to use the new restart function
 	function handleInputBlur() {
-        // Only resume examples if there's no history AND text is empty AND user hasn't typed
-		// AND the user has never typed anything or has submitted the form (clearing userHasEverTyped)
-        if (history.length === 0 && text.trim().length === 0 && !userHasTyped && !userHasEverTyped) {
-            examplesPaused = false;
-            // Start one example immediately
-            setTimeout(() => {
-                if (!isTyping && history.length === 0 && !userHasTyped && !userHasEverTyped) {
-                    cycleExamples();
-                    // Start cycling if not already cycling
-                    if (!cycleInterval) {
-                        cycleInterval = setInterval(cycleExamples, 5000);
-                    }
-                }
-            }, 500); // Small delay to prevent immediate restart if user is interacting
-        } else {
-            // If user has typed, ensure examples remain paused
-            examplesPaused = true;
-        }
+		// If there's no history AND text is empty, try to restart examples
+		if (history.length === 0 && text.trim().length === 0) {
+			restartExamplesIfNeeded();
+		} else {
+			// If user has typed, ensure examples remain paused
+			examplesPaused = true;
+		}
 	}
 	
 	// Toggle play/pause for examples - simplify logic
@@ -210,7 +224,11 @@
 			userHasTyped = false;
 			textIsFromExample = false;
 			console.log('Text is empty - userHasTyped reset, userHasEverTyped unchanged:', userHasEverTyped);
-			// Note: we don't reset userHasEverTyped here
+			
+			// If there's no history, consider restarting the examples
+			if (history.length === 0) {
+				restartExamplesIfNeeded();
+			}
 		}
 	});
 
@@ -326,6 +344,8 @@
 				text = '';
 				// Clear from sessionStorage instead of localStorage
 				sessionStorage.removeItem('translationInputText'); 
+				// Consider restarting examples since we've cleared the text
+				restartExamplesIfNeeded();
 				return;
 			}
 
@@ -345,6 +365,7 @@
 			text = '';
 			// Clear from sessionStorage instead of localStorage
 			sessionStorage.removeItem('translationInputText');
+			// No need to restart examples here as we've likely added to history
 		} catch (error) {
 			console.error('Error fetching translation:', error);
 			toast.error('Translation failed. Please try again.');
