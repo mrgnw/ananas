@@ -5,6 +5,7 @@ export const userHasTyped = writable(false);
 export const userHasEverTyped = writable(false);
 export const isTyping = writable(false);
 export const examplesPaused = writable(false);
+export const textIsFromExample = writable(false);
 
 // Debug logs with timestamps
 function logWithTimestamp(message, value) {
@@ -16,16 +17,23 @@ export function markUserTyped() {
     userHasTyped.set(true);
     userHasEverTyped.set(true);
     examplesPaused.set(true);
-    logWithTimestamp('👇 ', true);
+    textIsFromExample.set(false); // User typed, not an example
+    logWithTimestamp('User typed content', true);
+}
+
+export function markExampleTyped() {
+    textIsFromExample.set(true);
+    logWithTimestamp('Example text being typed', true);
 }
 
 export function resetTypingFlags() {
     userHasTyped.set(false);
     userHasEverTyped.set(false);
-    logWithTimestamp('Typing flags reset', { userHasTyped: false, userHasEverTyped: false });
+    textIsFromExample.set(false);
+    logWithTimestamp('Typing flags reset', { userHasTyped: false, userHasEverTyped: false, textIsFromExample: false });
 }
 
 export function clearUserHasTyped() {
     userHasTyped.set(false);
-    logWithTimestamp('👇 reset', false);
+    logWithTimestamp('User typing flag reset', false);
 }

@@ -29,6 +29,8 @@
 	let typingInterval = $state(null);
 	let userHasTyped = $state(false);
 	let userHasEverTyped = $state(false);
+	// Add a flag to track if the current text is from an example
+	let textIsFromExample = $state(false);
 
 	function markUserTyped() {
 		userHasTyped = true;
@@ -47,6 +49,8 @@
 		typingInterval = clearTimer(typingInterval);
 		text = '';
 		let i = 0;
+		// Mark that the text being typed is from an example
+		textIsFromExample = true;
 
 		(function typeNext() {
 			typingInterval = setTimeout(
@@ -57,6 +61,7 @@
 					} else {
 						typingInterval = clearTimer(typingInterval);
 						isTyping = false;
+						// Keep textIsFromExample true after typing completes
 					}
 				},
 				30 + Math.floor(Math.random() * 40)
@@ -191,6 +196,8 @@
 		// mark that the user has typed
 		if (!isTyping) {
 			markUserTyped();
+			// When user types, text is no longer from an example
+			textIsFromExample = false;
 		}
 	}
 	
@@ -201,23 +208,25 @@
 			// If text was cleared through submission or manual clearing
 			// and not because we're in the middle of typing an example
 			userHasTyped = false;
+			textIsFromExample = false;
 			console.log('Text is empty - userHasTyped reset, userHasEverTyped unchanged:', userHasEverTyped);
 			// Note: we don't reset userHasEverTyped here
-		} else if (text.trim().length > 0 && !isTyping) {
-			userHasTyped = true;
-			userHasEverTyped = true;
-			console.log('Text has content - userHasEverTyped set to true:', userHasEverTyped);
-			examplesPaused = true;
 		}
 	});
 
+	// Fixed version of the problematic effect
 	$effect(() => {
 		if (text.trim().length > 0 && !isTyping) {
-			userHasTyped = true;
-			userHasEverTyped = true;
-			examplesPaused = true;
+			// Only set userHasTyped/userHasEverTyped to true if the text is NOT from an example
+			if (!textIsFromExample) {
+				userHasTyped = true;
+				userHasEverTyped = true;
+				examplesPaused = true;
+				console.log('User typed text - userHasEverTyped set to true:', userHasEverTyped);
+			} else {
+				console.log('Example text completed - keeping userHasEverTyped as:', userHasEverTyped);
+			}
 		}
-		// ...
 	});
 
 	function loadHistory() {
@@ -285,6 +294,7 @@
 		// Reset user typing flags after submission
 		userHasTyped = false;
 		userHasEverTyped = false; // Reset this flag on successful submission
+		textIsFromExample = false;
 		console.log('Form submitted - userHasEverTyped reset to:', userHasEverTyped);
 
 		// Set loading state
