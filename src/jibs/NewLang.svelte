@@ -11,6 +11,7 @@
 	import TranslationInput from './TranslationInput.svelte';
 	import PlayPauseButton from './PlayPauseButton.svelte';
 	import { getColorByIndex } from '$lib/colors';
+	import { onMount, onDestroy } from 'svelte';
 
 	// Helper function to safely clear timers (both intervals and timeouts)
 	function clearTimer(timer) {
@@ -21,21 +22,53 @@
 		return timer;
 	}
 
-	// Store example typer state in reactive variables
-	$effect(() => {
-		// Update these reactive variables from the store
-		isTyping = $exampleTyper.isTyping;
-		textIsFromExample = $exampleTyper.textIsFromExample;
-		userHasTyped = $exampleTyper.userHasTyped;
-		userHasEverTyped = $exampleTyper.userHasEverTyped;
-		examplesPaused = $exampleTyper.examplesPaused;
-	});
-
+	// Store example typer state
 	let isTyping = $state(false);
 	let textIsFromExample = $state(false);
 	let userHasTyped = $state(false);
 	let userHasEverTyped = $state(false);
 	let examplesPaused = $state(false);
+	
+	// Subscribe to the store values directly
+	const unsubscribe = exampleTyper.subscribe(state => {
+		isTyping = state.isTyping;
+		textIsFromExample = state.textIsFromExample;
+		userHasTyped = state.userHasTyped;
+		userHasEverTyped = state.userHasEverTyped;
+		examplesPaused = state.examplesPaused;
+	});
+	
+	// Clean up subscription when component is destroyed
+	onDestroy(() => {
+		unsubscribe();
+	});
+
+	// Initialize examples when component is mounted
+	let examplesCleanup;
+	onMount(() => {
+		// Update dependencies initially
+		exampleTyper.updateDependencies(text, $translationHistory.length);
+		
+		// Initialize examples
+		if ($translationHistory.length === 0) {
+			examplesCleanup = exampleTyper.initializeExamples((newText) => text = newText);
+		}
+		
+		// Clean up on component destruction
+		return () => {
+			if (examplesCleanup) examplesCleanup();
+		};
+	});
+
+	// Track changes to text and history length - convert $: to $effect
+	$effect(() => {
+		exampleTyper.updateDependencies(text, $translationHistory.length);
+		
+		// If text is empty and there's no history, consider restarting examples
+		if (text.trim().length === 0 && !isTyping && $translationHistory.length === 0) {
+			exampleTyper.restartExamplesIfNeeded((newText) => text = newText);
+		}
+	});
 	
 	function loadSavedText() {
 		if (browser) {
@@ -59,11 +92,6 @@
 	let text = $state(loadSavedText());
 	let truncate_lines = $state(true);
 
-	// Sync text and history length with example typer store
-	$effect(() => {
-		exampleTyper.updateDependencies(text, $translationHistory.length);
-	});
-
 	// language management
 	let user_langs = $derived(translateLanguages.languages);
 	let tgt_langs = $derived(Object.keys(user_langs));
@@ -75,25 +103,9 @@
 
 	let is_loading = $state(false);
 
-	// Save text when it changes
+	// Save text when it changes - convert $: to $effect
 	$effect(() => {
 		saveText(text);
-	});
-
-	// Initialize examples when browser is available and history is loaded
-	$effect(() => {
-		// Return the cleanup function
-		return exampleTyper.initializeExamples((newText) => text = newText);
-	});
-
-	// Reset the user has typed flag when text is empty but preserve userHasEverTyped
-	$effect(() => {
-		if (text.trim().length === 0 && !isTyping) {
-			// If there's no history, consider restarting the examples
-			if ($translationHistory.length === 0) {
-				exampleTyper.restartExamplesIfNeeded((newText) => text = newText);
-			}
-		}
 	});
 
 	async function handleSubmit() {
@@ -161,6 +173,7 @@
 	}
 
 	function toggleExamples() {
+		// Fix: Pass the setText function to the toggleExamples method
 		exampleTyper.toggleExamples((newText) => text = newText);
 	}
 

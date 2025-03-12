@@ -12,6 +12,7 @@ function createExampleTyperStore() {
   let _examplesPaused = false;
   let _currentText = '';
   let _translationHistoryLength = 0;
+  let _initializationActive = false;  // Track if initialization is active
   
   // Store subscribers
   const subscribers = new Set();
@@ -20,6 +21,7 @@ function createExampleTyperStore() {
   function clearTimer(timer) {
     if (timer) {
       clearTimeout(timer);
+      clearInterval(timer);  // Make sure we clear both types of timers
       return null;
     }
     return timer;
@@ -125,6 +127,13 @@ function createExampleTyperStore() {
   
   // Toggle play/pause for examples
   function toggleExamples(setText) {
+    // Debug
+    console.log("Toggle examples called, current state:", { 
+      _examplesPaused, 
+      _userHasEverTyped,
+      _translationHistoryLength 
+    });
+    
     // If user has ever typed, don't allow unpausing
     if (_userHasEverTyped) {
       update.call(this, { examplesPaused: true });
@@ -132,13 +141,22 @@ function createExampleTyperStore() {
     }
     
     // Normal toggle behavior only if user has never typed
-    update.call(this, { examplesPaused: !_examplesPaused });
+    const newPausedState = !_examplesPaused;
+    update.call(this, { examplesPaused: newPausedState });
     
-    if (_examplesPaused) {
+    if (newPausedState) {
+      // If pausing, clear the interval
       _cycleInterval = clearTimer(_cycleInterval);
+      console.log("Examples paused, interval cleared");
     } else {
+      // If unpausing, start cycling examples
       if (!_cycleInterval && _translationHistoryLength === 0) {
+        console.log("Starting example cycle");
+        // Clear any existing interval first to prevent duplicates
+        _cycleInterval = clearTimer(_cycleInterval);
+        // Start one example immediately
         cycleExamples.call(this, setText);
+        // Set up the interval
         _cycleInterval = setInterval(() => cycleExamples.call(this, setText), 5000);
       }
     }
@@ -159,6 +177,9 @@ function createExampleTyperStore() {
       
       // Type remaining text at 5ms per character
       let i = _currentText.length;
+      
+      // Clear any existing interval to prevent duplicates
+      _typingInterval = clearTimer(_typingInterval);
       
       // finish typing quickly (5ms per character)
       _typingInterval = setInterval(() => {
@@ -198,20 +219,29 @@ function createExampleTyperStore() {
         examplesPaused: false
       });
       
+      // Make sure any existing intervals are cleared first
+      _cycleInterval = clearTimer(_cycleInterval);
+      
       // Start one example after a 4-second delay
-      setTimeout(() => {
+      const restartTimeout = setTimeout(() => {
         if (!_isTyping && _translationHistoryLength === 0) {
           cycleExamples.call(this, setText);
           
           // Set up cycling interval if not already cycling
-          if (!_cycleInterval) {
-            _cycleInterval = setInterval(() => cycleExamples.call(this, setText), 5000);
-          }
+          // Clear any existing interval first
+          _cycleInterval = clearTimer(_cycleInterval);
+          _cycleInterval = setInterval(() => cycleExamples.call(this, setText), 5000);
         }
       }, 4000);
       
       console.log('Examples restarted - all typing flags reset - examples will start in 4 seconds');
+      
+      // Return a cleanup function
+      return () => clearTimeout(restartTimeout);
     }
+    
+    // Return a no-op cleanup if we didn't set a timeout
+    return () => {};
   }
   
   // Handle input blur
@@ -236,36 +266,55 @@ function createExampleTyperStore() {
   
   // Initialize examples with a timeout
   function initializeExamples(setText) {
+    // Only initialize once
+    if (_initializationActive) {
+      console.log('Initialization already active, skipping');
+      return () => {};
+    }
+    
+    // Mark initialization as active
+    _initializationActive = true;
+    
     if (browser && _translationHistoryLength === 0 && !_userHasTyped && 
         (!_userHasEverTyped || _currentText.trim() === '')) {
       console.log('Page fully loaded with empty history, initializing examples');
+      
+      // Clear any existing intervals first
+      _cycleInterval = clearTimer(_cycleInterval);
+      _typingInterval = clearTimer(_typingInterval);
       
       // Type the first example after a short delay to ensure page is fully rendered
       const timeout = setTimeout(() => {
         console.log('Starting first example');
         cycleExamples.call(this, setText);
         
-        // Set up cycling interval
-        if (!_cycleInterval) {
-          console.log('Setting up cycling interval');
-          _cycleInterval = setInterval(() => cycleExamples.call(this, setText), 5000);
-        }
+        // Set up cycling interval - clear any existing one first
+        _cycleInterval = clearTimer(_cycleInterval);
+        console.log('Setting up cycling interval');
+        _cycleInterval = setInterval(() => cycleExamples.call(this, setText), 5000);
       }, 1000);
       
+      // Return a proper cleanup function
       return () => {
-        console.log('Cleaning up intervals');
+        console.log('Cleaning up intervals and timeouts');
         clearTimeout(timeout);
         _cycleInterval = clearTimer(_cycleInterval);
         _typingInterval = clearTimer(_typingInterval);
+        _initializationActive = false;
       };
     }
-    return () => {};
+    
+    // Return a function to mark initialization as inactive
+    return () => {
+      _initializationActive = false;
+    };
   }
   
   // Cleanup on destroy
   function cleanup() {
     _cycleInterval = clearTimer(_cycleInterval);
     _typingInterval = clearTimer(_typingInterval);
+    _initializationActive = false;
   }
   
   return {
@@ -301,7 +350,7 @@ function createExampleTyperStore() {
       return initializeExamples.call(this, setText);
     },
     restartExamplesIfNeeded: function(setText) {
-      restartExamplesIfNeeded.call(this, setText);
+      return restartExamplesIfNeeded.call(this, setText);
     },
     reset: function() {
       update.call(this, {
@@ -316,6 +365,7 @@ function createExampleTyperStore() {
       _typingInterval = clearTimer(_typingInterval);
       _currentText = '';
       _translationHistoryLength = 0;
+      _initializationActive = false;
     }
   };
 }
