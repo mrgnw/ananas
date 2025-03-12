@@ -1,6 +1,5 @@
 <script>
 	import { examplePhrases, exampleTranslations } from '$lib/example';
-
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Badge } from '$lib/components/ui/badge';
@@ -12,6 +11,9 @@
 	import { getColorByIndex } from '$lib/colors';
 
 	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+
+	// Add debug mode flag
+	let debugMode = $state(true);
 
 	// Helper function to safely clear timers (both intervals and timeouts)
 	function clearTimer(timer) {
@@ -25,7 +27,17 @@
 	let isTyping = $state(false);
 	// Interval ID for cleanup
 	let typingInterval = $state(null);
+	let userHasTyped = $state(false);
+	let userHasEverTyped = $state(false);
+	// Add a flag to track if the current text is from an example
+	let textIsFromExample = $state(false);
 
+	function markUserTyped() {
+		userHasTyped = true;
+		userHasEverTyped = true;
+		examplesPaused = true;
+		cycleInterval = clearTimer(cycleInterval);
+	}
 	/**
 	 * Simple typewriter function that updates a variable one letter at a time
 	 * @param {string} newText - The new text to type
@@ -37,6 +49,8 @@
 		typingInterval = clearTimer(typingInterval);
 		text = '';
 		let i = 0;
+		// Mark that the text being typed is from an example
+		textIsFromExample = true;
 
 		(function typeNext() {
 			typingInterval = setTimeout(
@@ -47,6 +61,7 @@
 					} else {
 						typingInterval = clearTimer(typingInterval);
 						isTyping = false;
+						// Keep textIsFromExample true after typing completes
 					}
 				},
 				30 + Math.floor(Math.random() * 40)
@@ -61,8 +76,8 @@
 
 	// Function to cycle to the next example
 	function cycleExamples() {
-		// Only show examples if not paused and no history
-		if (!examplesPaused && history.length === 0) {
+		// Only show examples if not paused and no history and user hasn't typed
+		if (!examplesPaused && history.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
 			typeLetters(examplePhrases[Math.floor(Math.random() * examplePhrases.length)]);
 		}
 	}
@@ -102,35 +117,58 @@
 		}
 	}
 	
-	// Handle input blur event
-	function handleInputBlur() {
-		// If there's no history (no translations yet), resume examples
-		if (history.length === 0) {
+	// Add a function to restart examples when appropriate
+	function restartExamplesIfNeeded() {
+		// Only restart examples if there's no history and text is empty
+		if (history.length === 0 && text.trim().length === 0) {
+			// Reset all flags that might prevent examples from showing
+			userHasTyped = false;
+			userHasEverTyped = false;  // Reset this flag to allow examples to run again
+			textIsFromExample = false;
 			examplesPaused = false;
-			// Start one example immediately
+			
+			// Start one example after a 4-second delay
 			setTimeout(() => {
 				if (!isTyping && history.length === 0) {
 					cycleExamples();
-					// Start cycling if not already cycling
+					// Set up cycling interval if not already cycling
 					if (!cycleInterval) {
 						cycleInterval = setInterval(cycleExamples, 5000);
 					}
 				}
-			}, 500); // Small delay to prevent immediate restart if user is interacting
+			}, 4000); // Changed from 500ms to 4000ms (4 seconds)
+			
+			console.log('Examples restarted - all typing flags reset - examples will start in 4 seconds');
+		}
+	}
+
+	// Handle input blur event - update to use the new restart function
+	function handleInputBlur() {
+		// If there's no history AND text is empty, try to restart examples
+		if (history.length === 0 && text.trim().length === 0) {
+			restartExamplesIfNeeded();
+		} else {
+			// If user has typed, ensure examples remain paused
+			examplesPaused = true;
 		}
 	}
 	
-	// Toggle play/pause for examples
+	// Toggle play/pause for examples - simplify logic
 	function toggleExamples() {
+		// If user has ever typed, don't allow unpausing
+		if (userHasEverTyped) {
+			examplesPaused = true;
+			return;
+		}
+		
+		// Normal toggle behavior only if user has never typed
 		examplesPaused = !examplesPaused;
 		
 		if (examplesPaused) {
-			// Pause examples
 			cycleInterval = clearTimer(cycleInterval);
 		} else {
-			// Resume examples
 			if (!cycleInterval && history.length === 0) {
-				cycleExamples(); // Show one immediately
+				cycleExamples();
 				cycleInterval = setInterval(cycleExamples, 5000);
 			}
 		}
@@ -138,8 +176,10 @@
 
 	// Initialize examples when browser is available and history is loaded
 	$effect(() => {
-		// Only start examples if browser is available AND history is loaded AND history is empty
-		if (browser && history !== undefined && history.length === 0) {
+		// Only start examples if browser is available AND history is loaded AND history is empty AND user hasn't typed
+		// AND the user has never typed anything or input is empty
+		if (browser && history !== undefined && history.length === 0 && !userHasTyped && 
+			(!userHasEverTyped || text.trim() === '')) {
 			console.log('Page fully loaded with empty history, initializing examples');
 
 			// Type the first example after a short delay to ensure page is fully rendered
@@ -161,6 +201,49 @@
 				cycleInterval = clearTimer(cycleInterval);
 				typingInterval = clearTimer(typingInterval);
 			};
+		}
+	});
+
+	// Track user input to detect when they start typing
+	function handleUserInput(event) {
+		// If this is user-initiated input (not our example typing), 
+		// mark that the user has typed
+		if (!isTyping) {
+			markUserTyped();
+			// When user types, text is no longer from an example
+			textIsFromExample = false;
+		}
+	}
+	
+
+	// Reset the user has typed flag when text is empty but preserve userHasEverTyped
+	$effect(() => {
+		if (text.trim().length === 0 && !isTyping) {
+			// If text was cleared through submission or manual clearing
+			// and not because we're in the middle of typing an example
+			userHasTyped = false;
+			textIsFromExample = false;
+			console.log('Text is empty - userHasTyped reset, userHasEverTyped unchanged:', userHasEverTyped);
+			
+			// If there's no history, consider restarting the examples
+			if (history.length === 0) {
+				restartExamplesIfNeeded();
+			}
+		}
+	});
+
+	// Fixed version of the problematic effect
+	$effect(() => {
+		if (text.trim().length > 0 && !isTyping) {
+			// Only set userHasTyped/userHasEverTyped to true if the text is NOT from an example
+			if (!textIsFromExample) {
+				userHasTyped = true;
+				userHasEverTyped = true;
+				examplesPaused = true;
+				console.log('User typed text - userHasEverTyped set to true:', userHasEverTyped);
+			} else {
+				console.log('Example text completed - keeping userHasEverTyped as:', userHasEverTyped);
+			}
 		}
 	});
 
@@ -250,6 +333,8 @@
 				text = '';
 				// Clear from sessionStorage instead of localStorage
 				sessionStorage.removeItem('translationInputText'); 
+				// Consider restarting examples since we've cleared the text
+				restartExamplesIfNeeded();
 				return;
 			}
 
@@ -269,6 +354,7 @@
 			text = '';
 			// Clear from sessionStorage instead of localStorage
 			sessionStorage.removeItem('translationInputText');
+			// No need to restart examples here as we've likely added to history
 		} catch (error) {
 			console.error('Error fetching translation:', error);
 			toast.error('Translation failed. Please try again.');
@@ -277,11 +363,17 @@
 		}
 	}
 
-	// Keyboard event handlers for accessibility
+	// Keyboard event handlers for accessibility and user typing detection
 	function handleKeyDown(event, callback) {
-		if (event.key === 'Enter' || event.key === ' ') {
+		// Handle the callback first (for accessibility)
+		if ((event.key === 'Enter' || event.key === ' ') && callback) {
 			event.preventDefault();
 			callback();
+		}
+		
+		// Always mark user as typed for any key press when not in automatic typing
+		if (!isTyping) {
+			markUserTyped();
 		}
 	}
 </script>
@@ -304,6 +396,9 @@
 				needsAttention={history.length === 0}
 				onInputFocus={handleInputFocus}
 				onInputBlur={handleInputBlur}
+				onInput={handleUserInput}
+				onKeyDown={handleKeyDown} 
+				onKeyPress={handleKeyDown} 
 				inputClass="px-1 font-medium py-2.5"
 				containerClass="desktop-input w-full"
 			/>
@@ -404,6 +499,9 @@
 			{handleSubmit}
 			onInputFocus={handleInputFocus}
 			onInputBlur={handleInputBlur}
+			onInput={handleUserInput}
+			onKeyDown={handleKeyDown}
+			onKeyPress={handleKeyDown}
 			needsAttention={history.length === 0}
 			inputClass="text-gray-900 py-3"
 			containerClass="mobile-input w-full max-w-full"

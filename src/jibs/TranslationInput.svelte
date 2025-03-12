@@ -9,6 +9,9 @@
 		needsAttention = false,
 		onInputFocus,
 		onInputBlur,
+		onInput,
+		onKeyDown,
+		onKeyPress,
 		inputClass = '',
 		containerClass = ''
 	} = $props();
@@ -49,8 +52,14 @@
 			.trim()
 	);
 
-	// Event handlers
+	// Event handlers - simplified to make sure events are always passed up
 	function handleKeyDown(event) {
+		// Forward the event to the parent component's handler immediately
+		if (typeof onKeyDown === 'function') {
+			onKeyDown(event);
+		}
+		
+		// Then handle the Enter key for submit
 		if (event.key === 'Enter' && is_ready) {
 			event.preventDefault();
 			handleSubmit();
@@ -60,6 +69,20 @@
 	function handleFocus() {
 		isInputFocused = true;
 		if (typeof onInputFocus === 'function') onInputFocus();
+	}
+	
+	function handleInput(event) {
+		// Forward the input event to the parent component immediately
+		if (typeof onInput === 'function') {
+			onInput(event);
+		}
+	}
+	
+	function handleKeyPress(event) {
+		// Forward the keypress event to the parent component
+		if (typeof onKeyPress === 'function') {
+			onKeyPress(event);
+		}
 	}
 </script>
 
@@ -73,6 +96,8 @@
 				disabled={is_loading}
 				class={inputClasses}
 				onkeydown={handleKeyDown}
+				oninput={handleInput}
+				onkeypress={handleKeyPress}
 				onfocus={handleFocus}
 				onclick={handleFocus}
 				onblur={() => {
