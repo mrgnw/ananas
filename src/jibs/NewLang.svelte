@@ -1,5 +1,5 @@
 <script>
-	import { examplePhrases, exampleTranslations } from '$lib/example';
+	import { exampleTranslations } from '$lib/example';
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import { translationHistory } from '$lib/stores/translationHistory.svelte.js';
 	import { exampleTyper } from '$lib/stores/exampleTyper.svelte.js';
@@ -13,16 +13,7 @@
 	import { getColorByIndex } from '$lib/colors';
 	import { onMount, onDestroy } from 'svelte';
 
-	// Helper function to safely clear timers (both intervals and timeouts)
-	function clearTimer(timer) {
-		if (timer) {
-			clearTimeout(timer); // Works for both setTimeout and setInterval
-			return null;
-		}
-		return timer;
-	}
 
-	// Store example typer state
 	let isTyping = $state(false);
 	
 	let examplesPaused = $state(false);
