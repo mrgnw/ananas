@@ -1,6 +1,9 @@
 <script>
-	import { examplePhrases, exampleTranslations } from '$lib/example';
+	import { exampleTranslations } from '$lib/example';
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+	import { translationHistory } from '$lib/stores/translationHistory.svelte.js';
+	import { exampleTyper } from '$lib/stores/exampleTyper.svelte.js';
+	import { translationStateMachine, STATES } from '$lib/stores/translationStateMachine.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
@@ -9,252 +12,57 @@
 	import TranslationInput from './TranslationInput.svelte';
 	import PlayPauseButton from './PlayPauseButton.svelte';
 	import { getColorByIndex } from '$lib/colors';
+	import { onMount, onDestroy } from 'svelte';
 
-	const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
-
-	// Add debug mode flag
-	let debugMode = $state(true);
-
-	// Helper function to safely clear timers (both intervals and timeouts)
-	function clearTimer(timer) {
-		if (timer) {
-			clearTimeout(timer); // Works for both setTimeout and setInterval
-			return null;
-		}
-		return timer;
-	}
-
+	// State tracking variables
 	let isTyping = $state(false);
-	// Interval ID for cleanup
-	let typingInterval = $state(null);
-	let userHasTyped = $state(false);
-	let userHasEverTyped = $state(false);
-	// Add a flag to track if the current text is from an example
-	let textIsFromExample = $state(false);
-
-	function markUserTyped() {
-		userHasTyped = true;
-		userHasEverTyped = true;
-		examplesPaused = true;
-		cycleInterval = clearTimer(cycleInterval);
-	}
-	/**
-	 * Simple typewriter function that updates a variable one letter at a time
-	 * @param {string} newText - The new text to type
-	 */
-	function typeLetters(newText) {
-		if (isTyping) return;
-
-		isTyping = true;
-		typingInterval = clearTimer(typingInterval);
-		text = '';
-		let i = 0;
-		// Mark that the text being typed is from an example
-		textIsFromExample = true;
-
-		(function typeNext() {
-			typingInterval = setTimeout(
-				() => {
-					if (i < newText.length) {
-						text = newText.substring(0, ++i);
-						typeNext();
-					} else {
-						typingInterval = clearTimer(typingInterval);
-						isTyping = false;
-						// Keep textIsFromExample true after typing completes
-					}
-				},
-				30 + Math.floor(Math.random() * 40)
-			);
-		})();
-	}
-
-	// Interval for cycling examples
-	let cycleInterval = $state(null);
-	// Track if examples are paused or playing
-	let examplesPaused = $state(false);
-
-	// Function to cycle to the next example
-	function cycleExamples() {
-		// Only show examples if not paused and no history and user hasn't typed
-		if (!examplesPaused && history.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
-			typeLetters(examplePhrases[Math.floor(Math.random() * examplePhrases.length)]);
-		}
-	}
-
-	// Handle input focus event from TranslationInput
-	function handleInputFocus() {
-		// Pause examples during input focus
-		examplesPaused = true;
-		
-		// Clear the cycling interval to prevent new examples
-		cycleInterval = clearTimer(cycleInterval);
-		
-		// If currently typing, complete the current example quickly
-		if (isTyping && typingInterval) {
-			console.log('Completing typing animation quickly');
-			typingInterval = clearTimer(typingInterval);
-			
-			// Find matching example or use current text
-			const targetText = (text && examplePhrases.find((ex) => ex.startsWith(text))) || '';
-			if (!targetText) return (isTyping = false);
-
-			// Type remaining text at 5ms per character
-			let i = text.length;
-
-			// finish typing quickly (5ms per character)
-			typingInterval = setInterval(() => {
-				if (i < targetText.length) {
-					// Add the next letter at ultra fast speed
-					text = targetText.substring(0, i + 1);
-					i++;
-				} else {
-					// Once we've completed the entire example, stop typing
-					typingInterval = clearTimer(typingInterval);
-					isTyping = false;
-				}
-			}, 5);
-		}
-	}
+	let examplesPaused = $state(true); // Start with examples paused
+	let is_loading = $state(false); // Change this to a regular state variable
 	
-	// Add a function to restart examples when appropriate
-	function restartExamplesIfNeeded() {
-		// Only restart examples if there's no history and text is empty
-		if (history.length === 0 && text.trim().length === 0) {
-			// Reset all flags that might prevent examples from showing
-			userHasTyped = false;
-			userHasEverTyped = false;  // Reset this flag to allow examples to run again
-			textIsFromExample = false;
-			examplesPaused = false;
-			
-			// Start one example after a 4-second delay
-			setTimeout(() => {
-				if (!isTyping && history.length === 0) {
-					cycleExamples();
-					// Set up cycling interval if not already cycling
-					if (!cycleInterval) {
-						cycleInterval = setInterval(cycleExamples, 5000);
-					}
-				}
-			}, 4000); // Changed from 500ms to 4000ms (4 seconds)
-			
-			console.log('Examples restarted - all typing flags reset - examples will start in 4 seconds');
-		}
-	}
-
-	// Handle input blur event - update to use the new restart function
-	function handleInputBlur() {
-		// If there's no history AND text is empty, try to restart examples
-		if (history.length === 0 && text.trim().length === 0) {
-			restartExamplesIfNeeded();
-		} else {
-			// If user has typed, ensure examples remain paused
-			examplesPaused = true;
-		}
-	}
+	// Subscribe to the state machine
+	const unsubscribeMachine = translationStateMachine.subscribe(state => {
+		examplesPaused = state.context.examplesPaused;
+		is_loading = state.currentState === STATES.TRANSLATING; // Update is_loading based on state
+	});
 	
-	// Toggle play/pause for examples - simplify logic
-	function toggleExamples() {
-		// If user has ever typed, don't allow unpausing
-		if (userHasEverTyped) {
-			examplesPaused = true;
-			return;
-		}
-		
-		// Normal toggle behavior only if user has never typed
-		examplesPaused = !examplesPaused;
-		
-		if (examplesPaused) {
-			cycleInterval = clearTimer(cycleInterval);
-		} else {
-			if (!cycleInterval && history.length === 0) {
-				cycleExamples();
-				cycleInterval = setInterval(cycleExamples, 5000);
-			}
-		}
-	}
-
-	// Initialize examples when browser is available and history is loaded
-	$effect(() => {
-		// Only start examples if browser is available AND history is loaded AND history is empty AND user hasn't typed
-		// AND the user has never typed anything or input is empty
-		if (browser && history !== undefined && history.length === 0 && !userHasTyped && 
-			(!userHasEverTyped || text.trim() === '')) {
-			console.log('Page fully loaded with empty history, initializing examples');
-
-			// Type the first example after a short delay to ensure page is fully rendered
-			const timeout = setTimeout(() => {
-				console.log('Starting first example');
-				cycleExamples();
-
-				// Set up cycling interval
-				if (!cycleInterval) {
-					console.log('Setting up cycling interval');
-					cycleInterval = setInterval(cycleExamples, 5000);
-				}
-			}, 1000);
-
-			// Cleanup function
-			return () => {
-				console.log('Cleaning up intervals');
-				clearTimeout(timeout);
-				cycleInterval = clearTimer(cycleInterval);
-				typingInterval = clearTimer(typingInterval);
-			};
-		}
+	// Subscribe to the example typer for specific typing state
+	const unsubscribeTyper = exampleTyper.subscribe(state => {
+		isTyping = state.isTyping;
+	});
+	
+	// Clean up subscriptions when component is destroyed
+	onDestroy(() => {
+		unsubscribeMachine();
+		unsubscribeTyper();
 	});
 
-	// Track user input to detect when they start typing
-	function handleUserInput(event) {
-		// If this is user-initiated input (not our example typing), 
-		// mark that the user has typed
-		if (!isTyping) {
-			markUserTyped();
-			// When user types, text is no longer from an example
-			textIsFromExample = false;
+	// Initialize machine and examples when component is mounted
+	let examplesCleanup;
+	onMount(() => {
+		// Update dependencies initially
+		exampleTyper.updateDependencies(text, $translationHistory.length);
+		
+		// Initialize examples if there's no history
+		if ($translationHistory.length === 0) {
+			translationStateMachine.actions.startExamples();
+			examplesCleanup = exampleTyper.initializeExamples((newText) => text = newText);
 		}
-	}
+		
+		return () => {
+			if (examplesCleanup) examplesCleanup();
+		};
+	});
+
+	// Track changes to text and history length
+	$effect(() => {
+		exampleTyper.updateDependencies(text, $translationHistory.length);
+		
+		// If text is empty and there's no history, consider restarting examples
+		if (text.trim().length === 0 && !isTyping && $translationHistory.length === 0) {
+			exampleTyper.restartExamplesIfNeeded((newText) => text = newText);
+		}
+	});
 	
-
-	// Reset the user has typed flag when text is empty but preserve userHasEverTyped
-	$effect(() => {
-		if (text.trim().length === 0 && !isTyping) {
-			// If text was cleared through submission or manual clearing
-			// and not because we're in the middle of typing an example
-			userHasTyped = false;
-			textIsFromExample = false;
-			console.log('Text is empty - userHasTyped reset, userHasEverTyped unchanged:', userHasEverTyped);
-			
-			// If there's no history, consider restarting the examples
-			if (history.length === 0) {
-				restartExamplesIfNeeded();
-			}
-		}
-	});
-
-	// Fixed version of the problematic effect
-	$effect(() => {
-		if (text.trim().length > 0 && !isTyping) {
-			// Only set userHasTyped/userHasEverTyped to true if the text is NOT from an example
-			if (!textIsFromExample) {
-				userHasTyped = true;
-				userHasEverTyped = true;
-				examplesPaused = true;
-				console.log('User typed text - userHasEverTyped set to true:', userHasEverTyped);
-			} else {
-				console.log('Example text completed - keeping userHasEverTyped as:', userHasEverTyped);
-			}
-		}
-	});
-
-	function loadHistory() {
-		if (browser) {
-			const stored = localStorage.getItem('translationHistory');
-			return stored ? JSON.parse(stored) : [];
-		}
-		return [];
-	}
-
 	function loadSavedText() {
 		if (browser) {
 			const savedText = sessionStorage.getItem('translationInputText');
@@ -269,19 +77,14 @@
 		}
 	}
 
-	let history = $state(loadHistory());
-
 	function deleteTranslation(index) {
-		history = history.filter((_, i) => i !== index);
-		if (browser) {
-			localStorage.setItem('translationHistory', JSON.stringify(history));
-		}
+		translationHistory.deleteTranslation(index);
 	}
 
 	let text = $state(loadSavedText());
 	let truncate_lines = $state(true);
 
-	// language management
+	// Language management
 	let user_langs = $derived(translateLanguages.languages);
 	let tgt_langs = $derived(Object.keys(user_langs));
 	let show_langs = $derived(
@@ -290,23 +93,14 @@
 			.map(([key, _]) => key)
 	);
 
-	let is_loading = $state(false);
-
 	// Save text when it changes
 	$effect(() => {
 		saveText(text);
 	});
 
 	async function handleSubmit() {
-		// Stop typing animation if it's running
-		if (isTyping) {
-			typingInterval = clearTimer(typingInterval);
-			isTyping = false;
-		}
-		// prevent new examples from starting
-		cycleInterval = clearTimer(cycleInterval);
-
-		is_loading = true;
+		// Use state machine to indicate we're translating
+		translationStateMachine.actions.startTranslating();
 		const apiUrl = '/api/translate';
 
 		try {
@@ -318,7 +112,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs: tgt_langs // Use all selected languages, not just displayed ones
+					tgt_langs
 				})
 			});
 
@@ -327,40 +121,62 @@
 			}
 
 			const data = await response.json();
+			console.log('Translation API response:', data);
 
-			if (history.some((item) => item.text === text)) {
+			if (translationHistory.get().some((item) => item.text === text)) {
 				toast.info('This text has already been translated!');
 				text = '';
-				// Clear from sessionStorage instead of localStorage
 				sessionStorage.removeItem('translationInputText'); 
-				// Consider restarting examples since we've cleared the text
-				restartExamplesIfNeeded();
+				exampleTyper.restartExamplesIfNeeded((newText) => text = newText);
+				translationStateMachine.actions.reset();
 				return;
 			}
 
-			history = [
-				{
-					text,
-					translations: data,
-					timestamp: new Date().toISOString()
-				},
-				...history
-			];
-
-			if (browser) {
-				localStorage.setItem('translationHistory', JSON.stringify(history));
+			try {
+				translationHistory.addTranslation(text, data);
+				
+				// Update state machine with success
+				translationStateMachine.actions.translationSuccess(data);
+				
+				toast.success('Translation successful!');
+				text = '';
+				sessionStorage.removeItem('translationInputText');
+			} catch (storeError) {
+				console.error('Error adding translation to history:', storeError);
+				translationStateMachine.actions.translationError(storeError);
+				toast.error('Failed to save translation');
 			}
-			toast.success('Translation successful!');
-			text = '';
-			// Clear from sessionStorage instead of localStorage
-			sessionStorage.removeItem('translationInputText');
-			// No need to restart examples here as we've likely added to history
 		} catch (error) {
 			console.error('Error fetching translation:', error);
+			translationStateMachine.actions.translationError(error);
 			toast.error('Translation failed. Please try again.');
 		} finally {
-			is_loading = false;
+			// No need to explicitly set is_loading here as it's derived from the state machine
 		}
+	}
+
+	// Handle user input - notify the state machine
+	function handleUserInput() {
+		if (!isTyping) {
+			translationStateMachine.actions.userTyping();
+			exampleTyper.handleUserInput();
+		}
+	}
+
+	// Handle events by forwarding to the store with state machine awareness
+	function handleInputFocus() {
+		exampleTyper.handleInputFocus((newText) => text = newText);
+	}
+	
+	function handleInputBlur() {
+		exampleTyper.handleInputBlur((newText) => text = newText);
+	}
+
+	// Toggle examples using the state machine
+	function toggleExamples() {
+		const newPauseState = translationStateMachine.actions.toggleExamples();
+		// Update the exampleTyper based on the new state
+		exampleTyper.toggleExamples((newText) => text = newText);
 	}
 
 	// Keyboard event handlers for accessibility and user typing detection
@@ -373,7 +189,8 @@
 		
 		// Always mark user as typed for any key press when not in automatic typing
 		if (!isTyping) {
-			markUserTyped();
+			translationStateMachine.actions.userTyping();
+			exampleTyper.markUserTyped();
 		}
 	}
 </script>
@@ -391,9 +208,9 @@
 		<div class="flex items-center gap-2">
 			<TranslationInput
 				bind:text
-				{is_loading}
+				is_loading={is_loading}
 				{handleSubmit}
-				needsAttention={history.length === 0}
+				needsAttention={$translationHistory.length === 0}
 				onInputFocus={handleInputFocus}
 				onInputBlur={handleInputBlur}
 				onInput={handleUserInput}
@@ -403,7 +220,7 @@
 				containerClass="desktop-input w-full"
 			/>
 			
-			{#if history.length === 0}
+			{#if $translationHistory.length === 0}
 				<PlayPauseButton 
 					isPaused={examplesPaused} 
 					onClick={toggleExamples} 
@@ -459,7 +276,7 @@
 
 			<!-- Translation cards with improved responsive grid -->
 			<div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-				{#each history as translation, i}
+				{#each $translationHistory as translation, i}
 					<!-- MultiLangCard.svelte -->
 					<MultiLangCard
 						{translation}
@@ -495,19 +312,19 @@
 	<div class="mx-auto flex max-w-md items-center gap-2">
 		<TranslationInput
 			bind:text
-			{is_loading}
+			is_loading={is_loading}
 			{handleSubmit}
 			onInputFocus={handleInputFocus}
 			onInputBlur={handleInputBlur}
 			onInput={handleUserInput}
 			onKeyDown={handleKeyDown}
 			onKeyPress={handleKeyDown}
-			needsAttention={history.length === 0}
+			needsAttention={$translationHistory.length === 0}
 			inputClass="text-gray-900 py-3"
 			containerClass="mobile-input w-full max-w-full"
 		/>
 		
-		{#if history.length === 0}
+		{#if $translationHistory.length === 0}
 			<PlayPauseButton 
 				isPaused={examplesPaused} 
 				onClick={toggleExamples} 
