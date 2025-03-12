@@ -3,6 +3,7 @@
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import { translationHistory } from '$lib/stores/translationHistory.svelte.js';
 	import { exampleTyper } from '$lib/stores/exampleTyper.svelte.js';
+	import { translationStateMachine, STATES } from '$lib/stores/translationStateMachine.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
@@ -13,40 +14,46 @@
 	import { getColorByIndex } from '$lib/colors';
 	import { onMount, onDestroy } from 'svelte';
 
-
+	// State tracking variables
 	let isTyping = $state(false);
+	let examplesPaused = $state(true); // Start with examples paused
+	let is_loading = $state(false); // Change this to a regular state variable
 	
-	let examplesPaused = $state(false);
-	
-	// Subscribe to the store values directly
-	const unsubscribe = exampleTyper.subscribe(state => {
-		isTyping = state.isTyping;
-		examplesPaused = state.examplesPaused;
+	// Subscribe to the state machine
+	const unsubscribeMachine = translationStateMachine.subscribe(state => {
+		examplesPaused = state.context.examplesPaused;
+		is_loading = state.currentState === STATES.TRANSLATING; // Update is_loading based on state
 	});
 	
-	// Clean up subscription when component is destroyed
+	// Subscribe to the example typer for specific typing state
+	const unsubscribeTyper = exampleTyper.subscribe(state => {
+		isTyping = state.isTyping;
+	});
+	
+	// Clean up subscriptions when component is destroyed
 	onDestroy(() => {
-		unsubscribe();
+		unsubscribeMachine();
+		unsubscribeTyper();
 	});
 
-	// Initialize examples when component is mounted
+	// Initialize machine and examples when component is mounted
 	let examplesCleanup;
 	onMount(() => {
 		// Update dependencies initially
 		exampleTyper.updateDependencies(text, $translationHistory.length);
 		
-		// Initialize examples
+		// Initialize examples if there's no history
 		if ($translationHistory.length === 0) {
+			translationStateMachine.actions.startExamples();
 			examplesCleanup = exampleTyper.initializeExamples((newText) => text = newText);
 		}
 		
-		// Clean up on component destruction
 		return () => {
 			if (examplesCleanup) examplesCleanup();
 		};
 	});
 
-	// Track changes to text and history length - convert $: to $effect
+	// Track changes to text and history length
 	$effect(() => {
 		exampleTyper.updateDependencies(text, $translationHistory.length);
 		
@@ -70,7 +77,6 @@
 		}
 	}
 
-	// The deleteTranslation function now calls the store method
 	function deleteTranslation(index) {
 		translationHistory.deleteTranslation(index);
 	}
@@ -78,7 +84,7 @@
 	let text = $state(loadSavedText());
 	let truncate_lines = $state(true);
 
-	// language management
+	// Language management
 	let user_langs = $derived(translateLanguages.languages);
 	let tgt_langs = $derived(Object.keys(user_langs));
 	let show_langs = $derived(
@@ -87,16 +93,14 @@
 			.map(([key, _]) => key)
 	);
 
-	let is_loading = $state(false);
-
-	// Save text when it changes - convert $: to $effect
+	// Save text when it changes
 	$effect(() => {
 		saveText(text);
 	});
 
 	async function handleSubmit() {
-		// Stop typing animation if it's running
-		is_loading = true;
+		// Use state machine to indicate we're translating
+		translationStateMachine.actions.startTranslating();
 		const apiUrl = '/api/translate';
 
 		try {
@@ -108,7 +112,7 @@
 				},
 				body: JSON.stringify({
 					text,
-					tgt_langs: tgt_langs // Use all selected languages, not just displayed ones
+					tgt_langs
 				})
 			});
 
@@ -124,28 +128,42 @@
 				text = '';
 				sessionStorage.removeItem('translationInputText'); 
 				exampleTyper.restartExamplesIfNeeded((newText) => text = newText);
+				translationStateMachine.actions.reset();
 				return;
 			}
 
 			try {
 				translationHistory.addTranslation(text, data);
 				
+				// Update state machine with success
+				translationStateMachine.actions.translationSuccess(data);
+				
 				toast.success('Translation successful!');
 				text = '';
 				sessionStorage.removeItem('translationInputText');
 			} catch (storeError) {
 				console.error('Error adding translation to history:', storeError);
+				translationStateMachine.actions.translationError(storeError);
 				toast.error('Failed to save translation');
 			}
 		} catch (error) {
 			console.error('Error fetching translation:', error);
+			translationStateMachine.actions.translationError(error);
 			toast.error('Translation failed. Please try again.');
 		} finally {
-			is_loading = false;
+			// No need to explicitly set is_loading here as it's derived from the state machine
 		}
 	}
 
-	// Handle events by forwarding to the store
+	// Handle user input - notify the state machine
+	function handleUserInput() {
+		if (!isTyping) {
+			translationStateMachine.actions.userTyping();
+			exampleTyper.handleUserInput();
+		}
+	}
+
+	// Handle events by forwarding to the store with state machine awareness
 	function handleInputFocus() {
 		exampleTyper.handleInputFocus((newText) => text = newText);
 	}
@@ -154,12 +172,10 @@
 		exampleTyper.handleInputBlur((newText) => text = newText);
 	}
 
-	function handleUserInput() {
-		exampleTyper.handleUserInput();
-	}
-
+	// Toggle examples using the state machine
 	function toggleExamples() {
-		// Fix: Pass the setText function to the toggleExamples method
+		const newPauseState = translationStateMachine.actions.toggleExamples();
+		// Update the exampleTyper based on the new state
 		exampleTyper.toggleExamples((newText) => text = newText);
 	}
 
@@ -173,6 +189,7 @@
 		
 		// Always mark user as typed for any key press when not in automatic typing
 		if (!isTyping) {
+			translationStateMachine.actions.userTyping();
 			exampleTyper.markUserTyped();
 		}
 	}
@@ -191,7 +208,7 @@
 		<div class="flex items-center gap-2">
 			<TranslationInput
 				bind:text
-				{is_loading}
+				is_loading={is_loading}
 				{handleSubmit}
 				needsAttention={$translationHistory.length === 0}
 				onInputFocus={handleInputFocus}
@@ -295,7 +312,7 @@
 	<div class="mx-auto flex max-w-md items-center gap-2">
 		<TranslationInput
 			bind:text
-			{is_loading}
+			is_loading={is_loading}
 			{handleSubmit}
 			onInputFocus={handleInputFocus}
 			onInputBlur={handleInputBlur}

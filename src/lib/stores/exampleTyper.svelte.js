@@ -1,5 +1,6 @@
 import { browser } from '$app/environment';
 import { examplePhrases } from '$lib/example';
+import { translationStateMachine, STATES } from './translationStateMachine.svelte.js';
 
 function createExampleTyperStore() {
   // Private state
@@ -79,6 +80,9 @@ function createExampleTyperStore() {
       textIsFromExample: true 
     });
     
+    // Update the state machine to reflect example typing
+    translationStateMachine.actions.startExamples();
+    
     _typingInterval = clearTimer(_typingInterval);
     setText('');
     let i = 0;
@@ -105,9 +109,18 @@ function createExampleTyperStore() {
 
   // Function to cycle to the next example
   function cycleExamples(setText) {
-    // Only show examples if not paused and no history and user hasn't typed
-    if (!_examplesPaused && _translationHistoryLength === 0 && 
-        !_userHasTyped && (!_userHasEverTyped || _currentText.trim() === '')) {
+    // Get state from the state machine for a single source of truth
+    const machineState = translationStateMachine.state;
+    const context = translationStateMachine.context;
+    
+    // Only show examples if in the right state for examples
+    if (
+      machineState === STATES.EXAMPLE_TYPING && 
+      !context.examplesPaused && 
+      _translationHistoryLength === 0 && 
+      !_userHasTyped && 
+      (!_userHasEverTyped || _currentText.trim() === '')
+    ) {
       const randomExample = examplePhrases[Math.floor(Math.random() * examplePhrases.length)];
       typeLetters.call(this, randomExample, setText);
     }
@@ -122,30 +135,20 @@ function createExampleTyperStore() {
       textIsFromExample: false
     });
     
+    // Also update the state machine 
+    translationStateMachine.actions.userTyping();
+    
     _cycleInterval = clearTimer(_cycleInterval);
   }
   
   // Toggle play/pause for examples
   function toggleExamples(setText) {
-    // Debug
-    console.log("Toggle examples called, current state:", { 
-      _examplesPaused, 
-      _userHasEverTyped,
-      _translationHistoryLength 
-    });
+    // Let the state machine handle toggling and get the result
+    _examplesPaused = translationStateMachine.examplesPaused;
+    update.call(this, { examplesPaused: _examplesPaused });
     
-    // If user has ever typed, don't allow unpausing
-    if (_userHasEverTyped) {
-      update.call(this, { examplesPaused: true });
-      return;
-    }
-    
-    // Normal toggle behavior only if user has never typed
-    const newPausedState = !_examplesPaused;
-    update.call(this, { examplesPaused: newPausedState });
-    
-    if (newPausedState) {
-      // If pausing, clear the interval
+    if (_examplesPaused) {
+      // If paused, clear the interval
       _cycleInterval = clearTimer(_cycleInterval);
       console.log("Examples paused, interval cleared");
     } else {
@@ -200,6 +203,7 @@ function createExampleTyperStore() {
   function handleInputFocus(setText) {
     // Pause examples during input focus
     update.call(this, { examplesPaused: true });
+    translationStateMachine.actions.pauseExamples();
     
     // Clear the cycling interval to prevent new examples
     _cycleInterval = clearTimer(_cycleInterval);
@@ -218,6 +222,9 @@ function createExampleTyperStore() {
         textIsFromExample: false,
         examplesPaused: false
       });
+      
+      // Also update the state machine
+      translationStateMachine.actions.startExamples();
       
       // Make sure any existing intervals are cleared first
       _cycleInterval = clearTimer(_cycleInterval);
@@ -252,6 +259,7 @@ function createExampleTyperStore() {
     } else {
       // If user has typed, ensure examples remain paused
       update.call(this, { examplesPaused: true });
+      translationStateMachine.actions.userTyping();
     }
   }
   
@@ -261,6 +269,7 @@ function createExampleTyperStore() {
     // mark that the user has typed
     if (!_isTyping) {
       markUserTyped.call(this);
+      translationStateMachine.actions.userTyping();
     }
   }
   
@@ -282,6 +291,9 @@ function createExampleTyperStore() {
       // Clear any existing intervals first
       _cycleInterval = clearTimer(_cycleInterval);
       _typingInterval = clearTimer(_typingInterval);
+      
+      // Update the state machine
+      translationStateMachine.actions.startExamples();
       
       // Type the first example after a short delay to ensure page is fully rendered
       const timeout = setTimeout(() => {
@@ -315,6 +327,11 @@ function createExampleTyperStore() {
     _cycleInterval = clearTimer(_cycleInterval);
     _typingInterval = clearTimer(_typingInterval);
     _initializationActive = false;
+  }
+  
+  // Initialize store with current state machine state
+  if (browser) {
+    _examplesPaused = translationStateMachine.examplesPaused;
   }
   
   return {
@@ -360,6 +377,8 @@ function createExampleTyperStore() {
         textIsFromExample: false,
         examplesPaused: false
       });
+      
+      translationStateMachine.actions.reset();
       
       _cycleInterval = clearTimer(_cycleInterval);
       _typingInterval = clearTimer(_typingInterval);

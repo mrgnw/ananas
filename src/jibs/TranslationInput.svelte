@@ -52,6 +52,24 @@
 			.trim()
 	);
 
+	// Ensure we're properly disabling the input when loading
+	let inputAttrs = $derived({
+		type: "text",
+		placeholder: is_loading ? 'Translating...' : 'Enter text from any language...',
+		value: text,
+		disabled: is_loading, // Make sure this is properly set
+		class: inputClasses,
+		onkeydown: handleKeyDown,
+		oninput: handleInput,
+		onkeypress: handleKeyPress,
+		onfocus: handleFocus,
+		onclick: handleFocus,
+		onblur: () => {
+			isInputFocused = false;
+			if (typeof onInputBlur === 'function') onInputBlur();
+		}
+	});
+
 	// Event handlers - simplified to make sure events are always passed up
 	function handleKeyDown(event) {
 		// Forward the event to the parent component's handler immediately
@@ -89,22 +107,7 @@
 <div class="flex w-full items-center gap-4">
 	<div class={containerClasses}>
 		<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
-			<input
-				type="text"
-				placeholder={is_loading ? 'Translating...' : 'Enter text from any language...'}
-				bind:value={text}
-				disabled={is_loading}
-				class={inputClasses}
-				onkeydown={handleKeyDown}
-				oninput={handleInput}
-				onkeypress={handleKeyPress}
-				onfocus={handleFocus}
-				onclick={handleFocus}
-				onblur={() => {
-					isInputFocused = false;
-					if (typeof onInputBlur === 'function') onInputBlur();
-				}}
-			/>
+				<input {...inputAttrs} />
 
 			<button
 				onclick={handleSubmit}
