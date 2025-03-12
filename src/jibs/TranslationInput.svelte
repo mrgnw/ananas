@@ -52,16 +52,17 @@
 			.trim()
 	);
 
-	// Event handlers
+	// Event handlers - simplified to make sure events are always passed up
 	function handleKeyDown(event) {
+		// Forward the event to the parent component's handler immediately
+		if (typeof onKeyDown === 'function') {
+			onKeyDown(event);
+		}
+		
+		// Then handle the Enter key for submit
 		if (event.key === 'Enter' && is_ready) {
 			event.preventDefault();
 			handleSubmit();
-			}
-		
-		// Forward the event to the parent component's handler if provided
-		if (typeof onKeyDown === 'function') {
-			onKeyDown(event);
 		}
 	}
 
@@ -71,7 +72,7 @@
 	}
 	
 	function handleInput(event) {
-		// Forward the input event to the parent component
+		// Forward the input event to the parent component immediately
 		if (typeof onInput === 'function') {
 			onInput(event);
 		}
