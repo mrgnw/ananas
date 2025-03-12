@@ -48,7 +48,6 @@ export let examplePhrases = [
 	"Saya suka musik", // Indonesian: I like music
 	"Cảm ơn rất nhiều", // Vietnamese: Thank you very much
 	"Mahal kita", // Filipino/Tagalog: I love you
-	"Kia ora", // Maori: Hello/Be well
 	"Mình rất thích ẩm thực Việt Nam", // Vietnamese: I really like Vietnamese cuisine
 	"Ik spreek een beetje Nederlands", // Dutch: I speak a little Dutch
 	"Hvar er næsti strætó?", // Icelandic: Where is the next bus?
