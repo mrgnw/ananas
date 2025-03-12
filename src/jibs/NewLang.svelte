@@ -2,6 +2,7 @@
 	import { examplePhrases, exampleTranslations } from '$lib/example';
 	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import { translationHistory } from '$lib/stores/translationHistory.svelte.js';
+	import { exampleTyper } from '$lib/stores/exampleTyper.svelte.js';
 	import MultiLangCard from './MultiLangCard.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Toaster } from 'svelte-sonner';
@@ -20,231 +21,22 @@
 		return timer;
 	}
 
+	// Store example typer state in reactive variables
+	$effect(() => {
+		// Update these reactive variables from the store
+		isTyping = $exampleTyper.isTyping;
+		textIsFromExample = $exampleTyper.textIsFromExample;
+		userHasTyped = $exampleTyper.userHasTyped;
+		userHasEverTyped = $exampleTyper.userHasEverTyped;
+		examplesPaused = $exampleTyper.examplesPaused;
+	});
+
 	let isTyping = $state(false);
-	// Interval ID for cleanup
-	let typingInterval = $state(null);
+	let textIsFromExample = $state(false);
 	let userHasTyped = $state(false);
 	let userHasEverTyped = $state(false);
-	// Add a flag to track if the current text is from an example
-	let textIsFromExample = $state(false);
-
-	function markUserTyped() {
-		userHasTyped = true;
-		userHasEverTyped = true;
-		examplesPaused = true;
-		cycleInterval = clearTimer(cycleInterval);
-	}
-	/**
-	 * Simple typewriter function that updates a variable one letter at a time
-	 * @param {string} newText - The new text to type
-	 */
-	function typeLetters(newText) {
-		if (isTyping) return;
-
-		isTyping = true;
-		typingInterval = clearTimer(typingInterval);
-		text = '';
-		let i = 0;
-		// Mark that the text being typed is from an example
-		textIsFromExample = true;
-
-		(function typeNext() {
-			typingInterval = setTimeout(
-				() => {
-					if (i < newText.length) {
-						text = newText.substring(0, ++i);
-						typeNext();
-					} else {
-						typingInterval = clearTimer(typingInterval);
-						isTyping = false;
-						// Keep textIsFromExample true after typing completes
-					}
-				},
-				30 + Math.floor(Math.random() * 40)
-			);
-		})();
-	}
-
-	// Interval for cycling examples
-	let cycleInterval = $state(null);
-	// Track if examples are paused or playing
 	let examplesPaused = $state(false);
-
-	// Function to cycle to the next example
-	function cycleExamples() {
-		// Only show examples if not paused and no history and user hasn't typed
-		if (!examplesPaused && $translationHistory.length === 0 && !userHasTyped && (!userHasEverTyped || text.trim() === '')) {
-			typeLetters(examplePhrases[Math.floor(Math.random() * examplePhrases.length)]);
-		}
-	}
-
-	// Handle input focus event from TranslationInput
-	function handleInputFocus() {
-		// Pause examples during input focus
-		examplesPaused = true;
-		
-		// Clear the cycling interval to prevent new examples
-		cycleInterval = clearTimer(cycleInterval);
-		
-		// If currently typing, complete the current example quickly
-		if (isTyping && typingInterval) {
-			console.log('Completing typing animation quickly');
-			typingInterval = clearTimer(typingInterval);
-			
-			// Find matching example or use current text
-			const targetText = (text && examplePhrases.find((ex) => ex.startsWith(text))) || '';
-			if (!targetText) return (isTyping = false);
-
-			// Type remaining text at 5ms per character
-			let i = text.length;
-
-			// finish typing quickly (5ms per character)
-			typingInterval = setInterval(() => {
-				if (i < targetText.length) {
-					// Add the next letter at ultra fast speed
-					text = targetText.substring(0, i + 1);
-					i++;
-				} else {
-					// Once we've completed the entire example, stop typing
-					typingInterval = clearTimer(typingInterval);
-					isTyping = false;
-				}
-			}, 5);
-		}
-	}
 	
-	// Add a function to restart examples when appropriate
-	function restartExamplesIfNeeded() {
-		// Only restart examples if there's no history and text is empty
-		if ($translationHistory.length === 0 && text.trim().length === 0) {
-			// Reset all flags that might prevent examples from showing
-			userHasTyped = false;
-			userHasEverTyped = false;  // Reset this flag to allow examples to run again
-			textIsFromExample = false;
-			examplesPaused = false;
-			
-			// Start one example after a 4-second delay
-			setTimeout(() => {
-				if (!isTyping && $translationHistory.length === 0) {
-					cycleExamples();
-					// Set up cycling interval if not already cycling
-					if (!cycleInterval) {
-						cycleInterval = setInterval(cycleExamples, 5000);
-					}
-				}
-			}, 4000); // Changed from 500ms to 4000ms (4 seconds)
-			
-			console.log('Examples restarted - all typing flags reset - examples will start in 4 seconds');
-		}
-	}
-
-	// Handle input blur event - update to use the new restart function
-	function handleInputBlur() {
-		// If there's no history AND text is empty, try to restart examples
-		if ($translationHistory.length === 0 && text.trim().length === 0) {
-			restartExamplesIfNeeded();
-		} else {
-			// If user has typed, ensure examples remain paused
-			examplesPaused = true;
-		}
-	}
-	
-	// Toggle play/pause for examples - simplify logic
-	function toggleExamples() {
-		// If user has ever typed, don't allow unpausing
-		if (userHasEverTyped) {
-			examplesPaused = true;
-			return;
-		}
-		
-		// Normal toggle behavior only if user has never typed
-		examplesPaused = !examplesPaused;
-		
-		if (examplesPaused) {
-			cycleInterval = clearTimer(cycleInterval);
-		} else {
-			if (!cycleInterval && $translationHistory.length === 0) {
-				cycleExamples();
-				cycleInterval = setInterval(cycleExamples, 5000);
-			}
-		}
-	}
-
-	// Initialize examples when browser is available and history is loaded
-	$effect(() => {
-		// Only start examples if browser is available AND history is loaded AND history is empty AND user hasn't typed
-		// AND the user has never typed anything or input is empty
-		if (browser && $translationHistory !== undefined && $translationHistory.length === 0 && !userHasTyped && 
-			(!userHasEverTyped || text.trim() === '')) {
-			console.log('Page fully loaded with empty history, initializing examples');
-
-			// Type the first example after a short delay to ensure page is fully rendered
-			const timeout = setTimeout(() => {
-				console.log('Starting first example');
-				cycleExamples();
-
-				// Set up cycling interval
-				if (!cycleInterval) {
-					console.log('Setting up cycling interval');
-					cycleInterval = setInterval(cycleExamples, 5000);
-				}
-			}, 1000);
-
-			// Cleanup function
-			return () => {
-				console.log('Cleaning up intervals');
-				clearTimeout(timeout);
-				cycleInterval = clearTimer(cycleInterval);
-				typingInterval = clearTimer(typingInterval);
-			};
-		}
-	});
-
-	// Track user input to detect when they start typing
-	function handleUserInput(event) {
-		// If this is user-initiated input (not our example typing), 
-		// mark that the user has typed
-		if (!isTyping) {
-			markUserTyped();
-			// When user types, text is no longer from an example
-			textIsFromExample = false;
-		}
-	}
-	
-
-	// Reset the user has typed flag when text is empty but preserve userHasEverTyped
-	$effect(() => {
-		if (text.trim().length === 0 && !isTyping) {
-			// If text was cleared through submission or manual clearing
-			// and not because we're in the middle of typing an example
-			userHasTyped = false;
-			textIsFromExample = false;
-			console.log('Text is empty - userHasTyped reset, userHasEverTyped unchanged:', userHasEverTyped);
-			
-			// If there's no history, consider restarting the examples
-			if ($translationHistory.length === 0) {
-				restartExamplesIfNeeded();
-			}
-		}
-	});
-
-	// Fixed version of the problematic effect
-	$effect(() => {
-		if (text.trim().length > 0 && !isTyping) {
-			// Only set userHasTyped/userHasEverTyped to true if the text is NOT from an example
-			if (!textIsFromExample) {
-				userHasTyped = true;
-				userHasEverTyped = true;
-				examplesPaused = true;
-				console.log('User typed text - userHasEverTyped set to true:', userHasEverTyped);
-			} else {
-				console.log('Example text completed - keeping userHasEverTyped as:', userHasEverTyped);
-			}
-		}
-	});
-
-	// Remove loadHistory function - now handled by the store
-
 	function loadSavedText() {
 		if (browser) {
 			const savedText = sessionStorage.getItem('translationInputText');
@@ -259,9 +51,6 @@
 		}
 	}
 
-	// Use the store value instead of local state
-	// Replace let history = $state(loadHistory());
-	
 	// The deleteTranslation function now calls the store method
 	function deleteTranslation(index) {
 		translationHistory.deleteTranslation(index);
@@ -269,6 +58,11 @@
 
 	let text = $state(loadSavedText());
 	let truncate_lines = $state(true);
+
+	// Sync text and history length with example typer store
+	$effect(() => {
+		exampleTyper.updateDependencies(text, $translationHistory.length);
+	});
 
 	// language management
 	let user_langs = $derived(translateLanguages.languages);
@@ -286,15 +80,24 @@
 		saveText(text);
 	});
 
+	// Initialize examples when browser is available and history is loaded
+	$effect(() => {
+		// Return the cleanup function
+		return exampleTyper.initializeExamples((newText) => text = newText);
+	});
+
+	// Reset the user has typed flag when text is empty but preserve userHasEverTyped
+	$effect(() => {
+		if (text.trim().length === 0 && !isTyping) {
+			// If there's no history, consider restarting the examples
+			if ($translationHistory.length === 0) {
+				exampleTyper.restartExamplesIfNeeded((newText) => text = newText);
+			}
+		}
+	});
+
 	async function handleSubmit() {
 		// Stop typing animation if it's running
-		if (isTyping) {
-			typingInterval = clearTimer(typingInterval);
-			isTyping = false;
-		}
-		// prevent new examples from starting
-		cycleInterval = clearTimer(cycleInterval);
-
 		is_loading = true;
 		const apiUrl = '/api/translate';
 
@@ -316,28 +119,22 @@
 			}
 
 			const data = await response.json();
-			console.log('Translation API response:', data); // Log the response data
+			console.log('Translation API response:', data);
 
-			// Fix: Use the non-reactive store object to access methods
 			if (translationHistory.get().some((item) => item.text === text)) {
 				toast.info('This text has already been translated!');
 				text = '';
-				// Clear from sessionStorage instead of localStorage
 				sessionStorage.removeItem('translationInputText'); 
-				// Consider restarting examples since we've cleared the text
-				restartExamplesIfNeeded();
+				exampleTyper.restartExamplesIfNeeded((newText) => text = newText);
 				return;
 			}
 
 			try {
-				// Add to history using the store method instead of directly manipulating state
 				translationHistory.addTranslation(text, data);
 				
 				toast.success('Translation successful!');
 				text = '';
-				// Clear from sessionStorage instead of localStorage
 				sessionStorage.removeItem('translationInputText');
-				// No need to restart examples here as we've likely added to history
 			} catch (storeError) {
 				console.error('Error adding translation to history:', storeError);
 				toast.error('Failed to save translation');
@@ -350,6 +147,23 @@
 		}
 	}
 
+	// Handle events by forwarding to the store
+	function handleInputFocus() {
+		exampleTyper.handleInputFocus((newText) => text = newText);
+	}
+	
+	function handleInputBlur() {
+		exampleTyper.handleInputBlur((newText) => text = newText);
+	}
+
+	function handleUserInput() {
+		exampleTyper.handleUserInput();
+	}
+
+	function toggleExamples() {
+		exampleTyper.toggleExamples((newText) => text = newText);
+	}
+
 	// Keyboard event handlers for accessibility and user typing detection
 	function handleKeyDown(event, callback) {
 		// Handle the callback first (for accessibility)
@@ -360,7 +174,7 @@
 		
 		// Always mark user as typed for any key press when not in automatic typing
 		if (!isTyping) {
-			markUserTyped();
+			exampleTyper.markUserTyped();
 		}
 	}
 </script>
