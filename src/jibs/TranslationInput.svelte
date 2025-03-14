@@ -16,7 +16,8 @@
 		containerClass = ''
 	} = $props();
 
-	let is_ready = $derived(text.length > 0 && !is_loading);
+	// Make sure is_ready evaluates correctly for button activation
+	let is_ready = $derived(text && text.trim().length > 0 && !is_loading);
 
 	let isInputFocused = $state(false);
 
@@ -72,15 +73,17 @@
 
 	// Event handlers - simplified to make sure events are always passed up
 	function handleKeyDown(event) {
-		// Forward the event to the parent component's handler immediately
-		if (typeof onKeyDown === 'function') {
-			onKeyDown(event);
+			// First check for Enter key submission directly
+		if (event.key === 'Enter' && text && text.trim().length > 0 && !is_loading) {
+			event.preventDefault();
+			// Call handleSubmit directly instead of relying on external handling
+			handleSubmit();
+			return;
 		}
 		
-		// Then handle the Enter key for submit
-		if (event.key === 'Enter' && is_ready) {
-			event.preventDefault();
-			handleSubmit();
+		// Forward the event to the parent component's handler
+		if (typeof onKeyDown === 'function') {
+			onKeyDown(event);
 		}
 	}
 
@@ -102,6 +105,14 @@
 			onKeyPress(event);
 		}
 	}
+
+	// Create a proper submit handler function that checks conditions directly
+	function submitTranslation(event) {
+		event.preventDefault();
+		if (text && text.trim().length > 0 && !is_loading) {
+			handleSubmit();
+		}
+	}
 </script>
 
 <div class="flex w-full items-center gap-4">
@@ -110,7 +121,7 @@
 				<input {...inputAttrs} />
 
 			<button
-				onclick={handleSubmit}
+				onclick={submitTranslation}
 				onmouseenter={() => typeof onInputFocus === 'function' && onInputFocus()}
 				disabled={!is_ready}
 				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full transition-opacity duration-200 {showSendButton
@@ -119,6 +130,7 @@
 					? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
 					: 'text-gray-400'}"
 				type="submit"
+				aria-label={is_loading ? 'Translating...' : 'Translate'}
 			>
 				{#if is_loading}
 					<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600"></div>
