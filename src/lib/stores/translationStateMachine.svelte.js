@@ -17,7 +17,8 @@ function createTranslationStateMachine() {
   let _context = {
     error: null,
     lastTranslation: null,
-    examplesPaused: false
+    examplesPaused: false,
+    debugInfo: null // Added for debugging
   };
   
   // Subscribers
@@ -103,15 +104,24 @@ function createTranslationStateMachine() {
       },
       
       // User has started typing
-      userTyping() {
+      userTyping(debugText) {
         if (_currentState === STATES.IDLE || _currentState === STATES.EXAMPLE_TYPING) {
-          transition(STATES.USER_TYPING, { examplesPaused: true });
+          // Added optional debug parameter to track text being typed
+          transition(STATES.USER_TYPING, { 
+            examplesPaused: true,
+            debugInfo: debugText ? { textLength: debugText.length, text: debugText } : null
+          });
         }
       },
       
       // User has submitted a translation request
-      startTranslating() {
-        transition(STATES.TRANSLATING);
+      startTranslating(textToTranslate) {
+        // Adding the text to context for debugging
+        transition(STATES.TRANSLATING, {
+          debugInfo: textToTranslate ? 
+            { textLength: textToTranslate.length, textValue: textToTranslate } : 
+            { note: 'No text provided to startTranslating' }
+        });
       },
       
       // Translation completed successfully
@@ -127,6 +137,12 @@ function createTranslationStateMachine() {
       // Reset to idle state
       reset() {
         transition(STATES.IDLE, { error: null, lastTranslation: null });
+      },
+      
+      // Add debug info
+      addDebugInfo(info) {
+        _context.debugInfo = info;
+        notify();
       }
     },
     

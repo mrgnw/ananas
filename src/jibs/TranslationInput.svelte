@@ -16,8 +16,8 @@
 		containerClass = ''
 	} = $props();
 
-	// Make sure is_ready evaluates correctly for button activation
-	let is_ready = $derived(text && text.trim().length > 0 && !is_loading);
+	// Simplified condition - only check for non-empty text and not loading
+	let is_ready = $derived(Boolean(text && text.trim().length > 0) && !is_loading);
 
 	let isInputFocused = $state(false);
 
@@ -71,12 +71,12 @@
 		}
 	});
 
-	// Event handlers - simplified to make sure events are always passed up
+	// Event handlers - prioritize immediate submission when criteria is met
 	function handleKeyDown(event) {
-			// First check for Enter key submission directly
+		// First check for Enter key submission
 		if (event.key === 'Enter' && text && text.trim().length > 0 && !is_loading) {
+			console.log('Enter key pressed with valid text - submitting form');
 			event.preventDefault();
-			// Call handleSubmit directly instead of relying on external handling
 			handleSubmit();
 			return;
 		}
@@ -106,40 +106,76 @@
 		}
 	}
 
-	// Create a proper submit handler function that checks conditions directly
+	// Simplified submit handler with explicit logging
 	function submitTranslation(event) {
 		event.preventDefault();
+		console.log('Submit button clicked, is_ready:', is_ready, 'text length:', text?.length || 0);
+		
+		// Double-check here to ensure nothing prevents submission
+		if (text && text.trim().length > 0 && !is_loading) {
+			handleSubmit();
+		} else {
+			console.log('Submit prevented - text empty or loading:', {
+				hasText: Boolean(text && text.trim().length > 0),
+				isLoading: is_loading
+			});
+		}
+	}
+
+	// Explicit form submission handler
+	function handleFormSubmit(event) {
+		event.preventDefault();
+		console.log('Form submitted, is_ready:', is_ready, 'text length:', text?.length || 0);
+		
+		// Double-check here to ensure nothing prevents submission
 		if (text && text.trim().length > 0 && !is_loading) {
 			handleSubmit();
 		}
 	}
+
+	// Monitor key state variables that affect submission
+	$effect(() => {
+		console.debug('TranslationInput state:', {
+			text_length: text?.length || 0,
+			text_trimmed_length: text?.trim().length || 0,
+			is_loading,
+			is_ready,
+			canSubmit: Boolean(text && text.trim().length > 0 && !is_loading)
+		});
+	});
 </script>
 
 <div class="flex w-full items-center gap-4">
 	<div class={containerClasses}>
-		<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
-				<input {...inputAttrs} />
+		<form class="w-full" onsubmit={handleFormSubmit}>
+			<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
+					<input 
+						{...inputAttrs}
+						onkeydown={handleKeyDown} 
+					/>
 
-			<button
-				onclick={submitTranslation}
-				onmouseenter={() => typeof onInputFocus === 'function' && onInputFocus()}
-				disabled={!is_ready}
-				class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full transition-opacity duration-200 {showSendButton
-					? 'opacity-100'
-					: 'opacity-0'} {is_ready
-					? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
-					: 'text-gray-400'}"
-				type="submit"
-				aria-label={is_loading ? 'Translating...' : 'Translate'}
-			>
-				{#if is_loading}
-					<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600"></div>
-				{:else}
-					<Send size={18} />
-				{/if}
-				<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
-			</button>
-		</div>
+				<button
+					onclick={submitTranslation}
+					onmouseenter={() => typeof onInputFocus === 'function' && onInputFocus()}
+					disabled={!is_ready}
+					class="absolute right-2 flex h-8 w-8 items-center justify-center rounded-full transition-opacity duration-200 {showSendButton
+						? 'opacity-100'
+						: 'opacity-0'} {is_ready
+						? 'text-blue-600 hover:bg-blue-50 hover:text-blue-700'
+						: 'text-gray-400 cursor-not-allowed'}"
+					type="submit"
+					aria-label={is_loading ? 'Translating...' : 'Translate'}
+					data-ready={is_ready}
+				>
+					{#if is_loading}
+						<div class="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600"></div>
+					{:else}
+						<Send size={18} />
+					{/if}
+					<span class="sr-only">{is_loading ? 'Translating...' : 'Translate'}</span>
+				</button>
+			</div>
+		</form>
 	</div>
 
 	<a

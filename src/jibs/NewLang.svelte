@@ -21,6 +21,7 @@
 	
 	// Subscribe to the state machine
 	const unsubscribeMachine = translationStateMachine.subscribe(state => {
+		console.log('State machine update:', state.currentState, 'examplesPaused:', state.context.examplesPaused);
 		examplesPaused = state.context.examplesPaused;
 		is_loading = state.currentState === STATES.TRANSLATING; // Update is_loading based on state
 	});
@@ -99,11 +100,30 @@
 	});
 
 	async function handleSubmit() {
+		console.log('handleSubmit called with text:', text);
+		
+		// Only validate text here, don't block on any other conditions
+		if (!text || text.trim().length === 0) {
+			console.debug('Skipping submission - empty text');
+			return;
+		}
+
+		// Check if we're already translating to prevent double-submissions
+		if (is_loading) {
+			console.debug('Already translating, skipping submission');
+			return;
+		}
+
 		// Use state machine to indicate we're translating
-		translationStateMachine.actions.startTranslating();
+		translationStateMachine.actions.startTranslating(text);
+		console.log('Starting translation process, text:', text.substring(0, 20) + (text.length > 20 ? '...' : ''));
+		
 		const apiUrl = '/api/translate';
 
 		try {
+			console.log('Starting translation for:', text);
+			console.log('Target languages:', tgt_langs);
+			
 			console.log('Target languages:', tgt_langs);
 			const response = await fetch(apiUrl, {
 				method: 'POST',
@@ -156,9 +176,21 @@
 	}
 
 	// Handle user input - notify the state machine
-	function handleUserInput() {
+	function handleUserInput(event) {
+		// Log the actual input value for debugging
+		console.debug('User input detected:', { 
+			value: event?.target?.value,
+			currentText: text,
+			textLength: text?.length || 0
+		});
+		
+		// Update text state - this is important for the binding to work correctly
+		if (event && event.target && typeof event.target.value === 'string') {
+			text = event.target.value;
+		}
+		
 		if (!isTyping) {
-			translationStateMachine.actions.userTyping();
+			translationStateMachine.actions.userTyping(text);
 			exampleTyper.handleUserInput();
 		}
 	}
@@ -181,7 +213,30 @@
 
 	// Keyboard event handlers for accessibility and user typing detection
 	function handleKeyDown(event, callback) {
-		// Handle the callback first (for accessibility)
+		// Log key press for debugging with the current text value
+		console.debug('Key pressed in NewLang:', event.key, {
+			text_value: text,
+			text_length: text?.length || 0,
+			text_trimmed_length: text?.trim?.()?.length || 0,
+			is_loading,
+			canSubmit: Boolean(text?.trim?.()?.length > 0 && !is_loading)
+		});
+		
+		// Handle submission on Enter key with minimal conditions
+		if (event.key === 'Enter') {
+			if (text && text.trim().length > 0 && !is_loading) {
+				console.log('Enter key - submitting valid text:', text);
+				event.preventDefault();
+				handleSubmit();
+				return;
+			} else {
+				console.log('Enter key - cannot submit:', 
+					!text?.trim?.()?.length ? 'empty text' : 'currently loading',
+					'Current text value:', text);
+			}
+		}
+		
+		// Handle the callback for other accessibility cases
 		if ((event.key === 'Enter' || event.key === ' ') && callback) {
 			event.preventDefault();
 			callback();
