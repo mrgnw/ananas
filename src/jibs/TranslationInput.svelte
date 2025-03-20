@@ -1,9 +1,10 @@
 <script>
 	import { Languages, Send } from 'lucide-svelte';
+	import { tick } from 'svelte';
 
 	// Props using Svelte 5 runes
 	let {
-		text = $bindable(),
+		text = $bindable(''),  // Initialize with empty string if not provided
 		is_loading,
 		handleSubmit,
 		needsAttention = false,
@@ -16,15 +17,27 @@
 		containerClass = ''
 	} = $props();
 
+	// Internal state for the input value to ensure we have full control
+	let inputValue = $state(text);
+
+	// Effect to synchronize inputValue with text prop
+	$effect(() => {
+		if (text !== inputValue) {
+			console.log('Synchronizing input value:', { text, inputValue });
+			inputValue = text;
+		}
+	});
+
 	// Simplified condition - only check for non-empty text and not loading
-	let is_ready = $derived(Boolean(text && text.trim().length > 0) && !is_loading);
+	let is_ready = $derived(Boolean(inputValue?.trim?.()?.length > 0) && !is_loading);
 
 	let isInputFocused = $state(false);
 
 	let animationState = $derived(
 		is_loading ? 'translating' : isInputFocused ? 'focused' : needsAttention ? 'attention' : 'idle'
 	);
-	let showSendButton = $derived(isInputFocused || is_loading || text.length > 0);
+	
+	let showSendButton = $derived(isInputFocused || is_loading || inputValue?.length > 0);
 	let inputClasses = $derived(
 		`
 		flex-grow 
@@ -74,10 +87,17 @@
 	// Event handlers - prioritize immediate submission when criteria is met
 	function handleKeyDown(event) {
 		// First check for Enter key submission
-		if (event.key === 'Enter' && text && text.trim().length > 0 && !is_loading) {
-			console.log('Enter key pressed with valid text - submitting form');
+		if (event.key === 'Enter' && inputValue && inputValue.trim().length > 0 && !is_loading) {
+			console.log('Enter key pressed with valid text - submitting form:', inputValue);
 			event.preventDefault();
-			handleSubmit();
+			
+			// Update the bound text first 
+			text = inputValue;
+			
+			// Wait for a tick to ensure binding has been processed
+			tick().then(() => {
+				handleSubmit();
+			});
 			return;
 		}
 		
@@ -93,10 +113,24 @@
 	}
 	
 	function handleInput(event) {
+		// Update internal value
+		inputValue = event.target.value;
+		
+		// Update the bound value
+		text = inputValue;
+		
 		// Forward the input event to the parent component immediately
 		if (typeof onInput === 'function') {
 			onInput(event);
 		}
+		
+		// Log current state for debugging
+		console.debug('Input changed:', { 
+			value: event.target.value,
+			inputValue,
+			boundText: text,
+			textLength: inputValue?.length || 0
+		});
 	}
 	
 	function handleKeyPress(event) {
@@ -109,14 +143,23 @@
 	// Simplified submit handler with explicit logging
 	function submitTranslation(event) {
 		event.preventDefault();
-		console.log('Submit button clicked, is_ready:', is_ready, 'text length:', text?.length || 0);
+		console.log('Submit button clicked, is_ready:', is_ready, 'text values:', {
+			inputValue,
+			boundText: text
+		});
 		
 		// Double-check here to ensure nothing prevents submission
-		if (text && text.trim().length > 0 && !is_loading) {
-			handleSubmit();
+		if (inputValue && inputValue.trim().length > 0 && !is_loading) {
+			// Make sure the bound value is updated
+			text = inputValue;
+			
+			// Wait a tick to ensure binding is processed
+			tick().then(() => {
+				handleSubmit();
+			});
 		} else {
 			console.log('Submit prevented - text empty or loading:', {
-				hasText: Boolean(text && text.trim().length > 0),
+				hasText: Boolean(inputValue && inputValue.trim().length > 0),
 				isLoading: is_loading
 			});
 		}
@@ -136,11 +179,12 @@
 	// Monitor key state variables that affect submission
 	$effect(() => {
 		console.debug('TranslationInput state:', {
-			text_length: text?.length || 0,
-			text_trimmed_length: text?.trim().length || 0,
+			input_value: inputValue,
+			bound_text: text,
+			text_length: inputValue?.length || 0,
+			text_trimmed_length: inputValue?.trim?.()?.length || 0,
 			is_loading,
 			is_ready,
-			canSubmit: Boolean(text && text.trim().length > 0 && !is_loading)
 		});
 	});
 </script>
@@ -149,9 +193,22 @@
 	<div class={containerClasses}>
 		<form class="w-full" onsubmit={handleFormSubmit}>
 			<div class="relative flex w-full items-center overflow-hidden rounded-full bg-white">
-					<input 
-						{...inputAttrs}
-						onkeydown={handleKeyDown} 
+					<!-- Use the internal inputValue for the input and sync with the bound text -->
+					<input
+						type="text" 
+						bind:value={inputValue}
+						placeholder={is_loading ? 'Translating...' : 'Enter text from any language...'}
+						disabled={is_loading}
+						class={inputClasses}
+						onkeydown={handleKeyDown}
+						oninput={handleInput}
+						onfocus={handleFocus}
+						onclick={handleFocus}
+						onblur={() => {
+							isInputFocused = false;
+							if (typeof onInputBlur === 'function') onInputBlur();
+						}}
+						onkeypress={handleKeyPress}
 					/>
 
 				<button
