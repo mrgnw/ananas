@@ -22,7 +22,7 @@
         error = "Invalid email or password";
       } else {
         // Redirect to home page on successful login
-        goto("/");
+        goto("/user/profile");
       }
     } catch (e) {
       error = "An error occurred during login";
@@ -68,7 +68,7 @@
     </button>
   </form>
   
-  <p>Don't have an account? <a href="/register">Register</a></p>
+  <p>Don't have an account? <a href="/user/register">Register</a></p>
 </div>
 
 <style>

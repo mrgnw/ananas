@@ -42,7 +42,7 @@
       } else {
         success = true;
         // Redirect to login page after a delay
-        setTimeout(() => goto("/login"), 2000);
+        setTimeout(() => goto("/user/login"), 2000);
       }
     } catch (e) {
       error = "An error occurred during registration";
@@ -117,7 +117,7 @@
     </form>
   {/if}
   
-  <p>Already have an account? <a href="/login">Login</a></p>
+  <p>Already have an account? <a href="/user/login">Login</a></p>
 </div>
 
 <style>

@@ -61,7 +61,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     strategy: "jwt"
   },
   pages: {
-    signIn: "/login",
+    signIn: "/user/login",
   },
   callbacks: {
     async jwt({ token, user }) {

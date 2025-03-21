@@ -27,8 +27,8 @@
     <div class="auth-status not-authenticated">
       <p>You are not logged in.</p>
       <div class="auth-buttons">
-        <a href="/login" class="button login">Login</a>
-        <a href="/register" class="button register">Register</a>
+        <a href="/user/login" class="button login">Login</a>
+        <a href="/user/register" class="button register">Register</a>
       </div>
     </div>
   {/if}

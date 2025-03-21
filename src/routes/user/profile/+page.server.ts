@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   // If user isn't logged in, redirect to login page
   if (!session?.user) {
-    throw redirect(303, '/login');
+    throw redirect(303, '/user/login');
   }
 
   return {

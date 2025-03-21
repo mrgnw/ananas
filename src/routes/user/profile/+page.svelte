@@ -8,7 +8,7 @@
 
   function handleLogout() {
     signOut({ redirect: false }).then(() => {
-      goto('/login');
+      goto('/user/login');
     });
   }
 </script>
@@ -27,7 +27,7 @@
       Logout
     </button>
   {:else}
-    <p>You are not logged in. Please <a href="/login">log in</a> to view your profile.</p>
+    <p>You are not logged in. Please <a href="/user/login">log in</a> to view your profile.</p>
   {/if}
 </div>
 
