@@ -1,0 +1,37 @@
+{
+  "name": "ananas-auth",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-15",
+  "env": {
+    "production": {
+      "d1_databases": [
+        {
+          "binding": "D1_DB_PROD",
+          "database_name": "ananas-auth",
+          "database_id": "49c2953d-0e5e-4bb8-abf8-02920b01d986"
+        }
+      ]
+    },
+    "dev": {
+      "d1_databases": [
+        {
+          "binding": "D1_DB_DEV",
+          "database_name": "ananas-auth-dev",
+          "database_id": "56c5a913-b8f1-4104-b52e-577d7b380658"
+        }
+      ]
+    }
+  },
+  "d1_databases": [
+    {
+      "binding": "D1_DB_PROD",
+      "database_name": "ananas-auth",
+      "database_id": "49c2953d-0e5e-4bb8-abf8-02920b01d986"
+    },
+    {
+      "binding": "D1_DB_DEV",
+      "database_name": "ananas-auth-dev",
+      "database_id": "56c5a913-b8f1-4104-b52e-577d7b380658"
+    }
+  ]
+}
