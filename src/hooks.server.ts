@@ -9,6 +9,5 @@ export const handleAuth: Handle = async ({ event, resolve }) => {
 
 export const handle: Handle = async ({ event, resolve }) => {
 	// Auth handle
-	await handleAuth({ event, resolve });
 	return handle({ event, resolve });
 };
