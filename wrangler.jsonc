@@ -5,8 +5,9 @@
   "d1_databases": [
     {
       "binding": "D1_DB",
-      "database_name": "ananas-auth",
-      "database_id": "49c2953d-0e5e-4bb8-abf8-02920b01d986"
+      "database_name": "ananas-auth-dev",
+      "database_id": "56c5a913-b8f1-4104-b52e-577d7b380658"
     }
-  ]
+  ],
+  "node_compat": true
 }
