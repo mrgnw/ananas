@@ -7,7 +7,6 @@ import { compare } from "bcrypt";
 // Define user type for better type safety
 interface UserRecord {
   id: string;
-  name: string;
   email: string;
   password: string;
 }

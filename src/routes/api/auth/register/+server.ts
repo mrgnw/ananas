@@ -6,10 +6,10 @@ import { randomUUID } from "crypto";
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
-    const { name, email, password } = await request.json();
+    const { email, password } = await request.json();
     
     // Basic validation
-    if (!name || !email || !password) {
+    if (!email || !password) {
       return json({ message: "Missing required fields" }, { status: 400 });
     }
     
@@ -38,7 +38,7 @@ export const POST: RequestHandler = async ({ request }) => {
     await env.D1_DB.prepare(
       "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)"
     )
-      .bind(userId, name, email, hashedPassword)
+      .bind(userId, "default", email, hashedPassword)
       .run();
     
     return json({ message: "User registered successfully" }, { status: 201 });

@@ -1,10 +1,8 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
 
-  let name = $state("");
   let email = $state("");
   let password = $state("");
-  let confirmPassword = $state("");
   let error = $state<string | null>(null);
   let success = $state(false);
   let loading = $state(false);
@@ -12,13 +10,6 @@
   async function handleSubmit() {
     loading = true;
     error = null;
-    
-    // Basic validation
-    if (password !== confirmPassword) {
-      error = "Passwords do not match";
-      loading = false;
-      return;
-    }
     
     if (password.length < 8) {
       error = "Password must be at least 8 characters long";
@@ -32,7 +23,7 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ email, password })
       });
       
       const data = await response.json();
@@ -67,17 +58,6 @@
   {:else}
     <form on:submit|preventDefault={handleSubmit}>
       <div class="form-group">
-        <label for="name">Full Name</label>
-        <input 
-          type="text" 
-          id="name" 
-          bind:value={name} 
-          required 
-          disabled={loading}
-        />
-      </div>
-      
-      <div class="form-group">
         <label for="email">Email</label>
         <input 
           type="email" 
@@ -97,17 +77,6 @@
           required 
           disabled={loading}
           minlength="8"
-        />
-      </div>
-      
-      <div class="form-group">
-        <label for="confirm-password">Confirm Password</label>
-        <input 
-          type="password" 
-          id="confirm-password" 
-          bind:value={confirmPassword} 
-          required 
-          disabled={loading}
         />
       </div>
       
