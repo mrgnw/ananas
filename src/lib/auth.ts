@@ -3,7 +3,7 @@ import { D1Adapter } from "@auth/d1-adapter";
 import Credentials from "@auth/core/providers/credentials";
 import { env } from "$env/dynamic/private";
 import { compare } from "bcrypt";
-import { Database } from "bun:sqlite"; // Use Bun's SQLite for local development
+import { Database } from "bun:sqlite";
 
 // Define user type for better type safety
 interface UserRecord {
@@ -12,7 +12,6 @@ interface UserRecord {
   password: string;
 }
 
-// Use Bun's SQLite database in development if D1_DB is not defined
 const localDB = env.DATABASE_URL ? new Database(env.DATABASE_URL) : null;
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
@@ -36,9 +35,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
           }
 
           // Query the database for the user
-          const user = db
-            .prepare("SELECT * FROM users WHERE email = ?")
-            .get(credentials.email) as UserRecord | undefined;
+          const stmt = db.query("SELECT * FROM users WHERE email = $email");
+          const user = stmt.get({ $email: credentials.email }) as UserRecord | undefined;
 
           if (!user) return null;
 

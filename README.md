@@ -4,7 +4,7 @@ I'm making this for myself to translate to multiple languages at once.
 
 ```sh
 bun install
-bun run dev
+bun --bun run dev # for bun:sqlite to work
 ```
 
 # Made with
@@ -13,4 +13,5 @@ bun run dev
 	- add component:
 		```bunx shadcn-svelte@latest add button```
 
-
+## Notes
+[bun:sqlite workaround](https://github.com/oven-sh/bun/issues/4704)

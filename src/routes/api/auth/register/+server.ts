@@ -3,9 +3,9 @@ import type { RequestHandler } from "./$types";
 import { env } from "$env/dynamic/private";
 import { hash } from "bcrypt";
 import { randomUUID } from "crypto";
-import { Database } from "bun:sqlite"; // Use Bun's SQLite for local development
+import { Database } from "bun:sqlite"; // Correctly import bun:sqlite
 
-// Use Bun's SQLite database in development if D1_DB is not defined
+// Initialize Bun's SQLite database for local development
 const localDB = env.DATABASE_URL ? new Database(env.DATABASE_URL) : null;
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -29,9 +29,8 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     // Check if user already exists
-    const existingUser = db
-      .prepare("SELECT id FROM users WHERE email = ?")
-      .get(email);
+    const stmt = db.query("SELECT id FROM users WHERE email = $email");
+    const existingUser = stmt.get({ $email: email });
 
     if (existingUser) {
       return json({ message: "Email already in use" }, { status: 409 });
@@ -44,9 +43,15 @@ export const POST: RequestHandler = async ({ request }) => {
     const userId = randomUUID();
 
     // Insert the user into the database
-    db.prepare(
-      "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)"
-    ).run(userId, "default", email, hashedPassword);
+    const insertStmt = db.query(
+      "INSERT INTO users (id, name, email, password) VALUES ($id, $name, $email, $password)"
+    );
+    insertStmt.run({
+      $id: userId,
+      $name: "default",
+      $email: email,
+      $password: hashedPassword
+    });
 
     return json({ message: "User registered successfully" }, { status: 201 });
   } catch (error) {
