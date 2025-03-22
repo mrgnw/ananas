@@ -3,6 +3,7 @@ import { D1Adapter } from "@auth/d1-adapter";
 import Credentials from "@auth/core/providers/credentials";
 import { env } from "$env/dynamic/private";
 import { compare } from "bcrypt";
+import { Database } from "bun:sqlite"; // Use Bun's SQLite for local development
 
 // Define user type for better type safety
 interface UserRecord {
@@ -10,6 +11,9 @@ interface UserRecord {
   email: string;
   password: string;
 }
+
+// Use Bun's SQLite database in development if D1_DB is not defined
+const localDB = env.DATABASE_URL ? new Database(env.DATABASE_URL) : null;
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
   providers: [
@@ -25,27 +29,30 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
         }
 
         try {
+          const db = env.D1_DB || localDB;
+          if (!db) {
+            console.error("No database connection available");
+            return null;
+          }
+
           // Query the database for the user
-          const user = await env.D1_DB.prepare(
-            "SELECT * FROM users WHERE email = ?"
-          )
-            .bind(credentials.email)
-            .first<UserRecord>();
-          
+          const user = db
+            .prepare("SELECT * FROM users WHERE email = ?")
+            .get(credentials.email) as UserRecord | undefined;
+
           if (!user) return null;
-          
+
           // Check password using bcrypt
           const isValidPassword = await compare(
             credentials.password,
             user.password
           );
-          
+
           if (!isValidPassword) return null;
-          
+
           // Return user data without sensitive information
           return {
             id: user.id,
-            name: user.name,
             email: user.email
           };
         } catch (error) {
@@ -55,7 +62,7 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
       }
     }),
   ],
-  adapter: D1Adapter(env.D1_DB),
+  adapter: D1Adapter(env.D1_DB || localDB),
   session: {
     strategy: "jwt"
   },
