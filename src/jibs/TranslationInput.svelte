@@ -133,16 +133,6 @@
 		}
 	}
 
-	// Monitor key state variables that affect submission
-	$effect(() => {
-		console.debug('TranslationInput state:', {
-			text_length: text?.length || 0,
-			text_trimmed_length: text?.trim().length || 0,
-			is_loading,
-			is_ready,
-			canSubmit: Boolean(text && text.trim().length > 0 && !is_loading)
-		});
-	});
 </script>
 
 <div class="flex w-full items-center gap-4">
