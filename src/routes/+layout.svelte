@@ -44,7 +44,8 @@
 
 {#if browser}
 <div class="fixed bottom-4 right-4 flex gap-2 z-50 bg-white/50 p-2 rounded-lg">
-	{#if hasCountryCode && countryFlag}
+	<!-- Future feature: country detection / language suggestion -->
+    <!-- {#if hasCountryCode && countryFlag}
 		<Button
 			variant="outline"
 			size="icon"
@@ -53,7 +54,7 @@
 		>
 			<span class="text-lg">{countryFlag}</span>
 		</Button>
-	{/if}
+	{/if} -->
 	<SettingsButton />
 </div>
 {/if}
