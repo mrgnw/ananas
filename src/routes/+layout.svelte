@@ -48,7 +48,7 @@
 		<Button
 			variant="outline"
 			size="icon"
-			class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800"
+			class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
 			title={countryInfo?.name || countryCode}
 		>
 			<span class="text-lg">{countryFlag}</span>
