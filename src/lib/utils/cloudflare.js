@@ -8,15 +8,17 @@ import { getCountryInfo } from '$lib/utils/languages.js';
 export function getCloudflareData(request) {
     const { headers } = request;
     
-    // Get the critical headers directly, similar to textme implementation
+    // Capture all headers as an object for debugging
+    const allHeaders = {};
+    headers.forEach((value, key) => {
+        allHeaders[key] = value;
+    });
+    
+    // Log all headers to server console
+    console.log('[SERVER] All request headers:', allHeaders);
+    
     const ip_country = headers.get('cf-ipcountry') || '';
     const accept_language = headers.get('accept-language') || '';
-    
-    // For debugging, but much simpler
-    console.log('[SERVER] Cloudflare headers:', {
-        ip_country,
-        accept_language
-    });
     
     // Get country information from our database
     const countryInfo = getCountryInfo(ip_country);
@@ -26,6 +28,8 @@ export function getCloudflareData(request) {
         ip_country,
         country_phone,
         accept_language,
-        countryInfo
+        countryInfo,
+        // Include all headers for client-side debugging
+        headers: allHeaders
     };
 }
