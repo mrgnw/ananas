@@ -1,25 +1,28 @@
 import { getCloudflareData } from '$lib/utils/cloudflare.js';
-import { Database } from 'bun:sqlite';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ request, params = {} }) => {
   // Get Cloudflare data
   const cloudflareData = getCloudflareData(request);
   
-  console.log('[LAYOUT SERVER] Headers received:', cloudflareData.headers);
-  console.log('[LAYOUT SERVER] Cloudflare country:', cloudflareData.ip_country);
-
-  // Test the database connection and log the result
-  const db = new Database(process.env.DATABASE_URL || ':memory:');
-  const testQuery = db.query("SELECT 'banana' AS fruit");
-  const result = testQuery.get();
+  // Log what we're passing to the client
+  console.log('[LAYOUT SERVER] Headers being passed to client:', 
+    Object.keys(cloudflareData.allHeaders).length, 'headers');
   
+  // Simple test data instead of SQLite database
+  const testQueryResult = { fruit: 'banana' };
+  
+  // In SvelteKit, returned objects are serialized with devalue
+  // Make sure we return allHeaders directly at the top level for accessibility
   return {
-    ...cloudflareData,
-    testQueryResult: result,
-    // Include the slug like textme does (if available)
-    slug: params.slug,
-    // Keep the headers for debugging
-    headers: cloudflareData.headers
+    ip_country: cloudflareData.ip_country,
+    country_phone: cloudflareData.country_phone,
+    accept_language: cloudflareData.accept_language,
+    countryInfo: cloudflareData.countryInfo,
+    allHeaders: cloudflareData.allHeaders,
+    testQueryResult,
+    // Don't nest under cloudflareData as it makes access more complex
+    slug: params.slug
+    
   };
 };

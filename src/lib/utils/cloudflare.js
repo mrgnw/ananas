@@ -8,7 +8,8 @@ import { getCountryInfo } from '$lib/utils/languages.js';
 export function getCloudflareData(request) {
     const { headers } = request;
     
-    // Capture all headers as an object for debugging
+    // Capture all headers as a plain object for debugging
+    // Using a plain object ensures it can be properly serialized
     const allHeaders = {};
     headers.forEach((value, key) => {
         allHeaders[key] = value;
@@ -24,12 +25,12 @@ export function getCloudflareData(request) {
     const countryInfo = getCountryInfo(ip_country);
     const country_phone = countryInfo ? countryInfo.phone : null;
     
+    // Make sure we return a serializable plain object with all data
     return {
         ip_country,
         country_phone,
         accept_language,
         countryInfo,
-        // Include all headers for client-side debugging
-        headers: allHeaders
+        allHeaders // Renamed from headers to allHeaders for clarity
     };
 }

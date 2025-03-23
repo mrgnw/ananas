@@ -9,49 +9,24 @@
     title?: string;
   }>();
   
-  const title = $derived(props.title ?? 'Debug Information');
+  const title = $derived(props.title ?? 'Raw Headers');
   const data = $derived(props.data ?? {});
   
-  // Log received data on mount
+  // Enable this for additional debugging
   onMount(() => {
-    console.log('[DEBUG BUTTON] Received data keys:', Object.keys(data));
-    if (data.headers) {
-      console.log('[DEBUG BUTTON] Headers available:', Object.keys(data.headers).length);
-    } else {
-      console.log('[DEBUG BUTTON] No headers object found in data');
-    }
+    console.log('[DEBUG BUTTON] Received data:', data);
+    console.log('[DEBUG BUTTON] Data keys:', Object.keys(data));
+    console.log('[DEBUG BUTTON] Has allHeaders?', !!data.allHeaders);
   });
   
-  // Determine which headers object to use (supporting both data.headers and data.allHeaders)
-  const headers = $derived(() => {
-    if (data.headers) return data.headers;
-    if (data.allHeaders) return data.allHeaders;
-    return null;
-  });
+  // Get headers from top-level allHeaders property
+  const allHeaders = $derived(data.allHeaders || {});
   
-  // Add fallback debugging info if headers are missing
-  const debugInfo = $derived(() => {
-    return {
-      dataAvailable: Object.keys(data).length > 0,
-      headersAvailable: headers ? Object.keys(headers).length : 0,
-      timestamp: new Date().toISOString()
-    };
-  });
+  // Count headers for display
+  const headerCount = $derived(Object.keys(allHeaders).length);
   
-  // Check if we have Cloudflare-specific headers
-  const hasCfHeaders = $derived(() => {
-    if (!headers) return false;
-    return Object.keys(headers).some(key => key.startsWith('cf-'));
-  });
-  
-  function formatValue(value) {
-    if (value === null) return 'null';
-    if (value === undefined) return 'undefined';
-    if (typeof value === 'object') {
-      return JSON.stringify(value, null, 2);
-    }
-    return String(value);
-  }
+  // Check for Cloudflare headers
+  const hasCfHeaders = $derived(Object.keys(allHeaders).some(key => key.startsWith('cf-')));
 </script>
 
 <DropdownMenu.Root>
@@ -59,126 +34,39 @@
     <Button
       variant="outline"
       size="icon"
-      class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800"
+      class="rounded-full bg-blue-100 hover:bg-blue-200"
       builders={[builder]}
     >
       <Bug class="h-5 w-5" />
     </Button>
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content class="w-80 max-h-[80vh] overflow-y-auto">
+  <DropdownMenu.Content class="w-[90vw] max-w-[800px] max-h-[80vh] overflow-y-auto">
     <DropdownMenu.Label>{title}</DropdownMenu.Label>
     
     <div class="p-2 font-mono text-xs">
-      <!-- Diagnostic Information -->
-      <div class="mb-3 bg-yellow-50 p-2 rounded border">
-        <div class="font-semibold text-sm text-yellow-700">Diagnostic Info</div>
-        <div class="mt-1">
-          <div>Data keys: {Object.keys(data).join(', ') || 'none'}</div>
-          <div>Headers: {headers ? Object.keys(headers).length : 'Not available'}</div>
-          <div>CF detected: {hasCfHeaders ? 'Yes' : 'No'}</div>
-          <div>Timestamp: {debugInfo.timestamp}</div>
-        </div>
+      <!-- Show debugging info -->
+      <div class="bg-yellow-50 p-2 rounded border mb-2">
+        <div>Data keys received: {Object.keys(data).join(', ')}</div>
+        <div>allHeaders present: {data.allHeaders ? 'Yes' : 'No'}</div>
       </div>
-    
-      {#if data && Object.keys(data).length > 0}
-        {#if data.ip_country}
-          <div class="mb-3 bg-blue-50 p-2 rounded border">
-            <div class="font-semibold text-sm text-blue-700">Cloudflare Country</div>
-            <div class="mt-1">
-              <div class="text-lg font-bold">{data.ip_country || 'Not available'}</div>
-              {#if data.country_phone}
-                <div class="text-sm">Phone Code: {data.country_phone}</div>
-              {/if}
-            </div>
-          </div>
+      
+      <!-- Show raw headers data -->
+      <div class="bg-gray-50 p-2 rounded border mt-1 overflow-auto">
+        <pre class="whitespace-pre-wrap break-all">{JSON.stringify(allHeaders, null, 2)}</pre>
+      </div>
+      
+      <!-- Basic stats about the data -->
+      <div class="mt-2 text-xs text-gray-500">
+        Headers count: {headerCount}
+        {#if hasCfHeaders}
+          <span class="ml-2 text-green-600 font-bold">✓ Cloudflare headers present</span>
         {/if}
-        
-        {#if headers}
-          <div class="mb-3">
-            <div class="font-semibold text-sm text-green-700">HTTP Headers {hasCfHeaders ? '✓ Cloudflare Detected' : ''}</div>
-            <div class="bg-gray-50 p-2 rounded border mt-1 max-h-80 overflow-y-auto">
-              <input 
-                type="text" 
-                placeholder="Filter headers..." 
-                class="w-full p-1 mb-2 border rounded text-xs"
-                on:input={(e) => {
-                  const value = e.target.value.toLowerCase();
-                  const rows = document.querySelectorAll('tr.header-row');
-                  rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(value) ? '' : 'none';
-                  });
-                }}
-              />
-              <table class="w-full text-left">
-                <thead>
-                  <tr>
-                    <th class="pb-1 border-b">Header</th>
-                    <th class="pb-1 border-b">Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each Object.entries(headers) as [key, value]}
-                    <tr class="border-b border-gray-100 header-row {key.startsWith('cf-') ? 'bg-blue-50' : ''}">
-                      <td class="pr-2 py-1 font-medium">{key}</td>
-                      <td class="py-1 break-all">{value}</td>
-                    </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        {/if}
-        
-        {#each Object.entries(data) as [key, value]}
-          {#if key !== 'headers' && key !== 'allHeaders' && key !== 'ip_country' && key !== 'country_phone'}
-            <div class="mb-3">
-              <div class="font-semibold text-sm">{key}</div>
-              <div class="bg-gray-50 p-2 rounded border mt-1">
-                {#if typeof value === 'object' && value !== null}
-                  {#each Object.entries(value) as [subKey, subValue]}
-                    <div class="mb-1">
-                      <span class="font-medium">{subKey}:</span>
-                      {#if typeof subValue === 'object' && subValue !== null && Array.isArray(subValue)}
-                        <div class="ml-2">
-                          {#if subValue.length > 0}
-                            <ul class="list-disc ml-4 mt-1">
-                              {#each subValue as item}
-                                <li class="mb-1">
-                                  {#if typeof item === 'object' && item !== null}
-                                    <pre class="whitespace-pre-wrap break-all text-xs">{formatValue(item)}</pre>
-                                  {:else}
-                                    {item}
-                                  {/if}
-                                </li>
-                              {/each}
-                            </ul>
-                          {:else}
-                            <span class="text-gray-500">Empty array</span>
-                          {/if}
-                        </div>
-                      {:else if typeof subValue === 'object' && subValue !== null}
-                        <pre class="ml-2 whitespace-pre-wrap break-all text-xs">{formatValue(subValue)}</pre>
-                      {:else}
-                        <span class="ml-2">{formatValue(subValue)}</span>
-                      {/if}
-                    </div>
-                  {/each}
-                {:else}
-                  {formatValue(value)}
-                {/if}
-              </div>
-            </div>
-          {/if}
-        {/each}
-      {:else}
-        <div class="text-gray-400">No debug data available</div>
-      {/if}
+      </div>
     </div>
     
     <DropdownMenu.Separator />
-    <DropdownMenu.Item on:click={() => console.log('Debug data:', data)}>
-      Log to Console
+    <DropdownMenu.Item on:click={() => console.log('Raw Headers:', allHeaders)}>
+      Log Headers to Console
     </DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>

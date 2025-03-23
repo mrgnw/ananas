@@ -10,11 +10,12 @@
 	/** @type {{children?: import('svelte').Snippet}} */
 	let { children } = $props();
 	
-	// Add derived data for debugging using Svelte 5 runes
-	const pageData = $derived(page.data || {});
+	// Create debug data object with direct access to the headers
 	const debugData = $derived({
-		...page.data,
-		// Fallback structure if headers are missing
+		// Direct access to headers from the data object
+		allHeaders: $page.data.allHeaders,
+		// Include other data for reference
+		ip_country: $page.data.ip_country,
 		clientInfo: {
 			browser: browser ? 'True' : 'False',
 			timestamp: new Date().toISOString(),
@@ -22,14 +23,19 @@
 		}
 	});
 	
-	// Log Cloudflare data to console on client
+	// Log Cloudflare data to console on client for debugging
 	onMount(() => {
-		if (browser && page && page.data) {
-			console.log('[CLIENT] Page data available:', Object.keys(page.data));
-			console.log('[CLIENT] Headers available:', page.data.headers ? 'Yes' : 'No');
+		if (browser) {
+			console.log('[CLIENT] Full page data structure:', $page.data);
 			
-			// Log entire page data for debugging
-			console.log('[CLIENT] Full page data:', page.data);
+			// Specifically check for allHeaders
+			if ($page.data.allHeaders) {
+				console.log('[CLIENT] Headers found! Count:', Object.keys($page.data.allHeaders).length);
+				console.log('[CLIENT] Some headers:', Object.keys($page.data.allHeaders).slice(0, 3));
+			} else {
+				console.log('[CLIENT] No headers found in page data');
+				console.log('[CLIENT] Available keys:', Object.keys($page.data));
+			}
 		}
 	});
 
@@ -48,7 +54,7 @@
 {#if browser}
 <div class="fixed bottom-4 right-4 flex gap-2 z-50 bg-white/50 p-2 rounded-lg">
 	<DebugButton 
-		title="Cloudflare Data" 
+		title="Cloudflare Headers ({debugData.allHeaders ? Object.keys(debugData.allHeaders).length : 0})" 
 		data={debugData} 
 	/>
 	<SettingsButton />
