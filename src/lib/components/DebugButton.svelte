@@ -9,24 +9,17 @@
     title?: string;
   }>();
   
-  const title = $derived(props.title ?? 'Raw Headers');
+  const title = $derived(props.title ?? 'Country Info');
   const data = $derived(props.data ?? {});
-  
-  // Enable this for additional debugging
-  onMount(() => {
-    console.log('[DEBUG BUTTON] Received data:', data);
-    console.log('[DEBUG BUTTON] Data keys:', Object.keys(data));
-    console.log('[DEBUG BUTTON] Has allHeaders?', !!data.allHeaders);
-  });
   
   // Get headers from top-level allHeaders property
   const allHeaders = $derived(data.allHeaders || {});
   
+  // Extract just the country code
+  const countryCode = $derived(allHeaders['cf-ipcountry'] || data.ip_country || 'Unknown');
+  
   // Count headers for display
   const headerCount = $derived(Object.keys(allHeaders).length);
-  
-  // Check for Cloudflare headers
-  const hasCfHeaders = $derived(Object.keys(allHeaders).some(key => key.startsWith('cf-')));
 </script>
 
 <DropdownMenu.Root>
@@ -40,33 +33,26 @@
       <Bug class="h-5 w-5" />
     </Button>
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content class="w-[90vw] max-w-[800px] max-h-[80vh] overflow-y-auto">
+  <DropdownMenu.Content class="w-48">
     <DropdownMenu.Label>{title}</DropdownMenu.Label>
     
-    <div class="p-2 font-mono text-xs">
-      <!-- Show debugging info -->
-      <div class="bg-yellow-50 p-2 rounded border mb-2">
-        <div>Data keys received: {Object.keys(data).join(', ')}</div>
-        <div>allHeaders present: {data.allHeaders ? 'Yes' : 'No'}</div>
+    <div class="p-3 font-mono">
+      <!-- Show just the country code and header count -->
+      <div class="text-center mb-2">
+        <div class="text-2xl font-bold text-blue-700">{countryCode}</div>
+        <div class="text-xs text-gray-500">Headers: {headerCount}</div>
       </div>
       
-      <!-- Show raw headers data -->
-      <div class="bg-gray-50 p-2 rounded border mt-1 overflow-auto">
-        <pre class="whitespace-pre-wrap break-all">{JSON.stringify(allHeaders, null, 2)}</pre>
-      </div>
-      
-      <!-- Basic stats about the data -->
-      <div class="mt-2 text-xs text-gray-500">
-        Headers count: {headerCount}
-        {#if hasCfHeaders}
-          <span class="ml-2 text-green-600 font-bold">✓ Cloudflare headers present</span>
-        {/if}
+      <!-- Show just the cf-ipcountry value if expanded -->
+      <div class="mt-2 text-xs">
+        <div class="font-semibold">cf-ipcountry:</div>
+        <div class="bg-gray-50 p-2 rounded border overflow-hidden">{allHeaders['cf-ipcountry'] || 'Not available'}</div>
       </div>
     </div>
     
     <DropdownMenu.Separator />
     <DropdownMenu.Item on:click={() => console.log('Raw Headers:', allHeaders)}>
-      Log Headers to Console
+      Log All Headers to Console
     </DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>
