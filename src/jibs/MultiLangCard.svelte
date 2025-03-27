@@ -55,18 +55,20 @@
 								? 'border-blue-300'
 								: 'border-gray-100'} mb-2 transition-colors last:mb-0 hover:border-blue-200"
 						>
-							<div
-								class="text-sm {getColorByIndex(Object.keys(translateLanguages.languages).indexOf(lang), true)} pr-6 pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}"
-							>
-								{translation.translations[lang]}
+							<div class="flex items-start">
+								<button
+									class="mr-1.5 mt-0.5 text-gray-400 opacity-0 transition-opacity hover:text-blue-500 group-hover:opacity-100"
+									aria-label="Copy translation"
+									onclick={() => copyToClipboard(translation.translations[lang])}
+								>
+									<Copy class="h-2.5 w-2.5" />
+								</button>
+								<div
+									class="flex-grow text-sm {getColorByIndex(Object.keys(translateLanguages.languages).indexOf(lang), true)} pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}"
+								>
+									{translation.translations[lang]}
+								</div>
 							</div>
-							<button
-								class="absolute right-0 top-0 p-1 text-gray-400 opacity-0 transition-opacity hover:text-blue-500 group-hover:opacity-100"
-								aria-label="Copy translation"
-								onclick={() => copyToClipboard(translation.translations[lang])}
-							>
-								<Copy class="h-2.5 w-2.5" />
-							</button>
 						</div>
 					{/if}
 				{/each}
