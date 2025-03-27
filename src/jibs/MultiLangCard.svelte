@@ -76,7 +76,7 @@
 		</CardContent>
 		
 		<!-- Delete button - moved outside the translations container -->
-		<div class="absolute bottom-1 right-1 z-10">
+		<div class="absolute bottom-1 right-1 z-10 opacity-0 transition-opacity group-hover:opacity-100">
 			<button
 				class="icon-button rounded-full border border-gray-100 bg-white p-1 text-gray-400 shadow-md hover:text-red-500"
 				aria-label="Delete translation"
