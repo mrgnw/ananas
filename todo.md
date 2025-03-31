@@ -1,11 +1,9 @@
 # Functionality
 ## In progress
+  
+- [ ] [user_authentication] allow basic user authentication. pick_language_per_session is now linked to the user's language selection
 
-- [pick_language_per_session] Language picker - select languages per session/user
-
-  select from the large list of possible languages to show which are currently displayed or translated
-  - [user_authentication] allow user authentication. pick_language_per_session is now linked to the user's language selection
-    - [passkey_authentication] [Passlock.dev](Passlock.dev)
+- [ ] [passkey_authentication] [Passlock.dev](Passlock.dev)
 
 - [single_language_view] when only one language is selected, condense the layout. Remove the card wrapper completely in single language mode
 
@@ -51,6 +49,10 @@
 - [original_language_hint] Let the user say what language the original is
 
 ## Done
+
+- [pick_language_per_session]() Language picker - select languages per session/user
+
+  select from the large list of possible languages to show which are currently displayed or translated
 
 - persistent results (localStorage)
 
