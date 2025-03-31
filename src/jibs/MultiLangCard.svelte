@@ -14,6 +14,9 @@
 		}
 	};
 
+	/**
+	 * @param {string} text
+	 */
 	const copyToClipboard = async (text) => {
 		try {
 			if (browser && navigator.clipboard && navigator.clipboard.writeText) {
@@ -43,32 +46,31 @@
 
 <div class="group w-full">
 	<Card class="transition-shadow hover:shadow-md relative">
-		<CardContent class="p-3">
+		<CardContent class="p-2 sm:p-3">
 			<div class="relative">
 				{#each show_langs as lang}
 					{#if translation.translations[lang]}
 						{@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
 						{@const isSourceLang = lang === sourceLang}
 
-						<div
-							class="group relative border-l-2 pl-2.5 {isSourceLang
-								? 'border-blue-300'
-								: 'border-gray-100'} mb-2 transition-colors last:mb-0 hover:border-blue-200"
-						>
-							<div class="flex items-start">
-								<button
-									class="mr-1.5 mt-0.5 text-gray-400 opacity-0 transition-opacity hover:text-blue-500 group-hover:opacity-100"
-									aria-label="Copy translation"
-									onclick={() => copyToClipboard(translation.translations[lang])}
-								>
-									<Copy class="h-2.5 w-2.5" />
-								</button>
-								<div
-									class="flex-grow text-sm {getColorByIndex(Object.keys(translateLanguages.languages).indexOf(lang), true)} pt-0.5 {truncate_lines ? 'line-clamp-3' : ''}"
-								>
-									{translation.translations[lang]}
-								</div>
+						<!-- Streamlined layout with minimal nesting -->
+						<div class="relative group mb-1 last:mb-0">
+							<!-- Border as pseudo-element to avoid layout impact -->
+							<div class="absolute left-0 top-0 bottom-0 w-0.5 {isSourceLang ? 'bg-blue-300' : 'bg-gray-100'} group-hover:bg-blue-200 transition-colors"></div>
+							
+							<!-- Translation text with padding for copy button -->
+							<div class="pl-4 text-sm {getColorByIndex(Object.keys(translateLanguages.languages).indexOf(lang), true)} {truncate_lines ? 'line-clamp-3' : ''} break-words">
+								{translation.translations[lang]}
 							</div>
+							
+							<!-- Copy button absolutely positioned -->
+							<button
+								class="absolute left-0.5 top-0.5 text-gray-400 opacity-0 transition-opacity hover:text-blue-500 group-hover:opacity-100"
+								aria-label="Copy translation"
+								onclick={() => copyToClipboard(translation.translations[lang])}
+							>
+								<Copy class="h-2.5 w-2.5" />
+							</button>
 						</div>
 					{/if}
 				{/each}
