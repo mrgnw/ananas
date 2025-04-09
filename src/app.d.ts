@@ -4,9 +4,15 @@
 
 /// <reference types="@cloudflare/workers-types" />
 
+import type { DrizzleD1Database } from 'drizzle-orm/d1';
+import type * as schema from '$lib/server/schema';
+
 declare namespace App {
 	// interface Error {}
-	// interface Locals {}
+	interface Locals {
+		db: DrizzleD1Database<typeof schema>;
+		user: typeof schema.users.$inferSelect | null; // Or define a specific User type
+	}
 	// interface PageData {}
 	interface Platform {
 		env: {
