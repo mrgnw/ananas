@@ -20,7 +20,6 @@ This plan outlines the steps needed to add Passkey (WebAuthn) authentication to 
 
 ### 1.2. Install Dependencies
     - Add WebAuthn libraries: `bun add @simplewebauthn/server @simplewebauthn/browser`
-    - Add session management library (e.g., `lucia-auth`): `bun add lucia` and its Drizzle adapter `@lucia-auth/adapter-drizzle`.
 
 ### 1.3. API Endpoints (`src/routes/api/auth/...`)
     - **Registration:**
@@ -28,24 +27,25 @@ This plan outlines the steps needed to add Passkey (WebAuthn) authentication to 
         - `POST /api/auth/register/verify`: Verify the registration response from the browser using `@simplewebauthn/server`. If valid:
             - Create a new User record.
             - Create a new Passkey record linked to the user.
-            - Potentially log the user in immediately by creating a session.
+            - Log the user in by setting a secure, HTTP-only session cookie containing the user ID.
     - **Login:**
         - `POST /api/auth/login`: Generate authentication options using `@simplewebauthn/server`, including a challenge. Store the challenge.
         - `POST /api/auth/login/verify`: Verify the authentication response from the browser. If valid:
             - Check the signature counter.
-            - Create a user session (e.g., using Lucia).
+            - Set a secure, HTTP-only session cookie containing the user ID.
             - Update the passkey counter in the database.
     - **Logout:**
-        - `POST /api/auth/logout`: Invalidate the current user session.
+        - `POST /api/auth/logout`: Clear the session cookie.
 
-### 1.4. Session Management (`src/lib/server/auth.ts` or similar)
-    - Configure Lucia (or chosen library) with the Drizzle adapter.
-    - Define functions for creating, validating, and invalidating sessions.
+### 1.4. Session Handling (Cookies)
+    - Use secure, HTTP-only cookies to store a session identifier (e.g., user ID) after successful authentication.
+    - Cookies should have appropriate attributes (`Secure`, `HttpOnly`, `SameSite=Lax`, `Path=/`).
 
 ### 1.5. Server Hooks (`src/hooks.server.ts`)
     - Implement the `handle` hook to:
-        - Validate the session cookie on incoming requests using Lucia.
-        - Attach user session information (`user`, `session`) to `event.locals`.
+        - Read the session cookie on incoming requests.
+        - If the cookie exists, attempt to retrieve the corresponding user from the database using the ID from the cookie.
+        - Attach the retrieved user information (or `null` if no valid session) to `event.locals.user`.
 
 ### 1.6. Environment Configuration (`.env`, `wrangler.json`)
     - Define required environment variables for SimpleWebAuthn (e.g., `RP_ID`, `RP_ORIGIN`).
@@ -55,7 +55,7 @@ This plan outlines the steps needed to add Passkey (WebAuthn) authentication to 
 
 ### 2.1. Root Layout (`+layout.server.ts` & `+layout.svelte`)
     - **`+layout.server.ts`:** Load the user session data from `event.locals` (populated by `hooks.server.ts`).
-    - **`+layout.svelte`:** Receive the user session data via `$page.data` and make it available to child components, potentially storing it in a Svelte store or using it directly.
+    - **`+layout.svelte`:** Receive the user data via `$page.data.user` and make it available to child components (e.g., storing in a `$state` variable or using it directly).
 
 ### 2.2. Registration UI (`src/routes/register/+page.svelte` or similar)
     - Form with username input.
@@ -75,7 +75,7 @@ This plan outlines the steps needed to add Passkey (WebAuthn) authentication to 
         - Handle success or error.
 
 ### 2.4. Authentication State Component (`src/lib/components/AuthButton.svelte` or similar)
-    - Conditionally display Login/Register buttons or User Info/Logout button based on the session state from `$page.data`.
+    - Conditionally display Login/Register buttons or User Info/Logout button based on the user state from `$page.data.user`.
     - Trigger relevant API calls (logout, navigate to login/register).
 
 ## 3. Database Migration
