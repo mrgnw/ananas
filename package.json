@@ -10,7 +10,6 @@
     "drizzle-orm": "^0.41.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^8.10.0",
-    "eslint-plugin-svelte3": "^4.0.0",
     "postcss": "^8.5.3",
     "postcss-load-config": "^5.1.0",
     "prettier": "^3.5.3",
