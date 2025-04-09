@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
 
-    // Define the expected shape of the API response
-    type ApiResponse = 
-        | { success: true; fruit: string } 
-        | { success: false; error: string };
+	// Define the expected shape of the API response
+	type ApiResponse = 
+		| { success: true; count: number } // Updated for counter
+		| { success: false; error: string };
 
-	// State for loading indicator
+	// State for loading indicator (shared for simplicity)
 	let loading = $state(false);
 
-	// Function to handle the button click
-	async function handleQueryClick() {
+	// Function to handle the counter increment button click
+	async function handleIncrementClick() {
 		loading = true;
 		try {
 			const response = await fetch('/api/banana', { 
@@ -21,17 +21,14 @@
 			const result = await response.json() as ApiResponse;
 
 			if (!response.ok || !result.success) {
-				// Handle HTTP errors or application-level errors from the API
-				// Check if success is false before accessing error
 				const errorMessage = !result.success ? result.error : `HTTP Error: ${response.statusText}`;
-				toast.error(`Database query failed: ${errorMessage}`);
+				toast.error(`Counter update failed: ${errorMessage}`);
 				console.error('Query failed:', result, response);
 			} else {
-				// Success case (TypeScript now knows result.success is true here)
-				toast.success(`Database query successful! Result: ${result.fruit}`);
+				// Success: Show the new count
+				toast.success(`Counter updated! New count: ${result.count}`);
 			}
 		} catch (error: any) {
-			// Handle network errors or unexpected issues
 			console.error('Fetch error:', error);
 			toast.error(`An error occurred: ${error.message || 'Unknown fetch error'}`);
 		} finally {
@@ -43,15 +40,18 @@
 
 <h1>Test Database Connection</h1>
 
-<p>Click the button below to run a simple query (`SELECT 'banana'`) against the database.</p>
+<p>Click the button below to test database operations.</p>
 
-<button onclick={handleQueryClick} disabled={loading}>
-	{#if loading}
-		Querying...
-	{:else}
-		Query for Banana
-	{/if}
-</button>
+<div class="flex gap-4">
+	<!-- Button for the new Increment Counter functionality -->
+	<button onclick={handleIncrementClick} disabled={loading}>
+		{#if loading}
+			Updating...
+		{:else}
+			Increment Counter
+		{/if}
+	</button>
+</div>
 
 <style>
 	button {

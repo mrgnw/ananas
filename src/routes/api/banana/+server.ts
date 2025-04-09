@@ -1,36 +1,40 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { drizzle } from 'drizzle-orm/d1';
+import * as schema from '$lib/server/schema';
+import { eq, sql } from 'drizzle-orm';
 
 export const POST: RequestHandler = async ({ platform }) => {
     if (!platform?.env?.DB) {
         console.error('Database binding DB not found in platform environment.');
-        // Use SvelteKit error helper for server errors
-        // This will generate a standard error response
-        throw error(500, 'Database configuration error. Binding not found.'); 
+        throw error(500, 'Database configuration error. Binding not found.');
     }
 
     try {
-        const d1 = platform.env.DB;
-        const stmt = d1.prepare("SELECT 'banana' as fruit");
-        const result = await stmt.first<{ fruit: string }>();
+        const db = drizzle(platform.env.DB, { schema });
 
-        if (!result || typeof result.fruit !== 'string') {
-            console.error('Database query returned unexpected or no result:', result);
-            // Return JSON error response
-            return json({ success: false, error: 'Query returned unexpected result.' }, { status: 500 });
+        const counterId = 1;
+        const result = await db
+            .insert(schema.testCounter)
+            .values({ id: counterId, count: 1 })
+            .onConflictDoUpdate({ 
+                target: schema.testCounter.id, 
+                set: { count: sql`${schema.testCounter.count} + 1` } 
+            })
+            .returning({ updatedCount: schema.testCounter.count });
+
+        if (!result || result.length === 0 || typeof result[0]?.updatedCount !== 'number') {
+            console.error('Insert/Update operation failed or returned unexpected result:', result);
+            return json({ success: false, error: 'Counter update failed.' }, { status: 500 });
         }
 
-        const fruit = result.fruit;
-        console.log('Server log: Database query successful! Result:', fruit); // Log on the server
-        // Return JSON success response
-        return json({ success: true, fruit: fruit });
+        const newCount = result[0].updatedCount;
+        console.log('Server log: Counter updated successfully! New count:', newCount); 
+        return json({ success: true, count: newCount });
 
     } catch (err: any) {
-        console.error('Database query failed:', err);
+        console.error('Database operation failed:', err);
         const errorMessage = err.message || 'Unknown database error';
-        // Return JSON error response
-        return json({ success: false, error: `Failed to query database: ${errorMessage}` }, { status: 500 });
-        // Alternatively, re-throw as a SvelteKit error:
-        // throw error(500, `Failed to query database: ${errorMessage}`);
+        return json({ success: false, error: `Database operation failed: ${errorMessage}` }, { status: 500 });
     }
 };
