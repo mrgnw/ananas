@@ -4,7 +4,13 @@ import adapter from '@sveltejs/adapter-cloudflare';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			// See https://kit.svelte.dev/docs/adapter-cloudflare#options
+			platformProxy: {
+				configPath: 'wrangler.json',
+				persist: true
+			}
+		}),
 		alias: {
 			"$jibs": './src/jibs',
 			"$utils": "$lib/utils",
