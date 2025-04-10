@@ -1,4 +1,3 @@
-import { db } from '$lib/server/db/index.ts';
 import * as schema from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
 import { verifyAuthenticationResponse, type VerifyAuthenticationResponseOpts } from '@simplewebauthn/server';
@@ -7,7 +6,7 @@ import type {
 	VerifiedAuthenticationResponse
 } from '@simplewebauthn/server';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
-import { setSession } from '$lib/server/session'; // Import session management
+// import { setSession } from '$lib/server/session.ts'; // Import session management - TODO: Implement session creation logic
 import type { RequestHandler } from './$types';
 import { error, json } from '@sveltejs/kit';
 import { dev } from '$app/environment'; // Import dev for secure cookie flag
@@ -126,7 +125,7 @@ export const POST: RequestHandler = async (event) => {
 		}
 
 		// 5. Login successful: Set session state
-		await setSession(cookies, user.id);
+		// await setSession(cookies, user.id); // TODO: Implement session creation using Lucia
 
 		// Clear the temporary login email cookie
 		cookies.delete('loginEmail', { path: '/' });
