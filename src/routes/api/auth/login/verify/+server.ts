@@ -1,4 +1,4 @@
-import { db } from '$lib/server/db';
+import { db } from '$lib/server/db.ts';
 import * as schema from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
 import { verifyAuthenticationResponse, type VerifyAuthenticationResponseOpts } from '@simplewebauthn/server';
