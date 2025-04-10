@@ -118,12 +118,12 @@ export const POST: RequestHandler = async (event) => {
             await db.insert(schema.passkeys).values({
                 // Use schema column names
                 id: credentialID, // Now using correct variable derived from registrationInfo.credential.id
-                // publicKey: publicKeyBuffer, // Temporarily commented out
+                publicKey: Buffer.from(''), // Placeholder for testing
                 counter: counter, // Now using correct variable derived from registrationInfo.credential.counter
                 userId: userId,
                 webauthnUserId: webauthnUserId, // Assuming this corresponds to the user ID used in webauthn flow
                 deviceType: deviceType,
-                // backedUp: backedUp, // Temporarily commented out
+                backedUp: false, // Placeholder for testing (boolean)
                 // transports: transportsString // Temporarily commented out
             });
 
