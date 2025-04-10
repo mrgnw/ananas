@@ -18,22 +18,34 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
     }
 
     const db = drizzle(platform.env.DB, { schema });
-    const { username } = (await request.json()) as { username: string }; // Assert type
+    const { email } = (await request.json()) as { email: string }; // Assert type
 
-    if (!username || typeof username !== 'string') {
-        throw error(400, 'Username is required');
+    if (!email || typeof email !== 'string') {
+        throw error(400, 'Email is required');
     }
 
-    // 1. Find user by username
-    const usersFound = await db.select().from(schema.users).where(eq(schema.users.username, username)).limit(1);
-    if (usersFound.length === 0) {
-        // Avoid revealing if username exists or not - use generic error
-        throw error(400, 'Authentication failed'); 
+    // 1. Find user by email
+    let user;
+    try {
+        const usersFound = await db.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
+        if (usersFound.length === 0) {
+            // Avoid revealing if email exists or not - use generic error
+            throw error(400, 'Authentication failed'); 
+        }
+        user = usersFound[0];
+    } catch (dbError: any) {
+        console.error('Database error finding user:', dbError);
+        throw error(500, `Database error finding user: ${dbError?.message ?? 'Unknown error'}`);
     }
-    const user = usersFound[0];
 
     // 2. Find user's registered passkeys (authenticators)
-    const userAuthenticators = await db.select().from(schema.passkeys).where(eq(schema.passkeys.userId, user.id));
+    let userAuthenticators;
+    try {
+        userAuthenticators = await db.select().from(schema.passkeys).where(eq(schema.passkeys.userId, user.id));
+    } catch (dbError: any) {
+        console.error('Database error finding passkeys:', dbError);
+        throw error(500, `Database error finding passkeys: ${dbError?.message ?? 'Unknown error'}`);
+    }
 
     if (userAuthenticators.length === 0) {
         // User exists but has no registered passkeys

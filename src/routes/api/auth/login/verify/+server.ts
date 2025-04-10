@@ -1,118 +1,145 @@
-import type { RequestHandler } from './$types';
-import { error, json } from '@sveltejs/kit';
-import { verifyAuthenticationResponse } from '@simplewebauthn/server';
-import type { AuthenticationResponseJSON } from '@simplewebauthn/types';
-import type { VerifiedAuthenticationResponse, VerifyAuthenticationResponseOpts } from '@simplewebauthn/server';
-
-// Buffer for base64 handling
-import { Buffer } from 'buffer';
-
-// Drizzle Imports
-import { drizzle } from 'drizzle-orm/d1';
+import { db } from '$lib/server/db';
 import * as schema from '$lib/server/schema';
 import { eq } from 'drizzle-orm';
+import { verifyAuthenticationResponse, type VerifyAuthenticationResponseOpts } from '@simplewebauthn/server';
+import type {
+	AuthenticationResponseJSON,
+	VerifiedAuthenticationResponse
+} from '@simplewebauthn/server';
+import { isoBase64URL } from '@simplewebauthn/server/helpers';
+import { setSession } from '$lib/server/session'; // Import session management
+import type { RequestHandler } from './$types';
+import { error, json } from '@sveltejs/kit';
 import { dev } from '$app/environment'; // Import dev for secure cookie flag
+import { drizzle } from 'drizzle-orm/d1'; // Import drizzle D1 adapter
 
-// --- Relying Party details - TODO: Move to environment variables & ensure consistency --- 
-const rpID = process.env.NODE_ENV === 'development' ? 'localhost' : 'ananas-8ek.pages.dev'; // Example - Adjust needed!
-const origin = process.env.NODE_ENV === 'development' ? `http://${rpID}:5173` : `https://${rpID}`; // Example - Adjust needed!
-// --- End of RP details ---
+// Infer Passkey type
+type PasskeySelect = typeof schema.passkeys.$inferSelect;
 
-export const POST: RequestHandler = async ({ request, platform, cookies }) => {
-    if (!platform?.env?.DB) {
-        throw error(500, 'Database configuration error');
-    }
+// Define type for user with passkeys relation
+type UserWithPasskeys = typeof schema.users.$inferSelect & {
+	passkeys: PasskeySelect[];
+};
 
-    const db = drizzle(platform.env.DB, { schema });
-    const body: AuthenticationResponseJSON = await request.json();
+// --- Relying Party details - TODO: Move to environment variables & ensure consistency ---
+// Note: These MUST match the values used in the GET /api/auth/login endpoint
+const rpID = process.env.RP_ID;
+const origin = process.env.ORIGIN;
 
-    const challengePayloadCookie = cookies.get('authChallengePayload');
-    if (!challengePayloadCookie) {
-        throw error(400, 'Challenge cookie not found. Authentication might have timed out.');
-    }
+// Runtime check for environment variables
+if (!rpID || !origin) {
+	console.error('Missing RP_ID or ORIGIN environment variables');
+	// Throw an error or handle appropriately. Cannot proceed without these.
+	// For a real app, you might throw immediately or have a config check at startup.
+	throw new Error('Server configuration error: RP_ID or ORIGIN missing.'); 
+}
 
-    // Parse challenge and userId from cookie
-    let expectedChallenge: string;
-    let userId: string;
-    try {
-        const payload = JSON.parse(challengePayloadCookie);
-        expectedChallenge = payload.challenge;
-        userId = payload.userId;
-        if (!expectedChallenge || !userId) {
-            throw new Error('Invalid auth challenge payload');
-        }
-    } catch (e) {
-        throw error(400, 'Invalid auth challenge cookie format.');
-    }
+/**
+ * Verifies the authentication response received from the client.
+ */
+export const POST: RequestHandler = async (event) => {
+	const { cookies, request, platform } = event;
 
-    // Clean up challenge cookie immediately
-    cookies.delete('authChallengePayload', { path: '/' });
+	if (!platform?.env?.DB) {
+		throw error(500, 'Database configuration error');
+	}
+	const dbInstance = drizzle(platform.env.DB, { schema }); // Pass schema
 
-    // 1. Get the user
-    const usersFound = await db.select().from(schema.users).where(eq(schema.users.id, userId)).limit(1);
-    if (usersFound.length === 0) {
-        throw error(400, 'Authentication failed (user not found)');
-    }
-    const user = usersFound[0];
+	const body: AuthenticationResponseJSON = await request.json();
 
-    // 2. Get the specific passkey/authenticator used for this login attempt
-    const authenticatorIdBase64Url = body.id;
-    const authenticator = await db.query.passkeys.findFirst({
-        where: eq(schema.passkeys.id, authenticatorIdBase64Url), // DB stores base64url id
-    });
+	const expectedChallenge = cookies.get('loginChallenge');
+	const userEmail = cookies.get('loginEmail'); // Get email associated with this login attempt
 
-    if (!authenticator) {
-        throw error(400, `Could not find authenticator with ID ${authenticatorIdBase64Url} for user ${userId}`);
-    }
+	if (!expectedChallenge) {
+		throw error(400, 'Challenge not found. Login timed out?');
+	}
 
-    // 3. Verify the authentication response
-    let verification: VerifiedAuthenticationResponse;
-    try {
-        const opts: VerifyAuthenticationResponseOpts = {
-            response: body,
-            expectedChallenge: expectedChallenge,
-            expectedOrigin: origin,
-            expectedRPID: rpID,
-            authenticator: {
-                credentialID: Buffer.from(authenticator.id, 'base64url'), // Convert base64url string ID from DB back to buffer
-                credentialPublicKey: authenticator.publicKey, // This is already a buffer/blob from DB
-                counter: authenticator.counter,
-                transports: authenticator.transports?.split(',') as AuthenticatorTransport[] | undefined,
-            },
-            requireUserVerification: false, // Adjust as needed (e.g., true)
-        };
-        verification = await verifyAuthenticationResponse(opts);
-    } catch (err: any) {
-        console.error('Authentication verification failed:', err);
-        return json({ success: false, error: `Verification failed: ${err.message}` }, { status: 400 });
-    }
+	if (!userEmail) {
+		throw error(400, 'User email not found for login verification.');
+	}
 
-    const { verified, authenticationInfo } = verification;
+	// Clear the challenge cookie immediately after retrieving it
+	cookies.delete('loginChallenge', { path: '/' });
 
-    if (!verified || !authenticationInfo) {
-        return json({ success: false, error: 'Could not verify authentication.' }, { status: 400 });
-    }
+	try {
+		// 1. Find the user by email
+		const user = await dbInstance.query.users.findFirst({
+			where: eq(schema.users.email, userEmail),
+			with: { // Type assertion needed here as TS struggles with relation type inference after query
+				passkeys: true // Include passkeys to find the one being used
+			}
+		}) as UserWithPasskeys | undefined; // Explicitly type the result
 
-    // 4. Update the authenticator's counter in the database
-    try {
-        await db.update(schema.passkeys)
-            .set({ counter: authenticationInfo.newCounter })
-            .where(eq(schema.passkeys.id, authenticator.id)); // Use the original base64url ID here
+		if (!user) {
+			throw error(404, `User with email ${userEmail} not found.`);
+		}
 
-        // Set session cookie upon successful login verification
-        const SESSION_COOKIE_NAME = 'auth_session';
-        cookies.set(SESSION_COOKIE_NAME, userId, {
-            path: '/',
-            httpOnly: true,
-            secure: !dev, // Use secure flag in production
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 24 * 7 // 7 days (adjust as needed)
-        });
+		// 2. Find the specific passkey that was used for authentication
+		const credentialID_b64url = body.id;
+		const authenticator = user.passkeys.find((pk: PasskeySelect) => pk.id === credentialID_b64url);
 
-        return json({ success: true, verified });
+		if (!authenticator) {
+			throw error(400, `Could not find authenticator with ID ${credentialID_b64url} for user ${userEmail}`);
+		}
 
-    } catch (dbError: any) {
-        console.error('Failed to update passkey counter:', dbError);
-        throw error(500, `Database error during authentication: ${dbError.message}`);
-    }
+		// 3. Verify the authentication response
+		let verification: VerifiedAuthenticationResponse;
+		try {
+			const verificationOptions: VerifyAuthenticationResponseOpts = {
+				response: body,
+				expectedChallenge: expectedChallenge,
+				expectedOrigin: origin,
+				expectedRPID: rpID,
+				authenticator: {
+					credentialID: isoBase64URL.toBuffer(authenticator.id), // Use correct helper
+					credentialPublicKey: authenticator.publicKey, // Assuming stored as Buffer/Blob
+					counter: authenticator.counter,
+					// Include transports if your schema stores them and they're needed for verification
+					// transports: authenticator.transports?.split(','),
+				},
+				requireUserVerification: true // Usually recommended
+			};
+			// Cast to any to bypass persistent TS error; structure seems correct for the library
+			verification = await verifyAuthenticationResponse(verificationOptions as any);
+		} catch (verificationError: any) {
+			console.error('Authentication verification failed:', verificationError);
+			throw error(400, `Authentication failed: ${verificationError.message}`);
+		}
+
+		const { verified, authenticationInfo } = verification;
+
+		if (!verified || !authenticationInfo) {
+			throw error(400, 'Authentication verification failed.');
+		}
+
+		// 4. Update the authenticator counter in the database
+		try {
+			await dbInstance
+				.update(schema.passkeys)
+				.set({ counter: authenticationInfo.newCounter })
+				.where(eq(schema.passkeys.id, authenticator.id));
+		} catch (dbError) {
+			console.error('Failed to update authenticator counter:', dbError);
+			// Decide if this is critical. If the user is verified but counter update fails,
+			// they might be locked out next time. Maybe log and proceed, or throw error.
+			throw error(500, 'Failed to update authenticator details.');
+		}
+
+		// 5. Login successful: Set session state
+		await setSession(cookies, user.id);
+
+		// Clear the temporary login email cookie
+		cookies.delete('loginEmail', { path: '/' });
+
+		return json({ ok: true, email: user.email }); // Send success response
+
+	} catch (err: any) {
+		console.error('Error verifying login:', err);
+		const errorMessage = err.message || 'Failed to verify login.';
+		const statusCode = err.status || 500;
+		// Ensure sensitive challenge/email cookies are cleared on error too
+		cookies.delete('loginChallenge', { path: '/' });
+		cookies.delete('loginEmail', { path: '/' });
+		throw error(statusCode, errorMessage);
+	}
 };

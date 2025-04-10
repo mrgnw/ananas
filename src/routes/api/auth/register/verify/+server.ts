@@ -18,7 +18,9 @@ const rpID = process.env.NODE_ENV === 'development' ? 'localhost' : 'ananas-8ek.
 const origin = process.env.NODE_ENV === 'development' ? `http://${rpID}:5173` : `https://${rpID}`; // Example - Adjust needed!
 // --- End of RP details ---
 
-export const POST: RequestHandler = async ({ request, platform, cookies }) => {
+export const POST: RequestHandler = async (event) => {
+    const { cookies, request, platform } = event;
+
     if (!platform?.env?.DB) {
         throw error(500, 'Database configuration error');
     }
@@ -32,17 +34,17 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
         throw error(400, 'Challenge cookie not found. Registration might have timed out.');
     }
 
-    // Parse challenge, userId, and userName from cookie
+    // Parse challenge, userId, and email from cookie
     let expectedChallenge: string;
     let userId: string;
-    let userName: string;
+    let email: string;
     try {
         const payload = JSON.parse(challengePayloadCookie);
         expectedChallenge = payload.challenge;
         userId = payload.userId;
-        userName = payload.userName;
-        if (!expectedChallenge || !userId || !userName) {
-            throw new Error('Invalid challenge payload');
+        email = payload.email;
+        if (!expectedChallenge || !userId || !email) {
+            throw new Error('Invalid auth challenge payload');
         }
     } catch (e) {
         throw error(400, 'Invalid challenge cookie format.');
@@ -79,14 +81,6 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
         return json({ success: false, error: 'Internal error: Registration info missing.' }, { status: 500 });
     }
 
-    const { 
-        credentialPublicKey,
-        credentialID, 
-        counter, 
-        credentialDeviceType, 
-        credentialBackedUp 
-    } = registrationInfo;
-
     // We retrieved the userId from the challenge cookie now.
     // We should also verify that the userHandle returned by the authenticator
     // corresponds to the userId we expect, although simplewebauthn server
@@ -95,26 +89,34 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
     // TODO: Check if credentialID already exists for any user? Should be unlikely.
 
     try {
-        // Using a transaction for atomicity
-        await db.transaction(async (tx) => {
-            // 1. Create the user (handle potential conflicts if username/email were involved)
-            // Since we used a random UUID for ID, conflict is unlikely on ID itself.
-            await tx.insert(schema.users).values({
-                id: userId, // Use the ID retrieved from the cookie
-                username: userName, // Use the username retrieved from the cookie
-            }).onConflictDoNothing(); // Or handle conflict appropriately
-            
-            // 2. Create the passkey credential
-            await tx.insert(schema.passkeys).values({
-                id: Buffer.from(credentialID).toString('base64url'), // Use base64url credentialID as passkey ID
-                userId: userId,
-                publicKey: Buffer.from(credentialPublicKey), // Store as buffer
-                webauthnUserId: userId, // This is the user.id used in WebAuthn ceremonies
-                counter: counter,
-                deviceType: credentialDeviceType,
-                backedUp: credentialBackedUp,
-                transports: body.response.transports?.join(',') || null, // Store transports as comma-separated string
-            });
+        // Perform inserts sequentially as D1 transactions via drizzle seem problematic
+        // 1. Create the user record
+        await db.insert(schema.users).values({
+            id: userId,
+            email: email, // Use email from the challenge payload
+        }).onConflictDoNothing(); // Or handle conflict appropriately
+
+        // 2. Create the passkey credential
+        if (!verification.registrationInfo) {
+            throw new Error('Registration info missing from verification result.');
+        }
+        const { credentialPublicKey, credentialID, counter } = verification.registrationInfo as any;
+
+        // Extract additional needed fields safely, providing non-null values
+        const webauthnUserId = userId; // This should be the user ID we passed to generate options
+        const deviceType = (verification.registrationInfo as any).credentialDeviceType;
+        const backedUp = (verification.registrationInfo as any).credentialBackedUp;
+
+        await db.insert(schema.passkeys).values({
+            // Use schema column names
+            id: Buffer.from(credentialID).toString('base64url'), // Credential ID is the primary key 'id' for the passkey
+            publicKey: Buffer.from(credentialPublicKey), // Store public key directly as Buffer (assuming schema is blob)
+            counter: counter,
+            userId: userId,
+            webauthnUserId: webauthnUserId, // Assuming this corresponds to the user ID used in webauthn flow
+            deviceType: deviceType,
+            backedUp: backedUp,
+            transports: body.response.transports?.join(','), // Store transports as comma-separated string
         });
 
         // Set session cookie upon successful registration

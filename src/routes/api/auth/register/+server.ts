@@ -1,8 +1,11 @@
 import type { RequestHandler } from './$types';
-import { json } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/types';
 import { Buffer } from 'buffer'; // Node.js Buffer for base64
+import { drizzle } from 'drizzle-orm/d1';
+import * as schema from '$lib/server/schema';
+import { eq } from 'drizzle-orm';
 
 // --- Relying Party details - TODO: Move to environment variables --- 
 const rpName = 'Ananas';
@@ -17,19 +20,32 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
     // TODO: Potentially check if user is already logged in? Or handle username input?
     // For now, we assume this is for a new user registration initiated by the client.
 
-    // Placeholder for user details - in a real app, you might get username from request body
-    // and check if it exists before generating options. Use a more robust username generation if needed.
-    const userName = `user_${Date.now()}`.slice(0, 64); // Ensure username is within common limits
-    const userIdString = crypto.randomUUID(); // Generate a temporary user ID as string
-    // Convert the userId string to Uint8Array (required by simplewebauthn)
-    const userIdBuffer = Buffer.from(userIdString, 'utf-8'); 
+    const db = drizzle(platform.env.DB, { schema });
+
+    const { email } = await request.json() as { email: string };
+
+    if (!email) {
+        return json({ error: 'Email is required.' }, { status: 400 });
+    }
+
+    // Check if user already exists
+    try {
+        const existingUser = await db.select().from(schema.users).where(eq(schema.users.email, email));
+        if (existingUser.length > 0) {
+            return json({ error: 'User already exists.' }, { status: 400 });
+        }
+    } catch (dbError: any) {
+        throw error(500, `Database error checking user existence: ${dbError?.message ?? 'Unknown error'}`);
+    }
+
+    const userId = crypto.randomUUID(); // Generate a new UUID for the user
 
     const options: PublicKeyCredentialCreationOptionsJSON = await generateRegistrationOptions({
         rpName,
         rpID,
-        userID: userIdBuffer,
-        userName: userName,
-        // Don't specifyresidentKey or requireResidentKey unless you know you need them
+        userID: Buffer.from(userId, 'utf-8'),
+        userName: email, // Use email as the WebAuthn username
+        userDisplayName: email, // Use email for display name as well
         attestationType: 'none', // 'none' means we don't need attestation signatures
         excludeCredentials: [], // TODO: Add existing credentials for this user if re-registering a device
         authenticatorSelection: {
@@ -37,11 +53,11 @@ export const POST: RequestHandler = async ({ request, platform, cookies }) => {
         },
     });
 
-    // Store challenge, userId (string), and userName together
+    // Store challenge, userId (string), and email together
     const challengePayload = JSON.stringify({
         challenge: options.challenge,
-        userId: userIdString,
-        userName: userName
+        userId: userId,
+        email: email
     });
     cookies.set('registrationChallengePayload', challengePayload, {
         path: '/',

@@ -5,7 +5,7 @@ This plan outlines the steps needed to add Passkey (WebAuthn) authentication to 
 ## 1. Backend Setup
 
 ### 1.1. Database Schema (`src/lib/server/schema.ts`)
-    - **Define `User` Table:** If not already present, create a `users` table to store user information (e.g., `id`, `username`).
+    - **Define `User` Table:** If not already present, create a `users` table to store user information (e.g., `id`, `email`).
     - **Define `Passkey` Table:** Create a `passkeys` table to store WebAuthn credentials, including fields like:
         - `id` (Primary Key)
         - `user_id` (Foreign Key linking to `users` table)
@@ -25,7 +25,7 @@ This plan outlines the steps needed to add Passkey (WebAuthn) authentication to 
     - **Registration:**
         - `POST /api/auth/register`: Generate registration options using `@simplewebauthn/server`, including a challenge. Store the challenge temporarily (e.g., in a secure cookie or short-lived DB record).
         - `POST /api/auth/register/verify`: Verify the registration response from the browser using `@simplewebauthn/server`. If valid:
-            - Create a new User record.
+            - Create a new User record with the provided email.
             - Create a new Passkey record linked to the user.
             - Log the user in by setting a secure, HTTP-only session cookie containing the user ID.
     - **Login:**
@@ -58,7 +58,7 @@ This plan outlines the steps needed to add Passkey (WebAuthn) authentication to 
     - **`+layout.svelte`:** Receive the user data via `$page.data.user` and make it available to child components (e.g., storing in a `$state` variable or using it directly).
 
 ### 2.2. Registration UI (`src/routes/register/+page.svelte` or similar)
-    - Form with username input.
+    - Form with email input.
     - Button to initiate registration.
     - On button click:
         - Fetch registration options from `/api/auth/register`.
