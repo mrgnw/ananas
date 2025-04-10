@@ -55,6 +55,7 @@ export const POST: RequestHandler = async (event) => {
 
     let verification: VerifiedRegistrationResponse;
     try {
+        // --- Broader Try-Catch Start ---
         const opts: VerifyRegistrationResponseOpts = {
             response: body,
             expectedChallenge: expectedChallenge,
@@ -63,90 +64,92 @@ export const POST: RequestHandler = async (event) => {
             requireUserVerification: false, // Set to true if you want to enforce user verification (PIN, Biometrics)
         };
         verification = await verifyRegistrationResponse(opts);
-    } catch (err: any) {
-        console.error('Registration verification failed:', err);
-        return json({ success: false, error: `Verification failed: ${err.message}` }, { status: 400 });
-    }
 
-    const { verified, registrationInfo } = verification;
+        // --- DEBUGGING: Log the entire verification object --- 
+        console.log('--- Full Verification Object ---');
+        console.dir(verification, { depth: null }); // Use console.dir for better object inspection
+        console.log('------------------------------------');
 
-    if (!verified || !registrationInfo) {
-        return json({ success: false, error: 'Could not verify registration.' }, { status: 400 });
-    }
-
-    // Add extra check to satisfy TypeScript before destructuring
-    if (!registrationInfo) {
-        // This case should logically not be reached if verified is true
-        console.error('Registration info missing despite successful verification flag.');
-        return json({ success: false, error: 'Internal error: Registration info missing.' }, { status: 500 });
-    }
-
-    // We retrieved the userId from the challenge cookie now.
-    // We should also verify that the userHandle returned by the authenticator
-    // corresponds to the userId we expect, although simplewebauthn server
-    // should handle part of this consistency check.
-
-    // TODO: Check if credentialID already exists for any user? Should be unlikely.
-
-    try {
-        // Perform inserts sequentially as D1 transactions via drizzle seem problematic
-        // 1. Create the user record
-        await db.insert(schema.users).values({
-            id: userId,
-            email: email, // Use email from the challenge payload
-        }).onConflictDoNothing(); // Or handle conflict appropriately
-
-        // 2. Create the passkey credential
-        if (!verification.registrationInfo) {
-            throw new Error('Registration info missing from verification result.');
+        // Extract necessary info from verification result
+        const { registrationInfo } = verification;
+        if (!registrationInfo) {
+            // Should theoretically have registrationInfo if verification succeeded
+            throw new Error('Missing registration info after verification');
         }
-        const { credentialPublicKey, credentialID, counter } = verification.registrationInfo as any;
+        // Access properties based on actual structure from console.dir output
+        // @ts-ignore - Bypassing type errors if definition mismatches runtime structure
+        const credential = registrationInfo.credential as { id: string; publicKey: Uint8Array; counter: number };
+        const credentialID = credential.id;
+        const credentialPublicKey = credential.publicKey;
+        const counter = credential.counter;
+        
+        // These seem to be direct properties based on logs
+        const deviceType = registrationInfo.credentialDeviceType;
+        const backedUp = registrationInfo.credentialBackedUp;
 
-        // Extract additional needed fields safely, providing non-null values
+        // Prepare data for passkey table
         const webauthnUserId = userId; // This should be the user ID we passed to generate options
-        const deviceType = (verification.registrationInfo as any).credentialDeviceType;
-        const backedUp = (verification.registrationInfo as any).credentialBackedUp;
-        const backedUpInt = backedUp ? 1 : 0; // Convert boolean to integer 0 or 1
+        const transportsString = body.response.transports?.join(',');
 
-        // --- DEBUGGING: Log values and types before insert ---
-        console.log('--- Inserting Passkey ---');
-        console.log('id:', credentialID, typeof credentialID);
-        console.log('publicKey:', credentialPublicKey, typeof credentialPublicKey, credentialPublicKey instanceof Uint8Array);
-        console.log('counter:', counter, typeof counter);
-        console.log('userId:', userId, typeof userId);
-        console.log('webauthnUserId:', webauthnUserId, typeof webauthnUserId);
-        console.log('deviceType:', deviceType, typeof deviceType);
-        console.log('backedUp (int):', backedUpInt, typeof backedUpInt);
-        console.log('transports:', body.response.transports?.join(','), typeof body.response.transports?.join(','));
-        console.log('-------------------------');
+        try {
+            // Explicitly convert publicKey to Buffer for Drizzle/TypeScript
+            const publicKeyBuffer = Buffer.from(credentialPublicKey);
 
-        await db.insert(schema.passkeys).values({
-            // Use schema column names
-            id: Buffer.from(credentialID).toString('base64url'), // Credential ID is the primary key 'id' for the passkey
-            publicKey: Buffer.from(credentialPublicKey), // Store public key directly as Buffer (assuming schema is blob)
-            counter: counter,
-            userId: userId,
-            webauthnUserId: webauthnUserId, // Assuming this corresponds to the user ID used in webauthn flow
-            deviceType: deviceType,
-            backedUp: backedUpInt, // Insert the integer value
-            transports: body.response.transports?.join(','), // Store transports as comma-separated string
-        });
+            // --- DEBUGGING: Log values and types immediately before insert attempt ---
+            console.log('--- Attempting to Insert Passkey ---');
+            console.log('id (string):', credentialID, typeof credentialID); // Should be base64url string
+            console.log('publicKey (Buffer):', publicKeyBuffer, typeof publicKeyBuffer, publicKeyBuffer instanceof Buffer); // Log the buffer
+            console.log('counter:', counter, typeof counter);
+            console.log('userId:', userId, typeof userId);
+            console.log('webauthnUserId:', webauthnUserId, typeof webauthnUserId);
+            console.log('deviceType:', deviceType, typeof deviceType);
+            console.log('backedUp (boolean):', backedUp, typeof backedUp);
+            console.log('transports:', transportsString, typeof transportsString);
+            console.log('------------------------------------');
 
-        // Set session cookie upon successful registration
-        const SESSION_COOKIE_NAME = 'auth_session';
-        cookies.set(SESSION_COOKIE_NAME, userId, {
-            path: '/',
-            httpOnly: true,
-            secure: !dev, // Use secure flag in production
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 24 * 7 // 7 days
-        });
+            // Perform inserts sequentially as D1 transactions via drizzle seem problematic
+            // 1. Create the user record
+            await db.insert(schema.users).values({
+                id: userId,
+                email: email, // Use email from the challenge payload
+            }).onConflictDoNothing(); // Or handle conflict appropriately
 
-        return json({ success: true, verified });
+            // 2. Create the passkey credential
+            await db.insert(schema.passkeys).values({
+                // Use schema column names
+                id: credentialID, // Now using correct variable derived from registrationInfo.credential.id
+                // publicKey: publicKeyBuffer, // Temporarily commented out
+                counter: counter, // Now using correct variable derived from registrationInfo.credential.counter
+                userId: userId,
+                webauthnUserId: webauthnUserId, // Assuming this corresponds to the user ID used in webauthn flow
+                deviceType: deviceType,
+                // backedUp: backedUp, // Temporarily commented out
+                // transports: transportsString // Temporarily commented out
+            });
 
-    } catch (dbError: any) {
-        console.error('Failed to save user/passkey to DB:', dbError);
-        // TODO: Check for specific errors like UNIQUE constraint violations
-        throw error(500, `Database error during registration: ${dbError.message}`);
+            // Set session cookie upon successful registration
+            const SESSION_COOKIE_NAME = 'auth_session';
+            cookies.set(SESSION_COOKIE_NAME, userId, {
+                path: '/',
+                httpOnly: true,
+                secure: !dev, // Use secure flag in production
+                sameSite: 'lax',
+                maxAge: 60 * 60 * 24 * 7 // 7 days
+            });
+
+            return json({ success: true, verified: verification.verified });
+
+        } catch (dbInsertError: any) {
+            // Handle potential database errors during passkey insertion
+            console.error('Failed to save passkey to DB:', dbInsertError);
+            // IMPORTANT: Consider rolling back user creation if passkey fails?
+            // For now, just report the error.
+            throw error(500, `Database error during passkey registration: ${dbInsertError.message}`);
+        }
+        // --- Broader Try-Catch End ---
+    } catch (err: any) {
+        // Catch errors from verification or data preparation stages
+        console.error('Error during registration verification or data prep:', err);
+        return json({ success: false, error: `Verification failed: ${err.message}` }, { status: 400 });
     }
 };
