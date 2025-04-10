@@ -106,6 +106,19 @@ export const POST: RequestHandler = async (event) => {
         const webauthnUserId = userId; // This should be the user ID we passed to generate options
         const deviceType = (verification.registrationInfo as any).credentialDeviceType;
         const backedUp = (verification.registrationInfo as any).credentialBackedUp;
+        const backedUpInt = backedUp ? 1 : 0; // Convert boolean to integer 0 or 1
+
+        // --- DEBUGGING: Log values and types before insert ---
+        console.log('--- Inserting Passkey ---');
+        console.log('id:', credentialID, typeof credentialID);
+        console.log('publicKey:', credentialPublicKey, typeof credentialPublicKey, credentialPublicKey instanceof Uint8Array);
+        console.log('counter:', counter, typeof counter);
+        console.log('userId:', userId, typeof userId);
+        console.log('webauthnUserId:', webauthnUserId, typeof webauthnUserId);
+        console.log('deviceType:', deviceType, typeof deviceType);
+        console.log('backedUp (int):', backedUpInt, typeof backedUpInt);
+        console.log('transports:', body.response.transports?.join(','), typeof body.response.transports?.join(','));
+        console.log('-------------------------');
 
         await db.insert(schema.passkeys).values({
             // Use schema column names
@@ -115,7 +128,7 @@ export const POST: RequestHandler = async (event) => {
             userId: userId,
             webauthnUserId: webauthnUserId, // Assuming this corresponds to the user ID used in webauthn flow
             deviceType: deviceType,
-            backedUp: backedUp,
+            backedUp: backedUpInt, // Insert the integer value
             transports: body.response.transports?.join(','), // Store transports as comma-separated string
         });
 
