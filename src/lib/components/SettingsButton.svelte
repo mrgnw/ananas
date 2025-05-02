@@ -4,6 +4,8 @@
   import { toast } from "svelte-sonner";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js'
+  import { userStore } from '$lib/stores/user.svelte.js';
+  import { defaultLanguages } from '$lib/utils/languages.js';
 
   function clearCache() {
     try {
@@ -18,17 +20,19 @@
   }
 
   function addDefaultLanguages() {
-    translateLanguages.addDefaultLanguages();
+    Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
     toast.success("Added default languages");
   }
 
   function resetLanguages() {
-    translateLanguages.resetToDefaults();
+    // Remove all, then add defaults
+    userStore.user.selectedLanguages.slice().forEach(code => userStore.removeLanguage(code));
+    Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
     toast.success("Reset to default languages");
   }
 
   function clearAllLanguages() {
-    translateLanguages.clearLanguages();
+    userStore.user.selectedLanguages.slice().forEach(code => userStore.removeLanguage(code));
     toast.success("Cleared all languages");
   }
 </script>

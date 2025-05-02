@@ -1,20 +1,17 @@
 <script>
   import { userStore } from '$lib/stores/user.svelte.js';
   import languageData from '$lib/data/wikidata-languages.json';
+  import { isDeepLSupported, isM2MSupported, showCompatibleLanguages } from '$lib/utils/languageSupport.ts';
 
-  // Deduplicate by code
-  const seen = new Set();
-  const allLanguages = languageData
-    .filter(lang => {
-      if (seen.has(lang.iso)) return false;
-      seen.add(lang.iso);
-      return true;
-    })
-    .map(lang => ({
-      code: lang.iso,
-      label: lang.langLabel,
-      native: lang.nativeNames?.[0] || lang.langLabel
-    }));
+  // Get the user's translators
+  const translators = userStore.user.translators;
+
+  // Use the utility to get only compatible languages
+  const allLanguages = showCompatibleLanguages(translators).map(lang => ({
+    code: lang.iso,
+    label: lang.langLabel,
+    native: lang.nativeNames?.[0] || lang.langLabel
+  }));
 
   function isSelected(code) {
     return userStore.user.selectedLanguages.includes(code);

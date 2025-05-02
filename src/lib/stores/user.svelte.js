@@ -1,6 +1,7 @@
 // src/lib/stores/user.svelte.js
 let user = $state({
-  selectedLanguages: []
+  selectedLanguages: [],
+  translators: ['deepl'] // Default to deepl, can support others in future
 });
 
 // Load from localStorage on module load
@@ -29,8 +30,28 @@ function removeLanguage(code) {
   save();
 }
 
+function setTranslators(translators) {
+  user.translators = Array.isArray(translators) ? translators : [translators];
+  save();
+}
+
+function addTranslator(translator) {
+  if (!user.translators.includes(translator)) {
+    user.translators.push(translator);
+    save();
+  }
+}
+
+function removeTranslator(translator) {
+  user.translators = user.translators.filter(t => t !== translator);
+  save();
+}
+
 export const userStore = {
   user,
   addLanguage,
-  removeLanguage
+  removeLanguage,
+  setTranslators,
+  addTranslator,
+  removeTranslator
 };
