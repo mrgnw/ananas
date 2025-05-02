@@ -44,6 +44,7 @@
   <a href="/">Translate</a>
   <a href="/languages">Languages</a>
   <a href="/user">User</a>
+  <a href="/history">History</a>
 </nav>
 
 {@render children?.()}

@@ -3,6 +3,7 @@
   import TranslationInput from '$jibs/TranslationInput.svelte';
   import TranslationResult from '$jibs/TranslationResult.svelte';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
+  import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
   let text = $state('');
   let result = $state(null);
   let loading = $state(false);
@@ -28,6 +29,14 @@
       });
       if (!res.ok) throw new Error('API error');
       result = await res.json();
+      // Add to translation history
+      translationHistoryStore.addTranslation({
+        input: text,
+        output: result,
+        sourceLang: 'auto', // or set if you know the source
+        targetLang: userStore.user.selectedLanguages,
+        timestamp: Date.now()
+      });
     } catch (e) {
       error = e.message || 'Unknown error';
     } finally {
