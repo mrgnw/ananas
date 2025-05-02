@@ -1,5 +1,6 @@
 <script>
   import { userStore } from '$lib/stores/user.svelte.js';
+  import MultiLangCard from '$jibs/MultiLangCard.svelte';
   let text = $state('');
   let result = $state(null);
   let loading = $state(false);
@@ -47,6 +48,7 @@
 
 {#if result}
   <h2 class="mt-4 text-lg font-bold">Results</h2>
+  <MultiLangCard translation={{ translations: result }} />
   <ul class="mt-2 space-y-2">
     {#each Object.entries(result) as [key, value]}
       <li>

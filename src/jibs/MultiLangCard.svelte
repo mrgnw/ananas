@@ -4,7 +4,7 @@
 	import { browser } from '$app/environment';
 	import { getColorByIndex } from '$lib/colors';
 	import { Copy, Trash2 } from 'lucide-svelte';
-	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+	import { userStore } from '$lib/stores/user.svelte.js';
 
 	let { translation, show_langs, truncate_lines, onDelete = null, ...props } = $props();
 
@@ -48,7 +48,7 @@
 	<Card class="transition-shadow hover:shadow-md relative">
 		<CardContent class="p-2 sm:p-3">
 			<div class="relative">
-				{#each show_langs as lang}
+				{#each userStore.user.selectedLanguages as lang, i}
 					{#if translation.translations[lang]}
 						{@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
 						{@const isSourceLang = lang === sourceLang}
@@ -59,7 +59,7 @@
 							<div class="absolute left-0 top-0 bottom-0 w-0.5 {isSourceLang ? 'bg-blue-300' : 'bg-gray-100'} group-hover:bg-blue-200 transition-colors"></div>
 							
 							<!-- Translation text with padding for copy button -->
-							<div class="pl-4 text-sm {getColorByIndex(Object.keys(translateLanguages.languages).indexOf(lang), true)} {truncate_lines ? 'line-clamp-3' : ''} break-words">
+							<div class="pl-4 text-sm {getColorByIndex(i, true)} {truncate_lines ? 'line-clamp-3' : ''} break-words">
 								{translation.translations[lang]}
 							</div>
 							
