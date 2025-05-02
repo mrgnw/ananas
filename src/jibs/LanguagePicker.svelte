@@ -7,16 +7,12 @@
   import languageData from '$lib/data/wikidata-languages.json';
   import { Languages, Plus } from 'lucide-svelte';
 
-  let selectedCodes = $derived(translateLanguages.selectedCodes);
+  let selectedCodes = $derived(() => Object.keys(translateLanguages.languages));
 
-  // First, create a map of 3-char to 2-char codes
   const iso3ToIso1Map = new Map(
-    languageData
-      .filter(lang => lang.iso1)
-      .map(lang => [lang.iso, lang.iso1])
+    languageData.filter(lang => lang.iso1).map(lang => [lang.iso, lang.iso1])
   );
 
-  // Create a map of 2-char to language info
   const countryLanguages = new Map(
     Object.entries(languages).map(([code, info]) => [code, {
       value: code,
@@ -25,29 +21,13 @@
     }])
   );
 
-  // Add custom languages
   const customLanguages = new Map([
-    ['scn', {
-      value: 'scn',
-      label: 'Sicilian',
-      native: 'Sicilianu'
-    }]
+    ['scn', { value: 'scn', label: 'Sicilian', native: 'Sicilianu' }]
   ]);
 
-  // Create a unified language map, preferring 2-char codes
   const allLanguages = new Map();
-
-  // First add countries-list languages (2-char codes)
-  countryLanguages.forEach((info, code) => {
-    allLanguages.set(code, info);
-  });
-
-  // Add custom languages
-  customLanguages.forEach((info, code) => {
-    allLanguages.set(code, info);
-  });
-
-  // Add wikidata languages that don't have 2-char codes
+  countryLanguages.forEach((info, code) => allLanguages.set(code, info));
+  customLanguages.forEach((info, code) => allLanguages.set(code, info));
   languageData.forEach(lang => {
     if (!lang.iso1 && !allLanguages.has(lang.iso)) {
       allLanguages.set(lang.iso, {
@@ -58,20 +38,18 @@
     }
   });
 
-  // Convert to array for the combobox
-  let langs = Array.from(allLanguages.values());
+  let inputValue = $state("");
+  let langs = $derived(() => Array.from(allLanguages.values()));
+  let filteredLangs = $derived(() => filterLanguages(inputValue));
 
   function isLanguageSelected(langCode) {
-    // If this is a 3-char code, try to get its 2-char equivalent
     const codeToCheck = iso3ToIso1Map.get(langCode) || langCode;
-    return selectedCodes.includes(codeToCheck);
+    return selectedCodes.includes(codeToCheck) || selectedCodes.includes(langCode);
   }
 
   function handleLanguageAdd(langCode) {
-    // Always use 2-char code if available
     const codeToUse = iso3ToIso1Map.get(langCode) || langCode;
     const langInfo = allLanguages.get(codeToUse) || allLanguages.get(langCode);
-    
     if (!selectedCodes.includes(codeToUse)) {
       translateLanguages.addLanguage(codeToUse, {
         label: langInfo?.label || codeToUse,
@@ -82,15 +60,6 @@
     }
     inputValue = "";
   }
-
-  let value = $state("");
-  let inputValue = $state("");
-  let open = $derived(inputValue.length > 0);
-  let filteredLangs = $derived(filterLanguages(inputValue));
-
-  let selectedValue = $derived(
-    langs.find((lang) => lang.label === value || lang.native === value)?.label ?? "Add language..."
-  );
 
   function filterLanguages(inputValue) {
     const lowerInput = inputValue.toLowerCase();
@@ -104,17 +73,14 @@
       .sort((a, b) => {
         const aExactMatch = a.value.toLowerCase() === lowerInput;
         const bExactMatch = b.value.toLowerCase() === lowerInput;
-
         if (aExactMatch && !bExactMatch) return -1;
         if (!aExactMatch && bExactMatch) return 1;
-
         const aStartsWith = a.value.toLowerCase().startsWith(lowerInput) ||
           a.label.toLowerCase().startsWith(lowerInput) ||
           a.native.toLowerCase().startsWith(lowerInput);
         const bStartsWith = b.value.toLowerCase().startsWith(lowerInput) ||
           b.label.toLowerCase().startsWith(lowerInput) ||
           b.native.toLowerCase().startsWith(lowerInput);
-
         if (aStartsWith && !bStartsWith) return -1;
         if (!aStartsWith && bStartsWith) return 1;
         return 0;
@@ -130,6 +96,9 @@
     }
   }
 
+  function getLanguageName(lang) {
+    return lang.label || lang.native || lang.code;
+  }
 </script>
 
 <div class="flex gap-2 items-center">

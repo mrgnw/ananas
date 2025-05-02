@@ -3,7 +3,7 @@
   import X from "lucide-svelte/icons/x";
   import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 
-  let selectedCodes = $derived(translateLanguages.selectedCodes);
+  let selectedCodes = $derived(() => Object.keys(translateLanguages.languages));
   
   function removeLanguage(code) {
     // The store will handle normalization internally
