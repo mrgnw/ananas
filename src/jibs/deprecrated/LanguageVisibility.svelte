@@ -10,7 +10,7 @@
 		DropdownMenuRadioItem,
 		DropdownMenuCheckboxItem
 	} from '$lib/components/ui/dropdown-menu';
-	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+	import { translateLanguages } from '$jibs/deprecrated/translateLanguages.svelte.js';
 
 	import DropdownMenuLabel from '@/components/ui/dropdown-menu/dropdown-menu-label.svelte';
 	import { DropdownMenu, DropdownMenu } from 'bits-ui';

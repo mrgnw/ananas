@@ -1,5 +1,5 @@
 <script>
-import { translateLanguages, createTranslateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+import { translateLanguages, createTranslateLanguages } from '$jibs/deprecrated/translateLanguages.svelte.js';
 
 // Test data
 const testLanguages = {

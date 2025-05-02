@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import NewLang from '$jibs/NewLang.svelte';
+	import NewLang from '$jibs/deprecrated/NewLang.svelte';
 	import { translationInput } from '$lib/stores/translationStore';
 	
 	interface Props {

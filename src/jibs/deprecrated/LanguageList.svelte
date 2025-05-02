@@ -1,12 +1,11 @@
 <script>
   import { Badge } from "$lib/components/ui/badge";
   import X from "lucide-svelte/icons/x";
-  import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
+  import { translateLanguages } from '$jibs/deprecrated/translateLanguages.svelte.js';
 
   let selectedCodes = $derived(() => Object.keys(translateLanguages.languages));
-  
+
   function removeLanguage(code) {
-    // The store will handle normalization internally
     translateLanguages.removeLanguage(code);
   }
 
@@ -14,12 +13,11 @@
   function handle_variant(hovered_lang) {
     return hovered_lang == selected_lang_to_remove ? "destructive" : "outline";
   }
-
 </script>
 
 <div class="selected-languages">
   <ul>
-    {#each selectedCodes as langCode}
+    {#each selectedCodes as langCode (langCode)}
     <li>
       <Badge variant={handle_variant(langCode)}>
         {translateLanguages.getLanguageInfo(langCode)?.label || langCode}

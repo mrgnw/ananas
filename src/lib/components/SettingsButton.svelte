@@ -3,7 +3,6 @@
   import { Settings } from "lucide-svelte";
   import { toast } from "svelte-sonner";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-  import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js'
   import { userStore } from '$lib/stores/user.svelte.js';
   import { defaultLanguages } from '$lib/utils/languages.js';
 

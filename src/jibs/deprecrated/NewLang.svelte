@@ -1,6 +1,5 @@
 <script>
 	import { exampleTranslations } from '$lib/example';
-	import { translateLanguages } from '$lib/stores/translateLanguages.svelte.js';
 	import { translationHistory } from '$lib/stores/translationHistory.svelte.js';
 	import { exampleTyper } from '$lib/stores/exampleTyper.svelte.js';
 	import { translationStateMachine, STATES } from '$lib/stores/translationStateMachine.svelte.js';
@@ -13,6 +12,7 @@
 	import PlayPauseButton from './PlayPauseButton.svelte';
 	import { getColorByIndex } from '$lib/colors';
 	import { onMount, onDestroy } from 'svelte';
+	import { userStore } from '$lib/stores/user.svelte.js';
 
 	// State tracking variables
 	let isTyping = $state(false);
@@ -86,9 +86,9 @@
 	let truncate_lines = $state(true);
 
 	// Language management
-	let user_langs = $derived(translateLanguages.languages);
-	let tgt_langs = $derived(Object.keys(user_langs));
-	let show_langs = $derived(
+	let user_langs = $derived(() => userStore.user.selectedLanguages);
+	let tgt_langs = $derived(() => userStore.user.selectedLanguages);
+	let show_langs = $derived(() =>
 		Object.entries(user_langs)
 			.filter(([_, lang]) => lang.display)
 			.map(([key, _]) => key)
@@ -247,6 +247,13 @@
 			translationStateMachine.actions.userTyping();
 			exampleTyper.markUserTyped();
 		}
+	}
+
+	function addDefaultLanguages() {
+		// Set some default ISO codes (e.g. English, Russian, Japanese, Spanish, Italian, Catalan)
+		const defaults = ['eng', 'rus', 'jpn', 'spa', 'ita', 'cat'];
+		defaults.forEach(code => userStore.addLanguage(code));
+		toast.success("Added default languages");
 	}
 </script>
 

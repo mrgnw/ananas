@@ -46,6 +46,9 @@
 		}, {})
 	);
 
+	// Add a $derived for selectedCodes that always returns an array
+	let selectedCodes = $derived(() => Array.isArray(translateLanguages.selectedCodes) ? translateLanguages.selectedCodes : (Object.keys(translateLanguages.languages) ?? []));
+
 	function toggleLanguage(code: string) {
 		if (isSelected(code)) {
 			translateLanguages.removeLanguage(code);
@@ -60,7 +63,12 @@
 	}
 
 	function isSelected(code: string) {
-		return translateLanguages.selectedCodes.includes(code);
+		const codes = Array.isArray(selectedCodes)
+			? selectedCodes
+			: (selectedCodes && typeof selectedCodes === 'object')
+				? Object.values(selectedCodes)
+				: [];
+		return codes.includes(code);
 	}
 
 	function formatSpeakers(count: number | undefined) {
