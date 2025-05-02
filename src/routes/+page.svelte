@@ -1,15 +1,44 @@
-<script lang="ts">
-	import type { PageData } from './$types';
-	import NewLang from '$jibs/deprecrated/NewLang.svelte';
-	import { translationInput } from '$lib/stores/translationStore';
-	
-	interface Props {
-		data: PageData;
-	}
+<script>
+  import { userStore } from '$lib/stores/user.svelte.js';
+  import TranslationInput from '$jibs/TranslationInput.svelte';
+  import TranslationResult from '$jibs/TranslationResult.svelte';
+  import MultiLangCard from '$jibs/MultiLangCard.svelte';
+  let text = $state('');
+  let result = $state(null);
+  let loading = $state(false);
+  let error = $state('');
 
-	let { data }: Props = $props();
+  async function handleTranslate() {
+    error = '';
+    result = null;
+    if (!text.trim()) return;
+    if (!userStore.user.selectedLanguages.length) {
+      error = 'Please select at least one language.';
+      return;
+    }
+    loading = true;
+    try {
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          tgt_langs: userStore.user.selectedLanguages
+        })
+      });
+      if (!res.ok) throw new Error('API error');
+      result = await res.json();
+    } catch (e) {
+      error = e.message || 'Unknown error';
+    } finally {
+      loading = false;
+    }
+  }
 </script>
 
-<div class="container mx-auto p-4 max-w-5xl">
-	<NewLang text={$translationInput} />
-</div>
+<h1>Translate</h1>
+<TranslationInput bind:text {loading} onTranslate={handleTranslate} />
+{#if error}
+  <div class="text-red-600 mt-2">{error}</div>
+{/if}
+<TranslationResult {result} />
