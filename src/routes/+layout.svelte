@@ -40,6 +40,12 @@
 	<link rel="manifest" href="/manifest.webmanifest">
 </svelte:head>
 
+<nav class="p-4 bg-gray-100 flex gap-4">
+  <a href="/">Translate</a>
+  <a href="/languages">Languages</a>
+  <a href="/user">User</a>
+</nav>
+
 {@render children?.()}
 
 {#if browser}

@@ -6,6 +6,9 @@
 <h3>Selected languages:</h3>
 <ul>
   {#each userStore.user.selectedLanguages as code}
-    <li>{code}</li>
+    <li>
+      <button on:click={() => userStore.removeLanguage(code)} style="margin-right: 1em">Remove</button>
+      {code}
+    </li>
   {/each}
 </ul>
