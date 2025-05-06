@@ -2,6 +2,7 @@ I'm making this for myself to translate to multiple languages at once.
 
 # run
 
+
 ```sh
 bun install
 bun run dev
