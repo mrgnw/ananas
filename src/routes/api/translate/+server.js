@@ -2,14 +2,14 @@ import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
 const OPENAI_API_KEY = env.VITE_OPENAI_API_KEY;
-const apiUrl = 'https://4845cad5-ananas-api-dev.xces.workers.dev/deepl';
+const API_BACKEND = env.API_BACKEND || 'https://ananas-api.xces.workers.dev';
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
 	try {
 		const { text, tgt_langs } = await request.json();
 
-		const response = await fetch(apiUrl, {
+		const response = await fetch(API_BACKEND, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
