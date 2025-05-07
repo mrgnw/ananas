@@ -99,11 +99,13 @@
       </button>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
-      <span class="lang-native">({lang.nativeName})</span>
+      {#if lang.nativeName && lang.nativeName !== lang.name}
+        <span class="lang-native">({lang.nativeName})</span>
+      {/if}
     </li>
   {/each}
 
-  {#if filteredLanguages.some(lang => !lang.selected)}
+  {#if filteredLanguages.some(lang => !lang.selected) && filteredLanguages.some(lang => lang.selected)}
     <li class="language-separator" style="margin: 0.5em 0; border-bottom: 1px solid #eee; list-style: none;"></li>
   {/if}
 
@@ -124,7 +126,9 @@
       </button>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
-      <span class="lang-native">({lang.nativeName})</span>
+      {#if lang.nativeName && lang.nativeName !== lang.name}
+        <span class="lang-native">({lang.nativeName})</span>
+      {/if}
     </li>
   {/each}
 </ul>
