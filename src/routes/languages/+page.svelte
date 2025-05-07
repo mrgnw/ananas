@@ -17,6 +17,44 @@
   let props = $props();
   let { ip_country, country_languages, accept_language, country_phone } = props;
   
+  let filter = $state('');
+
+  let filteredLanguages = $derived.by(() => {
+    if (!filter.trim()) return [...languageOptions];
+    const f = filter.trim().toLowerCase();
+    const exact = [];
+    const starts = [];
+    const partial = [];
+    for (const lang of languageOptions) {
+      const name = lang.name?.toLowerCase() || '';
+      const native = lang.nativeName?.toLowerCase() || '';
+      const code2 = lang.code?.toLowerCase() || '';
+      const code3 = lang.iso3?.toLowerCase?.() || '';
+      if (
+        name === f ||
+        native === f ||
+        code2 === f ||
+        code3 === f
+      ) {
+        exact.push(lang);
+      } else if (
+        name.startsWith(f) ||
+        native.startsWith(f) ||
+        code2.startsWith(f) ||
+        code3.startsWith(f)
+      ) {
+        starts.push(lang);
+      } else if (
+        name.includes(f) ||
+        native.includes(f) ||
+        code2.includes(f) ||
+        code3.includes(f)
+      ) {
+        partial.push(lang);
+      }
+    }
+    return [...exact, ...starts, ...partial];
+  });
 
   function formatSpeakers(n) {
     if (!n) return '';
@@ -34,10 +72,43 @@
   }
 </script>
 
+<input
+  class="language-filter-input"
+  type="text"
+  placeholder="Filter by name, native name, 2- or 3-letter code..."
+  bind:value={filter}
+  autocomplete="off"
+  style="margin-bottom:1em;width:100%;padding:0.5em;font-size:1em;border-radius:5px;border:1px solid #ddd;"
+/>
 
 <ul class="languages-list">
-  {#each [...languageOptions].sort((a, b) => languageSort(a, b, ip_country)) as lang (lang.code)}
-    <li class="language-item {lang.selected ? 'selected' : ''}" animate:flip={{ duration: 120 }}>
+  {#each [...filteredLanguages].filter(lang => lang.selected) as lang (lang.code)}
+    <li class="language-item selected">
+      <button class="add-btn"
+        onclick={() => lang.selected
+          ? userStore.removeLanguage(lang.code)
+          : userStore.addLanguage(lang.code)
+        }>
+        <span class="add-btn-label-wrap">
+          {#if lang.selected}
+            <span class="add-btn-label" in:fade out:fade>Remove</span>
+          {:else}
+            <span class="add-btn-label" in:fade out:fade>Add</span>
+          {/if}
+        </span>
+      </button>
+      <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
+      <span class="lang-label">{lang.name}</span>
+      <span class="lang-native">({lang.nativeName})</span>
+    </li>
+  {/each}
+
+  {#if filteredLanguages.some(lang => !lang.selected)}
+    <li class="language-separator" style="margin: 0.5em 0; border-bottom: 1px solid #eee; list-style: none;"></li>
+  {/if}
+
+  {#each [...filteredLanguages].filter(lang => !lang.selected) as lang (lang.code)}
+    <li class="language-item">
       <button class="add-btn"
         onclick={() => lang.selected
           ? userStore.removeLanguage(lang.code)
