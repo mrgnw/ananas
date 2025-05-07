@@ -21,6 +21,9 @@
             <span class="history-time">{new Date(item.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
           </span>
         </div>
+        {#if i < history.translations.slice(0, 8).length - 1}
+          <div class="history-separator" aria-hidden="true"></div>
+        {/if}
       </li>
     {/each}
   </ul>
@@ -36,16 +39,21 @@
   list-style: none;
 }
 .history-card {
-  /* Remove border, background, and radius for seamless look */
   border: none;
   border-radius: 0;
   padding: 0.5em 0 0.5em 0;
   background: none;
   position: relative;
-  transition: box-shadow 0.15s;
+  transition: none;
   box-shadow: none;
   overflow: visible;
   min-height: 2.2em;
+}
+.history-separator {
+  height: 1px;
+  background: #ececec;
+  margin: 0.5em 0 0 0;
+  width: 100%;
 }
 .history-meta-float {
   display: flex;
