@@ -21,7 +21,6 @@
   }
 </script>
 
-<h1>Select Languages</h1>
 <ul class="languages-list">
   {#each [...languageOptions].sort((a, b) => b.selected - a.selected || b.speakers - a.speakers) as lang (lang.code)}
     <li class="language-item {lang.selected ? 'selected' : ''}" animate:flip={{ duration: 120 }}>
