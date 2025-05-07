@@ -74,7 +74,7 @@ async function fetchWikidataCountries() {
   const data = await response.json();
   
   // Process the results into a more usable format
-  const countries = data.results.bindings.map(country => {
+  let countries = data.results.bindings.map(country => {
     const languages = country.languages?.value.split('|').filter(Boolean) || [];
     const languageLabels = country.languageLabels?.value.split('|').filter(Boolean) || [];
     const languageIsos = country.languageIsos?.value.split('|').filter(Boolean) || [];
@@ -82,7 +82,7 @@ async function fetchWikidataCountries() {
     const speakerCounts = country.speakerCounts?.value.split('|').map(Number).filter(Boolean) || [];
     
     // Create language objects with labels, ISO codes and speaker counts
-    const languagesWithData = languages.map((lang, index) => ({
+    let languagesWithData = languages.map((lang, index) => ({
       id: lang.split('/').pop(),
       name: languageLabels[index],
       iso: languageIsos[index],
@@ -90,10 +90,15 @@ async function fetchWikidataCountries() {
       speakers: speakerCounts[index] || null,
       speakers_m: speakerCounts[index] ? +(speakerCounts[index] / 1000000).toFixed(1) : null
     }));
-  
-    // Sort languages by speaker count
-    languagesWithData.sort((a, b) => (b.speakers || 0) - (a.speakers || 0));
-  
+
+    // Sort languages by id for idempotency
+    languagesWithData.sort((a, b) => {
+      if (!a.id && !b.id) return 0;
+      if (!a.id) return 1;
+      if (!b.id) return -1;
+      return a.id.localeCompare(b.id);
+    });
+
     return {
       wikidata_id: country.country.value.split('/').pop(),
       name: country.countryLabel.value,
@@ -109,6 +114,9 @@ async function fetchWikidataCountries() {
       languages: languagesWithData
     };
   });
+
+  // Sort countries by name for idempotency
+  countries.sort((a, b) => a.name.localeCompare(b.name));
 
   // Write the results to a JSON file
   await Bun.write(
