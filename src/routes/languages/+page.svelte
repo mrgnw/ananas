@@ -2,17 +2,15 @@
   import { userStore } from '$lib/stores/user.svelte.js';
   import { getAllLanguages } from '$lib/utils/languages.js';
 
-  // All languages, sorted by speakers descending
-  let allLanguages = $state(
-    getAllLanguages().sort((a, b) => b.speakers - a.speakers)
-  );
+  // Only runs once on load
+  let allLanguages = $state(getAllLanguages().sort((a, b) => b.speakers - a.speakers));
 
-  // Use $derived.by for reactivity with userStore
-  let selectedLangs = $derived.by(() =>
-    allLanguages.filter(lang => userStore.user.selectedLanguages.includes(lang.code))
-  );
-  let unselectedLangs = $derived.by(() =>
-    allLanguages.filter(lang => !userStore.user.selectedLanguages.includes(lang.code))
+  let languageOptions = $derived.by(() =>
+    allLanguages.map(lang => ({
+      ...lang,
+      selected: userStore.user.selectedLanguages.includes(lang.code)
+    }))
+    .sort((a, b) => (b.selected - a.selected) || (b.speakers - a.speakers))
   );
 
   function formatSpeakers(n) {
@@ -23,20 +21,14 @@
 
 <h1>Select Languages</h1>
 <ul class="languages-list">
-  {#each selectedLangs as lang (lang.code)}
-    <li class="language-item selected">
-      <button class="add-btn" onclick={() => userStore.removeLanguage(lang.code)}>
-        Remove
-      </button>
-      <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
-      <span class="lang-label">{lang.name}</span>
-      <span class="lang-native">({lang.nativeName})</span>
-    </li>
-  {/each}
-  {#each unselectedLangs as lang (lang.code)}
-    <li class="language-item">
-      <button class="add-btn" onclick={() => userStore.addLanguage(lang.code)}>
-        Add
+  {#each languageOptions as lang (lang.code)}
+    <li class="language-item {lang.selected ? 'selected' : ''}">
+      <button class="add-btn"
+        onclick={() => lang.selected
+          ? userStore.removeLanguage(lang.code)
+          : userStore.addLanguage(lang.code)
+        }>
+        {lang.selected ? 'Remove' : 'Add'}
       </button>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
