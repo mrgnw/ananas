@@ -30,11 +30,13 @@
           ? userStore.removeLanguage(lang.code)
           : userStore.addLanguage(lang.code)
         }>
-        {#if lang.selected}
-          <span class="add-btn-label" in:fade out:fade>Remove</span>
-        {:else}
-          <span class="add-btn-label" in:fade out:fade>Add</span>
-        {/if}
+        <span class="add-btn-label-wrap">
+          {#if lang.selected}
+            <span class="add-btn-label" in:fade out:fade>Remove</span>
+          {:else}
+            <span class="add-btn-label" in:fade out:fade>Add</span>
+          {/if}
+        </span>
       </button>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
@@ -99,9 +101,21 @@
   margin-left: 0.2em;
   margin-right: 0.2em;
 }
-.add-btn-label {
+.add-btn-label-wrap {
+  position: relative;
   display: inline-block;
-  width: 60px;
+  width: 60px; /* or whatever fits both labels */
+  height: 1.5em;
   text-align: center;
+  vertical-align: middle;
+}
+.add-btn-label {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 </style>
