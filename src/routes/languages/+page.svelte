@@ -2,13 +2,18 @@
   import { userStore } from '$lib/stores/user.svelte.js';
   import { getAllLanguages } from '$lib/utils/languages.js';
 
+  // All languages, sorted by speakers descending
   let allLanguages = $state(
     getAllLanguages().sort((a, b) => b.speakers - a.speakers)
   );
 
-  function isSelected(code) {
-    return userStore.user.selectedLanguages.includes(code);
-  }
+  // Use $derived.by for reactivity with userStore
+  let selectedLangs = $derived.by(() =>
+    allLanguages.filter(lang => userStore.user.selectedLanguages.includes(lang.code))
+  );
+  let unselectedLangs = $derived.by(() =>
+    allLanguages.filter(lang => !userStore.user.selectedLanguages.includes(lang.code))
+  );
 
   function formatSpeakers(n) {
     if (!n) return '';
@@ -18,13 +23,20 @@
 
 <h1>Select Languages</h1>
 <ul class="languages-list">
-  {#each allLanguages as lang (lang.code)}
+  {#each selectedLangs as lang (lang.code)}
+    <li class="language-item selected">
+      <button class="add-btn" onclick={() => userStore.removeLanguage(lang.code)}>
+        Remove
+      </button>
+      <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
+      <span class="lang-label">{lang.name}</span>
+      <span class="lang-native">({lang.nativeName})</span>
+    </li>
+  {/each}
+  {#each unselectedLangs as lang (lang.code)}
     <li class="language-item">
-      <button
-        class="add-btn"
-        onclick={() => isSelected(lang.code) ? userStore.removeLanguage(lang.code) : userStore.addLanguage(lang.code)}
-      >
-        {isSelected(lang.code) ? 'Remove' : 'Add'}
+      <button class="add-btn" onclick={() => userStore.addLanguage(lang.code)}>
+        Add
       </button>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
