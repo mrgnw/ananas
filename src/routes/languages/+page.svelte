@@ -100,7 +100,7 @@
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
       {#if lang.nativeName && lang.nativeName !== lang.name}
-        <span class="lang-native">({lang.nativeName})</span>
+        <span class="lang-native">{lang.nativeName}</span>
       {/if}
     </li>
   {/each}
@@ -127,7 +127,7 @@
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
       {#if lang.nativeName && lang.nativeName !== lang.name}
-        <span class="lang-native">({lang.nativeName})</span>
+        <span class="lang-native">{lang.nativeName}</span>
       {/if}
     </li>
   {/each}
@@ -205,5 +205,19 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+.lang-label {
+  font-weight: 600;
+  font-size: 1.05em;
+  display: block;
+}
+.lang-native {
+  display: block;
+  font-style: italic;
+  color: #888;
+  font-size: 0.97em;
+  margin-top: -0.15em;
+  margin-bottom: 0.1em;
+  margin-left: 0.2em;
 }
 </style>
