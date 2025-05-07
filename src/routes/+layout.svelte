@@ -40,11 +40,13 @@
 	<link rel="manifest" href="/manifest.webmanifest">
 </svelte:head>
 
-<nav class="p-4 bg-gray-100 flex gap-4">
-  <a href="/">Translate</a>
-  <a href="/languages">Languages</a>
-  <a href="/user">User</a>
-  <a href="/history">History</a>
+<nav class="main-navbar">
+  <ul class="navbar-list">
+    <li><a href="/" class:active={$page.url.pathname === '/'}>Translate</a></li>
+    <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')}>Languages</a></li>
+    <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>User</a></li>
+    <li><a href="/history" class:active={$page.url.pathname.startsWith('/history')}>History</a></li>
+  </ul>
 </nav>
 
 {@render children?.()}
@@ -65,3 +67,56 @@
 	<SettingsButton />
 </div>
 {/if}
+
+<style>
+.main-navbar {
+  background: rgba(255,255,255,0.85);
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.03);
+  padding: 0.5rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.navbar-list {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.navbar-list li {
+  margin: 0;
+}
+.navbar-list a {
+  display: block;
+  padding: 0.5em 1.1em;
+  border-radius: 999px;
+  color: #222;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+.navbar-list a:hover {
+  background: #f3f4f6;
+  color: #3730a3;
+  box-shadow: 0 2px 8px 0 rgba(55,48,163,0.07);
+}
+.navbar-list a.active {
+  background: #3730a3;
+  color: #fff;
+  box-shadow: 0 2px 8px 0 rgba(55,48,163,0.13);
+}
+@media (max-width: 600px) {
+  .navbar-list {
+    gap: 0.5rem;
+  }
+  .navbar-list a {
+    padding: 0.5em 0.7em;
+    font-size: 0.98em;
+  }
+}
+</style>
