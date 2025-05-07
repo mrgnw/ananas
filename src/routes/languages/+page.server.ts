@@ -7,5 +7,5 @@ export const load: PageServerLoad = async ({ parent }) => {
   const ip_country = parentData.ip_country;
   const countryInfo = getCountryInfo(ip_country);
   const country_languages = countryInfo?.languages || [];
-  return { country_languages };
+  return { country_languages, ip_country };
 };

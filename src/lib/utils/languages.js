@@ -83,6 +83,15 @@ export function getCountryInfo(countryCode) {
     return countriesData.find(country => country.iso === countryCode.toLowerCase())
 }
 
+// Returns 1 if iso3_lang is a language of the user's country (from Cloudflare IP), else 0
+// Pass countryIso2 as a lowercase ISO 3166-1 alpha-2 code (e.g. 'us', 'fr')
+export function isLocalLanguage(iso3_lang, countryIso2) {
+    if (!iso3_lang || !countryIso2) return 0;
+    const country = countriesData.find(c => c.iso === countryIso2.toLowerCase());
+    if (!country || !country.languages) return 0;
+    return country.languages.some(lang => lang.iso === iso3_lang) ? 1 : 0;
+}
+
 // Search languages with smart ranking
 export function searchLanguages(query, country = null) {
     if (!query && !country) return getAllLanguages()

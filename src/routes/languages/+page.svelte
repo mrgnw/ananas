@@ -2,7 +2,7 @@
   import { fade } from 'svelte/transition';
   import { flip } from 'svelte/animate';
   import { userStore } from '$lib/stores/user.svelte.js';
-  import { getAllLanguages } from '$lib/utils/languages.js';
+  import { getAllLanguages, isLocalLanguage } from '$lib/utils/languages.js';
 
   let allLanguages = $state(getAllLanguages());
 
@@ -14,25 +14,27 @@
       }
     }))
   );
+  
+  let { ip_country } = $props();
 
   function formatSpeakers(n) {
     if (!n) return '';
     return (n / 1000).toFixed(0) + 'M';
   }
+
+  function languageSort(a, b, userCountry) {
+    if (b.selected !== a.selected) return b.selected - a.selected;
+    if (!a.selected && !b.selected && userCountry) {
+      const aLocal = isLocalLanguage(a.code, userCountry);
+      const bLocal = isLocalLanguage(b.code, userCountry);
+      if (aLocal !== bLocal) return bLocal - aLocal;
+    }
+    return b.speakers - a.speakers;
+  }
 </script>
 
 <ul class="languages-list">
-    {#each [...languageOptions].sort((a, b) => {
-        // Selected languages always first
-        if (b.selected !== a.selected) return b.selected - a.selected;
-        // If both unselected, Spanish (code 'es') comes first
-        if (!a.selected && !b.selected) {
-          if (a.code === 'spa') return -1;
-          if (b.code === 'spa') return 1;
-        }
-        // Otherwise, sort by speakers
-        return b.speakers - a.speakers;
-      }) as lang (lang.code)}
+  {#each [...languageOptions].sort((a, b) => languageSort(a, b, ip_country)) as lang (lang.code)}
     <li class="language-item {lang.selected ? 'selected' : ''}" animate:flip={{ duration: 120 }}>
       <button class="add-btn"
         onclick={() => lang.selected
