@@ -14,12 +14,8 @@
       }
     }))
   );
-  
-  let { ip_country, country_languages, accept_language, country_phone } = $props();
-  console.debug('ip_country', ip_country);
-  console.debug('country_languages', country_languages);
-  console.debug('accept_language', accept_language);
-  console.debug('country_phone', country_phone);
+  let props = $props();
+  let { ip_country, country_languages, accept_language, country_phone } = props;
   
 
   function formatSpeakers(n) {
@@ -37,6 +33,7 @@
     return b.speakers - a.speakers;
   }
 </script>
+
 
 <ul class="languages-list">
   {#each [...languageOptions].sort((a, b) => languageSort(a, b, ip_country)) as lang (lang.code)}

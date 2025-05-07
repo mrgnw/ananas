@@ -9,7 +9,8 @@
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
 	
 	/** @type {{children?: import('svelte').Snippet}} */
-	let { children } = $props();
+    let allProps = $props();
+	let { children } = allProps;
 	
 	// Get the country code and find country info directly from JSON
 	const countryCode = $derived($page.data.ip_country || '');
@@ -64,7 +65,7 @@
 			<span class="text-lg">{countryFlag}</span>
 		</Button>
 	{/if} -->
-	<SettingsButton />
+	<SettingsButton {...allProps}  />
 </div>
 {/if}
 
