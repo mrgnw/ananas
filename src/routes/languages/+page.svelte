@@ -15,7 +15,12 @@
     }))
   );
   
-  let { ip_country } = $props();
+  let { ip_country, country_languages, accept_language, country_phone } = $props();
+  console.debug('ip_country', ip_country);
+  console.debug('country_languages', country_languages);
+  console.debug('accept_language', accept_language);
+  console.debug('country_phone', country_phone);
+  
 
   function formatSpeakers(n) {
     if (!n) return '';
