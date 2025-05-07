@@ -29,7 +29,7 @@ export function getAllLanguages() {
         code: lang.iso,
         name: lang.langLabel,
         nativeName: lang.nativeNames?.[0] || lang.langLabel,
-        speakers: lang.speakers
+        speakers: lang.nativeSpeakers_k || 0,
     }))
 }
 

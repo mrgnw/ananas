@@ -1,5 +1,5 @@
 SELECT DISTINCT ?iso ?iso1 ?langLabel 
-  (FLOOR(MAX(?nativeSpeakers_) / 1000) as ?nativeSpeakers_k)
+  (FLOOR(MAX(COALESCE(?nativeSpeakers_, 0)) / 1000) as ?nativeSpeakers_k)
   (GROUP_CONCAT(DISTINCT ?writingSystemLabel; separator=", ") as ?writingSystems)
   (GROUP_CONCAT(DISTINCT ?countryLabel; separator="|") as ?countries)
   (MIN(STRAFTER(STR(?unescoStatus), "Q")) as ?unescoStatus)
@@ -9,13 +9,14 @@ SELECT DISTINCT ?iso ?iso1 ?langLabel
 WHERE {
   # Core data
   ?lang wdt:P220 ?iso ;
-        wdt:P1098 ?nativeSpeakers_ ;
         rdfs:label ?langLabel .
   FILTER(LANG(?langLabel) = "en")
-  FILTER(?nativeSpeakers_ >= 1000000)
-  
+
   # ISO 639-1 code (optional)
   OPTIONAL { ?lang wdt:P218 ?iso1 }
+  
+  # Native speakers (optional)
+  OPTIONAL { ?lang wdt:P1098 ?nativeSpeakers_ }
   
   # Optional data
   OPTIONAL { 
@@ -50,6 +51,7 @@ WHERE {
   OPTIONAL { ?lang wdt:P1705 ?nativeName }
 }
 GROUP BY ?iso ?iso1 ?langLabel
-HAVING(MAX(?nativeSpeakers_) >= 1000000)
-ORDER BY DESC(MAX(?nativeSpeakers_)) ?iso
-LIMIT 200
+
+ORDER BY DESC(MAX(COALESCE(?nativeSpeakers_, 0))) ?iso
+LIMIT 270
+ 

@@ -2,6 +2,9 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { createPatch } from 'diff'
+import chalk from 'chalk';
+import { diffLines } from 'diff';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = path.join(__dirname, '../src/lib/data')
@@ -111,10 +114,60 @@ async function fetchWikidataSpeakers() {
     return Object.assign(obj, Object.fromEntries(sortedProps))
   })
 
+  // Deduplicate by iso code (keep first occurrence, log duplicates)
+  const uniqueLanguages = [];
+  const seenIso = new Set();
+  for (const lang of languages) {
+    const existingIdx = uniqueLanguages.findIndex(l => l.iso === lang.iso);
+    if (existingIdx === -1) {
+      uniqueLanguages.push(lang);
+      seenIso.add(lang.iso);
+    } else {
+      const original = uniqueLanguages[existingIdx];
+      // Merge logic
+      const merged = { ...original };
+      // Native speakers: pick largest
+      merged.nativeSpeakers_k = Math.max(original.nativeSpeakers_k || 0, lang.nativeSpeakers_k || 0);
+      // langLabel: pick from record with largest nativeSpeakers_k
+      merged.langLabel = (lang.nativeSpeakers_k || 0) > (original.nativeSpeakers_k || 0) ? lang.langLabel : original.langLabel;
+      // Arrays: merge and dedupe
+      const mergeSet = (a, b) => Array.from(new Set([...(a || []), ...(b || [])])).sort();
+      merged.nativeNames = mergeSet(original.nativeNames, lang.nativeNames);
+      merged.countries = mergeSet(original.countries, lang.countries);
+      merged.writingSystems = mergeSet(original.writingSystems, lang.writingSystems);
+      // All other fields: keep from record with largest nativeSpeakers_k
+      for (const key of Object.keys(lang)) {
+        if (!(key in merged)) merged[key] = lang[key];
+        if (!['iso','iso1','nativeSpeakers_k','langLabel','nativeNames','countries','writingSystems'].includes(key)) {
+          if ((lang.nativeSpeakers_k || 0) > (original.nativeSpeakers_k || 0)) {
+            merged[key] = lang[key];
+          }
+        }
+      }
+      // Print debug diff
+      const mergedStr = JSON.stringify(merged, null, 2);
+      const originalStr = JSON.stringify(original, null, 2);
+      const duplicateStr = JSON.stringify(lang, null, 2);
+      const diffResult = diffLines(originalStr, mergedStr);
+      console.debug(chalk.yellow(`Merged duplicate iso code: ${lang.iso}`));
+      diffResult.forEach(part => {
+        if (part.added) {
+          process.stdout.write(chalk.green(part.value));
+        } else if (part.removed) {
+          process.stdout.write(chalk.red(part.value));
+        } else {
+          process.stdout.write(chalk.gray(part.value));
+        }
+      });
+      process.stdout.write('\n');
+      uniqueLanguages[existingIdx] = merged;
+    }
+  }
+
   // Write to file
   const outputPath = path.join(OUTPUT_DIR, 'wikidata-languages.json')
-  fs.writeFileSync(outputPath, JSON.stringify(languages, null, 2))
-  console.log(`Wrote ${languages.length} languages to ${outputPath}`)
+  fs.writeFileSync(outputPath, JSON.stringify(uniqueLanguages, null, 2))
+  console.log(`Wrote ${uniqueLanguages.length} languages to ${outputPath}`)
 }
 
 fetchWikidataSpeakers().catch(console.error)
