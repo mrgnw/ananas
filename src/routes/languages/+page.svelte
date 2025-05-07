@@ -22,7 +22,17 @@
 </script>
 
 <ul class="languages-list">
-  {#each [...languageOptions].sort((a, b) => b.selected - a.selected || b.speakers - a.speakers) as lang (lang.code)}
+    {#each [...languageOptions].sort((a, b) => {
+        // Selected languages always first
+        if (b.selected !== a.selected) return b.selected - a.selected;
+        // If both unselected, Spanish (code 'es') comes first
+        if (!a.selected && !b.selected) {
+          if (a.code === 'spa') return -1;
+          if (b.code === 'spa') return 1;
+        }
+        // Otherwise, sort by speakers
+        return b.speakers - a.speakers;
+      }) as lang (lang.code)}
     <li class="language-item {lang.selected ? 'selected' : ''}" animate:flip={{ duration: 120 }}>
       <button class="add-btn"
         onclick={() => lang.selected
