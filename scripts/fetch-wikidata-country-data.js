@@ -115,7 +115,29 @@ async function fetchWikidataCountries() {
     };
   });
 
-  // Sort countries by name for idempotency
+  // Remove duplicate countries by wikidata_id
+  const seen = new Set();
+  countries = countries.filter(country => {
+    if (seen.has(country.wikidata_id)) return false;
+    seen.add(country.wikidata_id);
+    return true;
+  });
+
+  // Ensure languages are sorted by id, then name for stability
+  countries.forEach(country => {
+    country.languages.sort((a, b) => {
+      if (a.id && b.id) {
+        const cmp = a.id.localeCompare(b.id);
+        if (cmp !== 0) return cmp;
+      }
+      if (a.name && b.name) return a.name.localeCompare(b.name);
+      if (a.name) return -1;
+      if (b.name) return 1;
+      return 0;
+    });
+  });
+
+  // Sort countries by name for idempotency and readability
   countries.sort((a, b) => a.name.localeCompare(b.name));
 
   // Write the results to a JSON file

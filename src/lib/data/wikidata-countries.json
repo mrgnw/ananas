@@ -18,7 +18,7 @@
       {
         "id": "Q161804",
         "name": "Nuristani",
-        "iso": "prs",
+        "iso": "pus",
         "iso1": null,
         "speakers": 7600000,
         "speakers_m": 7.6
@@ -48,17 +48,17 @@
       {
         "id": "Q36670",
         "name": "Pashayi",
+        "iso": "prs",
         "iso1": null,
-        "speakers": 39000000,
-        "speakers_m": 39
+        "speakers": 16000000,
+        "speakers_m": 16
       },
       {
         "id": "Q58680",
         "name": "Pashto",
-        "iso": "pus",
         "iso1": null,
-        "speakers": 16000000,
-        "speakers_m": 16
+        "speakers": 39000000,
+        "speakers_m": 39
       },
       {
         "id": "Q9264",
@@ -639,16 +639,16 @@
         "name": "Bissa",
         "iso": "bib",
         "iso1": null,
-        "speakers": 7600000,
-        "speakers_m": 7.6
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q36096",
         "name": "Mooré",
         "iso": "mos",
         "iso1": null,
-        "speakers": null,
-        "speakers_m": null
+        "speakers": 7600000,
+        "speakers_m": 7.6
       }
     ]
   },
@@ -1475,15 +1475,15 @@
         "id": "Q35392",
         "name": "Demotic Greek",
         "iso1": null,
-        "speakers": 15000000,
-        "speakers_m": 15
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q36510",
         "name": "Modern Greek",
         "iso1": null,
-        "speakers": null,
-        "speakers_m": null
+        "speakers": 15000000,
+        "speakers_m": 15
       },
       {
         "id": "Q9129",
@@ -2342,57 +2342,57 @@
       {
         "id": "Q33454",
         "name": "Fula",
-        "iso": "myq",
-        "iso1": null,
+        "iso": "ful",
+        "iso1": "ff",
         "speakers": 24000000,
         "speakers_m": 24
       },
       {
         "id": "Q33795",
         "name": "Senufo",
-        "iso": "ful",
-        "iso1": "ff",
+        "iso": "snk",
+        "iso1": null,
         "speakers": 2700000,
         "speakers_m": 2.7
       },
       {
         "id": "Q35021",
         "name": "Bozo",
-        "iso1": null,
-        "speakers": null,
-        "speakers_m": null
-      },
-      {
-        "id": "Q36186",
-        "name": "Maninka",
-        "iso": "myk",
-        "iso1": null,
-        "speakers": 3300000,
-        "speakers_m": 3.3
-      },
-      {
-        "id": "Q36187",
-        "name": "Minyanka",
-        "iso": "kao",
+        "iso": "mey",
         "iso1": null,
         "speakers": 3763900,
         "speakers_m": 3.8
       },
       {
-        "id": "Q36660",
-        "name": "Soninke",
+        "id": "Q36186",
+        "name": "Maninka",
         "iso": "taq",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
       },
       {
-        "id": "Q36905",
-        "name": "Kassonke",
-        "iso": "mey",
+        "id": "Q36187",
+        "name": "Minyanka",
+        "iso1": null,
+        "speakers": null,
+        "speakers_m": null
+      },
+      {
+        "id": "Q36660",
+        "name": "Soninke",
+        "iso": "kao",
         "iso1": null,
         "speakers": 1096795,
         "speakers_m": 1.1
+      },
+      {
+        "id": "Q36905",
+        "name": "Kassonke",
+        "iso": "myq",
+        "iso1": null,
+        "speakers": 3300000,
+        "speakers_m": 3.3
       },
       {
         "id": "Q4670066",
@@ -2411,7 +2411,7 @@
       {
         "id": "Q56231",
         "name": "Hassaniya Arabic",
-        "iso": "snk",
+        "iso": "myk",
         "iso1": null,
         "speakers": 500000,
         "speakers_m": 0.5
@@ -2533,6 +2533,7 @@
       {
         "id": "Q13300",
         "name": "Nahuatl",
+        "iso": "yua",
         "iso1": null,
         "speakers": 1925620,
         "speakers_m": 1.9
@@ -2540,7 +2541,6 @@
       {
         "id": "Q13354",
         "name": "Yucatec Maya",
-        "iso": "yua",
         "iso1": null,
         "speakers": 706000,
         "speakers_m": 0.7
@@ -2763,7 +2763,7 @@
         "id": "Q36239",
         "name": "New Zealand Sign Language",
         "iso": "nzs",
-        "iso1": null,
+        "iso1": "mi",
         "speakers": 20200,
         "speakers_m": 0
       },
@@ -2771,7 +2771,7 @@
         "id": "Q36451",
         "name": "Māori",
         "iso": "mri",
-        "iso1": "mi",
+        "iso1": null,
         "speakers": 160000,
         "speakers_m": 0.2
       }
@@ -3727,8 +3727,8 @@
         "name": "Afrikaans",
         "iso": "afr",
         "iso1": "af",
-        "speakers": 7200000,
-        "speakers_m": 7.2
+        "speakers": 4009000,
+        "speakers_m": 4
       },
       {
         "id": "Q1860",
@@ -3742,9 +3742,9 @@
         "id": "Q32704",
         "name": "Venda",
         "iso": "ven",
-        "iso1": "ve",
-        "speakers": 1300000,
-        "speakers_m": 1.3
+        "iso1": "nr",
+        "speakers": 6000000,
+        "speakers_m": 6
       },
       {
         "id": "Q3322093",
@@ -3758,49 +3758,49 @@
         "id": "Q33890",
         "name": "Northern Sotho",
         "iso": "nso",
-        "iso1": "ss",
-        "speakers": 10300000,
-        "speakers_m": 10.3
+        "iso1": "tn",
+        "speakers": 7200000,
+        "speakers_m": 7.2
       },
       {
         "id": "Q34014",
         "name": "Swazi",
         "iso": "ssw",
-        "iso1": "ts",
-        "speakers": 4100000,
-        "speakers_m": 4.1
+        "iso1": "ss",
+        "speakers": 2034200,
+        "speakers_m": 2
       },
       {
         "id": "Q34137",
         "name": "Tswana",
         "iso": "tsn",
-        "iso1": "st",
-        "speakers": 3400000,
-        "speakers_m": 3.4
+        "iso1": "ve",
+        "speakers": 10300000,
+        "speakers_m": 10.3
       },
       {
         "id": "Q34327",
         "name": "Tsonga",
         "iso": "tso",
-        "iso1": "tn",
-        "speakers": 2034200,
-        "speakers_m": 2
+        "iso1": "ts",
+        "speakers": 3400000,
+        "speakers_m": 3.4
       },
       {
         "id": "Q34340",
         "name": "Sesotho",
         "iso": "sot",
-        "iso1": "nr",
-        "speakers": 4009000,
-        "speakers_m": 4
+        "iso1": "st",
+        "speakers": 13000000,
+        "speakers_m": 13
       },
       {
         "id": "Q36785",
         "name": "Southern Ndebele",
         "iso": "nbl",
         "iso1": null,
-        "speakers": 13000000,
-        "speakers_m": 13
+        "speakers": 4100000,
+        "speakers_m": 4.1
       }
     ]
   },
@@ -4058,9 +4058,9 @@
       {
         "id": "Q172244",
         "name": "Kanakanavu",
-        "iso": "pyu",
+        "iso": "tao",
         "iso1": null,
-        "speakers": 8500,
+        "speakers": 958,
         "speakers_m": 0
       },
       {
@@ -4073,33 +4073,32 @@
       {
         "id": "Q2391532",
         "name": "Taiwanese Hakka",
-        "iso": "tao",
-        "iso1": null,
-        "speakers": 80000,
-        "speakers_m": 0.1
-      },
-      {
-        "id": "Q262828",
-        "name": "Standard Taiwanese Mandarin",
-        "iso": "tay",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
       },
       {
+        "id": "Q262828",
+        "name": "Standard Taiwanese Mandarin",
+        "iso": "sxr",
+        "iso1": null,
+        "speakers": 4,
+        "speakers_m": 0
+      },
+      {
         "id": "Q34019",
         "name": "Taiwanese Sign Language",
-        "iso": "ami",
+        "iso": "tss",
         "iso1": null,
-        "speakers": 2100,
+        "speakers": 10500,
         "speakers_m": 0
       },
       {
         "id": "Q35132",
         "name": "Amis",
-        "iso": "pwn",
+        "iso": "ami",
         "iso1": null,
-        "speakers": 20000,
+        "speakers": 38000,
         "speakers_m": 0
       },
       {
@@ -4107,15 +4106,15 @@
         "name": "Taiwanese Hokkien",
         "iso": "dru",
         "iso1": null,
-        "speakers": 10500,
-        "speakers_m": 0
+        "speakers": 80000,
+        "speakers_m": 0.1
       },
       {
         "id": "Q49232",
         "name": "Rukai",
         "iso": "bnn",
         "iso1": null,
-        "speakers": 38000,
+        "speakers": 10,
         "speakers_m": 0
       },
       {
@@ -4128,9 +4127,9 @@
       {
         "id": "Q56505",
         "name": "Bunun",
-        "iso": "xnb",
+        "iso": "tay",
         "iso1": null,
-        "speakers": 4,
+        "speakers": 70,
         "speakers_m": 0
       },
       {
@@ -4143,44 +4142,46 @@
       {
         "id": "Q715755",
         "name": "Paiwan",
-        "iso": "tsu",
+        "iso": "pyu",
         "iso1": null,
-        "speakers": 10,
+        "speakers": 2100,
         "speakers_m": 0
       },
       {
         "id": "Q715760",
         "name": "Yami",
-        "iso": "trv",
+        "iso": "xsy",
         "iso1": null,
-        "speakers": 70,
+        "speakers": 20000,
         "speakers_m": 0
       },
       {
         "id": "Q715766",
         "name": "Atayal",
+        "iso": "ckv",
         "iso1": null,
-        "speakers": null,
-        "speakers_m": null
+        "speakers": 3800,
+        "speakers_m": 0
       },
       {
         "id": "Q716599",
         "name": "Saaroa",
+        "iso": "xnb",
         "iso1": null,
-        "speakers": null,
-        "speakers_m": null
+        "speakers": 8500,
+        "speakers_m": 0
       },
       {
         "id": "Q716627",
         "name": "Kavalan",
+        "iso": "pwn",
         "iso1": null,
-        "speakers": null,
-        "speakers_m": null
+        "speakers": 4750,
+        "speakers_m": 0
       },
       {
         "id": "Q716681",
         "name": "Tsou",
-        "iso": "sxr",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
@@ -4188,7 +4189,6 @@
       {
         "id": "Q716686",
         "name": "Seediq",
-        "iso": "ckv",
         "iso1": null,
         "speakers": null,
         "speakers_m": null
@@ -4196,26 +4196,26 @@
       {
         "id": "Q716690",
         "name": "Puyuma",
-        "iso": "xsy",
+        "iso": "szy",
         "iso1": null,
-        "speakers": 4750,
-        "speakers_m": 0
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q716695",
         "name": "Saisiyat",
-        "iso": "szy",
+        "iso": "tsu",
         "iso1": null,
-        "speakers": 958,
-        "speakers_m": 0
+        "speakers": null,
+        "speakers_m": null
       },
       {
         "id": "Q718269",
         "name": "Sakizaya",
-        "iso": "tss",
+        "iso": "trv",
         "iso1": null,
-        "speakers": 3800,
-        "speakers_m": 0
+        "speakers": null,
+        "speakers_m": null
       }
     ]
   },
@@ -4538,24 +4538,6 @@
     ]
   },
   {
-    "wikidata_id": "Q212",
-    "name": "Ukraine",
-    "native_name": "Україна",
-    "iso": "ua",
-    "iso3": "ukr",
-    "flag": "🇺🇦",
-    "languages": [
-      {
-        "id": "Q8798",
-        "name": "Ukrainian",
-        "iso": "ukr",
-        "iso1": "uk",
-        "speakers": 26900000,
-        "speakers_m": 26.9
-      }
-    ]
-  },
-  {
     "wikidata_id": "Q878",
     "name": "United Arab Emirates",
     "native_name": "les Émirats arabes unis",
@@ -4806,16 +4788,16 @@
         "name": "Xhosa",
         "iso": "xho",
         "iso1": null,
-        "speakers": 1300000,
-        "speakers_m": 1.3
+        "speakers": 8177300,
+        "speakers_m": 8.2
       },
       {
         "id": "Q13311",
         "name": "Ndau",
         "iso": "ndc",
         "iso1": null,
-        "speakers": 8177300,
-        "speakers_m": 8.2
+        "speakers": 1300000,
+        "speakers_m": 1.3
       },
       {
         "id": "Q1860",
@@ -4868,7 +4850,7 @@
         "id": "Q34101",
         "name": "Tonga",
         "iso": "toi",
-        "iso1": "xh",
+        "iso1": "st",
         "speakers": 1572800,
         "speakers_m": 1.6
       },
@@ -4876,7 +4858,7 @@
         "id": "Q34137",
         "name": "Tswana",
         "iso": "tsn",
-        "iso1": "ve",
+        "iso1": "xh",
         "speakers": 1270000,
         "speakers_m": 1.3
       },
@@ -4892,15 +4874,15 @@
         "id": "Q34340",
         "name": "Sesotho",
         "iso": "sot",
-        "iso1": "st",
-        "speakers": 4009000,
-        "speakers_m": 4
+        "iso1": "ve",
+        "speakers": 4500000,
+        "speakers_m": 4.5
       },
       {
         "id": "Q3553981",
         "name": "Nambya",
         "iso": "nmq",
-        "iso1": "nd",
+        "iso1": "tn",
         "speakers": 13000000,
         "speakers_m": 13
       },
@@ -4908,17 +4890,17 @@
         "id": "Q35613",
         "name": "Northern Ndebele",
         "iso": "nde",
-        "iso1": "tn",
-        "speakers": 6000000,
-        "speakers_m": 6
+        "iso1": "nd",
+        "speakers": 4009000,
+        "speakers_m": 4
       },
       {
         "id": "Q8072097",
         "name": "Zimbabwe Sign Language",
         "iso": "zib",
         "iso1": "ny",
-        "speakers": 4500000,
-        "speakers_m": 4.5
+        "speakers": 6000000,
+        "speakers_m": 6
       },
       {
         "id": "Q8826802",
