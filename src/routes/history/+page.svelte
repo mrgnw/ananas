@@ -8,19 +8,9 @@
   <p>No translations yet.</p>
 {:else}
   <ul class="history-list">
-    {#each history.translations.slice(0, 10) as item, i}
+    {#each history.translations.slice(0, 8) as item, i}
       <li class="history-card group">
         <MultiLangCard translation={{ translations: item.output }} />
-        <div class="text-xs mt-2 text-gray-500 flex flex-wrap gap-2 items-center">
-          <span>Target:</span>
-          {#each (Array.isArray(item.targetLang) ? item.targetLang : [item.targetLang]) as lang}
-            {#if item.output && item.output[lang] !== undefined}
-              <span>{lang}</span>
-            {:else}
-              <span style="color: maroon;">{lang}</span>
-            {/if}
-          {/each}
-        </div>
         <div class="history-meta-float">
           <span class="history-input-integral">
             <span class="history-input-preview">{item.input.length > 60 ? item.input.slice(0, 60) + '…' : item.input}</span>
@@ -40,20 +30,22 @@
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 0.7em;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .history-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.7em;
-  padding: 1.1em 1.2em 1.1em 1.2em;
-  background: #fff;
+  /* Remove border, background, and radius for seamless look */
+  border: none;
+  border-radius: 0;
+  padding: 0.5em 0 0.5em 0;
+  background: none;
   position: relative;
   transition: box-shadow 0.15s;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.03);
-  overflow: hidden;
+  box-shadow: none;
+  overflow: visible;
+  min-height: 2.2em;
 }
 .history-meta-float {
   display: flex;
@@ -64,7 +56,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0.7em 1.2em;
+  padding: 0.3em 0.2em;
   background: linear-gradient(0deg, rgba(255,255,255,0.97) 80%, rgba(255,255,255,0.2) 100%);
   opacity: 0;
   pointer-events: none;
