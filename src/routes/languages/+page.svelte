@@ -1,11 +1,11 @@
 <script>
+  import { fade } from 'svelte/transition';
+  import { flip } from 'svelte/animate';
   import { userStore } from '$lib/stores/user.svelte.js';
   import { getAllLanguages } from '$lib/utils/languages.js';
 
-  // Static, only runs on load
-  let allLanguages = $state(getAllLanguages().sort((a, b) => b.speakers - a.speakers));
+  let allLanguages = $state(getAllLanguages());
 
-  // using $state instead of $derived.by like chatgpt wanted
   let languageOptions = $state(
     allLanguages.map(lang => ({
       ...lang,
@@ -24,13 +24,17 @@
 <h1>Select Languages</h1>
 <ul class="languages-list">
   {#each [...languageOptions].sort((a, b) => b.selected - a.selected || b.speakers - a.speakers) as lang (lang.code)}
-    <li class="language-item {lang.selected ? 'selected' : ''}">
+    <li class="language-item {lang.selected ? 'selected' : ''}" animate:flip={{ duration: 120 }}>
       <button class="add-btn"
         onclick={() => lang.selected
           ? userStore.removeLanguage(lang.code)
           : userStore.addLanguage(lang.code)
         }>
-        {lang.selected ? 'Remove' : 'Add'}
+        {#if lang.selected}
+          <span class="add-btn-label" in:fade out:fade>Remove</span>
+        {:else}
+          <span class="add-btn-label" in:fade out:fade>Add</span>
+        {/if}
       </button>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
@@ -61,7 +65,7 @@
   background: #f6f8fa;
 }
 .add-btn {
-  min-width: 54px;
+  min-width: 70px;
   padding: 0.15em 0.7em;
   border-radius: 999px;
   border: none;
@@ -94,5 +98,10 @@
   text-align: right;
   margin-left: 0.2em;
   margin-right: 0.2em;
+}
+.add-btn-label {
+  display: inline-block;
+  width: 60px;
+  text-align: center;
 }
 </style>
