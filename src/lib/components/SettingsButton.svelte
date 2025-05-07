@@ -5,7 +5,6 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { userStore } from '$lib/stores/user.svelte.js';
   import { defaultLanguages } from '$lib/utils/languages.js';
-  import { syntaxHighlight } from '$lib/utils/syntaxHighlight.js';
   import Prism from 'prismjs';
   import 'prismjs/components/prism-json.js';
   import 'prismjs/themes/prism-tomorrow.css'; // or another Prism theme
