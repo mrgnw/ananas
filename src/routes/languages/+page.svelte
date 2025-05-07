@@ -2,15 +2,17 @@
   import { userStore } from '$lib/stores/user.svelte.js';
   import { getAllLanguages } from '$lib/utils/languages.js';
 
-  // Only runs once on load
+  // Static, only runs on load
   let allLanguages = $state(getAllLanguages().sort((a, b) => b.speakers - a.speakers));
 
-  let languageOptions = $derived.by(() =>
+  // using $state instead of $derived.by like chatgpt wanted
+  let languageOptions = $state(
     allLanguages.map(lang => ({
       ...lang,
-      selected: userStore.user.selectedLanguages.includes(lang.code)
+      get selected() {
+        return userStore.user.selectedLanguages.includes(lang.code);
+      }
     }))
-    .sort((a, b) => (b.selected - a.selected) || (b.speakers - a.speakers))
   );
 
   function formatSpeakers(n) {
@@ -21,7 +23,7 @@
 
 <h1>Select Languages</h1>
 <ul class="languages-list">
-  {#each languageOptions as lang (lang.code)}
+  {#each [...languageOptions].sort((a, b) => b.selected - a.selected || b.speakers - a.speakers) as lang (lang.code)}
     <li class="language-item {lang.selected ? 'selected' : ''}">
       <button class="add-btn"
         onclick={() => lang.selected
