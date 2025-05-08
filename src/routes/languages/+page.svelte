@@ -4,7 +4,10 @@
   import { flip } from 'svelte/animate';
 
   let filter = $state('');
-  let allLanguages = $state(getAllLanguages());
+  let { data } = $props();
+  let { languages = [], country_languages = [], ip_country } = data;
+
+  let allLanguages = $state(languages);
 
   // userLanguages: allLanguages that are in userStore.user.selectedLanguages (no filter applied)
   let userLanguages = $derived.by(() =>
