@@ -83,7 +83,7 @@
 
 <ul class="languages-list">
   {#each [...filteredLanguages].filter(lang => lang.selected) as lang (lang.code)}
-    <li class="language-item selected">
+    <li class="language-item selected" animate:flip>
       <button class="add-btn"
         onclick={() => lang.selected
           ? userStore.removeLanguage(lang.code)
@@ -110,7 +110,7 @@
   {/if}
 
   {#each [...filteredLanguages].filter(lang => !lang.selected) as lang (lang.code)}
-    <li class="language-item">
+    <li class="language-item" animate:flip>
       <button class="add-btn"
         onclick={() => lang.selected
           ? userStore.removeLanguage(lang.code)
