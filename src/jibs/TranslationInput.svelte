@@ -3,7 +3,7 @@
   import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
   import { Send } from 'lucide-svelte';
 
-  let { result = $bindable(), error = $bindable() } = $props()
+  let { result = $bindable() } = $props()
   let text = $state('');
   let loading = $state(false);
   
@@ -76,9 +76,6 @@
       </button>
     </div>
   </form>
-  {#if error}
-    <div class="error-message">{error}</div>
-  {/if}
   
 </main>
 
