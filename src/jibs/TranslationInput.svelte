@@ -6,7 +6,7 @@
   let { result = $bindable() } = $props()
   let text = $state('');
   let loading = $state(false);
-  
+  let error = $state('');
   let isInputFocused = $state(false);
 
   async function handleTranslate() {
