@@ -72,14 +72,15 @@
   }
 </script>
 
-<input
-  class="language-filter-input"
-  type="text"
-  placeholder="Filter by name, native name, 2- or 3-letter code..."
-  bind:value={filter}
-  autocomplete="off"
-  style="margin-bottom:1em;width:100%;padding:0.5em;font-size:1em;border-radius:5px;border:1px solid #ddd;"
-/>
+<div class="filter-bar">
+  <input
+    class="language-filter-input"
+    type="text"
+    placeholder="Filter languages..."
+    bind:value={filter}
+    autocomplete="off"
+  />
+</div>
 
 <ul class="languages-list">
   {#each [...filteredLanguages].filter(lang => lang.selected) as lang (lang.code)}
@@ -219,5 +220,35 @@
   margin-top: -0.15em;
   margin-bottom: 0.1em;
   margin-left: 0.2em;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  max-width: 420px;
+  margin: 2.5rem auto 1.5rem auto;
+  padding: 0 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  background: none;
+}
+.search-icon {
+  font-size: 1.2em;
+  color: #bdbdbd;
+  margin-right: 0.5em;
+  user-select: none;
+}
+.language-filter-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1.15em;
+  padding: 0.7em 0 0.7em 0;
+  color: #222;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+.language-filter-input:focus {
+  box-shadow: 0 2px 0 0 #6366f1;
+  border-bottom: 2px solid #6366f1;
 }
 </style>
