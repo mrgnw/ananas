@@ -131,3 +131,41 @@ function sortLanguages(codes, userCountry = null) {
         return speakersB - speakersA
     })
 }
+
+// Filter languages utility
+export function filterLanguages(languageOptions, filter) {
+    if (!filter.trim()) return [...languageOptions];
+    const f = filter.trim().toLowerCase();
+    const exact = [];
+    const starts = [];
+    const partial = [];
+    for (const lang of languageOptions) {
+        const name = lang.name?.toLowerCase() || '';
+        const native = lang.nativeName?.toLowerCase() || '';
+        const code2 = lang.code?.toLowerCase() || '';
+        const code3 = lang.iso3?.toLowerCase?.() || '';
+        if (
+            name === f ||
+            native === f ||
+            code2 === f ||
+            code3 === f
+        ) {
+            exact.push(lang);
+        } else if (
+            name.startsWith(f) ||
+            native.startsWith(f) ||
+            code2.startsWith(f) ||
+            code3.startsWith(f)
+        ) {
+            starts.push(lang);
+        } else if (
+            name.includes(f) ||
+            native.includes(f) ||
+            code2.includes(f) ||
+            code3.includes(f)
+        ) {
+            partial.push(lang);
+        }
+    }
+    return [...exact, ...starts, ...partial];
+}

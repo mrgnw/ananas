@@ -2,7 +2,7 @@
   import { fade } from 'svelte/transition';
   import { flip } from 'svelte/animate';
   import { userStore } from '$lib/stores/user.svelte.js';
-  import { getAllLanguages, isLocalLanguage } from '$lib/utils/languages.js';
+  import { getAllLanguages, isLocalLanguage, filterLanguages } from '$lib/utils/languages.js';
 
   let allLanguages = $state(getAllLanguages());
 
@@ -19,42 +19,7 @@
   
   let filter = $state('');
 
-  let filteredLanguages = $derived.by(() => {
-    if (!filter.trim()) return [...languageOptions];
-    const f = filter.trim().toLowerCase();
-    const exact = [];
-    const starts = [];
-    const partial = [];
-    for (const lang of languageOptions) {
-      const name = lang.name?.toLowerCase() || '';
-      const native = lang.nativeName?.toLowerCase() || '';
-      const code2 = lang.code?.toLowerCase() || '';
-      const code3 = lang.iso3?.toLowerCase?.() || '';
-      if (
-        name === f ||
-        native === f ||
-        code2 === f ||
-        code3 === f
-      ) {
-        exact.push(lang);
-      } else if (
-        name.startsWith(f) ||
-        native.startsWith(f) ||
-        code2.startsWith(f) ||
-        code3.startsWith(f)
-      ) {
-        starts.push(lang);
-      } else if (
-        name.includes(f) ||
-        native.includes(f) ||
-        code2.includes(f) ||
-        code3.includes(f)
-      ) {
-        partial.push(lang);
-      }
-    }
-    return [...exact, ...starts, ...partial];
-  });
+  let filteredLanguages = $derived.by(() => filterLanguages(languageOptions, filter));
 
   let flipDuration = 222;
 
