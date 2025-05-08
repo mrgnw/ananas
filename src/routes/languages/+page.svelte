@@ -86,20 +86,12 @@
 
 <ul class="languages-list">
   {#each [...filteredLanguages].filter(lang => lang.selected) as lang (lang.code)}
-    <li class="language-item selected" animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}>
-      <button class="add-btn"
-        onclick={() => lang.selected
-          ? userStore.removeLanguage(lang.code)
-          : userStore.addLanguage(lang.code)
-        }>
-        <span class="add-btn-label-wrap">
-          {#if lang.selected}
-            <span class="add-btn-label" in:fade out:fade>Remove</span>
-          {:else}
-            <span class="add-btn-label" in:fade out:fade>Add</span>
-          {/if}
-        </span>
-      </button>
+    <li class="language-item selected" role="button" tabindex="0"
+      onclick={() => userStore.removeLanguage(lang.code)}
+      onkeydown={e => (e.key === 'Enter' || e.key === ' ') && userStore.removeLanguage(lang.code)}
+      aria-label={`Remove ${lang.name}`}
+    >
+      <span class="lang-action">–</span>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
       {#if lang.nativeName && lang.nativeName !== lang.name}
@@ -113,20 +105,12 @@
   {/if}
 
   {#each [...filteredLanguages].filter(lang => !lang.selected) as lang (lang.code)}
-    <li class="language-item" animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}>
-      <button class="add-btn"
-        onclick={() => lang.selected
-          ? userStore.removeLanguage(lang.code)
-          : userStore.addLanguage(lang.code)
-        }>
-        <span class="add-btn-label-wrap">
-          {#if lang.selected}
-            <span class="add-btn-label" in:fade out:fade>Remove</span>
-          {:else}
-            <span class="add-btn-label" in:fade out:fade>Add</span>
-          {/if}
-        </span>
-      </button>
+    <li class="language-item" role="button" tabindex="0"
+      onclick={() => userStore.addLanguage(lang.code)}
+      onkeydown={e => (e.key === 'Enter' || e.key === ' ') && userStore.addLanguage(lang.code)}
+      aria-label={`Add ${lang.name}`}
+    >
+      <span class="lang-action">+</span>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
       {#if lang.nativeName && lang.nativeName !== lang.name}
@@ -152,30 +136,16 @@
   margin-bottom: 0.1em;
   font-size: 1em;
   min-height: 32px;
-  transition: background 0.12s;
+  transition: background 0.12s, box-shadow 0.12s;
   will-change: transform, opacity;
-}
-.language-item:hover {
-  background: #f6f8fa;
-}
-.add-btn {
-  min-width: 70px;
-  padding: 0.15em 0.7em;
-  border-radius: 999px;
-  border: none;
-  background: #f3f4f6;
-  color: #222;
-  font-weight: 500;
   cursor: pointer;
-  font-size: 0.97em;
-  transition: background 0.12s;
-  margin-right: 0.3em;
-  height: 28px;
+  outline: none;
 }
-.add-btn:active {
-  background: #e0e7ff;
-  color: #3730a3;
+.language-item:hover, .language-item:focus {
+  background: #f6f8fa;
+  box-shadow: 0 0 0 2px #6366f1;
 }
+
 .lang-label {
   font-weight: 600;
   margin-left: 0.3em;
@@ -192,23 +162,6 @@
   text-align: right;
   margin-left: 0.2em;
   margin-right: 0.2em;
-}
-.add-btn-label-wrap {
-  position: relative;
-  display: inline-block;
-  width: 60px; /* or whatever fits both labels */
-  height: 1.5em;
-  text-align: center;
-  vertical-align: middle;
-}
-.add-btn-label {
-  position: absolute;
-  left: 0; top: 0; right: 0; bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
 }
 .lang-label {
   font-weight: 600;
