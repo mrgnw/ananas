@@ -56,7 +56,7 @@
     return [...exact, ...starts, ...partial];
   });
 
-  let flipDuration = $derived.by(() => Math.max(80, Math.min(320, 600 / filteredLanguages.length)));
+  let flipDuration = 222;
 
   function formatSpeakers(n) {
     if (!n) return '';
@@ -87,6 +87,7 @@
 <ul class="languages-list">
   {#each [...filteredLanguages].filter(lang => lang.selected) as lang (lang.code)}
     <li class="language-item selected" role="button" tabindex="0"
+      animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}
       onclick={() => userStore.removeLanguage(lang.code)}
       onkeydown={e => (e.key === 'Enter' || e.key === ' ') && userStore.removeLanguage(lang.code)}
       aria-label={`Remove ${lang.name}`}
@@ -106,6 +107,7 @@
 
   {#each [...filteredLanguages].filter(lang => !lang.selected) as lang (lang.code)}
     <li class="language-item" role="button" tabindex="0"
+    animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}
       onclick={() => userStore.addLanguage(lang.code)}
       onkeydown={e => (e.key === 'Enter' || e.key === ' ') && userStore.addLanguage(lang.code)}
       aria-label={`Add ${lang.name}`}
