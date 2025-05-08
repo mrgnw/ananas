@@ -46,6 +46,11 @@ let result = $state(null); // Add result state to hold translation result
     margin-bottom: 0.5em;
     font-size: 0.8em;
     color: rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+    flex-wrap: wrap;
+    word-break: break-word;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   </style>
