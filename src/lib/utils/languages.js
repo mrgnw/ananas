@@ -25,12 +25,15 @@ export const defaultLanguages = {
 
 // Get all available languages from Wikidata
 export function getAllLanguages() {
-    return languageData.map(({ iso: code, langLabel: name, nativeNames, nativeSpeakers_k }) => ({
-        code,
-        name,
-        nativeName: nativeNames?.[0] || name,
-        speakers: nativeSpeakers_k || 0,
-    }));
+    // Always sort by native speakers descending
+    return languageData
+        .map(({ iso: code, langLabel: name, nativeNames, nativeSpeakers_k }) => ({
+            code,
+            name,
+            nativeName: nativeNames?.[0] || name,
+            speakers: nativeSpeakers_k || 0,
+        }))
+        .sort((a, b) => b.speakers - a.speakers);
 }
 
 // Convert language code to name using countries-list data

@@ -4,16 +4,14 @@
   import { flip } from 'svelte/animate';
 
   let filter = $state('');
-  let allLanguages = $state(getAllLanguages().sort((a, b) => b.speakers - a.speakers));
+  let allLanguages = $state(getAllLanguages());
 
-  // Attach a reactive getter for selection
-  let languageOptions = $state(
-    allLanguages.map(lang => ({
-      ...lang,
-      get selected() {
-        return userStore.user.selectedLanguages.includes(lang.code);
-      }
-    }))
+  // userLanguages: allLanguages that are in userStore.user.selectedLanguages (no filter applied)
+  let userLanguages = $derived.by(() =>
+    allLanguages.filter(lang => userStore.user.selectedLanguages.includes(lang.code))
+  );
+  let otherLanguages = $derived.by(() =>
+    allLanguages.filter(lang => !userStore.user.selectedLanguages.includes(lang.code))
   );
 
   function formatSpeakers(n) {
@@ -33,9 +31,7 @@
 </div>
 
 <ul class="languages-list">
-  {#each filterLanguages(languageOptions, filter)
-      .filter(lang => lang.selected)
-      .sort((a, b) => b.speakers - a.speakers) as lang (lang.code)}
+  {#each userLanguages as lang (lang.code)}
     <li class="language-item selected"
         animate:flip={{ duration: 222 }}
         onclick={() => userStore.removeLanguage(lang.code)}
@@ -50,14 +46,11 @@
     </li>
   {/each}
 
-  {#if filterLanguages(languageOptions, filter).some(lang => lang.selected) &&
-        filterLanguages(languageOptions, filter).some(lang => !lang.selected)}
+  {#if userLanguages.length && filterLanguages(otherLanguages, filter).length}
     <li class="language-separator" style="margin: 0.5em 0; border-bottom: 1px solid #eee; list-style: none;"></li>
   {/if}
 
-  {#each filterLanguages(languageOptions, filter)
-      .filter(lang => !lang.selected)
-      .sort((a, b) => b.speakers - a.speakers) as lang (lang.code)}
+  {#each filterLanguages(otherLanguages, filter) as lang (lang.code)}
     <li class="language-item"
         animate:flip={{ duration: 222  }}
         onclick={() => userStore.addLanguage(lang.code)}
