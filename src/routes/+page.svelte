@@ -16,10 +16,19 @@ let result = $state(null); // Add result state to hold translation result
           <div class="error-message">{error}</div>
       {/if}
       {#if result}
+      <div class="result centered-result">
         <MultiLangCard translation={{ translations: result }} />
+      </div>
       {/if}
 
   </main>
 
   <style>
-      </style>
+  .centered-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+  }
+  </style>
