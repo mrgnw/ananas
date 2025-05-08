@@ -1,7 +1,7 @@
 <script>
   import { userStore } from '$lib/stores/user.svelte.js';
   import TranslationInput from '$jibs/TranslationInput.svelte';
-  import TranslationResult from '$jibs/TranslationResult.svelte';
+  import MultiLangCard from '$jibs/MultiLangCard.svelte';
 
 let error = $state('');
 let result = $state(null); // Add result state to hold translation result
@@ -15,7 +15,10 @@ let result = $state(null); // Add result state to hold translation result
       {#if error}
           <div class="error-message">{error}</div>
       {/if}
-      <TranslationResult {result} />
+      {#if result}
+        <MultiLangCard translation={{ translations: result }} />
+      {/if}
+
   </main>
 
   <style>
