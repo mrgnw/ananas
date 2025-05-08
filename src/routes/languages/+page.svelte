@@ -1,11 +1,12 @@
 <script>
-  import { fade } from 'svelte/transition';
-  import { flip } from 'svelte/animate';
   import { userStore } from '$lib/stores/user.svelte.js';
-  import { getAllLanguages, isLocalLanguage, filterLanguages } from '$lib/utils/languages.js';
+  import { getAllLanguages, filterLanguages } from '$lib/utils/languages.js';
+  import { flip } from 'svelte/animate';
 
-  let allLanguages = $state(getAllLanguages());
+  let filter = $state('');
+  let allLanguages = $state(getAllLanguages().sort((a, b) => b.speakers - a.speakers));
 
+  // Attach a reactive getter for selection
   let languageOptions = $state(
     allLanguages.map(lang => ({
       ...lang,
@@ -14,28 +15,10 @@
       }
     }))
   );
-  let props = $props();
-  let { ip_country, country_languages, accept_language, country_phone } = props;
-  
-  let filter = $state('');
-
-  let filteredLanguages = $derived.by(() => filterLanguages(languageOptions, filter));
-
-  let flipDuration = 222;
 
   function formatSpeakers(n) {
     if (!n) return '';
     return (n / 1000).toFixed(0) + 'M';
-  }
-
-  function languageSort(a, b, userCountry) {
-    if (b.selected !== a.selected) return b.selected - a.selected;
-    if (!a.selected && !b.selected && userCountry) {
-      const aLocal = isLocalLanguage(a.code, userCountry);
-      const bLocal = isLocalLanguage(b.code, userCountry);
-      if (aLocal !== bLocal) return bLocal - aLocal;
-    }
-    return b.speakers - a.speakers;
   }
 </script>
 
@@ -50,13 +33,14 @@
 </div>
 
 <ul class="languages-list">
-  {#each [...filteredLanguages].filter(lang => lang.selected) as lang (lang.code)}
-    <li class="language-item selected" role="button" tabindex="0"
-      animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}
-      onclick={() => userStore.removeLanguage(lang.code)}
-      onkeydown={e => (e.key === 'Enter' || e.key === ' ') && userStore.removeLanguage(lang.code)}
-      aria-label={`Remove ${lang.name}`}
-    >
+  {#each filterLanguages(languageOptions, filter)
+      .filter(lang => lang.selected)
+      .sort((a, b) => b.speakers - a.speakers) as lang (lang.code)}
+    <li class="language-item selected"
+        animate:flip={{ duration: 222 }}
+        onclick={() => userStore.removeLanguage(lang.code)}
+        tabindex="0"
+        aria-label={`Remove ${lang.name}`}>
       <span class="lang-action">–</span>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
@@ -66,17 +50,19 @@
     </li>
   {/each}
 
-  {#if filteredLanguages.some(lang => !lang.selected) && filteredLanguages.some(lang => lang.selected)}
+  {#if filterLanguages(languageOptions, filter).some(lang => lang.selected) &&
+        filterLanguages(languageOptions, filter).some(lang => !lang.selected)}
     <li class="language-separator" style="margin: 0.5em 0; border-bottom: 1px solid #eee; list-style: none;"></li>
   {/if}
 
-  {#each [...filteredLanguages].filter(lang => !lang.selected) as lang (lang.code)}
-    <li class="language-item" role="button" tabindex="0"
-    animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}
-      onclick={() => userStore.addLanguage(lang.code)}
-      onkeydown={e => (e.key === 'Enter' || e.key === ' ') && userStore.addLanguage(lang.code)}
-      aria-label={`Add ${lang.name}`}
-    >
+  {#each filterLanguages(languageOptions, filter)
+      .filter(lang => !lang.selected)
+      .sort((a, b) => b.speakers - a.speakers) as lang (lang.code)}
+    <li class="language-item"
+        animate:flip={{ duration: 222  }}
+        onclick={() => userStore.addLanguage(lang.code)}
+        tabindex="0"
+        aria-label={`Add ${lang.name}`}>
       <span class="lang-action">+</span>
       <span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
       <span class="lang-label">{lang.name}</span>
