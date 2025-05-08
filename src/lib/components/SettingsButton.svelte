@@ -172,5 +172,5 @@
     padding: 0.7em 0.5em 0.7em 0.5em;
   }
 }
-@import 'prismjs/themes/prism-tomorrow.css';
+
 </style>
