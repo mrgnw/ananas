@@ -1,6 +1,7 @@
 <script>
 	import "../app.pcss";
 	import SettingsButton from "$lib/components/SettingsButton.svelte";
+    import { Languages } from 'lucide-svelte';
 	import { Button } from "$lib/components/ui/button";
 	import { page } from "$app/stores";
 	import { browser } from "$app/environment";
@@ -44,8 +45,8 @@
 <nav class="main-navbar">
   <ul class="navbar-list">
     <li><a href="/" class:active={$page.url.pathname === '/'}>Translate</a></li>
-    <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')}>Languages</a></li>
-    <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>User</a></li>
+    <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
+    <!-- <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>User</a></li> -->
     <li><a href="/history" class:active={$page.url.pathname.startsWith('/history')}>History</a></li>
   </ul>
 </nav>
