@@ -56,6 +56,8 @@
     return [...exact, ...starts, ...partial];
   });
 
+  let flipDuration = $derived.by(() => Math.max(80, Math.min(320, 600 / filteredLanguages.length)));
+
   function formatSpeakers(n) {
     if (!n) return '';
     return (n / 1000).toFixed(0) + 'M';
@@ -84,7 +86,7 @@
 
 <ul class="languages-list">
   {#each [...filteredLanguages].filter(lang => lang.selected) as lang (lang.code)}
-    <li class="language-item selected" animate:flip>
+    <li class="language-item selected" animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}>
       <button class="add-btn"
         onclick={() => lang.selected
           ? userStore.removeLanguage(lang.code)
@@ -111,7 +113,7 @@
   {/if}
 
   {#each [...filteredLanguages].filter(lang => !lang.selected) as lang (lang.code)}
-    <li class="language-item" animate:flip>
+    <li class="language-item" animate:flip={{ duration: flipDuration, easing: t => t*t*(3-2*t) }}>
       <button class="add-btn"
         onclick={() => lang.selected
           ? userStore.removeLanguage(lang.code)
@@ -151,6 +153,7 @@
   font-size: 1em;
   min-height: 32px;
   transition: background 0.12s;
+  will-change: transform, opacity;
 }
 .language-item:hover {
   background: #f6f8fa;
@@ -226,16 +229,10 @@
   display: flex;
   align-items: center;
   max-width: 420px;
-  margin: 2.5rem auto 1.5rem auto;
+  margin: .7rem auto .5rem auto;
   padding: 0 0.5rem;
   border-bottom: 2px solid #e5e7eb;
   background: none;
-}
-.search-icon {
-  font-size: 1.2em;
-  color: #bdbdbd;
-  margin-right: 0.5em;
-  user-select: none;
 }
 .language-filter-input {
   flex: 1;
@@ -243,7 +240,7 @@
   outline: none;
   background: none;
   font-size: 1.15em;
-  padding: 0.7em 0 0.7em 0;
+  padding: 0em 0 0em 0;
   color: #222;
   transition: box-shadow 0.15s, border-color 0.15s;
 }
