@@ -5,6 +5,7 @@
   import { getEnglishName } from '$lib/utils/languages.js';
 
 let result = $state(null); // Add result state to hold translation result
+let { data } = $props();
 </script>
 
   <main class="translate-main">
