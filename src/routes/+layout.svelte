@@ -1,6 +1,7 @@
 <script>
 	import "../app.pcss";
 	import SettingsButton from "$lib/components/SettingsButton.svelte";
+    import { Languages } from 'lucide-svelte';
 	import { Button } from "$lib/components/ui/button";
 	import { page } from "$app/stores";
 	import { browser } from "$app/environment";
@@ -9,7 +10,8 @@
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
 	
 	/** @type {{children?: import('svelte').Snippet}} */
-	let { children } = $props();
+    let allProps = $props();
+	let { children } = allProps;
 	
 	// Get the country code and find country info directly from JSON
 	const countryCode = $derived($page.data.ip_country || '');
@@ -43,8 +45,8 @@
 <nav class="main-navbar">
   <ul class="navbar-list">
     <li><a href="/" class:active={$page.url.pathname === '/'}>Translate</a></li>
-    <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')}>Languages</a></li>
-    <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>User</a></li>
+    <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
+    <!-- <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>User</a></li> -->
     <li><a href="/history" class:active={$page.url.pathname.startsWith('/history')}>History</a></li>
   </ul>
 </nav>
@@ -64,7 +66,7 @@
 			<span class="text-lg">{countryFlag}</span>
 		</Button>
 	{/if} -->
-	<SettingsButton />
+	<SettingsButton {...allProps}  />
 </div>
 {/if}
 

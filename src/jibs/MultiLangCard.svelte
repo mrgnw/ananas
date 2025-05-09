@@ -43,7 +43,7 @@
 	};
 </script>
 
-<div class="group w-full">
+<div class="group mx-auto max-w-xl min-w-[320px]">
   <div class="relative">
     <div class="p-2 sm:p-3">
       <div class="relative">
