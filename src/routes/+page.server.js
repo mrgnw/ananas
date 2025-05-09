@@ -1,14 +1,17 @@
-import { env } from '$env/dynamic/private';
 import { getCloudflareData } from '$lib/utils/cloudflare.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ request }) {
-    // Get Cloudflare data for this page request
-    const cloudflareData = getCloudflareData(request);
-    
-    console.log('[PAGE SERVER] User country:', cloudflareData.ip_country);
-    
-    return {
-        ...cloudflareData
-    };
+    try {
+        // Get Cloudflare data for this page request
+        const cloudflareData = getCloudflareData(request) || {};
+        console.log('[PAGE SERVER] Cloudflare data:', cloudflareData);
+        return {
+            ...cloudflareData
+        };
+    } catch (e) {
+        console.error('[PAGE SERVER] Error:', e);
+        // Return safe fallback so page does not 500
+        return {};
+    }
 }
