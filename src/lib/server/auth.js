@@ -67,11 +67,15 @@ export async function createUser(db, { email, password, username = null }) {
     console.log('[auth] Prepared user object, inserting into database...');
     
     try {
-      // Using run method for direct SQL for debugging
-      await db.run(`
-        INSERT INTO users (id, email, password_hash, username, created_at, updated_at) 
-        VALUES (?, ?, ?, ?, ?, ?)
-      `, [id, email, password_hash, username, now, now]);
+      // Using db.insert with schema instead of raw SQL
+      await db.insert(users).values({
+        id,
+        email,
+        password_hash,
+        username,
+        created_at: now,
+        updated_at: now
+      });
       
       console.log('[auth] Database insert successful');
     } catch (insertError) {
