@@ -12,6 +12,9 @@
   async function handleSignup(e) {
     e.preventDefault();
     
+    // Prevent double submission
+    if (isLoading) return;
+    
     // Validation
     if (!email || !password || !confirmPassword) {
       errorMessage = 'Please fill in all required fields';
@@ -41,12 +44,20 @@
     errorMessage = '';
     
     try {
-      const result = await userStore.signup(email, password, username);
-      if (result.success) {
+      // Use a local variable for the response to avoid reactivity issues
+      const signupResponse = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, username })
+      });
+      
+      const result = await signupResponse.json();
+      
+      if (signupResponse.ok && result.success) {
         // After signup, redirect to login page
         goto('/auth/login?registered=true');
       } else {
-        errorMessage = result.error || 'Signup failed. Please try again.';
+        errorMessage = result.message || 'Signup failed. Please try again.';
       }
     } catch (error) {
       console.error('Signup error:', error);

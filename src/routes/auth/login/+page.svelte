@@ -10,6 +10,9 @@
   async function handleLogin(e) {
     e.preventDefault();
     
+    // Prevent double submission
+    if (isLoading) return;
+    
     if (!email || !password) {
       errorMessage = 'Please enter both email and password';
       return;
@@ -19,11 +22,20 @@
     errorMessage = '';
     
     try {
-      const result = await userStore.login(email, password);
-      if (result.success) {
-        goto('/'); // Redirect to homepage after successful login
+      // Use direct fetch instead of going through the store to avoid reactivity issues
+      const loginResponse = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      
+      const result = await loginResponse.json();
+      
+      if (loginResponse.ok && result.success) {
+        // Redirect to homepage after successful login
+        goto('/');
       } else {
-        errorMessage = result.error || 'Login failed. Please check your credentials.';
+        errorMessage = result.message || 'Login failed. Please check your credentials.';
       }
     } catch (error) {
       console.error('Login error:', error);

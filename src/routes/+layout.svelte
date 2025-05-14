@@ -40,13 +40,20 @@
 		initializeFromStorage();
 	}
 	
-	// Update auth state when page data changes
+	// Update auth state when page data changes - use a more stable comparison
 	$effect(() => {
 		if (browser && $page.data) {
-			if ($page.data.user) {
-				userStore.setAuthState($page.data.user);
-			} else {
-				userStore.setAuthState(null);
+			const userData = $page.data.user;
+			const currentAuthState = userStore.user.auth;
+			
+			// Only update if there's an actual change to prevent recursive updates
+			const userChanged = 
+				(userData && !currentAuthState.isAuthenticated) || 
+				(!userData && currentAuthState.isAuthenticated) ||
+				(userData && currentAuthState.isAuthenticated && userData.id !== currentAuthState.id);
+				
+			if (userChanged) {
+				userStore.setAuthState(userData);
 			}
 		}
 	});

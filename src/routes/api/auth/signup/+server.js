@@ -1,6 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { initDB } from '$lib/server/db';
 import { createUser } from '$lib/server/auth';
+import { proxyToWrangler, shouldUseWranglerProxy } from '$lib/server/dev-proxy';
+import { dev } from '$app/environment';
 
 /**
  * User signup endpoint
@@ -8,6 +10,34 @@ import { createUser } from '$lib/server/auth';
  */
 export async function POST({ request, platform }) {
   try {
+    // Check if we should use the Wrangler proxy
+    if (shouldUseWranglerProxy(platform)) {
+      try {
+        // Proxy the request to the Wrangler dev server with the same body
+        const clonedRequest = request.clone();
+        const requestBody = await clonedRequest.json();
+        
+        const response = await proxyToWrangler('api/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        });
+        
+        const result = await response.json();
+        return json(result, { status: response.status });
+      } catch (proxyError) {
+        console.error('Error proxying to Wrangler:', proxyError);
+        return json({ 
+          success: false, 
+          message: 'Failed to connect to Wrangler dev server. Make sure wrangler dev is running on port 8787.',
+          error: dev ? proxyError.message : 'Proxy error'
+        }, { status: 502 });
+      }
+    }
+    
+    // Direct implementation when platform.env.DB is available
     const { email, password, username } = await request.json();
     
     // Validate inputs
@@ -27,6 +57,14 @@ export async function POST({ request, platform }) {
         { success: false, message: 'Password must be at least 8 characters long' },
         { status: 400 }
       );
+    }
+    
+    if (!platform?.env?.DB) {
+      return json({ 
+        success: false, 
+        message: 'Database connection not available', 
+        dev: dev
+      }, { status: 500 });
     }
     
     // Initialize DB connection
@@ -57,14 +95,14 @@ export async function POST({ request, platform }) {
       }
       
       return json(
-        { success: false, message: 'Failed to create user' },
+        { success: false, message: 'Failed to create user', error: dev ? dbError.message : undefined },
         { status: 500 }
       );
     }
   } catch (error) {
     console.error('Error in signup endpoint:', error);
     return json(
-      { success: false, message: 'Internal server error' },
+      { success: false, message: 'Internal server error', error: dev ? error.message : undefined },
       { status: 500 }
     );
   }
