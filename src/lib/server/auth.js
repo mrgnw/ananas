@@ -1,6 +1,21 @@
-import { randomUUID } from 'crypto';
 import { eq } from 'drizzle-orm';
 import { users, sessions } from './schema/users';
+
+// Generate UUID using the Web Crypto API instead of Node's crypto
+function randomUUID() {
+  // Use standard Web Crypto API to generate UUID
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  
+  // Fallback implementation if crypto.randomUUID is not available
+  const getRandomHex = (c) => {
+    const r = crypto.getRandomValues(new Uint8Array(1))[0];
+    return (c === 'x' ? r & 0x3 | 0x8 : r & 0xf).toString(16);
+  };
+  
+  return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, getRandomHex);
+}
 
 // For password hashing in a web environment, we'll use the Web Crypto API
 async function hashPassword(password) {
