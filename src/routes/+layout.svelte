@@ -72,7 +72,15 @@
     <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
     <li><a href="/history" class:active={$page.url.pathname.startsWith('/history')}>History</a></li>
     {#if userStore.user.auth.isAuthenticated}
-      <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>Profile</a></li>
+      <li>
+        <a href="/user" class:active={$page.url.pathname.startsWith('/user')} class="user-profile-link">
+          {#if userStore.user.auth.username}
+            {userStore.user.auth.username}
+          {:else}
+            Profile
+          {/if}
+        </a>
+      </li>
     {:else}
       <li><a href="/auth/login" class:active={$page.url.pathname.startsWith('/auth/login')}>Login</a></li>
       <li><a href="/auth/signup" class:active={$page.url.pathname.startsWith('/auth/signup')}>Signup</a></li>
@@ -140,6 +148,22 @@
   background: #3730a3;
   color: #fff;
   box-shadow: 0 2px 8px 0 rgba(55,48,163,0.13);
+}
+
+.user-profile-link {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-profile-link::before {
+  content: '';
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: #10b981;
+  border-radius: 50%;
 }
 @media (max-width: 600px) {
   .navbar-list {
