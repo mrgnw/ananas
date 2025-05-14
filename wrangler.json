@@ -1,0 +1,16 @@
+{
+    "name": "ananas",
+    "main": "src/index.ts",
+    "compatibility_date": "2024-09-26",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "ananas-auth-dev",
+            "database_id": "56c5a913-b8f1-4104-b52e-577d7b380658",
+            "migrations_dir": "drizzle/migrations"
+        }
+    ]
+}

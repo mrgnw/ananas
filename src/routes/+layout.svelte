@@ -7,6 +7,7 @@
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
 	import { initializeFromStorage } from '$lib/stores/translationStore';
+	import { userStore } from '$lib/stores/user.svelte.js';
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
 	
 	/** @type {{children?: import('svelte').Snippet}} */
@@ -26,6 +27,11 @@
 		if (browser) {
 			console.log('[CLIENT] Detected country:', countryCode || 'None detected');
 			console.log('[CLIENT] Country info from Wikidata:', countryInfo);
+			
+			// Initialize user authentication state from server data
+			if ($page.data.user) {
+				userStore.setAuthState($page.data.user);
+			}
 		}
 	});
 
@@ -33,6 +39,17 @@
 	if (browser) {
 		initializeFromStorage();
 	}
+	
+	// Update auth state when page data changes
+	$effect(() => {
+		if (browser && $page.data) {
+			if ($page.data.user) {
+				userStore.setAuthState($page.data.user);
+			} else {
+				userStore.setAuthState(null);
+			}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -46,8 +63,13 @@
   <ul class="navbar-list">
     <li><a href="/" class:active={$page.url.pathname === '/'}>Translate</a></li>
     <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
-    <!-- <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>User</a></li> -->
     <li><a href="/history" class:active={$page.url.pathname.startsWith('/history')}>History</a></li>
+    {#if userStore.user.auth.isAuthenticated}
+      <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>Profile</a></li>
+    {:else}
+      <li><a href="/auth/login" class:active={$page.url.pathname.startsWith('/auth/login')}>Login</a></li>
+      <li><a href="/auth/signup" class:active={$page.url.pathname.startsWith('/auth/signup')}>Signup</a></li>
+    {/if}
   </ul>
 </nav>
 

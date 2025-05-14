@@ -1,7 +1,7 @@
 import { getCloudflareData } from '$lib/utils/cloudflare.js';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ request, params = {} }) => {
+export const load: LayoutServerLoad = async ({ request, params = {}, locals }) => {
   // Get Cloudflare data
   const cloudflareData = getCloudflareData(request);
   
@@ -11,6 +11,13 @@ export const load: LayoutServerLoad = async ({ request, params = {} }) => {
   
   // Simple test data instead of SQLite database
   const testQueryResult = { fruit: 'banana' };
+  
+  // Get authentication state from locals
+  const user = locals.user ? {
+    id: locals.user.id,
+    email: locals.user.email,
+    username: locals.user.username
+  } : null;
   
   // In SvelteKit, returned objects are serialized with devalue
   // Make sure we return allHeaders directly at the top level for accessibility
@@ -22,7 +29,8 @@ export const load: LayoutServerLoad = async ({ request, params = {} }) => {
     allHeaders: cloudflareData.allHeaders,
     testQueryResult,
     // Don't nest under cloudflareData as it makes access more complex
-    slug: params.slug
-    
+    slug: params.slug,
+    // Authentication data
+    user
   };
 };
