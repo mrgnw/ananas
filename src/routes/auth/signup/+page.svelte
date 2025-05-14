@@ -61,7 +61,7 @@
   <div class="auth-card">
     <h1>Create Account</h1>
     
-    <form on:submit={handleSignup} class="auth-form">
+    <form onsubmit={handleSignup} class="auth-form">
       {#if errorMessage}
         <div class="error-message">{errorMessage}</div>
       {/if}

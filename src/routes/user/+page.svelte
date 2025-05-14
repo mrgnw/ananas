@@ -38,7 +38,7 @@
           <h3>{user.auth.username || 'User'}</h3>
           <p class="email">{user.auth.email}</p>
         </div>
-        <button class="logout-button" on:click={handleLogout} disabled={isLoggingOut}>
+        <button class="logout-button" onclick={handleLogout} disabled={isLoggingOut}>
           <LogOut size={18} />
           <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
         </button>
