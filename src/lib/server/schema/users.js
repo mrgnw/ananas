@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, json } from "drizzle-orm/sqlite-core";
 
 /**
  * Users table schema
@@ -30,4 +30,18 @@ export const sessions = sqliteTable("sessions", {
   user_id: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   expires_at: integer("expires_at").notNull(),
   created_at: integer("created_at").notNull(),
+});
+
+/**
+ * User preferences table schema
+ * - user_id: Foreign key to users table
+ * - selected_languages: Array of language codes
+ * - translators: Array of translator service IDs
+ * - updated_at: Timestamp of last update
+ */
+export const userPreferences = sqliteTable("user_preferences", {
+  user_id: text("user_id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
+  selected_languages: text("selected_languages").notNull().$type<string[]>(), // Stored as JSON
+  translators: text("translators").notNull().$type<string[]>(), // Stored as JSON
+  updated_at: integer("updated_at").notNull(),
 });

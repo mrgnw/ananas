@@ -1,4 +1,6 @@
 // src/lib/stores/user.svelte.js
+import { browser } from '$app/environment';
+
 let user = $state({
   selectedLanguages: [],
   translators: ['deepl'], // Default to deepl, can support others in future
@@ -7,11 +9,12 @@ let user = $state({
     id: null,
     email: null,
     username: null
-  }
+  },
+  syncing: false
 });
 
 // Load from localStorage on module load
-if (typeof localStorage !== 'undefined') {
+if (browser) {
   const saved = localStorage.getItem('user');
   if (saved) {
     Object.assign(user, JSON.parse(saved));
@@ -19,8 +22,47 @@ if (typeof localStorage !== 'undefined') {
 }
 
 function save() {
-  if (typeof localStorage !== 'undefined') {
+  if (browser) {
     localStorage.setItem('user', JSON.stringify(user));
+  }
+}
+
+// Save preferences to server if user is authenticated
+async function syncToServer() {
+  if (!user.auth.isAuthenticated || !user.auth.id || user.syncing) {
+    return;
+  }
+  
+  try {
+    user.syncing = true;
+    
+    const response = await fetch('/api/user/preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        selected_languages: user.selectedLanguages,
+        translators: user.translators
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to save preferences');
+    }
+    
+    console.log('User preferences synced to server');
+  } catch (error) {
+    console.error('Error syncing preferences to server:', error);
+  } finally {
+    user.syncing = false;
+  }
+}
+
+// Initialize user preferences from server data
+function initializeFromServerData(serverPreferences) {
+  if (serverPreferences) {
+    user.selectedLanguages = serverPreferences.selected_languages || [];
+    user.translators = serverPreferences.translators || ['deepl'];
+    save();
   }
 }
 
@@ -29,30 +71,45 @@ function addLanguage(code) {
   if (!user.selectedLanguages.includes(code)) {
     user.selectedLanguages.push(code);
     save();
+    if (user.auth.isAuthenticated) {
+      syncToServer();
+    }
   }
 }
 
 function removeLanguage(code) {
   user.selectedLanguages = user.selectedLanguages.filter(c => c !== code);
   save();
+  if (user.auth.isAuthenticated) {
+    syncToServer();
+  }
 }
 
 // Translator management
 function setTranslators(translators) {
   user.translators = Array.isArray(translators) ? translators : [translators];
   save();
+  if (user.auth.isAuthenticated) {
+    syncToServer();
+  }
 }
 
 function addTranslator(translator) {
   if (!user.translators.includes(translator)) {
     user.translators.push(translator);
     save();
+    if (user.auth.isAuthenticated) {
+      syncToServer();
+    }
   }
 }
 
 function removeTranslator(translator) {
   user.translators = user.translators.filter(t => t !== translator);
   save();
+  if (user.auth.isAuthenticated) {
+    syncToServer();
+  }
 }
 
 // Authentication management
@@ -155,5 +212,8 @@ export const userStore = {
   setAuthState,
   login,
   logout,
-  signup
+  signup,
+  // Server sync
+  initializeFromServerData,
+  syncToServer
 };

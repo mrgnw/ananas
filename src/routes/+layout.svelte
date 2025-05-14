@@ -31,6 +31,11 @@
 			// Initialize user authentication state from server data
 			if ($page.data.user) {
 				userStore.setAuthState($page.data.user);
+				
+				// Initialize user preferences from server data if available
+				if ($page.data.userPreferences) {
+					userStore.initializeFromServerData($page.data.userPreferences);
+				}
 			}
 		}
 	});
@@ -54,6 +59,11 @@
 				
 			if (userChanged) {
 				userStore.setAuthState(userData);
+				
+				// Initialize user preferences from server data if auth state changed
+				if (userData && $page.data.userPreferences) {
+					userStore.initializeFromServerData($page.data.userPreferences);
+				}
 			}
 		}
 	});

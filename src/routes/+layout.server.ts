@@ -1,7 +1,9 @@
 import { getCloudflareData } from '$lib/utils/cloudflare.js';
+import { initDB } from '$lib/server/db';
+import { getUserPreferences } from '$lib/server/user-preferences';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ request, params = {}, locals }) => {
+export const load: LayoutServerLoad = async ({ request, params = {}, locals, platform }) => {
   // Get Cloudflare data
   const cloudflareData = getCloudflareData(request);
   
@@ -19,6 +21,17 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals }) =
     username: locals.user.username
   } : null;
   
+  // Get user preferences if user is logged in
+  let userPreferences = null;
+  if (user && platform?.env?.DB) {
+    try {
+      const db = initDB(platform.env.DB);
+      userPreferences = await getUserPreferences(db, user.id);
+    } catch (error) {
+      console.error('[LAYOUT SERVER] Error loading user preferences:', error);
+    }
+  }
+  
   // In SvelteKit, returned objects are serialized with devalue
   // Make sure we return allHeaders directly at the top level for accessibility
   return {
@@ -31,6 +44,8 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals }) =
     // Don't nest under cloudflareData as it makes access more complex
     slug: params.slug,
     // Authentication data
-    user
+    user,
+    // User preferences
+    userPreferences
   };
 };
