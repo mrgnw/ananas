@@ -19,6 +19,41 @@ export default {
       return handleAuthTest(env);
     }
     
+    // Schema check endpoint
+    if (path === '/api/auth/schema' && method === 'GET') {
+      try {
+        const db = initDB(env.DB);
+        
+        // Check if tables exist
+        const tables = await db.run(`SELECT name FROM sqlite_master WHERE type='table';`);
+        
+        // Get schema for users table
+        const usersSchema = await db.run(`PRAGMA table_info(users);`);
+        
+        // Get schema for sessions table
+        const sessionsSchema = await db.run(`PRAGMA table_info(sessions);`);
+        
+        return new Response(JSON.stringify({
+          success: true,
+          tables: tables.results || [],
+          usersSchema: usersSchema.results || [],
+          sessionsSchema: sessionsSchema.results || []
+        }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({
+          success: false,
+          message: 'Failed to get schema',
+          error: error.message
+        }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+    }
+    
     // Signup endpoint
     if (path === '/api/auth/signup' && method === 'POST') {
       try {
@@ -63,8 +98,12 @@ export default {
         const db = initDB(env.DB);
         
         try {
+          console.log('[Wrangler] Attempting to create user:', { email, username });
+          
           // Create the user
           const user = await createUser(db, { email, password, username });
+          
+          console.log('[Wrangler] User created successfully:', { id: user.id, email: user.email });
           
           return new Response(JSON.stringify({ 
             success: true, 
@@ -79,7 +118,12 @@ export default {
             headers: { 'Content-Type': 'application/json' }
           });
         } catch (dbError) {
-          console.error('Database error during signup:', dbError);
+          console.error('[Wrangler] Database error during signup:', dbError);
+          console.error('[Wrangler] Error details:', { 
+            message: dbError.message,
+            name: dbError.name,
+            stack: dbError.stack
+          });
           
           // Check for duplicate email
           if (dbError.message && dbError.message.includes('UNIQUE constraint failed: users.email')) {
@@ -94,7 +138,15 @@ export default {
           
           return new Response(JSON.stringify({ 
             success: false, 
-            message: 'Failed to create user' 
+            message: 'Failed to create user',
+            error: dbError.message,
+            errorType: dbError.name,
+            stack: dbError.stack,
+            // Include additional details for debugging
+            details: {
+              dbErrorJSON: JSON.stringify(dbError, Object.getOwnPropertyNames(dbError)),
+              userInput: { email, username } // Don't include password
+            }
           }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
@@ -119,6 +171,7 @@ export default {
       message: `No handler for ${method} ${path}`,
       availableRoutes: [
         'GET /api/auth/test',
+        'GET /api/auth/schema',
         'POST /api/auth/signup'
       ]
     }), {

@@ -16,10 +16,36 @@ export async function proxyToWrangler(path, options = {}) {
   }
   
   const url = `${DEV_WRANGLER_URL}/${path}`;
-  console.log(`[DEV PROXY] Proxying request to: ${url}`);
+  console.log(`[DEV PROXY] Proxying request to: ${url}`, { method: options.method });
+  
+  // Log request body for debugging
+  if (options.body) {
+    try {
+      const bodyData = JSON.parse(options.body);
+      console.log(`[DEV PROXY] Request body:`, {
+        ...bodyData,
+        password: bodyData.password ? '[REDACTED]' : undefined
+      });
+    } catch (e) {
+      console.log(`[DEV PROXY] Request body: (non-JSON or parsing error)`);
+    }
+  }
   
   try {
     const response = await fetch(url, options);
+    console.log(`[DEV PROXY] Response status:`, response.status);
+    
+    if (!response.ok) {
+      try {
+        // Clone the response to read the body without consuming it
+        const clonedResponse = response.clone();
+        const errorBody = await clonedResponse.text();
+        console.error(`[DEV PROXY] Error response body:`, errorBody);
+      } catch (bodyReadError) {
+        console.error(`[DEV PROXY] Could not read error response body:`, bodyReadError);
+      }
+    }
+    
     return response;
   } catch (error) {
     console.error(`[DEV PROXY] Error proxying to ${url}:`, error);

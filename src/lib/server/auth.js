@@ -42,24 +42,50 @@ async function hashPassword(password) {
  * @returns {Promise<Object>} - Created user object (without password)
  */
 export async function createUser(db, { email, password, username = null }) {
-  const id = randomUUID();
-  const now = Date.now();
-  const password_hash = await hashPassword(password);
-  
-  const newUser = {
-    id,
-    email,
-    password_hash,
-    username,
-    created_at: now,
-    updated_at: now
-  };
-  
-  await db.insert(users).values(newUser);
-  
-  // Return user without password hash
-  const { password_hash: _, ...userWithoutPassword } = newUser;
-  return userWithoutPassword;
+  try {
+    console.log('[auth] Starting createUser with email:', email);
+    
+    const id = randomUUID();
+    console.log('[auth] Generated UUID:', id);
+    
+    const now = Date.now();
+    console.log('[auth] Timestamp:', now);
+    
+    console.log('[auth] Hashing password...');
+    const password_hash = await hashPassword(password);
+    console.log('[auth] Password hashed successfully');
+    
+    const newUser = {
+      id,
+      email,
+      password_hash,
+      username,
+      created_at: now,
+      updated_at: now
+    };
+    
+    console.log('[auth] Prepared user object, inserting into database...');
+    
+    try {
+      // Using run method for direct SQL for debugging
+      await db.run(`
+        INSERT INTO users (id, email, password_hash, username, created_at, updated_at) 
+        VALUES (?, ?, ?, ?, ?, ?)
+      `, [id, email, password_hash, username, now, now]);
+      
+      console.log('[auth] Database insert successful');
+    } catch (insertError) {
+      console.error('[auth] Database insert error:', insertError);
+      throw insertError;
+    }
+    
+    // Return user without password hash
+    const { password_hash: _, ...userWithoutPassword } = newUser;
+    return userWithoutPassword;
+  } catch (error) {
+    console.error('[auth] Error in createUser:', error);
+    throw error;
+  }
 }
 
 /**
