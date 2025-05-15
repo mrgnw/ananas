@@ -41,7 +41,7 @@ export const sessions = sqliteTable("sessions", {
  */
 export const userPreferences = sqliteTable("user_preferences", {
   user_id: text("user_id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
-  selected_languages: text("selected_languages").notNull().$type<string[]>(), // Stored as JSON
-  translators: text("translators").notNull().$type<string[]>(), // Stored as JSON
+  selected_languages: text("selected_languages").notNull(), // Stored as JSON
+  translators: text("translators").notNull(), // Stored as JSON
   updated_at: integer("updated_at").notNull(),
 });
