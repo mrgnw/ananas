@@ -147,6 +147,14 @@ async function login(email, password) {
     }
     
     // We'll load the user data from the layout data
+    
+    // Import translationHistoryStore to merge history after login
+    const { translationHistoryStore } = await import('./translationHistory.svelte.js');
+    if (translationHistoryStore) {
+      // Merge any existing local translations with the database
+      await translationHistoryStore.mergeWithDatabase();
+    }
+    
     return { success: true };
   } catch (error) {
     console.error('Login error:', error);
@@ -163,6 +171,13 @@ async function logout() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     });
+    
+    // Import translationHistoryStore to clear history on logout
+    const { translationHistoryStore } = await import('./translationHistory.svelte.js');
+    if (translationHistoryStore) {
+      // Clear the translation history
+      translationHistoryStore.clearHistory();
+    }
     
     setAuthState(null);
     return { success: true };

@@ -1,5 +1,6 @@
 import { drizzle } from 'drizzle-orm/d1';
-import * as schema from './schema/users';
+import * as usersSchema from './schema/users';
+import * as translationsSchema from './schema/translations';
 import { dev } from '$app/environment';
 
 /**
@@ -19,7 +20,7 @@ export function initDB(d1) {
     }
   }
   
-  return drizzle(d1, { schema });
+  return drizzle(d1, { schema: { ...usersSchema, ...translationsSchema } });
 }
 
 /**
