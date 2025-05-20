@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, json } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 /**
  * Users table schema
