@@ -8,9 +8,26 @@
   import Prism from 'prismjs';
   import 'prismjs/components/prism-json.js';
   import 'prismjs/themes/prism-tomorrow.css'; // or another Prism theme
+  import { onMount } from 'svelte';
 
   let props = $props();
   let showProps = $state(false);
+
+  // Use highlightedPropsJson from server if available, else fallback to client-side highlighting
+  let highlightedJson = $derived.by(() => {
+    if (typeof highlightedPropsJson === 'string' && highlightedPropsJson.length > 0) {
+      return highlightedPropsJson;
+    }
+    // fallback: highlight client-side if needed
+    if (typeof window !== 'undefined' && typeof Prism !== 'undefined') {
+      return Prism.highlight(
+        JSON.stringify(props.data ?? props, null, 2),
+        Prism.languages.json,
+        'json'
+      );
+    }
+    return JSON.stringify(props.data ?? props, null, 2);
+  });
 
   function clearCache() {
     try {
@@ -46,11 +63,7 @@
   }
 
   function getHighlightedJson() {
-    return Prism.highlight(
-      JSON.stringify(props.data ?? props, null, 2),
-      Prism.languages.json,
-      'json'
-    );
+    return highlightedJson;
   }
 </script>
 
