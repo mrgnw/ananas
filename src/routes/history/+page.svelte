@@ -12,6 +12,10 @@
       translationHistoryStore.loadFromDatabase();
     }
   });
+  
+  function handleDelete(item, index) {
+    translationHistoryStore.removeTranslation(index);
+  }
 </script>
 
 {#if history.loading}
@@ -25,7 +29,10 @@
   <ul class="history-list">
     {#each history.translations.slice(0, 20) as item, i}
       <li class="history-card group">
-        <MultiLangCard translation={{ translations: item.output }} />
+        <MultiLangCard 
+          translation={{ translations: item.output }} 
+          onDelete={() => handleDelete(item, i)}
+        />
         <div class="history-meta-float">
           <span class="history-input-integral">
             <span class="history-input-preview">{item.input.length > 60 ? item.input.slice(0, 60) + '…' : item.input}</span>
