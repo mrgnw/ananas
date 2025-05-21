@@ -1,8 +1,6 @@
 import { getCloudflareData } from '$lib/utils/cloudflare.js';
 import { initDB } from '$lib/server/db';
 import { getUserPreferences } from '$lib/server/user-preferences';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-json.js';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ request, params = {}, locals, platform }) => {
@@ -34,7 +32,7 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals, pla
     }
   }
   
-  // Example: highlight some JSON server-side
+  // Format JSON without Prism
   const propsJson = JSON.stringify({
     ip_country: cloudflareData.ip_country,
     country_phone: cloudflareData.country_phone,
@@ -46,12 +44,8 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals, pla
     user,
     userPreferences
   }, null, 2);
-  let highlightedPropsJson = '';
-  try {
-    highlightedPropsJson = Prism.highlight(propsJson, Prism.languages.json, 'json');
-  } catch (e) {
-    highlightedPropsJson = propsJson;
-  }
+  // No Prism highlighting
+  const highlightedPropsJson = '';
 
   // In SvelteKit, returned objects are serialized with devalue
   // Make sure we return allHeaders directly at the top level for accessibility
