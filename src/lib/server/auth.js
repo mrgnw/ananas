@@ -132,7 +132,12 @@ export async function authenticateUser(db, { email, password }) {
   return {
     sessionId,
     userId: user.id,
-    expiresAt
+    expiresAt,
+    user: {
+      id: user.id,
+      email: user.email,
+      username: user.username
+    }
   };
 }
 
