@@ -176,6 +176,15 @@ async function login(email, password) {
 
 async function logout() {
   try {
+    // First clear local state to prevent UI flashing
+    setAuthState(null);
+    
+    // Make sure to clear localStorage entirely
+    if (browser) {
+      localStorage.removeItem('user');
+    }
+    
+    // Make server-side request to logout
     const response = await fetch('/api/auth/logout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
@@ -187,8 +196,6 @@ async function logout() {
       // Clear the translation history
       translationHistoryStore.clearHistory();
     }
-    
-    setAuthState(null);
     
     // Redirect to home page after logout
     goto('/');
