@@ -2,6 +2,7 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 
+// Using Svelte 5 state
 let user = $state({
   selectedLanguages: [],
   translators: ['deepl'], // Default to deepl, can support others in future
@@ -12,6 +13,13 @@ let user = $state({
     username: null
   },
   syncing: false
+});
+
+// Make the auth state reactive for components
+$effect(() => {
+  // This effect will run when any property of user.auth changes
+  // Just accessing the properties to trigger the effect when they change
+  const { isAuthenticated, id, email, username } = user.auth;
 });
 
 // Load from localStorage on module load
@@ -215,8 +223,11 @@ async function login(email, password) {
       await translationHistoryStore.loadFromDatabase();
     }
     
+    // Add a small delay to ensure the UI updates before navigation
+    await new Promise(resolve => setTimeout(resolve, 10));
+    
     // Redirect to translate page
-    goto('/');
+    goto('/', { replaceState: true });
     
     return { success: true };
   } catch (error) {
@@ -251,8 +262,11 @@ async function logout() {
       translationHistoryStore.clearHistory();
     }
     
-    // Redirect to home page after logout
-    goto('/');
+    // Add a small delay to ensure the UI updates before navigation
+    await new Promise(resolve => setTimeout(resolve, 10));
+    
+    // Redirect to home page after logout, using replaceState to prevent navigation issues
+    goto('/', { replaceState: true });
     
     return { success: true };
   } catch (error) {
