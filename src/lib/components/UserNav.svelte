@@ -1,0 +1,40 @@
+<script>
+  import { getContext } from 'svelte';
+  import { page } from '$app/stores';
+  
+  // Get user store from context
+  const userStore = getContext('user');
+</script>
+
+{#if userStore.user.auth.isAuthenticated}
+  <li>
+    <a href="/user" class:active={$page.url.pathname.startsWith('/user')} class="user-profile-link">
+      {#if userStore.user.auth.username}
+        {userStore.user.auth.username}
+      {:else}
+        Profile
+      {/if}
+    </a>
+  </li>
+{:else}
+  <li><a href="/auth/login" class:active={$page.url.pathname.startsWith('/auth/login')}>Login</a></li>
+  <li><a href="/auth/signup" class:active={$page.url.pathname.startsWith('/auth/signup')}>Signup</a></li>
+{/if}
+
+<style>
+  .user-profile-link {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .user-profile-link::before {
+    content: '';
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    background-color: #10b981;
+    border-radius: 50%;
+  }
+</style>

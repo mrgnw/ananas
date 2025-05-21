@@ -1,6 +1,9 @@
 <script>
-  import { userStore } from '$lib/stores/user.svelte.js';
+  import { getContext } from 'svelte';
   import { goto } from '$app/navigation';
+  
+  // Get user store from context
+  const userStore = getContext('user');
   
   let email = $state('');
   let password = $state('');
@@ -32,8 +35,16 @@
       const result = await loginResponse.json();
       
       if (loginResponse.ok && result.success) {
-        // Redirect to homepage after successful login
-        goto('/');
+        // Set the auth state using the result
+        userStore.setAuthState(result.user);
+        
+        // Wait for state to update before navigation
+        await Promise.resolve();
+        
+        // Redirect to homepage after successful login with a small delay
+        setTimeout(() => {
+          goto('/', { replaceState: true });
+        }, 50);
       } else {
         errorMessage = result.message || 'Login failed. Please check your credentials.';
       }

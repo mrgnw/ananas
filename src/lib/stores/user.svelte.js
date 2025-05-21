@@ -2,7 +2,8 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 
-// Using Svelte 5 state
+// Using Svelte 5 state with a mutable object
+// This creates a deep reactive state that will track all property changes
 let user = $state({
   selectedLanguages: [],
   translators: ['deepl'], // Default to deepl, can support others in future
@@ -14,9 +15,6 @@ let user = $state({
   },
   syncing: false
 });
-
-// No need for an orphaned effect - Svelte 5 reactivity will track changes to user.auth
-// directly in components that access it.
 
 // Load from localStorage on module load
 if (browser) {
@@ -146,21 +144,25 @@ function removeTranslator(translator) {
 // Authentication management
 function setAuthState(userData) {
   if (userData) {
-    user.auth = {
-      isAuthenticated: true,
-      id: userData.id,
-      email: userData.email,
-      username: userData.username || null
-    };
+    // In Svelte 5, we can directly assign to object properties for reactivity
+    user.auth.isAuthenticated = true;
+    user.auth.id = userData.id;
+    user.auth.email = userData.email;
+    user.auth.username = userData.username || null;
   } else {
-    user.auth = {
-      isAuthenticated: false,
-      id: null,
-      email: null,
-      username: null
-    };
+    user.auth.isAuthenticated = false;
+    user.auth.id = null;
+    user.auth.email = null;
+    user.auth.username = null;
   }
+  // Save to localStorage
   save();
+  
+  // Force a microtask to ensure updates are processed
+  Promise.resolve().then(() => {
+    // This empty microtask helps ensure reactivity completes
+    console.log('Auth state updated:', user.auth.isAuthenticated);
+  });
 }
 
 async function login(email, password) {
@@ -219,11 +221,13 @@ async function login(email, password) {
       await translationHistoryStore.loadFromDatabase();
     }
     
-    // Add a small delay to ensure the UI updates before navigation
-    await new Promise(resolve => setTimeout(resolve, 10));
+    // Wait for next microtask to ensure UI updates are processed
+    await Promise.resolve();
     
-    // Redirect to translate page
-    goto('/', { replaceState: true });
+    // Redirect to translate page after a small delay to ensure UI is updated
+    setTimeout(() => {
+      goto('/', { replaceState: true });
+    }, 50);
     
     return { success: true };
   } catch (error) {
@@ -258,11 +262,13 @@ async function logout() {
       translationHistoryStore.clearHistory();
     }
     
-    // Add a small delay to ensure the UI updates before navigation
-    await new Promise(resolve => setTimeout(resolve, 10));
+    // Wait for next microtask to ensure UI updates are processed
+    await Promise.resolve();
     
-    // Redirect to home page after logout, using replaceState to prevent navigation issues
-    goto('/', { replaceState: true });
+    // Redirect to home page after a small delay to ensure UI is updated
+    setTimeout(() => {
+      goto('/', { replaceState: true });
+    }, 50);
     
     return { success: true };
   } catch (error) {

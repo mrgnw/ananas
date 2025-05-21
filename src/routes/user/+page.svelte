@@ -1,7 +1,11 @@
 <script>
-  import { userStore } from '$lib/stores/user.svelte.js';
+  import { getContext } from 'svelte';
   import { goto } from '$app/navigation';
+  import { browser } from '$app/environment';
   import { LogOut, User } from 'lucide-svelte';
+  
+  // Get user store from context
+  const userStore = getContext('user');
   
   // Access userStore directly instead of destructuring to maintain reactivity
   let isLoggingOut = $state(false);
@@ -13,10 +17,31 @@
   async function handleLogout() {
     isLoggingOut = true;
     try {
-      const result = await userStore.logout();
-      if (result.success) {
-        goto('/');
+      // First handle the server-side logout
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      // Clear localStorage entirely
+      if (browser) {
+        localStorage.removeItem('user');
       }
+      
+      // Clear auth state in the store
+      userStore.setAuthState(null);
+      
+      // Import translationHistoryStore to clear history on logout
+      const { translationHistoryStore } = await import('$lib/stores/translationHistory.svelte.js');
+      if (translationHistoryStore) {
+        translationHistoryStore.clearHistory();
+      }
+      
+      // Wait for a small delay to ensure UI updates
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
+      // Redirect to home page
+      goto('/', { replaceState: true });
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
