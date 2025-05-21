@@ -8,21 +8,27 @@ import { destroySession } from '$lib/server/auth';
  */
 export async function POST({ platform, cookies }) {
   try {
-    // Get session ID from cookie
-    const sessionId = cookies.get('session_id');
+    // Get session token and legacy session ID from cookies
+    const sessionToken = cookies.get('session_token');
+    const legacySessionId = cookies.get('session_id');
     
-    if (!sessionId) {
+    if (!sessionToken && !legacySessionId) {
       return json({ success: true, message: 'Already logged out' });
     }
     
     // Initialize DB connection
     const db = initDB(platform.env.DB);
     
-    // Destroy the session
-    await destroySession(db, sessionId);
+    // Destroy the sessions
+    if (sessionToken) {
+      await destroySession(db, sessionToken, true);
+      cookies.delete('session_token', { path: '/' });
+    }
     
-    // Clear the session cookie
-    cookies.delete('session_id', { path: '/' });
+    if (legacySessionId) {
+      await destroySession(db, legacySessionId);
+      cookies.delete('session_id', { path: '/' });
+    }
     
     return json({ 
       success: true, 

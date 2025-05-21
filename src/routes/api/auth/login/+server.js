@@ -28,8 +28,8 @@ export async function POST({ request, platform, cookies }) {
       );
     }
     
-    // Set session cookie
-    cookies.set('session_id', session.sessionId, {
+    // Set session cookie with the token instead of the hashed session ID
+    cookies.set('session_token', session.sessionToken, {
       path: '/',
       httpOnly: true,
       secure: true,
