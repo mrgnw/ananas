@@ -37,9 +37,15 @@ export async function POST({ request, platform, cookies }) {
       maxAge: 30 * 24 * 60 * 60 // 30 days in seconds
     });
     
+    // Return user data along with success message
     return json({ 
       success: true, 
-      message: 'Login successful' 
+      message: 'Login successful',
+      user: {
+        id: session.user.id,
+        email: session.user.email,
+        username: session.user.username
+      }
     });
   } catch (error) {
     console.error('Error in login endpoint:', error);

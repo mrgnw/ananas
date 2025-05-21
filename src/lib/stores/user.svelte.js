@@ -1,5 +1,6 @@
 // src/lib/stores/user.svelte.js
 import { browser } from '$app/environment';
+import { goto } from '$app/navigation';
 
 let user = $state({
   selectedLanguages: [],
@@ -146,14 +147,22 @@ async function login(email, password) {
       throw new Error(data.message || 'Login failed');
     }
     
-    // We'll load the user data from the layout data
+    // Set auth state directly from response
+    if (data.user) {
+      setAuthState(data.user);
+    }
     
     // Import translationHistoryStore to merge history after login
     const { translationHistoryStore } = await import('./translationHistory.svelte.js');
     if (translationHistoryStore) {
       // Merge any existing local translations with the database
       await translationHistoryStore.mergeWithDatabase();
+      // Load translations from database
+      await translationHistoryStore.loadFromDatabase();
     }
+    
+    // Redirect to translate page
+    goto('/');
     
     return { success: true };
   } catch (error) {
@@ -167,7 +176,7 @@ async function login(email, password) {
 
 async function logout() {
   try {
-    await fetch('/api/auth/logout', {
+    const response = await fetch('/api/auth/logout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     });
@@ -180,6 +189,10 @@ async function logout() {
     }
     
     setAuthState(null);
+    
+    // Redirect to home page after logout
+    goto('/');
+    
     return { success: true };
   } catch (error) {
     console.error('Logout error:', error);
