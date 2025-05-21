@@ -3,7 +3,7 @@
   import { goto } from '$app/navigation';
   import { LogOut, User } from 'lucide-svelte';
   
-  let { user } = userStore;
+  // Access userStore directly instead of destructuring to maintain reactivity
   let isLoggingOut = $state(false);
   
   function removeLanguage(code) {
@@ -29,14 +29,14 @@
   <div class="profile-header">
     <h2>User Profile</h2>
     
-    {#if user.auth.isAuthenticated}
+    {#if userStore.user.auth.isAuthenticated}
       <div class="profile-card">
         <div class="profile-icon">
           <User size={32} />
         </div>
         <div class="profile-details">
-          <h3>{user.auth.username || 'User'}</h3>
-          <p class="email">{user.auth.email}</p>
+          <h3>{userStore.user.auth.username || 'User'}</h3>
+          <p class="email">{userStore.user.auth.email}</p>
         </div>
         <button class="logout-button" onclick={handleLogout} disabled={isLoggingOut}>
           <LogOut size={18} />
@@ -52,9 +52,9 @@
   
   <div class="user-details">
     <h3>Selected languages:</h3>
-    {#if user.selectedLanguages?.length}
+    {#if userStore.user.selectedLanguages?.length}
       <ul class="lang-list">
-        {#each user.selectedLanguages as code}
+        {#each userStore.user.selectedLanguages as code}
           <li>
             <button class="remove-btn" onclick={() => removeLanguage(code)} title="Remove language">✕</button>
             <span class="lang-code">{code}</span>

@@ -69,9 +69,7 @@
 		}
 	});
 	
-	// Create reactive references to the auth state for the navbar
-	const isAuthenticated = $derived(userStore.user.auth.isAuthenticated);
-	const username = $derived(userStore.user.auth.username);
+	// Access auth state directly from userStore - Svelte 5 will track reactivity automatically
 </script>
 
 <svelte:head>
@@ -86,11 +84,11 @@
     <li><a href="/" class:active={$page.url.pathname === '/'}>Translate</a></li>
     <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
     <li><a href="/history" class:active={$page.url.pathname.startsWith('/history')}>History</a></li>
-    {#if isAuthenticated}
+    {#if userStore.user.auth.isAuthenticated}
       <li>
         <a href="/user" class:active={$page.url.pathname.startsWith('/user')} class="user-profile-link">
-          {#if username}
-            {username}
+          {#if userStore.user.auth.username}
+            {userStore.user.auth.username}
           {:else}
             Profile
           {/if}

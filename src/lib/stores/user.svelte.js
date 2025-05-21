@@ -15,12 +15,8 @@ let user = $state({
   syncing: false
 });
 
-// Make the auth state reactive for components
-$effect(() => {
-  // This effect will run when any property of user.auth changes
-  // Just accessing the properties to trigger the effect when they change
-  const { isAuthenticated, id, email, username } = user.auth;
-});
+// No need for an orphaned effect - Svelte 5 reactivity will track changes to user.auth
+// directly in components that access it.
 
 // Load from localStorage on module load
 if (browser) {
