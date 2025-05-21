@@ -58,12 +58,38 @@ async function syncToServer() {
   }
 }
 
-// Initialize user preferences from server data
+// Initialize and merge user preferences from server data
 function initializeFromServerData(serverPreferences) {
   if (serverPreferences) {
-    user.selectedLanguages = serverPreferences.selected_languages || [];
-    user.translators = serverPreferences.translators || ['deepl'];
+    // Get current preferences before overwriting
+    const currentLanguages = [...user.selectedLanguages];
+    const currentTranslators = [...user.translators];
+    
+    // Get server preferences
+    const serverLanguages = serverPreferences.selected_languages || [];
+    const serverTranslators = serverPreferences.translators || ['deepl'];
+    
+    // Merge languages (unique values from both sources)
+    const mergedLanguages = [...new Set([...currentLanguages, ...serverLanguages])];
+    
+    // Merge translators (unique values from both sources)
+    const mergedTranslators = [...new Set([...currentTranslators, ...serverTranslators])];
+    
+    // Update store with merged data
+    user.selectedLanguages = mergedLanguages;
+    user.translators = mergedTranslators;
+    
+    // Save to localStorage
     save();
+    
+    // If merging resulted in changes (new items added), sync back to server
+    const languagesChanged = mergedLanguages.length > serverLanguages.length;
+    const translatorsChanged = mergedTranslators.length > serverTranslators.length;
+    
+    if ((languagesChanged || translatorsChanged) && user.auth.isAuthenticated) {
+      console.log('Merged preferences differ from server, syncing back to server');
+      syncToServer();
+    }
   }
 }
 
@@ -147,9 +173,37 @@ async function login(email, password) {
       throw new Error(data.message || 'Login failed');
     }
     
+    // Cache current preferences before setting auth state
+    const currentPrefs = {
+      selectedLanguages: [...user.selectedLanguages],
+      translators: [...user.translators]
+    };
+    
     // Set auth state directly from response
     if (data.user) {
       setAuthState(data.user);
+    }
+    
+    // Get preferences from server
+    try {
+      const prefsResponse = await fetch('/api/user/preferences', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      // Check if layout page already loaded preferences
+      // If not, we'll fetch them and merge with localStorage preferences
+      if (!user.selectedLanguages.length && currentPrefs.selectedLanguages.length) {
+        // Merge with cached preferences and sync back if needed
+        user.selectedLanguages = currentPrefs.selectedLanguages;
+        user.translators = currentPrefs.translators;
+        save();
+        
+        // Sync merged preferences back to server
+        await syncToServer();
+      }
+    } catch (prefsError) {
+      console.error('Error loading preferences:', prefsError);
     }
     
     // Import translationHistoryStore to merge history after login
