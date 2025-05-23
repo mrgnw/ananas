@@ -24,7 +24,7 @@ export async function POST({ request, platform, locals }) {
       return json({ error: 'Invalid translation data' }, { status: 400 });
     }
 
-    const db = initDB(platform.env.DB);
+    const db = initDB(platform?.env?.DB || process.env.DB);
     const success = await mergeLocalTranslations(db, locals.user.id, translations);
     
     if (!success) {

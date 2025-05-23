@@ -68,7 +68,7 @@ export async function POST({ request, platform }) {
     }
     
     // Initialize DB connection
-    const db = initDB(platform.env.DB);
+    const db = initDB(platform?.env?.DB || process.env.DB);
     
     try {
       // Create the user

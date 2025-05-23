@@ -33,7 +33,7 @@ export async function POST({ request, locals, platform }) {
     }
     
     // Initialize DB connection
-    const db = initDB(platform.env.DB);
+    const db = initDB(platform?.env?.DB || process.env.DB);
     
     // Save preferences
     const result = await saveUserPreferences(db, locals.user.id, {

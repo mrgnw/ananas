@@ -45,7 +45,7 @@ export async function GET({ platform, url }) {
     }
     
     // Initialize DB connection
-    const db = initDB(platform.env.DB);
+    const db = initDB(platform?.env?.DB || process.env.DB);
     
     // Execute a simple query
     const tables = await db.run(`SELECT name FROM sqlite_master WHERE type='table';`);

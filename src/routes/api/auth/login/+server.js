@@ -15,8 +15,8 @@ export async function POST({ request, platform, cookies }) {
       return json({ success: false, message: 'Email and password are required' }, { status: 400 });
     }
     
-    // Initialize DB connection
-    const db = initDB(platform.env.DB);
+    // Initialize DB connection (fallback for development)
+    const db = initDB(platform?.env?.DB || process.env.DB);
     
     // Authenticate user
     const session = await authenticateUser(db, { email, password });

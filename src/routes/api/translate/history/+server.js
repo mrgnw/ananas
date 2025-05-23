@@ -23,7 +23,7 @@ export async function GET({ platform, locals }) {
   }
 
   try {
-    const db = initDB(platform.env.DB);
+    const db = initDB(platform?.env?.DB || process.env.DB);
     const translations = await getUserTranslationHistory(db, locals.user.id);
     
     return json({ translations });
@@ -55,7 +55,7 @@ export async function POST({ request, platform, locals }) {
       return json({ error: 'Invalid translation data' }, { status: 400 });
     }
 
-    const db = initDB(platform.env.DB);
+    const db = initDB(platform?.env?.DB || process.env.DB);
     const savedTranslation = await saveTranslation(db, translation, locals.user.id);
     
     return json({ success: true, translation: savedTranslation });
@@ -81,7 +81,7 @@ export async function DELETE({ platform, locals }) {
   }
 
   try {
-    const db = initDB(platform.env.DB);
+    const db = initDB(platform?.env?.DB || process.env.DB);
     await clearUserTranslationHistory(db, locals.user.id);
     
     return json({ success: true });
