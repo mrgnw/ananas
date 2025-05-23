@@ -103,13 +103,24 @@
         return;
       }
       
-      // Convert challenge to ArrayBuffer for WebAuthn
-      const challenge = Uint8Array.from(atob(beginResult.options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+      // Convert challenge from base64url to ArrayBuffer for WebAuthn
+      function base64urlToArrayBuffer(base64url) {
+        const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+        const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+        const binary = atob(padded);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+      
+      const challenge = base64urlToArrayBuffer(beginResult.options.challenge);
       
       // Convert allowCredentials
       const allowCredentials = beginResult.options.allowCredentials.map(cred => ({
         ...cred,
-        id: Uint8Array.from(atob(cred.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
+        id: base64urlToArrayBuffer(cred.id)
       }));
       
       // Get credential using WebAuthn
@@ -126,16 +137,29 @@
         return;
       }
       
+      // Convert ArrayBuffer to base64url
+      function arrayBufferToBase64url(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary)
+          .replace(/\+/g, '-')
+          .replace(/\//g, '_')
+          .replace(/=/g, '');
+      }
+      
       // Convert credential for sending to server
       const credentialForServer = {
         id: credential.id,
-        rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+        rawId: arrayBufferToBase64url(credential.rawId),
         type: credential.type,
         response: {
-          clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(credential.response.clientDataJSON))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-          authenticatorData: btoa(String.fromCharCode(...new Uint8Array(credential.response.authenticatorData))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-          signature: btoa(String.fromCharCode(...new Uint8Array(credential.response.signature))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-          userHandle: credential.response.userHandle ? btoa(String.fromCharCode(...new Uint8Array(credential.response.userHandle))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '') : null
+          clientDataJSON: arrayBufferToBase64url(credential.response.clientDataJSON),
+          authenticatorData: arrayBufferToBase64url(credential.response.authenticatorData),
+          signature: arrayBufferToBase64url(credential.response.signature),
+          userHandle: credential.response.userHandle ? arrayBufferToBase64url(credential.response.userHandle) : null
         }
       };
       

@@ -114,9 +114,20 @@
         return;
       }
       
-      // Convert challenge to ArrayBuffer for WebAuthn
-      const challenge = Uint8Array.from(atob(beginResult.options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
-      const userId = Uint8Array.from(atob(beginResult.options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+      // Convert challenge from base64url to ArrayBuffer for WebAuthn
+      function base64urlToArrayBuffer(base64url) {
+        const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+        const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+        const binary = atob(padded);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+      
+      const challenge = base64urlToArrayBuffer(beginResult.options.challenge);
+      const userId = base64urlToArrayBuffer(beginResult.options.user.id);
       
       // Create credential using WebAuthn
       console.log('WebAuthn create options:', {
@@ -146,14 +157,27 @@
         return;
       }
       
+      // Convert ArrayBuffer to base64url
+      function arrayBufferToBase64url(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary)
+          .replace(/\+/g, '-')
+          .replace(/\//g, '_')
+          .replace(/=/g, '');
+      }
+      
       // Convert credential for sending to server
       const credentialForServer = {
         id: credential.id,
-        rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+        rawId: arrayBufferToBase64url(credential.rawId),
         type: credential.type,
         response: {
-          clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(credential.response.clientDataJSON))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
-          attestationObject: btoa(String.fromCharCode(...new Uint8Array(credential.response.attestationObject))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+          clientDataJSON: arrayBufferToBase64url(credential.response.clientDataJSON),
+          attestationObject: arrayBufferToBase64url(credential.response.attestationObject),
           transports: credential.response.getTransports ? credential.response.getTransports() : []
         }
       };

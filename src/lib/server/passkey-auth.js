@@ -1,6 +1,7 @@
 // src/lib/server/passkey-auth.js
 import { eq, and } from 'drizzle-orm';
 import { users, passkeys, authChallenges } from './schema/users';
+import { encodeBase64url, decodeBase64url } from '@oslojs/encoding';
 
 // Generate UUID using the Web Crypto API
 function randomUUID() {
@@ -21,29 +22,14 @@ function randomUUID() {
  * Convert array buffer to base64url string
  */
 function bufferToBase64url(buffer) {
-  const bytes = new Uint8Array(buffer);
-  let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
+  return encodeBase64url(new Uint8Array(buffer));
 }
 
 /**
  * Convert base64url string to array buffer
  */
 function base64urlToBuffer(base64url) {
-  const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
-  const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
-  const binary = atob(padded);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return bytes.buffer;
+  return decodeBase64url(base64url).buffer;
 }
 
 /**
@@ -51,7 +37,7 @@ function base64urlToBuffer(base64url) {
  */
 function generateChallenge() {
   const buffer = crypto.getRandomValues(new Uint8Array(32));
-  return bufferToBase64url(buffer);
+  return encodeBase64url(buffer);
 }
 
 /**
@@ -168,7 +154,7 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
   }
   
   // Parse the attestation object to extract the public key
-  const attestationObject = base64urlToBuffer(credential.response.attestationObject);
+  const attestationObject = decodeBase64url(credential.response.attestationObject);
   
   // For now, we'll store the raw attestation object as the credential
   // In production, you should properly parse this and extract the public key
@@ -189,10 +175,11 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
   await db.insert(users).values(newUser);
   
   // Store passkey credential
+  // Ensure we store as Uint8Array for consistent binary data handling
   await db.insert(passkeys).values({
     id: credential.id,
     user_id: userId,
-    credential_public_key: attestationObject,
+    credential_public_key: new Uint8Array(attestationObject),
     credential_counter: 0,
     credential_device_type: 'singleDevice', // Default assumption
     credential_backed_up: false,
