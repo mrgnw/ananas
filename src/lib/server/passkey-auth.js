@@ -192,7 +192,7 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
   await db.insert(passkeys).values({
     id: credential.id,
     user_id: userId,
-    credential_public_key: new Uint8Array(attestationObject),
+    credential_public_key: attestationObject,
     credential_counter: 0,
     credential_device_type: 'singleDevice', // Default assumption
     credential_backed_up: false,
@@ -228,9 +228,12 @@ export async function beginPasskeyAuthentication(db, { email, rpId }) {
     throw new Error('User not found');
   }
   
-  // Get user's passkeys
+  // Get user's passkeys (exclude binary data we don't need)
   const userPasskeys = await db
-    .select()
+    .select({
+      id: passkeys.id,
+      transports: passkeys.transports
+    })
     .from(passkeys)
     .where(eq(passkeys.user_id, user.id));
   
