@@ -119,8 +119,9 @@ export async function beginPasskeyRegistration(db, { email, username = null, rpI
         { alg: -257, type: "public-key" }, // RS256
       ],
       authenticatorSelection: {
-        userVerification: "preferred",
-        residentKey: "preferred",
+        authenticatorAttachment: "platform",
+        userVerification: "required",
+        residentKey: "required",
       },
       timeout: 60000,
       attestation: "none"
@@ -161,8 +162,16 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
     throw new Error('Invalid credential format');
   }
   
-  // For now, we'll do basic validation. In production, you should use
-  // a proper WebAuthn library like @simplewebauthn/server for full validation
+  // Basic validation of credential structure
+  if (!credential.response.attestationObject || !credential.response.clientDataJSON) {
+    throw new Error('Invalid credential: missing required response data');
+  }
+  
+  // Parse the attestation object to extract the public key
+  const attestationObject = base64urlToBuffer(credential.response.attestationObject);
+  
+  // For now, we'll store the raw attestation object as the credential
+  // In production, you should properly parse this and extract the public key
   
   // Create user account
   const userId = randomUUID();
@@ -183,7 +192,7 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
   await db.insert(passkeys).values({
     id: credential.id,
     user_id: userId,
-    credential_public_key: new Uint8Array(base64urlToBuffer(credential.response.publicKey || '')),
+    credential_public_key: new Uint8Array(attestationObject),
     credential_counter: 0,
     credential_device_type: 'singleDevice', // Default assumption
     credential_backed_up: false,

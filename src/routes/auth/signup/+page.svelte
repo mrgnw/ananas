@@ -119,6 +119,15 @@
       const userId = Uint8Array.from(atob(beginResult.options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
       
       // Create credential using WebAuthn
+      console.log('WebAuthn create options:', {
+        ...beginResult.options,
+        challenge: challenge,
+        user: {
+          ...beginResult.options.user,
+          id: userId
+        }
+      });
+      
       const credential = await navigator.credentials.create({
         publicKey: {
           ...beginResult.options,
@@ -129,6 +138,8 @@
           }
         }
       });
+      
+      console.log('WebAuthn credential created:', credential);
       
       if (!credential) {
         errorMessage = 'Passkey registration was cancelled or failed';
