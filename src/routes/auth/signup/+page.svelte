@@ -1,6 +1,7 @@
 <script>
   import { userStore } from '$lib/stores/user.svelte.js';
   import { goto } from '$app/navigation';
+  import { browser } from '$app/environment';
   
   let email = $state('');
   let password = $state('');
@@ -8,8 +9,14 @@
   let username = $state('');
   let errorMessage = $state('');
   let isLoading = $state(false);
+  let supportsWebAuthn = $state(false);
   
-  async function handleSignup(e) {
+  // Check WebAuthn support on mount
+  if (browser) {
+    supportsWebAuthn = !!(navigator.credentials && navigator.credentials.create);
+  }
+  
+  async function handlePasswordSignup(e) {
     e.preventDefault();
     
     // Prevent double submission
@@ -66,17 +73,125 @@
       isLoading = false;
     }
   }
+  
+  async function handlePasskeySignup() {
+    // Prevent double submission
+    if (isLoading) return;
+    
+    // Basic validation
+    if (!email) {
+      errorMessage = 'Email is required for passkey registration';
+      return;
+    }
+    
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      errorMessage = 'Please enter a valid email address';
+      return;
+    }
+    
+    if (!supportsWebAuthn) {
+      errorMessage = 'Your browser does not support passkeys. Please use password registration instead.';
+      return;
+    }
+    
+    isLoading = true;
+    errorMessage = '';
+    
+    try {
+      // Start passkey registration
+      const beginResponse = await fetch('/api/auth/passkey/register/begin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, username })
+      });
+      
+      const beginResult = await beginResponse.json();
+      
+      if (!beginResponse.ok || !beginResult.success) {
+        errorMessage = beginResult.message || 'Failed to start passkey registration';
+        return;
+      }
+      
+      // Convert challenge to ArrayBuffer for WebAuthn
+      const challenge = Uint8Array.from(atob(beginResult.options.challenge.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+      const userId = Uint8Array.from(atob(beginResult.options.user.id.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+      
+      // Create credential using WebAuthn
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          ...beginResult.options,
+          challenge,
+          user: {
+            ...beginResult.options.user,
+            id: userId
+          }
+        }
+      });
+      
+      if (!credential) {
+        errorMessage = 'Passkey registration was cancelled or failed';
+        return;
+      }
+      
+      // Convert credential for sending to server
+      const credentialForServer = {
+        id: credential.id,
+        rawId: btoa(String.fromCharCode(...new Uint8Array(credential.rawId))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+        type: credential.type,
+        response: {
+          clientDataJSON: btoa(String.fromCharCode(...new Uint8Array(credential.response.clientDataJSON))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+          attestationObject: btoa(String.fromCharCode(...new Uint8Array(credential.response.attestationObject))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+          transports: credential.response.getTransports ? credential.response.getTransports() : []
+        }
+      };
+      
+      // Complete registration on server
+      const verifyResponse = await fetch('/api/auth/passkey/register/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          challengeId: beginResult.challengeId,
+          credential: credentialForServer
+        })
+      });
+      
+      const verifyResult = await verifyResponse.json();
+      
+      if (verifyResponse.ok && verifyResult.success) {
+        // Set auth state and redirect
+        if (verifyResult.user) {
+          userStore.setAuthState(verifyResult.user);
+        }
+        goto('/', { replaceState: true });
+      } else {
+        errorMessage = verifyResult.message || 'Passkey registration failed';
+      }
+    } catch (error) {
+      console.error('Passkey registration error:', error);
+      if (error.name === 'NotAllowedError') {
+        errorMessage = 'Passkey registration was cancelled or not allowed';
+      } else if (error.name === 'NotSupportedError') {
+        errorMessage = 'Passkeys are not supported on this device';
+      } else {
+        errorMessage = 'An unexpected error occurred during passkey registration';
+      }
+    } finally {
+      isLoading = false;
+    }
+  }
 </script>
 
 <div class="auth-container">
   <div class="auth-card">
     <h1>Create Account</h1>
     
-    <form onsubmit={handleSignup} class="auth-form">
-      {#if errorMessage}
-        <div class="error-message">{errorMessage}</div>
-      {/if}
-      
+    {#if errorMessage}
+      <div class="error-message">{errorMessage}</div>
+    {/if}
+    
+    <div class="auth-form">
       <div class="form-group">
         <label for="email">Email <span class="required">*</span></label>
         <input 
@@ -100,34 +215,62 @@
         />
       </div>
       
-      <div class="form-group">
-        <label for="password">Password <span class="required">*</span></label>
-        <input 
-          type="password" 
-          id="password" 
-          bind:value={password} 
-          required 
-          placeholder="Create a password (min. 8 characters)"
-          disabled={isLoading}
-        />
-      </div>
+      <!-- Password registration section -->
+      <form onsubmit={handlePasswordSignup} class="password-form">
+        <div class="form-section">
+          <h3>Register with Password</h3>
+          
+          <div class="form-group">
+            <label for="password">Password <span class="required">*</span></label>
+            <input 
+              type="password" 
+              id="password" 
+              bind:value={password} 
+              placeholder="Create a password (min. 8 characters)"
+              disabled={isLoading}
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              bind:value={confirmPassword} 
+              placeholder="Confirm your password"
+              disabled={isLoading}
+            />
+          </div>
+          
+          <button type="submit" class="auth-button" disabled={isLoading}>
+            {isLoading ? 'Creating Account...' : 'Sign Up with Password'}
+          </button>
+        </div>
+      </form>
       
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
-        <input 
-          type="password" 
-          id="confirmPassword" 
-          bind:value={confirmPassword} 
-          required 
-          placeholder="Confirm your password"
-          disabled={isLoading}
-        />
-      </div>
-      
-      <button type="submit" class="auth-button" disabled={isLoading}>
-        {isLoading ? 'Creating Account...' : 'Sign Up'}
-      </button>
-    </form>
+      <!-- Passkey registration section -->
+      {#if supportsWebAuthn}
+        <div class="divider">
+          <span>or</span>
+        </div>
+        
+        <div class="form-section">
+          <h3>Register with Passkey</h3>
+          <p class="passkey-description">
+            Use your device's built-in security (fingerprint, face, PIN) for secure, password-free access.
+          </p>
+          
+          <button 
+            type="button" 
+            class="auth-button passkey-button" 
+            onclick={handlePasskeySignup}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Creating Passkey...' : '🔐 Sign Up with Passkey'}
+          </button>
+        </div>
+      {/if}
+    </div>
     
     <div class="auth-links">
       <p>Already have an account? <a href="/auth/login">Log in</a></p>
@@ -165,6 +308,64 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+  }
+  
+  .password-form {
+    display: contents;
+  }
+  
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .form-section h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1rem 0;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+  
+  .divider span {
+    padding: 0 1rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .passkey-description {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.4;
+  }
+  
+  .passkey-button {
+    background: #059669 !important;
+  }
+  
+  .passkey-button:hover {
+    background: #047857 !important;
   }
   
   .form-group {

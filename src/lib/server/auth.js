@@ -21,7 +21,7 @@ function randomUUID() {
  * Generate a secure random session token
  * @returns {string} A base64url encoded random token
  */
-function generateSessionToken() {
+export function generateSessionToken() {
   // Generate 20 random bytes for the token
   const randomBytes = crypto.getRandomValues(new Uint8Array(20));
   
@@ -37,7 +37,7 @@ function generateSessionToken() {
  * @param {string} token - The session token to hash
  * @returns {Promise<string>} - A hex-encoded hash of the token
  */
-async function hashToken(token) {
+export async function hashToken(token) {
   // Create a hash of the token for database storage
   const encoder = new TextEncoder();
   const data = encoder.encode(token);
@@ -106,7 +106,7 @@ async function verifyPassword(password, storedHash) {
  * @param {string} username - Optional username
  * @returns {Promise<Object>} - Created user object (without password)
  */
-export async function createUser(db, { email, password, username = null }) {
+export async function createUser(db, { email, password = null, username = null }) {
   try {
     console.log('[auth] Starting createUser with email:', email);
     
@@ -116,10 +116,15 @@ export async function createUser(db, { email, password, username = null }) {
     const now = Date.now();
     console.log('[auth] Timestamp:', now);
     
-    console.log('[auth] Hashing password with salt...');
-    // Using the new salted password hashing
-    const password_hash = await hashPassword(password);
-    console.log('[auth] Password hashed successfully');
+    let password_hash = null;
+    if (password) {
+      console.log('[auth] Hashing password with salt...');
+      // Using the new salted password hashing
+      password_hash = await hashPassword(password);
+      console.log('[auth] Password hashed successfully');
+    } else {
+      console.log('[auth] Creating user without password (passkey-only)');
+    }
     
     const newUser = {
       id,
@@ -172,6 +177,11 @@ export async function authenticateUser(db, { email, password }) {
   
   if (!user) {
     return null; // User not found
+  }
+  
+  // Check if user has a password (might be passkey-only user)
+  if (!user.password_hash) {
+    return null; // User has no password, must use passkey authentication
   }
   
   // Verify password using the new verification method
