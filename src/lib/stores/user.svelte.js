@@ -1,6 +1,7 @@
 // src/lib/stores/user.svelte.js
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
+import { invalidateAll } from '$app/navigation';
 
 // Using Svelte 5 state with a mutable object
 // This creates a deep reactive state that will track all property changes
@@ -221,13 +222,11 @@ async function login(email, password) {
       await translationHistoryStore.loadFromDatabase();
     }
     
-    // Wait for next microtask to ensure UI updates are processed
-    await Promise.resolve();
+    // Invalidate all page data to refresh authentication state
+    await invalidateAll();
     
-    // Redirect to translate page after a small delay to ensure UI is updated
-    setTimeout(() => {
-      goto('/', { replaceState: true });
-    }, 50);
+    // Redirect to translate page
+    goto('/', { replaceState: true });
     
     return { success: true };
   } catch (error) {
@@ -262,13 +261,11 @@ async function logout() {
       translationHistoryStore.clearHistory();
     }
     
-    // Wait for next microtask to ensure UI updates are processed
-    await Promise.resolve();
+    // Invalidate all page data to refresh authentication state  
+    await invalidateAll();
     
-    // Redirect to home page after a small delay to ensure UI is updated
-    setTimeout(() => {
-      goto('/', { replaceState: true });
-    }, 50);
+    // Redirect to home page
+    goto('/', { replaceState: true });
     
     return { success: true };
   } catch (error) {

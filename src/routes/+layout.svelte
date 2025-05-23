@@ -50,23 +50,23 @@
 		initializeFromStorage();
 	}
 	
-	// Update auth state when page data changes - use a more stable comparison
+	// Sync with server data only when needed - but don't override client-side auth state
 	$effect(() => {
 		if (browser && $page.data) {
 			const userData = $page.data.user;
 			const currentAuthState = userStore.user.auth;
 			
-			// Only update if there's an actual change to prevent recursive updates
-			const userChanged = 
-				(userData && !currentAuthState.isAuthenticated) || 
-				(!userData && currentAuthState.isAuthenticated) ||
+			// If this is initial page load and we have server auth data but no client auth data
+			// OR if the server data indicates a different user than what we have locally
+			const shouldSyncFromServer = 
+				(!currentAuthState.isAuthenticated && userData) ||
 				(userData && currentAuthState.isAuthenticated && userData.id !== currentAuthState.id);
 				
-			if (userChanged) {
-				console.log('[LAYOUT] Auth state changed, updating userStore');
+			if (shouldSyncFromServer) {
+				console.log('[LAYOUT] Syncing auth state from server data');
 				userStore.setAuthState(userData);
 				
-				// Initialize user preferences from server data if auth state changed
+				// Initialize user preferences from server data if available
 				if (userData && $page.data.userPreferences) {
 					userStore.initializeFromServerData($page.data.userPreferences);
 				}
@@ -155,21 +155,6 @@
   box-shadow: 0 2px 8px 0 rgba(55,48,163,0.13);
 }
 
-.user-profile-link {
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.user-profile-link::before {
-  content: '';
-  display: inline-block;
-  width: 0.6rem;
-  height: 0.6rem;
-  background-color: #10b981;
-  border-radius: 50%;
-}
 @media (max-width: 600px) {
   .navbar-list {
     gap: 0.5rem;

@@ -4,13 +4,17 @@
   
   // Get user store from context
   const userStore = getContext('user');
+  
+  // Access auth state reactively with Svelte 5 syntax
+  const isAuthenticated = $derived(userStore.user.auth.isAuthenticated);
+  const username = $derived(userStore.user.auth.username);
 </script>
 
-{#if userStore.user.auth.isAuthenticated}
+{#if isAuthenticated}
   <li>
     <a href="/user" class:active={$page.url.pathname.startsWith('/user')} class="user-profile-link">
-      {#if userStore.user.auth.username}
-        {userStore.user.auth.username}
+      {#if username}
+        {username}
       {:else}
         Profile
       {/if}
