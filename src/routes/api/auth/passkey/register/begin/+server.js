@@ -15,11 +15,14 @@ export async function POST({ request, platform }) {
       return json({ success: false, message: 'Email is required' }, { status: 400 });
     }
     
+    // Get RPID from environment variable
+    const rpId = platform.env.WEBAUTHN_RP_ID;
+    
     // Initialize DB connection
     const db = initDB(platform.env.DB);
     
     // Start passkey registration
-    const registrationData = await beginPasskeyRegistration(db, { email, username });
+    const registrationData = await beginPasskeyRegistration(db, { email, username, rpId });
     
     return json({ 
       success: true, 

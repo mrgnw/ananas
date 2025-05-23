@@ -69,9 +69,10 @@ async function cleanupExpiredChallenges(db) {
  * @param {Object} db - Drizzle database instance
  * @param {string} email - User's email address
  * @param {string} username - User's username (optional)
+ * @param {string} rpId - Relying Party ID from environment
  * @returns {Promise<Object>} - Registration options for WebAuthn
  */
-export async function beginPasskeyRegistration(db, { email, username = null }) {
+export async function beginPasskeyRegistration(db, { email, username = null, rpId }) {
   // Clean up expired challenges first
   await cleanupExpiredChallenges(db);
   
@@ -106,7 +107,7 @@ export async function beginPasskeyRegistration(db, { email, username = null }) {
       challenge,
       rp: {
         name: "Ananas Translation App",
-        id: "localhost", // Change this to your domain in production
+        id: rpId || 'localhost',
       },
       user: {
         id: bufferToBase64url(new TextEncoder().encode(email)),
@@ -118,8 +119,7 @@ export async function beginPasskeyRegistration(db, { email, username = null }) {
         { alg: -257, type: "public-key" }, // RS256
       ],
       authenticatorSelection: {
-        authenticatorAttachment: "platform",
-        userVerification: "required",
+        userVerification: "preferred",
         residentKey: "preferred",
       },
       timeout: 60000,
@@ -205,9 +205,10 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
  * Start passkey authentication process
  * @param {Object} db - Drizzle database instance
  * @param {string} email - User's email address
+ * @param {string} rpId - Relying Party ID from environment
  * @returns {Promise<Object>} - Authentication options for WebAuthn
  */
-export async function beginPasskeyAuthentication(db, { email }) {
+export async function beginPasskeyAuthentication(db, { email, rpId }) {
   // Clean up expired challenges first
   await cleanupExpiredChallenges(db);
   
