@@ -164,10 +164,12 @@
         for (let i = 0; i < bytes.byteLength; i++) {
           binary += String.fromCharCode(bytes[i]);
         }
-        return btoa(binary)
+        const base64 = btoa(binary);
+        // Convert to base64url by replacing characters and removing padding
+        return base64
           .replace(/\+/g, '-')
           .replace(/\//g, '_')
-          .replace(/=/g, '');
+          .replace(/=+$/, ''); // Remove all trailing = padding
       }
       
       // Convert credential for sending to server
