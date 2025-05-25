@@ -5,7 +5,6 @@
   import { encodeBase64url, decodeBase64url } from '@oslojs/encoding';
   import { slide } from 'svelte/transition';
   
-  // Get user store from context
   const userStore = getContext('user');
   
   let email = $state('');
@@ -15,12 +14,8 @@
   let isCheckingEmail = $state(false);
   let emailExists = $state(null); // null = unknown, true = exists, false = new user
   let showPasswordField = $state(false);
-  let supportsWebAuthn = $state(false);
-  
-  // Check WebAuthn support on mount
-  if (browser) {
-    supportsWebAuthn = !!(navigator.credentials && navigator.credentials.create && navigator.credentials.get);
-  }
+  const supportsWebAuthn = browser && navigator.credentials?.create && navigator.credentials?.get;
+  const isLogin = $derived(emailExists === true);
   
   // Debounced email checking
   let emailCheckTimeout;
@@ -288,7 +283,7 @@
 
 <div class="auth-container">
   <div class="auth-card">
-    <h1>Welcome</h1>
+    <h1>Log in</h1>
     
     {#if errorMessage}
       <div class="error-message">{errorMessage}</div>
@@ -318,11 +313,7 @@
             onclick={handlePasskeyAuth}
             disabled={isLoading || showPasswordField}
           >
-            {#if isLoading}
-              {emailExists ? 'Signing in...' : 'Creating account...'}
-            {:else}
-              🔐 {emailExists ? 'Sign in' : 'Create account'} with Passkey
-            {/if}
+            {isLoading ? 'Authenticating...' : '🔐 with Passkey'}
           </button>
         {/if}
         
@@ -333,7 +324,7 @@
               type="password" 
               id="password" 
               bind:value={password} 
-              placeholder={emailExists ? "Enter your password" : "Create a password (min. 8 characters)"}
+              placeholder={isLogin ? "Enter your password" : "Create a password (min. 8 characters)"}
               disabled={isLoading}
               autofocus
             />
@@ -347,7 +338,7 @@
             onclick={() => showPasswordField = true}
             disabled={isLoading}
           >
-            🔑 {emailExists ? 'Sign in' : 'Create account'} with Password
+            🔑 with Password
           </button>
         {/if}
         
@@ -355,9 +346,9 @@
           <form onsubmit={handlePasswordAuth}>
             <button type="submit" class="auth-button primary" disabled={isLoading}>
               {#if isLoading}
-                {emailExists ? 'Signing in...' : 'Creating account...'}
+                {isLogin ? 'Signing in...' : 'Creating account...'}
               {:else}
-                {emailExists ? 'Sign In' : 'Create Account'}
+                {isLogin ? 'Sign In' : 'Create Account'}
               {/if}
             </button>
           </form>
