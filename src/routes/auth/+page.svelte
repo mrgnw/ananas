@@ -22,7 +22,12 @@
   
   async function checkEmailExists(emailValue) {
     if (!emailValue || !emailValue.includes('@')) {
+  function handleEmailInput(event) {
+    const emailValue = event.target.value;
+    
+    if (!emailValue?.includes('@')) {
       emailExists = null;
+      showPasswordField = false;
       return;
     }
     
@@ -41,7 +46,6 @@
           const result = await response.json();
           emailExists = result.exists;
         } else {
-          // On error, don't reveal anything
           emailExists = null;
         }
       } catch (error) {
@@ -50,18 +54,8 @@
       } finally {
         isCheckingEmail = false;
       }
-    }, 500); // 500ms debounce
+    }, 500);
   }
-  
-  // Watch email changes
-  $effect(() => {
-    if (email) {
-      checkEmailExists(email);
-    } else {
-      emailExists = null;
-      showPasswordField = false;
-    }
-  });
   
   async function handlePasswordAuth(e) {
     e.preventDefault();
@@ -296,16 +290,14 @@
           type="email" 
           id="email" 
           bind:value={email} 
+          oninput={handleEmailInput}
           required 
           placeholder="Enter your email"
           disabled={isLoading}
         />
-        {#if isCheckingEmail}
-          <div class="checking-indicator">Checking...</div>
-        {/if}
       </div>
       
-        {#if supportsWebAuthn}
+      {#if supportsWebAuthn}
           <button 
             type="button" 
             class="auth-button passkey" 
