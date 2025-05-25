@@ -21,8 +21,7 @@
     </a>
   </li>
 {:else}
-  <li><a href="/auth/login" class:active={$page.url.pathname.startsWith('/auth/login')}>Login</a></li>
-  <li><a href="/auth/signup" class:active={$page.url.pathname.startsWith('/auth/signup')}>Signup</a></li>
+  <li><a href="/auth" class:active={$page.url.pathname.startsWith('/auth')}>Sign In</a></li>
 {/if}
 
 <style>

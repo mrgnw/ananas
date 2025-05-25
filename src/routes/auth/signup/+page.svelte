@@ -58,7 +58,7 @@
       
       if (signupResponse.ok && result.success) {
         // After signup, redirect to login page
-        goto('/auth/login?registered=true');
+        goto('/auth?registered=true');
       } else {
         errorMessage = result.message || 'Signup failed. Please try again.';
       }

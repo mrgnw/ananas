@@ -47,7 +47,7 @@
       </div>
     {:else}
       <p class="not-authenticated">
-        You are not logged in. Please <a href="/auth/login">login</a> or <a href="/auth/signup">create an account</a>.
+        You are not logged in. Please <a href="/auth">sign in or create an account</a>.
       </p>
     {/if}
   </div>
