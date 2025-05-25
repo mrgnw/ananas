@@ -111,18 +111,31 @@
       // Convert challenge from base64url to ArrayBuffer for WebAuthn using @oslojs/encoding
       const challenge = decodeBase64url(beginResult.options.challenge).buffer;
       
+      // Helper function to decode base64url with fallback
+      function safeDecodeBase64url(str) {
+        try {
+          return decodeBase64url(str).buffer;
+        } catch (error) {
+          console.log('Falling back to manual base64url decode for:', str);
+          // Manual fallback for credential IDs that might not be perfectly formatted
+          const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+          const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+          const binary = atob(padded);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          return bytes.buffer;
+        }
+      }
+      
       // Convert allowCredentials
       const allowCredentials = beginResult.options.allowCredentials.map((cred, index) => {
         console.log(`Decoding credential ${index}:`, cred.id);
-        try {
-          return {
-            ...cred,
-            id: decodeBase64url(cred.id).buffer
-          };
-        } catch (error) {
-          console.error(`Failed to decode credential ${index} (${cred.id}):`, error);
-          throw error;
-        }
+        return {
+          ...cred,
+          id: safeDecodeBase64url(cred.id)
+        };
       });
       
       // Get credential using WebAuthn
