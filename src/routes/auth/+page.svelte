@@ -30,29 +30,45 @@
     }
     
     clearTimeout(emailCheckTimeout);
-    emailCheckTimeout = setTimeout(async () => {
-      isCheckingEmail = true;
+    emailCheckTimeout = setTimeout(() => checkEmailExists(emailValue), 500);
+  }
+  
+  async function checkEmailExists(emailToCheck = email) {
+    if (!emailToCheck?.includes('@')) return false;
+    
+    isCheckingEmail = true;
+    
+    try {
+      const response = await fetch('/api/auth/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailToCheck })
+      });
       
-      try {
-        const response = await fetch('/api/auth/check-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: emailValue })
-        });
-        
-        if (response.ok) {
-          const result = await response.json();
-          emailExists = result.exists;
-        } else {
-          emailExists = null;
-        }
-      } catch (error) {
-        console.error('Email check failed:', error);
+      if (response.ok) {
+        const result = await response.json();
+        emailExists = result.exists;
+        return true;
+      } else {
         emailExists = null;
-      } finally {
-        isCheckingEmail = false;
+        return false;
       }
-    }, 500);
+    } catch (error) {
+      console.error('Email check failed:', error);
+      emailExists = null;
+      return false;
+    } finally {
+      isCheckingEmail = false;
+    }
+  }
+  
+  async function ensureEmailChecked() {
+    if (emailExists === null && email.includes('@')) {
+      const success = await checkEmailExists();
+      if (!success) {
+        throw new Error('Failed to verify email. Please try again.');
+      }
+    }
   }
   
   async function handlePasswordAuth(e) {
@@ -69,6 +85,8 @@
     errorMessage = '';
     
     try {
+      await ensureEmailChecked();
+      
       const endpoint = emailExists ? '/api/auth/login' : '/api/auth/signup';
       
       const response = await fetch(endpoint, {
@@ -90,7 +108,7 @@
       }
     } catch (error) {
       console.error('Auth error:', error);
-      errorMessage = 'An unexpected error occurred. Please try again.';
+      errorMessage = error.message || 'An unexpected error occurred. Please try again.';
     } finally {
       isLoading = false;
     }
@@ -113,25 +131,7 @@
     errorMessage = '';
     
     try {
-      // Check email existence if we don't already know
-      if (emailExists === null && email.includes('@')) {
-        try {
-          const response = await fetch('/api/auth/check-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-          });
-          
-          if (response.ok) {
-            const result = await response.json();
-            emailExists = result.exists;
-          }
-        } catch (error) {
-          console.error('Email check failed:', error);
-          errorMessage = 'Failed to verify email. Please try again.';
-          return;
-        }
-      }
+      await ensureEmailChecked();
       
       if (emailExists) {
         // Login flow
@@ -140,6 +140,9 @@
         // Register flow
         await handlePasskeyRegister();
       }
+    } catch (error) {
+      console.error('Passkey auth error:', error);
+      errorMessage = error.message || 'An unexpected error occurred. Please try again.';
     } finally {
       isLoading = false;
     }
