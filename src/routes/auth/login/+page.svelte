@@ -104,10 +104,6 @@
         return;
       }
       
-      // Debug: log what we're trying to decode
-      console.log('Challenge to decode:', beginResult.options.challenge);
-      console.log('Credentials to decode:', beginResult.options.allowCredentials);
-      
       // Convert challenge from base64url to ArrayBuffer for WebAuthn using @oslojs/encoding
       const challenge = decodeBase64url(beginResult.options.challenge).buffer;
       
@@ -116,7 +112,6 @@
         try {
           return decodeBase64url(str).buffer;
         } catch (error) {
-          console.log('Falling back to manual base64url decode for:', str);
           // Manual fallback for credential IDs that might not be perfectly formatted
           const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
           const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
@@ -130,13 +125,10 @@
       }
       
       // Convert allowCredentials
-      const allowCredentials = beginResult.options.allowCredentials.map((cred, index) => {
-        console.log(`Decoding credential ${index}:`, cred.id);
-        return {
-          ...cred,
-          id: safeDecodeBase64url(cred.id)
-        };
-      });
+      const allowCredentials = beginResult.options.allowCredentials.map(cred => ({
+        ...cred,
+        id: safeDecodeBase64url(cred.id)
+      }));
       
       // Get credential using WebAuthn
       const credential = await navigator.credentials.get({

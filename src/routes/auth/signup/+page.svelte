@@ -120,15 +120,6 @@
       const userId = decodeBase64url(beginResult.options.user.id).buffer;
       
       // Create credential using WebAuthn
-      console.log('WebAuthn create options:', {
-        ...beginResult.options,
-        challenge: challenge,
-        user: {
-          ...beginResult.options.user,
-          id: userId
-        }
-      });
-      
       const credential = await navigator.credentials.create({
         publicKey: {
           ...beginResult.options,
@@ -139,8 +130,6 @@
           }
         }
       });
-      
-      console.log('WebAuthn credential created:', credential);
       
       if (!credential) {
         errorMessage = 'Passkey registration was cancelled or failed';
