@@ -7,17 +7,16 @@
   
   // Access auth state reactively with Svelte 5 syntax
   const isAuthenticated = $derived(userStore.user.auth.isAuthenticated);
-  const username = $derived(userStore.user.auth.username);
+  const email = $derived(userStore.user.auth.email);
 </script>
 
 {#if isAuthenticated}
   <li>
-    <a href="/user" class:active={$page.url.pathname.startsWith('/user')} class="user-profile-link">
-      {#if username}
-        {username}
-      {:else}
-        Profile
-      {/if}
+    <a href="/user" class:active={$page.url.pathname.startsWith('/user')} class="user-profile-link" title={email || 'Profile'}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
     </a>
   </li>
 {:else}
@@ -26,18 +25,17 @@
 
 <style>
   .user-profile-link {
-    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    color: #4b5563;
+    transition: color 0.15s ease;
   }
   
-  .user-profile-link::before {
-    content: '';
-    display: inline-block;
-    width: 0.6rem;
-    height: 0.6rem;
-    background-color: #10b981;
-    border-radius: 50%;
+  .user-profile-link:hover {
+    color: #3730a3;
+  }
+  
+  .user-profile-link.active {
+    color: #3730a3;
   }
 </style>
