@@ -113,6 +113,26 @@
     errorMessage = '';
     
     try {
+      // Check email existence if we don't already know
+      if (emailExists === null && email.includes('@')) {
+        try {
+          const response = await fetch('/api/auth/check-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            emailExists = result.exists;
+          }
+        } catch (error) {
+          console.error('Email check failed:', error);
+          errorMessage = 'Failed to verify email. Please try again.';
+          return;
+        }
+      }
+      
       if (emailExists) {
         // Login flow
         await handlePasskeyLogin();
