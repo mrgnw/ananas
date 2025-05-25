@@ -153,24 +153,7 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
     throw new Error('Invalid credential: missing required response data');
   }
   
-  // Debug: log the credential data
-  console.log('Credential response data:', {
-    attestationObject: credential.response.attestationObject,
-    clientDataJSON: credential.response.clientDataJSON,
-    attestationObjectLength: credential.response.attestationObject.length,
-    clientDataJSONLength: credential.response.clientDataJSON.length
-  });
-  
   // Parse the attestation object to extract the public key
-  try {
-    const attestationObject = decodeBase64url(credential.response.attestationObject);
-    console.log('Successfully decoded attestation object, length:', attestationObject.length);
-  } catch (decodeError) {
-    console.error('Failed to decode attestation object:', decodeError);
-    console.error('Attestation object string:', credential.response.attestationObject);
-    throw new Error(`Invalid attestation object encoding: ${decodeError.message}`);
-  }
-  
   const attestationObject = decodeBase64url(credential.response.attestationObject);
   
   // For now, we'll store the raw attestation object as the credential
@@ -192,11 +175,11 @@ export async function completePasskeyRegistration(db, { challengeId, credential 
   await db.insert(users).values(newUser);
   
   // Store passkey credential
-  // Ensure we store as Uint8Array for consistent binary data handling
+  // attestationObject is now a Uint8Array from decodeBase64url
   await db.insert(passkeys).values({
     id: credential.id,
     user_id: userId,
-    credential_public_key: new Uint8Array(attestationObject),
+    credential_public_key: attestationObject,
     credential_counter: 0,
     credential_device_type: 'singleDevice', // Default assumption
     credential_backed_up: false,

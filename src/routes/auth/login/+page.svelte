@@ -2,6 +2,7 @@
   import { getContext } from 'svelte';
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
+  import { encodeBase64url, decodeBase64url } from '@oslojs/encoding';
   
   // Get user store from context
   const userStore = getContext('user');
@@ -103,24 +104,13 @@
         return;
       }
       
-      // Convert challenge from base64url to ArrayBuffer for WebAuthn
-      function base64urlToArrayBuffer(base64url) {
-        const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
-        const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
-        const binary = atob(padded);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) {
-          bytes[i] = binary.charCodeAt(i);
-        }
-        return bytes.buffer;
-      }
-      
-      const challenge = base64urlToArrayBuffer(beginResult.options.challenge);
+      // Convert challenge from base64url to ArrayBuffer for WebAuthn using @oslojs/encoding
+      const challenge = decodeBase64url(beginResult.options.challenge).buffer;
       
       // Convert allowCredentials
       const allowCredentials = beginResult.options.allowCredentials.map(cred => ({
         ...cred,
-        id: base64urlToArrayBuffer(cred.id)
+        id: decodeBase64url(cred.id).buffer
       }));
       
       // Get credential using WebAuthn
@@ -137,31 +127,16 @@
         return;
       }
       
-      // Convert ArrayBuffer to base64url
-      function arrayBufferToBase64url(buffer) {
-        const bytes = new Uint8Array(buffer);
-        let binary = '';
-        for (let i = 0; i < bytes.byteLength; i++) {
-          binary += String.fromCharCode(bytes[i]);
-        }
-        const base64 = btoa(binary);
-        // Convert to base64url by replacing characters and removing padding
-        return base64
-          .replace(/\+/g, '-')
-          .replace(/\//g, '_')
-          .replace(/=+$/, ''); // Remove all trailing = padding
-      }
-      
-      // Convert credential for sending to server
+      // Convert credential for sending to server using @oslojs/encoding
       const credentialForServer = {
         id: credential.id,
-        rawId: arrayBufferToBase64url(credential.rawId),
+        rawId: encodeBase64url(new Uint8Array(credential.rawId)),
         type: credential.type,
         response: {
-          clientDataJSON: arrayBufferToBase64url(credential.response.clientDataJSON),
-          authenticatorData: arrayBufferToBase64url(credential.response.authenticatorData),
-          signature: arrayBufferToBase64url(credential.response.signature),
-          userHandle: credential.response.userHandle ? arrayBufferToBase64url(credential.response.userHandle) : null
+          clientDataJSON: encodeBase64url(new Uint8Array(credential.response.clientDataJSON)),
+          authenticatorData: encodeBase64url(new Uint8Array(credential.response.authenticatorData)),
+          signature: encodeBase64url(new Uint8Array(credential.response.signature)),
+          userHandle: credential.response.userHandle ? encodeBase64url(new Uint8Array(credential.response.userHandle)) : null
         }
       };
       
