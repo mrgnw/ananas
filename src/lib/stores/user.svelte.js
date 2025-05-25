@@ -191,26 +191,17 @@ async function login(email, password) {
       setAuthState(data.user);
     }
     
-    // Get preferences from server
-    try {
-      const prefsResponse = await fetch('/api/user/preferences', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      // Check if layout page already loaded preferences
-      // If not, we'll fetch them and merge with localStorage preferences
-      if (!user.selectedLanguages.length && currentPrefs.selectedLanguages.length) {
-        // Merge with cached preferences and sync back if needed
+    // Initialize preferences from server response if available
+    if (data.preferences) {
+      initializeFromServerData(data.preferences);
+    } else {
+      // Fallback: sync current local preferences to server
+      if (currentPrefs.selectedLanguages.length || currentPrefs.translators.length) {
         user.selectedLanguages = currentPrefs.selectedLanguages;
         user.translators = currentPrefs.translators;
         save();
-        
-        // Sync merged preferences back to server
         await syncToServer();
       }
-    } catch (prefsError) {
-      console.error('Error loading preferences:', prefsError);
     }
     
     // Import translationHistoryStore to merge history after login
@@ -243,10 +234,12 @@ async function logout() {
     // First clear local state to prevent UI flashing
     setAuthState(null);
     
-    // Make sure to clear localStorage entirely
-    if (browser) {
-      localStorage.removeItem('user');
-    }
+    // Clear selected languages as requested
+    user.selectedLanguages = [];
+    user.translators = ['deepl']; // Reset to default
+    
+    // Save the cleared state to localStorage
+    save();
     
     // Make server-side request to logout
     const response = await fetch('/api/auth/logout', {

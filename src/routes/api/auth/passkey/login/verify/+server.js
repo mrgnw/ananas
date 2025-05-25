@@ -3,6 +3,7 @@ import { initDB } from '$lib/server/db';
 import { completePasskeyAuthentication } from '$lib/server/passkey-auth';
 import { generateSessionToken, hashToken } from '$lib/server/auth';
 import { sessions } from '$lib/server/schema/users';
+import { getUserPreferences } from '$lib/server/user-preferences';
 
 /**
  * Complete passkey authentication process
@@ -45,6 +46,9 @@ export async function POST({ request, platform, cookies }) {
       maxAge: 30 * 24 * 60 * 60 // 30 days in seconds
     });
     
+    // Get user preferences to include in response
+    const preferences = await getUserPreferences(db, user.id);
+    
     return json({ 
       success: true, 
       message: 'Authentication successful',
@@ -52,7 +56,8 @@ export async function POST({ request, platform, cookies }) {
         id: user.id,
         email: user.email,
         username: user.username
-      }
+      },
+      preferences: preferences
     });
   } catch (error) {
     console.error('Error completing passkey authentication:', error);

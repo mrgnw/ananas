@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { initDB } from '$lib/server/db';
 import { authenticateUser } from '$lib/server/auth';
+import { getUserPreferences } from '$lib/server/user-preferences';
 
 /**
  * User login endpoint
@@ -37,7 +38,10 @@ export async function POST({ request, platform, cookies }) {
       maxAge: 30 * 24 * 60 * 60 // 30 days in seconds
     });
     
-    // Return user data along with success message
+    // Get user preferences to include in response
+    const preferences = await getUserPreferences(db, session.user.id);
+    
+    // Return user data along with success message and preferences
     return json({ 
       success: true, 
       message: 'Login successful',
@@ -45,7 +49,8 @@ export async function POST({ request, platform, cookies }) {
         id: session.user.id,
         email: session.user.email,
         username: session.user.username
-      }
+      },
+      preferences: preferences
     });
   } catch (error) {
     console.error('Error in login endpoint:', error);
