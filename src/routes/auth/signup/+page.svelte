@@ -205,7 +205,7 @@
           type="button" 
           class="auth-button passkey" 
           onclick={handlePasskeySignup}
-          disabled={isLoading}
+          disabled={isLoading || showPasswordField}
         >
           {isLoading ? 'Creating Passkey...' : '🔐 Register with Passkey'}
         </button>
@@ -225,14 +225,16 @@
         </div>
       {/if}
       
-      <button 
-        type="button" 
-        class="auth-button secondary" 
-        onclick={() => showPasswordField = true}
-        disabled={isLoading}
-      >
-        Register with Password
-      </button>
+      {#if !showPasswordField}
+        <button 
+          type="button" 
+          class="auth-button secondary" 
+          onclick={() => showPasswordField = true}
+          disabled={isLoading}
+        >
+          Register with Password
+        </button>
+      {/if}
       
       {#if showPasswordField}
         <form onsubmit={handlePasswordSignup}>
