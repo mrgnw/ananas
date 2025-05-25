@@ -2,6 +2,7 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { invalidateAll } from '$app/navigation';
+import { getAutoLanguageSelection } from '$lib/utils/languageSuggestions.ts';
 
 // Using Svelte 5 state with a mutable object
 // This creates a deep reactive state that will track all property changes
@@ -22,12 +23,28 @@ if (browser) {
   const saved = localStorage.getItem('user');
   if (saved) {
     Object.assign(user, JSON.parse(saved));
+  } else {
+    // First time user - suggest languages based on browser preferences
+    initializeLanguageSuggestions();
   }
 }
 
 function save() {
   if (browser) {
     localStorage.setItem('user', JSON.stringify(user));
+  }
+}
+
+// Initialize language suggestions for new users
+function initializeLanguageSuggestions(countryCode) {
+  if (!browser) return;
+  
+  const suggestedLanguages = getAutoLanguageSelection(countryCode);
+  
+  if (suggestedLanguages.length > 0) {
+    user.selectedLanguages = suggestedLanguages;
+    save();
+    console.log('Initialized with suggested languages:', suggestedLanguages);
   }
 }
 
@@ -299,6 +316,7 @@ export const userStore = {
   // Language management
   addLanguage,
   removeLanguage,
+  initializeLanguageSuggestions,
   // Translator management
   setTranslators,
   addTranslator,

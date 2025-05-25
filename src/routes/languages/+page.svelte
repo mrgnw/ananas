@@ -1,6 +1,7 @@
 <script>
 	import { userStore } from '$lib/stores/user.svelte.js';
 	import { getAllLanguages, filterLanguages } from '$lib/utils/languages.js';
+	import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
 	import { flip } from 'svelte/animate';
 
 	let filter = $state('');
@@ -8,6 +9,13 @@
 	let { languages = [], country_languages = [], ip_country } = data;
 
 	let allLanguages = $state(languages);
+	let showSuggestions = $state(true);
+	
+	// Get language suggestions
+	let suggestions = $derived(() => {
+		if (!showSuggestions || userStore.user?.selectedLanguages?.length > 0) return [];
+		return getLanguageSuggestions(ip_country);
+	});
 
 	// userLanguages: allLanguages that are in userStore.user.selectedLanguages (no filter applied)
 	let userLanguages = $derived.by(() =>
@@ -32,6 +40,32 @@
 		autocomplete="off"
 	/>
 </div>
+
+{#if suggestions.length > 0}
+	<div class="suggestions-section">
+		<h3>Suggested for you</h3>
+		<div class="suggestions-list">
+			{#each suggestions as suggestion}
+				<button 
+					class="suggestion-item" 
+					onclick={() => {
+						userStore.addLanguage(suggestion.code);
+						showSuggestions = false;
+					}}
+				>
+					<span class="suggestion-name">{suggestion.name}</span>
+					{#if suggestion.nativeName !== suggestion.name}
+						<span class="suggestion-native">{suggestion.nativeName}</span>
+					{/if}
+					<span class="suggestion-reason">{suggestion.reason === 'primary' ? 'Browser language' : suggestion.reason === 'country_primary' ? 'Local language' : 'Suggested'}</span>
+				</button>
+			{/each}
+		</div>
+		<button class="dismiss-suggestions" onclick={() => showSuggestions = false}>
+			× Dismiss suggestions
+		</button>
+	</div>
+{/if}
 
 <ul class="languages-list">
 	{#each userLanguages as lang (lang.code)}
@@ -77,6 +111,80 @@
 </ul>
 
 <style>
+	.suggestions-section {
+		max-width: 480px;
+		margin: 1rem auto;
+		padding: 1rem;
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+	}
+	
+	.suggestions-section h3 {
+		margin: 0 0 0.75rem 0;
+		font-size: 1rem;
+		font-weight: 600;
+		color: #374151;
+	}
+	
+	.suggestions-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+	
+	.suggestion-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		background: white;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		cursor: pointer;
+		text-align: left;
+		transition: all 0.15s ease;
+	}
+	
+	.suggestion-item:hover {
+		background: #f3f4f6;
+		border-color: #6366f1;
+	}
+	
+	.suggestion-name {
+		font-weight: 600;
+		color: #111827;
+	}
+	
+	.suggestion-native {
+		color: #6b7280;
+		font-style: italic;
+	}
+	
+	.suggestion-reason {
+		margin-left: auto;
+		font-size: 0.75rem;
+		color: #9ca3af;
+		background: #f3f4f6;
+		padding: 0.125rem 0.375rem;
+		border-radius: 12px;
+	}
+	
+	.dismiss-suggestions {
+		font-size: 0.875rem;
+		color: #6b7280;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.25rem 0;
+		transition: color 0.15s ease;
+	}
+	
+	.dismiss-suggestions:hover {
+		color: #374151;
+	}
+
 	.languages-list {
 		max-width: 480px;
 		margin: 0 auto;
