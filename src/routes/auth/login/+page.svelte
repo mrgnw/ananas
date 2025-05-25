@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
   import { encodeBase64url, decodeBase64url } from '@oslojs/encoding';
+  import { slide } from 'svelte/transition';
   
   // Get user store from context
   const userStore = getContext('user');
@@ -12,6 +13,7 @@
   let errorMessage = $state('');
   let isLoading = $state(false);
   let supportsWebAuthn = $state(false);
+  let showPasswordField = $state(false);
   
   // Check WebAuthn support on mount
   if (browser) {
@@ -211,14 +213,36 @@
           required 
           placeholder="Enter your email"
           disabled={isLoading}
+          onkeydown={(e) => {
+            if (e.key === 'Tab' && !e.shiftKey) {
+              showPasswordField = true;
+            }
+          }}
         />
       </div>
       
-      <!-- Password login section -->
-      <form onsubmit={handlePasswordLogin} class="password-form">
-        <div class="form-section">
-          <h3>Login with Password</h3>
-          
+      {#if supportsWebAuthn}
+        <button 
+          type="button" 
+          class="auth-button passkey" 
+          onclick={handlePasskeyLogin}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Authenticating...' : '🔐 Login with Passkey'}
+        </button>
+      {/if}
+      
+      <button 
+        type="button" 
+        class="auth-button secondary" 
+        onclick={() => showPasswordField = true}
+        disabled={isLoading}
+      >
+        Login with Password
+      </button>
+      
+      {#if showPasswordField}
+        <form onsubmit={handlePasswordLogin} transition:slide={{ duration: 200 }}>
           <div class="form-group">
             <label for="password">Password</label>
             <input 
@@ -227,36 +251,13 @@
               bind:value={password} 
               placeholder="Enter your password"
               disabled={isLoading}
+              autofocus
             />
           </div>
-          
-          <button type="submit" class="auth-button" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login with Password'}
+          <button type="submit" class="auth-button primary" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
           </button>
-        </div>
-      </form>
-      
-      <!-- Passkey login section -->
-      {#if supportsWebAuthn}
-        <div class="divider">
-          <span>or</span>
-        </div>
-        
-        <div class="form-section">
-          <h3>Login with Passkey</h3>
-          <p class="passkey-description">
-            Use your device's built-in security for quick, secure access.
-          </p>
-          
-          <button 
-            type="button" 
-            class="auth-button passkey-button" 
-            onclick={handlePasskeyLogin}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Authenticating...' : '🔐 Login with Passkey'}
-          </button>
-        </div>
+        </form>
       {/if}
     </div>
     
@@ -295,65 +296,35 @@
   .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-  }
-  
-  .password-form {
-    display: contents;
-  }
-  
-  .form-section {
-    display: flex;
-    flex-direction: column;
     gap: 1rem;
-    padding: 1.5rem;
-    background: #f9fafb;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
   }
   
-  .form-section h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1f2937;
+  .auth-button.passkey {
+    background: #059669;
+    width: 100%;
   }
   
-  .divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 1rem 0;
+  .auth-button.passkey:hover {
+    background: #047857;
   }
   
-  .divider::before,
-  .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #e5e7eb;
+  .auth-button.secondary {
+    background: #6b7280;
+    width: 100%;
   }
   
-  .divider span {
-    padding: 0 1rem;
-    color: #6b7280;
-    font-size: 0.875rem;
-    font-weight: 500;
+  .auth-button.secondary:hover {
+    background: #4b5563;
   }
   
-  .passkey-description {
-    margin: 0;
-    font-size: 0.875rem;
-    color: #6b7280;
-    line-height: 1.4;
+  .auth-button.primary {
+    background: #3730a3;
+    width: 100%;
+    margin-top: 0.5rem;
   }
   
-  .passkey-button {
-    background: #059669 !important;
-  }
-  
-  .passkey-button:hover {
-    background: #047857 !important;
+  .auth-button.primary:hover {
+    background: #4f46e5;
   }
   
   .form-group {
@@ -393,7 +364,6 @@
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s ease;
-    margin-top: 0.5rem;
   }
   
   .auth-button:hover {

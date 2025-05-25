@@ -3,14 +3,14 @@
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
   import { encodeBase64url, decodeBase64url } from '@oslojs/encoding';
+  import { slide } from 'svelte/transition';
   
   let email = $state('');
   let password = $state('');
-  let confirmPassword = $state('');
-  let username = $state('');
   let errorMessage = $state('');
   let isLoading = $state(false);
   let supportsWebAuthn = $state(false);
+  let showPasswordField = $state(false);
   
   // Check WebAuthn support on mount
   if (browser) {
@@ -24,7 +24,7 @@
     if (isLoading) return;
     
     // Validation
-    if (!email || !password || !confirmPassword) {
+    if (!email || !password) {
       errorMessage = 'Please fill in all required fields';
       return;
     }
@@ -42,11 +42,6 @@
       return;
     }
     
-    // Password confirmation check
-    if (password !== confirmPassword) {
-      errorMessage = 'Passwords do not match';
-      return;
-    }
     
     isLoading = true;
     errorMessage = '';
@@ -56,7 +51,7 @@
       const signupResponse = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, username })
+        body: JSON.stringify({ email, password })
       });
       
       const result = await signupResponse.json();
@@ -105,7 +100,7 @@
       const beginResponse = await fetch('/api/auth/passkey/register/begin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, username })
+        body: JSON.stringify({ email })
       });
       
       const beginResult = await beginResponse.json();
@@ -194,7 +189,7 @@
     
     <div class="auth-form">
       <div class="form-group">
-        <label for="email">Email <span class="required">*</span></label>
+        <label for="email">Email</label>
         <input 
           type="email" 
           id="email" 
@@ -202,74 +197,51 @@
           required 
           placeholder="Enter your email"
           disabled={isLoading}
+          onkeydown={(e) => {
+            if (e.key === 'Tab' && !e.shiftKey) {
+              showPasswordField = true;
+            }
+          }}
         />
       </div>
       
-      <div class="form-group">
-        <label for="username">Username (optional)</label>
-        <input 
-          type="text" 
-          id="username" 
-          bind:value={username} 
-          placeholder="Choose a username"
+      {#if supportsWebAuthn}
+        <button 
+          type="button" 
+          class="auth-button passkey" 
+          onclick={handlePasskeySignup}
           disabled={isLoading}
-        />
-      </div>
+        >
+          {isLoading ? 'Creating Passkey...' : '🔐 Register with Passkey'}
+        </button>
+      {/if}
       
-      <!-- Password registration section -->
-      <form onsubmit={handlePasswordSignup} class="password-form">
-        <div class="form-section">
-          <h3>Register with Password</h3>
-          
+      <button 
+        type="button" 
+        class="auth-button secondary" 
+        onclick={() => showPasswordField = true}
+        disabled={isLoading}
+      >
+        Register with Password
+      </button>
+      
+      {#if showPasswordField}
+        <form onsubmit={handlePasswordSignup} transition:slide={{ duration: 200 }}>
           <div class="form-group">
-            <label for="password">Password <span class="required">*</span></label>
+            <label for="password">Password</label>
             <input 
               type="password" 
               id="password" 
               bind:value={password} 
               placeholder="Create a password (min. 8 characters)"
               disabled={isLoading}
+              autofocus
             />
           </div>
-          
-          <div class="form-group">
-            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
-            <input 
-              type="password" 
-              id="confirmPassword" 
-              bind:value={confirmPassword} 
-              placeholder="Confirm your password"
-              disabled={isLoading}
-            />
-          </div>
-          
-          <button type="submit" class="auth-button" disabled={isLoading}>
-            {isLoading ? 'Creating Account...' : 'Sign Up with Password'}
+          <button type="submit" class="auth-button primary" disabled={isLoading}>
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
-        </div>
-      </form>
-      
-      <!-- Passkey registration section -->
-      {#if supportsWebAuthn}
-        <div class="divider">
-          <span>or</span>
-        </div>
-        
-        <div class="form-section">
-          <h3>Register with Passkey</h3>
-          <p class="passkey-description">
-            Use your device's built-in security (fingerprint, face, PIN) for secure, password-free access.
-          </p>
-          
-          <button 
-            type="button" 
-            class="auth-button passkey-button" 
-            onclick={handlePasskeySignup}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Creating Passkey...' : '🔐 Sign Up with Passkey'}
-          </button>
-        </div>
+        </form>
       {/if}
     </div>
     
@@ -308,65 +280,35 @@
   .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-  }
-  
-  .password-form {
-    display: contents;
-  }
-  
-  .form-section {
-    display: flex;
-    flex-direction: column;
     gap: 1rem;
-    padding: 1.5rem;
-    background: #f9fafb;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
   }
   
-  .form-section h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1f2937;
+  .auth-button.passkey {
+    background: #059669;
+    width: 100%;
   }
   
-  .divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 1rem 0;
+  .auth-button.passkey:hover {
+    background: #047857;
   }
   
-  .divider::before,
-  .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #e5e7eb;
+  .auth-button.secondary {
+    background: #6b7280;
+    width: 100%;
   }
   
-  .divider span {
-    padding: 0 1rem;
-    color: #6b7280;
-    font-size: 0.875rem;
-    font-weight: 500;
+  .auth-button.secondary:hover {
+    background: #4b5563;
   }
   
-  .passkey-description {
-    margin: 0;
-    font-size: 0.875rem;
-    color: #6b7280;
-    line-height: 1.4;
+  .auth-button.primary {
+    background: #3730a3;
+    width: 100%;
+    margin-top: 0.5rem;
   }
   
-  .passkey-button {
-    background: #059669 !important;
-  }
-  
-  .passkey-button:hover {
-    background: #047857 !important;
+  .auth-button.primary:hover {
+    background: #4f46e5;
   }
   
   .form-group {
@@ -410,7 +352,6 @@
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s ease;
-    margin-top: 0.5rem;
   }
   
   .auth-button:hover {
