@@ -305,7 +305,6 @@
         {/if}
       </div>
       
-      {#if !isCheckingEmail}
         {#if supportsWebAuthn}
           <button 
             type="button" 
@@ -353,7 +352,6 @@
             </button>
           </form>
         {/if}
-      {/if}
     </div>
   </div>
 </div>
