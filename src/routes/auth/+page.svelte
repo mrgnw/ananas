@@ -20,8 +20,6 @@
   // Debounced email checking
   let emailCheckTimeout;
   
-  async function checkEmailExists(emailValue) {
-    if (!emailValue || !emailValue.includes('@')) {
   function handleEmailInput(event) {
     const emailValue = event.target.value;
     
