@@ -41,6 +41,13 @@ function initializeLanguageSuggestions(countryCode) {
   
   const suggestedLanguages = getAutoLanguageSelection(countryCode);
   
+  console.log('Language initialization:', {
+    countryCode,
+    suggestedLanguages,
+    browserLanguages: navigator.languages || [navigator.language],
+    allSuggestions: getAutoLanguageSelection(countryCode)
+  });
+  
   if (suggestedLanguages.length > 0) {
     user.selectedLanguages = suggestedLanguages;
     save();

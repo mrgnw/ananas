@@ -88,13 +88,23 @@ export function suggestLanguagesFromBrowser(): Array<{
     confidence: number;
   }> = [];
   
+  console.log('Browser language detection:', {
+    browserLangs,
+    navigatorLanguages: browser ? navigator.languages : 'not in browser',
+    navigatorLanguage: browser ? navigator.language : 'not in browser'
+  });
+  
   const seenCodes = new Set<string>();
   
   // Primary suggestions from browser preferences
   browserLangs.forEach((browserLang, index) => {
     const iso3 = browserLangToIso3(browserLang);
+    console.log(`Processing browser lang: ${browserLang} -> ${iso3}`);
+    
     if (iso3 && !seenCodes.has(iso3)) {
       const langInfo = getLanguageInfo(iso3);
+      console.log(`Language info for ${iso3}:`, langInfo);
+      
       if (langInfo) {
         suggestions.push({
           code: iso3,
@@ -110,15 +120,19 @@ export function suggestLanguagesFromBrowser(): Array<{
   
   // Add English as fallback if not already suggested
   if (!seenCodes.has('eng')) {
-    suggestions.push({
-      code: 'eng',
-      name: 'English',
-      nativeName: 'English',
-      reason: 'fallback',
-      confidence: 0.5
-    });
+    const engInfo = getLanguageInfo('eng');
+    if (engInfo) {
+      suggestions.push({
+        code: 'eng',
+        name: engInfo.langLabel,
+        nativeName: engInfo.nativeNames?.[0] || engInfo.langLabel,
+        reason: 'fallback',
+        confidence: 0.5
+      });
+    }
   }
   
+  console.log('Final browser suggestions:', suggestions);
   return suggestions.slice(0, 5); // Limit to top 5 suggestions
 }
 
@@ -196,9 +210,33 @@ export function getLanguageSuggestions(countryCode?: string): Array<{
 export function getAutoLanguageSelection(countryCode?: string): string[] {
   const suggestions = getLanguageSuggestions(countryCode);
   
-  // Auto-select high-confidence suggestions (confidence > 0.7)
-  return suggestions
-    .filter(s => s.confidence > 0.7)
+  console.log('Auto language selection debug:', {
+    countryCode,
+    allSuggestions: suggestions,
+    browserLanguages: browser ? (navigator.languages || [navigator.language]) : [],
+    highConfidence: suggestions.filter(s => s.confidence > 0.7),
+    mediumConfidence: suggestions.filter(s => s.confidence > 0.5)
+  });
+  
+  // Prioritize browser language suggestions over country suggestions
+  const browserSuggestions = suggestions.filter(s => 
+    s.reason === 'primary' || s.reason === 'secondary' || s.reason === 'fallback'
+  );
+  
+  // Auto-select browser-based suggestions first (confidence > 0.3 for browser languages)
+  const selected = browserSuggestions
+    .filter(s => s.confidence > 0.3)
     .map(s => s.code)
     .slice(0, 3); // Max 3 auto-selected languages
+    
+  // If no browser suggestions, try country suggestions with higher confidence
+  if (selected.length === 0) {
+    const countrySuggestions = suggestions
+      .filter(s => s.reason.startsWith('country_') && s.confidence > 0.6)
+      .map(s => s.code)
+      .slice(0, 2);
+    return countrySuggestions;
+  }
+  
+  return selected;
 }
