@@ -299,9 +299,14 @@ export async function completePasskeyAuthentication(db, { challengeId, credentia
     throw new Error('Challenge expired');
   }
   
-  // Find the passkey
+  // Find the passkey (exclude binary data we don't need for basic validation)
   const [passkey] = await db
-    .select()
+    .select({
+      id: passkeys.id,
+      user_id: passkeys.user_id,
+      credential_counter: passkeys.credential_counter,
+      last_used_at: passkeys.last_used_at
+    })
     .from(passkeys)
     .where(and(
       eq(passkeys.id, credential.id),
