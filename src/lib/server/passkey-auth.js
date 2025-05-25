@@ -245,6 +245,9 @@ export async function beginPasskeyAuthentication(db, { email, rpId }) {
     created_at: now
   });
   
+  // Debug: log credential IDs
+  console.log('Sending credential IDs:', userPasskeys.map(p => ({ id: p.id, length: p.id?.length })));
+
   // Return WebAuthn authentication options
   return {
     challengeId,
