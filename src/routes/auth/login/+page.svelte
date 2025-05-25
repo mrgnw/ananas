@@ -213,11 +213,6 @@
           required 
           placeholder="Enter your email"
           disabled={isLoading}
-          onkeydown={(e) => {
-            if (e.key === 'Tab' && !e.shiftKey) {
-              showPasswordField = true;
-            }
-          }}
         />
       </div>
       
@@ -232,6 +227,20 @@
         </button>
       {/if}
       
+      {#if showPasswordField}
+        <div class="form-group" transition:slide={{ duration: 200 }}>
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            bind:value={password} 
+            placeholder="Enter your password"
+            disabled={isLoading}
+            autofocus
+          />
+        </div>
+      {/if}
+      
       <button 
         type="button" 
         class="auth-button secondary" 
@@ -242,18 +251,7 @@
       </button>
       
       {#if showPasswordField}
-        <form onsubmit={handlePasswordLogin} transition:slide={{ duration: 200 }}>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              bind:value={password} 
-              placeholder="Enter your password"
-              disabled={isLoading}
-              autofocus
-            />
-          </div>
+        <form onsubmit={handlePasswordLogin}>
           <button type="submit" class="auth-button primary" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
