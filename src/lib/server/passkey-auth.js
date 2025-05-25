@@ -269,6 +269,16 @@ export async function beginPasskeyAuthentication(db, { email, rpId }) {
  * @returns {Promise<Object>} - User object if authentication successful
  */
 export async function completePasskeyAuthentication(db, { challengeId, credential }) {
+  // Debug: log the credential data
+  console.log('Authentication credential data:', {
+    id: credential.id,
+    rawId: credential.rawId,
+    responseKeys: Object.keys(credential.response || {}),
+    clientDataJSON: credential.response?.clientDataJSON?.substring(0, 50) + '...',
+    authenticatorData: credential.response?.authenticatorData?.substring(0, 50) + '...',
+    signature: credential.response?.signature?.substring(0, 50) + '...'
+  });
+
   // Find and verify challenge
   const [challenge] = await db
     .select()
