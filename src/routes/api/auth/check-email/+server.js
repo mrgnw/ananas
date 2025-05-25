@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { db } from '$lib/server/db.js';
+import { initDB } from '$lib/server/db.js';
 import { users } from '$lib/server/schema/users.js';
 import { eq } from 'drizzle-orm';
 
@@ -29,7 +29,7 @@ function isRateLimited(ip) {
   return false;
 }
 
-export async function POST({ request, getClientAddress }) {
+export async function POST({ request, getClientAddress, platform }) {
   try {
     const clientIP = getClientAddress();
     
@@ -54,18 +54,32 @@ export async function POST({ request, getClientAddress }) {
     }
     
     // Check if user exists
-    const existingUser = await db
-      .select({ id: users.id })
-      .from(users)
-      .where(eq(users.email, email.toLowerCase()))
-      .limit(1);
+    try {
+      const db = initDB(platform?.env?.DB);
+      const existingUser = await db
+        .select({ id: users.id })
+        .from(users)
+        .where(eq(users.email, email.toLowerCase()))
+        .limit(1);
+      
+      // Always return same response time to prevent timing attacks
+      await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 50));
+      
+      return json({
+        exists: existingUser.length > 0
+      });
+    } catch (dbError) {
+      // In development without D1, assume new user to allow testing
+      console.warn('Database not available, assuming new user:', dbError.message);
+      
+      // Still add delay to prevent timing attacks
+      await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 50));
+      
+      return json({
+        exists: false
+      });
+    }
     
-    // Always return same response time to prevent timing attacks
-    await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 50));
-    
-    return json({
-      exists: existingUser.length > 0
-    });
     
   } catch (error) {
     console.error('Email check error:', error);
