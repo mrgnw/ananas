@@ -74,8 +74,17 @@
 				userStore.setAuthState(userData);
 				
 				// Merge local preferences into server data if available
+				console.log('[LAYOUT] Checking merge conditions:', {
+					userData: !!userData,
+					userPreferences: $page.data.userPreferences,
+					pageData: $page.data
+				});
+				
 				if (userData && $page.data.userPreferences) {
+					console.log('[LAYOUT] Calling mergeLocalIntoServerData');
 					userStore.mergeLocalIntoServerData($page.data.userPreferences);
+				} else {
+					console.log('[LAYOUT] Merge conditions not met - no userPreferences or no userData');
 				}
 			}
 		}
