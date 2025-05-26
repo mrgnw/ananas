@@ -7,6 +7,7 @@
 	import { onMount } from "svelte";
 	import { afterNavigate } from '$app/navigation';
 	import { userStore } from '$lib/stores/user.svelte.js';
+	import { translationsStore } from '$lib/stores/translationsStore.svelte.js';
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
 	import UserNav from '$lib/components/UserNav.svelte';
 	
@@ -30,6 +31,11 @@
 			// Load server preferences if they exist
 			if ($page.data.userPreferences) {
 				userStore.loadServerPreferences($page.data.userPreferences);
+			}
+			
+			// Initialize translation history from server data for cross-session persistence
+			if ($page.data.recentTranslations) {
+				translationsStore.initializeFromServerData($page.data.recentTranslations);
 			}
 		} else if ($page.data?.user === null) {
 			// Explicitly handle logout case

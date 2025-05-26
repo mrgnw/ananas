@@ -29,22 +29,33 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals, pla
     username: locals.user.username
   } : null;
   
-  // Get user preferences if user is logged in
+  // Get user preferences and recent translations if user is logged in
   let userPreferences = null;
+  let recentTranslations = null;
   if (user && platform?.env?.DB) {
     try {
       const db = initDB(platform.env.DB);
+      
+      // Load user preferences
       userPreferences = await getUserPreferences(db, user.id);
       console.log('[LAYOUT SERVER] Loaded user preferences:', {
         userId: user.id,
         selectedLanguages: userPreferences?.selected_languages,
         translators: userPreferences?.translators
       });
+      
+      // Load last 80 translations for cross-session history
+      const { getUserTranslationHistory } = await import('$lib/server/translation-history');
+      recentTranslations = await getUserTranslationHistory(db, user.id, { limit: 80 });
+      console.log('[LAYOUT SERVER] Loaded recent translations:', {
+        userId: user.id,
+        count: recentTranslations?.length || 0
+      });
     } catch (error) {
-      console.error('[LAYOUT SERVER] Error loading user preferences:', error);
+      console.error('[LAYOUT SERVER] Error loading user data:', error);
     }
   } else {
-    console.log('[LAYOUT SERVER] No user or DB available for preferences');
+    console.log('[LAYOUT SERVER] No user or DB available for user data');
   }
   
   // Format JSON without Prism
@@ -77,6 +88,8 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals, pla
     user,
     // User preferences
     userPreferences,
+    // Recent translation history for cross-session persistence
+    recentTranslations,
     highlightedPropsJson
   };
 };

@@ -4,7 +4,8 @@ import { userStore } from './user.svelte.js';
 
 let translations = $state({
   history: [], // Each item: { input, output, sourceLang, targetLang, timestamp }
-  loading: false
+  loading: false,
+  lastSyncTimestamp: null
 });
 
 // Computed current translation (most recent)
@@ -30,9 +31,38 @@ function save() {
   }
 }
 
+// Initialize from server data (for cross-session persistence)
+function initializeFromServerData(serverTranslations) {
+  if (serverTranslations?.length > 0) {
+    // Process server data to match our format
+    const processedTranslations = serverTranslations.map(t => ({
+      id: t.id,
+      input: t.input_text,
+      output: JSON.parse(t.output_json),
+      sourceLang: t.source_lang,
+      targetLang: JSON.parse(t.target_langs),
+      timestamp: t.created_at
+    }));
+    
+    translations.history = processedTranslations;
+    translations.lastSyncTimestamp = Date.now();
+    save(); // Update localStorage cache
+    
+    console.log('[TRANSLATIONS STORE] Initialized from server data:', {
+      count: processedTranslations.length
+    });
+  }
+}
+
 async function addTranslation(translation) {
   // translation: { input, output, sourceLang, targetLang, timestamp }
   translations.history.unshift(translation); // newest first
+  
+  // Keep only last 80 translations in memory
+  if (translations.history.length > 80) {
+    translations.history = translations.history.slice(0, 80);
+  }
+  
   save();
 
   // If user is authenticated, save to database
@@ -53,9 +83,28 @@ async function addTranslation(translation) {
   }
 }
 
-function removeTranslation(index) {
+async function removeTranslation(index) {
+  const translationToRemove = translations.history[index];
+  
+  // 1. Remove from local state immediately (optimistic)
   translations.history.splice(index, 1);
   save();
+  
+  // 2. Sync deletion to server if authenticated and translation has ID
+  if (userStore.user.auth.isAuthenticated && translationToRemove?.id) {
+    try {
+      const response = await fetch(`/api/translate/history/${translationToRemove.id}`, {
+        method: 'DELETE'
+      });
+      
+      if (!response.ok) {
+        console.error('Failed to delete translation from database');
+      }
+    } catch (error) {
+      console.error('Error deleting translation from database:', error);
+      // Could add rollback logic here if needed
+    }
+  }
 }
 
 function clearHistory() {
@@ -129,7 +178,8 @@ export const translationsStore = {
   removeTranslation,
   clearHistory,
   loadFromDatabase,
-  mergeWithDatabase
+  mergeWithDatabase,
+  initializeFromServerData
 };
 
 // Legacy export for backward compatibility during transition

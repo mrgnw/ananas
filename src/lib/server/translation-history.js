@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { translationHistory } from './schema/translations';
 import { nanoid } from 'nanoid';
 
@@ -118,6 +118,32 @@ export async function clearUserTranslationHistory(db, userId) {
     return true;
   } catch (error) {
     console.error('[translation-history] Error clearing user translation history:', error);
+    return false;
+  }
+}
+
+/**
+ * Delete a specific translation for a user
+ * 
+ * @param {Object} db - Drizzle database instance
+ * @param {string} translationId - Translation ID to delete
+ * @param {string} userId - User ID (for security - ensures user can only delete their own translations)
+ * @returns {Promise<boolean>} Whether the operation was successful
+ */
+export async function deleteTranslation(db, translationId, userId) {
+  try {
+    const result = await db
+      .delete(translationHistory)
+      .where(
+        and(
+          eq(translationHistory.id, translationId),
+          eq(translationHistory.user_id, userId)
+        )
+      );
+    
+    return true;
+  } catch (error) {
+    console.error('[translation-history] Error deleting translation:', error);
     return false;
   }
 }
