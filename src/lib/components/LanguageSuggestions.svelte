@@ -44,10 +44,16 @@
   });
 </script>
 
-{#if userLanguages.length === 0 && suggestionsToShow.length > 0}
+{#if suggestionsToShow.length > 0}
   <div class="language-suggestions">
     <div class="suggestions-header">
-      <span class="suggestions-title">Get started with these languages:</span>
+      <span class="suggestions-title">
+        {#if userLanguages.length === 0}
+          Get started with these languages:
+        {:else}
+          Add more languages:
+        {/if}
+      </span>
     </div>
     <div class="suggestions-buttons">
       {#each suggestionsToShow as suggestion}
@@ -69,9 +75,13 @@
       <a href="/languages" class="browse-all-link">Browse all languages →</a>
     </div>
   </div>
-{:else if userLanguages.length === 0}
+{:else if allSuggestions.length > 0}
   <div class="language-suggestions-debug">
-    <p>Debug: No suggestions to show. User has {userLanguages.length} languages. Country: {countryCode || 'none'}. All suggestions: {allSuggestions.length}</p>
+    <p>Debug: All suggestions already added! User has {userLanguages.length} languages. Country: {countryCode || 'none'}. All suggestions: {allSuggestions.length}</p>
+  </div>
+{:else}
+  <div class="language-suggestions-debug">
+    <p>Debug: No suggestions loaded. User has {userLanguages.length} languages. Country: {countryCode || 'none'}. All suggestions: {allSuggestions.length}</p>
   </div>
 {/if}
 

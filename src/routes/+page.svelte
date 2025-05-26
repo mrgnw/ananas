@@ -23,10 +23,11 @@ let userLanguages = $derived(userStore.user.selectedLanguages);
         {#each userLanguages as code, i}
           <span >{getEnglishName(code)}</span>{#if i < userLanguages.length - 1}<span class="lang-sep">·</span>{/if}
         {/each}
-      {:else}
-        <LanguageSuggestions countryCode={data.ip_country} />
       {/if}
     </div>
+    
+
+    <LanguageSuggestions countryCode={data.ip_country} />
       {#if result}
       <div class="result centered-result">
         <MultiLangCard translation={{ translations: result }} />
