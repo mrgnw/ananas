@@ -10,7 +10,16 @@ export async function POST({ request, platform }) {
       return json({ success: false, message: 'Email is required' }, { status: 400 });
     }
     
-    const rpId = platform?.env?.WEBAUTHN_RP_ID || process.env.WEBAUTHN_RP_ID || 'localhost';
+    // Dynamically determine RP_ID based on Cloudflare deployment
+    let rpId;
+    if (platform?.env?.CF_PAGES_URL) {
+      // Extract domain from Cloudflare Pages URL
+      const url = new URL(platform.env.CF_PAGES_URL);
+      rpId = url.hostname; // e.g., 'clean-sonnet4.ananas-8ek.pages.dev'
+    } else {
+      // Fallback to environment variable or localhost for local dev
+      rpId = platform?.env?.WEBAUTHN_RP_ID || process.env.WEBAUTHN_RP_ID || 'localhost';
+    }
     
     const db = initDB(platform?.env?.DB || process.env.DB);
     
