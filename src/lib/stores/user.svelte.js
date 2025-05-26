@@ -34,29 +34,49 @@ function save() {
 
 // Save preferences to server if user is authenticated
 async function syncToServer() {
+  console.log('🔄 syncToServer called with auth state:', {
+    isAuthenticated: user.auth.isAuthenticated,
+    userId: user.auth.id,
+    syncing: user.syncing,
+    selectedLanguages: user.selectedLanguages,
+    translators: user.translators
+  });
+  
   if (!user.auth.isAuthenticated || !user.auth.id || user.syncing) {
+    console.log('❌ syncToServer: Skipping sync - auth check failed');
     return;
   }
   
   try {
     user.syncing = true;
     
+    const requestData = {
+      selected_languages: user.selectedLanguages,
+      translators: user.translators
+    };
+    
+    console.log('📤 syncToServer: Sending request to /api/user/preferences', requestData);
+    
     const response = await fetch('/api/user/preferences', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        selected_languages: user.selectedLanguages,
-        translators: user.translators
-      })
+      body: JSON.stringify(requestData)
     });
     
+    console.log('📥 syncToServer: Response status:', response.status, response.statusText);
+    
     if (!response.ok) {
-      throw new Error('Failed to save preferences');
+      const errorText = await response.text();
+      console.error('❌ syncToServer: Server error response:', errorText);
+      throw new Error(`Failed to save preferences: ${response.status} ${errorText}`);
     }
     
-    console.log('User preferences synced to server');
+    const responseData = await response.json();
+    console.log('✅ syncToServer: Success response:', responseData);
+    
+    console.log('✅ User preferences synced to server successfully');
   } catch (error) {
-    console.error('Error syncing preferences to server:', error);
+    console.error('❌ Error syncing preferences to server:', error);
   } finally {
     user.syncing = false;
   }
