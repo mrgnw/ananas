@@ -186,8 +186,18 @@ export function getLanguageSuggestions(countryCode?: string): Array<{
   reason: 'primary' | 'secondary' | 'fallback' | 'country_primary' | 'country_secondary';
   confidence: number;
 }> {
+  console.log('getLanguageSuggestions called with countryCode:', countryCode);
+  
   const browserSuggestions = suggestLanguagesFromBrowser();
   const countrySuggestions = countryCode ? suggestLanguagesFromCountry(countryCode) : [];
+  
+  console.log('getLanguageSuggestions debug:', {
+    countryCode,
+    browserSuggestions,
+    countrySuggestions,
+    browserSuggestionsLength: browserSuggestions.length,
+    countrySuggestionsLength: countrySuggestions.length
+  });
   
   // Merge and deduplicate, prioritizing browser preferences
   const combined = [...browserSuggestions];
@@ -201,7 +211,10 @@ export function getLanguageSuggestions(countryCode?: string): Array<{
   });
   
   // Sort by confidence (highest first)
-  return combined.sort((a, b) => b.confidence - a.confidence).slice(0, 6);
+  const result = combined.sort((a, b) => b.confidence - a.confidence).slice(0, 6);
+  
+  console.log('getLanguageSuggestions final result:', result);
+  return result;
 }
 
 /**
