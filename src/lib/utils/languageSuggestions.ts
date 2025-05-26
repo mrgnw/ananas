@@ -218,24 +218,32 @@ export function getAutoLanguageSelection(countryCode?: string): string[] {
     mediumConfidence: suggestions.filter(s => s.confidence > 0.5)
   });
   
-  // Prioritize browser language suggestions over country suggestions
+  // Combine browser and country suggestions
   const browserSuggestions = suggestions.filter(s => 
     s.reason === 'primary' || s.reason === 'secondary' || s.reason === 'fallback'
   );
   
-  // Auto-select browser-based suggestions first (confidence > 0.3 for browser languages)
+  const countrySuggestions = suggestions.filter(s => 
+    s.reason.startsWith('country_') && s.confidence > 0.6
+  );
+  
+  // Start with all high-confidence browser suggestions
   const selected = browserSuggestions
     .filter(s => s.confidence > 0.3)
-    .map(s => s.code)
-    .slice(0, 3); // Max 3 auto-selected languages
+    .map(s => s.code);
     
-  // If no browser suggestions, try country suggestions with higher confidence
+  // Add country suggestions if they're not already included
+  countrySuggestions.forEach(suggestion => {
+    if (!selected.includes(suggestion.code)) {
+      selected.push(suggestion.code);
+    }
+  });
+  
+  // If still no suggestions, fall back to any browser suggestions
   if (selected.length === 0) {
-    const countrySuggestions = suggestions
-      .filter(s => s.reason.startsWith('country_') && s.confidence > 0.6)
+    return browserSuggestions
       .map(s => s.code)
       .slice(0, 2);
-    return countrySuggestions;
   }
   
   return selected;
