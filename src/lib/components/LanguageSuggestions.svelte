@@ -11,9 +11,7 @@
 
   // Load suggestions on component mount
   onMount(() => {
-    console.log('LanguageSuggestions onMount with countryCode:', countryCode);
     allSuggestions = getLanguageSuggestions(countryCode);
-    console.log('Loaded suggestions:', allSuggestions);
   });
 
   // Derive user languages
@@ -21,8 +19,6 @@
 
   // Derive suggestions to show (excluding already selected languages)
   let suggestionsToShow = $derived.by(() => {
-    console.log('🔄 suggestionsToShow derived running');
-    console.log('Data:', {
       allSuggestions,
       allSuggestionsLength: allSuggestions.length,
       userLanguages,
@@ -30,17 +26,14 @@
     });
     
     if (allSuggestions.length === 0) {
-      console.log('No allSuggestions yet, returning empty array');
       return [];
     }
     
     const filtered = allSuggestions.filter(s => {
       const isIncluded = userLanguages.includes(s.code);
-      console.log(`Filtering: ${s.code} already selected? ${isIncluded}`);
       return !isIncluded;
     });
     
-    console.log('🎯 Final suggestionsToShow:', filtered);
     return filtered.slice(0, 4);
   });
 </script>
