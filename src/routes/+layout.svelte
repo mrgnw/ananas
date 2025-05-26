@@ -33,11 +33,6 @@
 			console.log('[CLIENT] Detected country:', countryCode || 'None detected');
 			console.log('[CLIENT] Country info from Wikidata:', countryInfo);
 			
-			// Initialize language suggestions with country information if it's a new user
-			if (!localStorage.getItem('user') && countryCode) {
-				userStore.initializeLanguageSuggestions(countryCode);
-			}
-			
 			// Initialize user authentication state from server data
 			if ($page.data.user) {
 				userStore.setAuthState($page.data.user);
