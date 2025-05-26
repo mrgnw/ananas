@@ -1,33 +1,33 @@
 <script>
   import { onMount } from 'svelte';
-  import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
+  import { translationsStore } from '$lib/stores/translationsStore.svelte.js';
   import { userStore } from '$lib/stores/user.svelte.js';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
   
-  let history = translationHistoryStore.history;
+  let translations = translationsStore.translations;
   
   onMount(() => {
     // If the user is authenticated, load translations from the database
     if (userStore.user.auth.isAuthenticated) {
-      translationHistoryStore.loadFromDatabase();
+      translationsStore.loadFromDatabase();
     }
   });
   
   function handleDelete(item, index) {
-    translationHistoryStore.removeTranslation(index);
+    translationsStore.removeTranslation(index);
   }
 </script>
 
-{#if history.loading}
+{#if translations.loading}
   <div class="loading-container">
     <div class="loading-spinner"></div>
     <p>Loading translation history...</p>
   </div>
-{:else if history.translations.length === 0}
+{:else if translations.history.length === 0}
   <p>No translations yet.</p>
 {:else}
   <ul class="history-list">
-    {#each history.translations.slice(0, 20) as item, i}
+    {#each translations.history.slice(0, 20) as item, i}
       <li class="history-card group">
         <MultiLangCard 
           translation={{ translations: item.output }} 

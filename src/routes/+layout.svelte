@@ -2,14 +2,11 @@
 	import "../app.pcss";
 	import SettingsButton from "$lib/components/SettingsButton.svelte";
     import { Languages } from 'lucide-svelte';
-	import { Button } from "$lib/components/ui/button";
 	import { page } from "$app/stores";
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
 	import { setContext } from "svelte";
 	import { afterNavigate } from '$app/navigation';
-	import { invalidateAll } from '$app/navigation';
-	import { initializeFromStorage } from '$lib/stores/translationStore';
 	import { userStore } from '$lib/stores/user.svelte.js';
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
 	import UserNav from '$lib/components/UserNav.svelte';
@@ -39,11 +36,6 @@
 			}
 		}
 	});
-
-	// Initialize store from localStorage if in browser
-	if (browser) {
-		initializeFromStorage();
-	}
 	
 	// Function to sync server data
 	function syncServerData() {

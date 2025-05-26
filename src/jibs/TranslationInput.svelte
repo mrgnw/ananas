@@ -1,9 +1,8 @@
 <script>
   import { userStore } from '$lib/stores/user.svelte.js';
-  import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
+  import { translationsStore } from '$lib/stores/translationsStore.svelte.js';
   import { Send } from 'lucide-svelte';
 
-  let { result = $bindable() } = $props()
   let text = $state('');
   let loading = $state(false);
   let error = $state('');
@@ -11,7 +10,6 @@
 
   async function handleTranslate() {
     error = '';
-    result = null;
     if (!text.trim()) return;
     if (!userStore.user.selectedLanguages.length) {
       error = 'Please select at least one language.';
@@ -28,8 +26,8 @@
         })
       });
       if (!res.ok) throw new Error('API error');
-      result = await res.json();
-      translationHistoryStore.addTranslation({
+      const result = await res.json();
+      translationsStore.addTranslation({
         input: text,
         output: result,
         sourceLang: 'auto',

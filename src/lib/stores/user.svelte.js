@@ -172,9 +172,9 @@ async function login(email, password) {
     console.log('Login: server preferences data:', data.preferences);
     console.log('Login: cached current preferences:', currentPrefs);
     
-    // Merge local preferences into server data if available
+    // Load server preferences if available, otherwise sync local to server
     if (data.preferences) {
-      mergeLocalIntoServerData(data.preferences);
+      loadServerPreferences(data.preferences);
     } else {
       // No server preferences, sync current local preferences to server
       if (currentPrefs.selectedLanguages.length || currentPrefs.translators.length) {
@@ -182,13 +182,13 @@ async function login(email, password) {
       }
     }
     
-    // Import translationHistoryStore to merge history after login
-    const { translationHistoryStore } = await import('./translationHistory.svelte.js');
-    if (translationHistoryStore) {
+    // Import translationsStore to merge history after login
+    const { translationsStore } = await import('./translationsStore.svelte.js');
+    if (translationsStore) {
       // Merge any existing local translations with the database
-      await translationHistoryStore.mergeWithDatabase();
+      await translationsStore.mergeWithDatabase();
       // Load translations from database
-      await translationHistoryStore.loadFromDatabase();
+      await translationsStore.loadFromDatabase();
     }
     
     // Invalidate all page data to refresh authentication state
@@ -225,11 +225,11 @@ async function logout() {
       headers: { 'Content-Type': 'application/json' }
     });
     
-    // Import translationHistoryStore to clear history on logout
-    const { translationHistoryStore } = await import('./translationHistory.svelte.js');
-    if (translationHistoryStore) {
+    // Import translationsStore to clear history on logout
+    const { translationsStore } = await import('./translationsStore.svelte.js');
+    if (translationsStore) {
       // Clear the translation history
-      translationHistoryStore.clearHistory();
+      translationsStore.clearHistory();
     }
     
     // Invalidate all page data to refresh authentication state  
