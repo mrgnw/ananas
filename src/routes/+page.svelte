@@ -3,26 +3,35 @@
   import TranslationInput from '$jibs/TranslationInput.svelte';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
   import { getEnglishName } from '$lib/utils/languages.js';
-  import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
 
 let result = $state(null); // Add result state to hold translation result
 let { data } = $props();
 
-// Get language suggestions for new users
+// Update suggestions when country data is available
+$effect(() => {
+  if (data.ip_country) {
+    userStore.loadLanguageSuggestions(data.ip_country);
+  }
+});
+
+// Get language suggestions from the user store
 let suggestions = $derived(() => {
   const hasLanguages = userStore.user?.selectedLanguages?.length > 0;
-  const suggestionResults = getLanguageSuggestions(data.ip_country).slice(0, 4);
+  const suggestedLanguages = userStore.user?.suggestedLanguages || [];
   
   console.log('Suggestions debug:', {
     hasLanguages,
     selectedLanguages: userStore.user?.selectedLanguages,
     ip_country: data.ip_country,
-    suggestionResults,
+    suggestedLanguages,
     userStoreUser: userStore.user
   });
   
-  if (hasLanguages) return [];
-  return suggestionResults;
+  // Show suggestions if user has no languages or has suggestions that aren't already selected
+  if (hasLanguages) {
+    return suggestedLanguages.filter(s => !userStore.user.selectedLanguages.includes(s.code));
+  }
+  return suggestedLanguages.slice(0, 4);
 });
 </script>
 
@@ -127,6 +136,7 @@ let suggestions = $derived(() => {
     justify-content: center;
   }
 
+
   .suggestion-btn {
     display: flex;
     align-items: center;
@@ -174,5 +184,6 @@ let suggestions = $derived(() => {
     color: #4f46e5;
     text-decoration: underline;
   }
+
 
   </style>

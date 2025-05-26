@@ -2,13 +2,14 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { invalidateAll } from '$app/navigation';
-import { getAutoLanguageSelection } from '$lib/utils/languageSuggestions.ts';
+import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
 
 // Using Svelte 5 state with a mutable object
 // This creates a deep reactive state that will track all property changes
 let user = $state({
   selectedLanguages: [],
   translators: ['deepl'], // Default to deepl, can support others in future
+  suggestedLanguages: [], // New field to store language suggestions
   auth: {
     isAuthenticated: false,
     id: null,
@@ -23,10 +24,10 @@ if (browser) {
   const saved = localStorage.getItem('user');
   if (saved) {
     Object.assign(user, JSON.parse(saved));
-  } else {
-    // First time user - suggest languages based on browser preferences
-    initializeLanguageSuggestions();
   }
+  
+  // Always load language suggestions (for both new and returning users)
+  loadLanguageSuggestions();
 }
 
 function save() {
@@ -35,24 +36,26 @@ function save() {
   }
 }
 
-// Initialize language suggestions for new users
-function initializeLanguageSuggestions(countryCode) {
+// Load language suggestions (doesn't auto-select them)
+function loadLanguageSuggestions(countryCode) {
   if (!browser) return;
   
-  const suggestedLanguages = getAutoLanguageSelection(countryCode);
+  const suggestions = getLanguageSuggestions(countryCode);
   
-  console.log('Language initialization:', {
+  console.log('Language suggestions loaded:', {
     countryCode,
-    suggestedLanguages,
-    browserLanguages: navigator.languages || [navigator.language],
-    allSuggestions: getAutoLanguageSelection(countryCode)
+    suggestions,
+    browserLanguages: navigator.languages || [navigator.language]
   });
   
-  if (suggestedLanguages.length > 0) {
-    user.selectedLanguages = suggestedLanguages;
-    save();
-    console.log('Initialized with suggested languages:', suggestedLanguages);
-  }
+  user.suggestedLanguages = suggestions;
+  // Note: We DON'T automatically add these to selectedLanguages anymore
+}
+
+// Legacy function for backward compatibility (deprecated)
+function initializeLanguageSuggestions(countryCode) {
+  console.warn('initializeLanguageSuggestions is deprecated. Use loadLanguageSuggestions() instead.');
+  loadLanguageSuggestions(countryCode);
 }
 
 // Save preferences to server if user is authenticated
@@ -130,6 +133,7 @@ function addLanguage(code) {
     }
   }
 }
+
 
 function removeLanguage(code) {
   user.selectedLanguages = user.selectedLanguages.filter(c => c !== code);
@@ -323,7 +327,8 @@ export const userStore = {
   // Language management
   addLanguage,
   removeLanguage,
-  initializeLanguageSuggestions,
+  loadLanguageSuggestions,
+  initializeLanguageSuggestions, // deprecated but kept for compatibility
   // Translator management
   setTranslators,
   addTranslator,

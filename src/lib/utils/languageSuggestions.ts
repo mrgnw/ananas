@@ -205,9 +205,13 @@ export function getLanguageSuggestions(countryCode?: string): Array<{
 }
 
 /**
- * Gets automatic language suggestions for new users
+ * Gets automatic language suggestions for new users (DEPRECATED)
+ * Use getLanguageSuggestions() instead and let the UI handle selection
+ * @deprecated Use getLanguageSuggestions() for suggestions only
  */
 export function getAutoLanguageSelection(countryCode?: string): string[] {
+  console.warn('getAutoLanguageSelection is deprecated. Use getLanguageSuggestions() instead.');
+  
   const suggestions = getLanguageSuggestions(countryCode);
   
   console.log('Auto language selection debug:', {
@@ -218,33 +222,9 @@ export function getAutoLanguageSelection(countryCode?: string): string[] {
     mediumConfidence: suggestions.filter(s => s.confidence > 0.5)
   });
   
-  // Combine browser and country suggestions
-  const browserSuggestions = suggestions.filter(s => 
-    s.reason === 'primary' || s.reason === 'secondary' || s.reason === 'fallback'
-  );
-  
-  const countrySuggestions = suggestions.filter(s => 
-    s.reason.startsWith('country_') && s.confidence > 0.6
-  );
-  
-  // Start with all high-confidence browser suggestions
-  const selected = browserSuggestions
-    .filter(s => s.confidence > 0.3)
+  // For backward compatibility, return just the highest confidence suggestions
+  return suggestions
+    .filter(s => s.confidence > 0.6)
+    .slice(0, 3)
     .map(s => s.code);
-    
-  // Add country suggestions if they're not already included
-  countrySuggestions.forEach(suggestion => {
-    if (!selected.includes(suggestion.code)) {
-      selected.push(suggestion.code);
-    }
-  });
-  
-  // If still no suggestions, fall back to any browser suggestions
-  if (selected.length === 0) {
-    return browserSuggestions
-      .map(s => s.code)
-      .slice(0, 2);
-  }
-  
-  return selected;
 }
