@@ -2,14 +2,12 @@
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { invalidateAll } from '$app/navigation';
-import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
 
 // Using Svelte 5 state with a mutable object
 // This creates a deep reactive state that will track all property changes
 let user = $state({
   selectedLanguages: [],
   translators: ['deepl'], // Default to deepl, can support others in future
-  suggestedLanguages: [], // New field to store language suggestions
   auth: {
     isAuthenticated: false,
     id: null,
@@ -25,9 +23,6 @@ if (browser) {
   if (saved) {
     Object.assign(user, JSON.parse(saved));
   }
-  
-  // Always load language suggestions (for both new and returning users)
-  loadLanguageSuggestions();
 }
 
 function save() {
@@ -36,37 +31,6 @@ function save() {
   }
 }
 
-// Load language suggestions (doesn't auto-select them)
-function loadLanguageSuggestions(countryCode) {
-  if (!browser) {
-    console.log('loadLanguageSuggestions: Not in browser, skipping');
-    return;
-  }
-  
-  console.log('loadLanguageSuggestions called with:', countryCode);
-  const suggestions = getLanguageSuggestions(countryCode);
-  
-  console.log('Language suggestions loaded:', {
-    countryCode,
-    suggestions,
-    browserLanguages: navigator.languages || [navigator.language],
-    userBefore: { ...user },
-    suggestionsLength: suggestions.length
-  });
-  
-  user.suggestedLanguages = suggestions;
-  console.log('User after setting suggestions:', { ...user });
-  
-  // Save suggestions to localStorage so they persist
-  save();
-  // Note: We DON'T automatically add these to selectedLanguages anymore
-}
-
-// Legacy function for backward compatibility (deprecated)
-function initializeLanguageSuggestions(countryCode) {
-  console.warn('initializeLanguageSuggestions is deprecated. Use loadLanguageSuggestions() instead.');
-  loadLanguageSuggestions(countryCode);
-}
 
 // Save preferences to server if user is authenticated
 async function syncToServer() {
@@ -337,8 +301,6 @@ export const userStore = {
   // Language management
   addLanguage,
   removeLanguage,
-  loadLanguageSuggestions,
-  initializeLanguageSuggestions, // deprecated but kept for compatibility
   // Translator management
   setTranslators,
   addTranslator,
