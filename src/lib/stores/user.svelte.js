@@ -66,14 +66,24 @@ async function syncToServer() {
 function mergeLocalIntoServerData(serverPreferences) {
   if (!serverPreferences) return;
   
-  // Start with server data as base
-  const serverLanguages = serverPreferences.selected_languages || [];
-  const serverTranslators = serverPreferences.translators || ['deepl'];
+  // Create copies to avoid mutating original server data
+  const serverLanguages = [...(serverPreferences.selected_languages || [])];
+  const serverTranslators = [...(serverPreferences.translators || ['deepl'])];
+  const originalServerLanguageCount = serverLanguages.length;
+  const originalServerTranslatorCount = serverTranslators.length;
+  
+  console.log('Merging preferences:', {
+    serverLanguages,
+    localLanguages: user.selectedLanguages,
+    serverTranslators,
+    localTranslators: user.translators
+  });
   
   // Add any local languages that aren't already in server data
   user.selectedLanguages.forEach(lang => {
     if (!serverLanguages.includes(lang)) {
       serverLanguages.push(lang);
+      console.log(`Added local language "${lang}" to server data`);
     }
   });
   
@@ -81,6 +91,7 @@ function mergeLocalIntoServerData(serverPreferences) {
   user.translators.forEach(translator => {
     if (!serverTranslators.includes(translator)) {
       serverTranslators.push(translator);
+      console.log(`Added local translator "${translator}" to server data`);
     }
   });
   
@@ -89,9 +100,15 @@ function mergeLocalIntoServerData(serverPreferences) {
   user.translators = serverTranslators;
   save();
   
+  console.log('Final merged result:', {
+    selectedLanguages: user.selectedLanguages,
+    translators: user.translators
+  });
+  
   // Sync back to server if we added anything
-  if (serverLanguages.length > (serverPreferences.selected_languages || []).length ||
-      serverTranslators.length > (serverPreferences.translators || []).length) {
+  if (serverLanguages.length > originalServerLanguageCount ||
+      serverTranslators.length > originalServerTranslatorCount) {
+    console.log('Changes detected, syncing to server');
     syncToServer();
   }
 }
