@@ -21,18 +21,34 @@ onMount(() => {
 
 let userLanguages = $derived(userStore.user.selectedLanguages);
 
-let suggestionsToShow = $derived(() => {
-  const filtered = allSuggestions.filter(s => !userLanguages.includes(s.code));
-  console.log('Suggestions to show:', {
-    allSuggestions: allSuggestions.length,
+let suggestionsToShow = $derived.by(() => {
+  console.log('🔄 suggestionsToShow derived running');
+  console.log('Data:', {
+    allSuggestions,
+    allSuggestionsLength: allSuggestions.length,
     userLanguages,
-    filtered: filtered.length,
-    filteredSuggestions: filtered
+    userLanguagesLength: userLanguages.length
   });
+  
+  if (allSuggestions.length === 0) {
+    console.log('No allSuggestions yet, returning empty array');
+    return [];
+  }
+  
+  const filtered = allSuggestions.filter(s => {
+    const isIncluded = userLanguages.includes(s.code);
+    console.log(`Filtering: ${s.code} already selected? ${isIncluded}`);
+    return !isIncluded;
+  });
+  
+  console.log('🎯 Final suggestionsToShow:', filtered);
   return filtered.slice(0, 4);
 });
 </script>
 
+  <!-- <pre><code>{JSON.stringify(allSuggestions, null, 2)}</code></pre>
+  •
+  <pre><code>{JSON.stringify(suggestionsToShow, null, 2)}</code></pre> -->
   <main class="translate-main">
       <TranslationInput
           bind:result
@@ -49,7 +65,7 @@ let suggestionsToShow = $derived(() => {
           </div>
           <div class="suggestions-buttons">
             {#if suggestionsToShow.length === 0}
-              <p>Debug: No suggestions found. User has {userLanguages.length} languages. Country: {data.ip_country || 'none'}</p>
+              <p>Debug: No suggestions to show. User has {userLanguages.length} languages. Country: {data.ip_country || 'none'}. All suggestions: {allSuggestions.length}</p>
             {/if}
             {#each suggestionsToShow as suggestion}
               <button 
