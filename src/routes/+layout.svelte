@@ -50,43 +50,53 @@
 		initializeFromStorage();
 	}
 	
-	// Sync with server data only when needed - but don't override client-side auth state
-	$effect(() => {
-		if (browser && $page.data) {
+	// Sync with server data on mount
+	onMount(() => {
+		console.log('[LAYOUT] onMount - checking for server auth data');
+		
+		if ($page.data?.user) {
 			const userData = $page.data.user;
 			const currentAuthState = userStore.user.auth;
 			
-			// If this is initial page load and we have server auth data but no client auth data
-			// OR if the server data indicates a different user than what we have locally
-			const shouldSyncFromServer = 
-				(!currentAuthState.isAuthenticated && userData) ||
-				(userData && currentAuthState.isAuthenticated && userData.id !== currentAuthState.id);
-				
-			if (shouldSyncFromServer) {
-				console.log('[LAYOUT] Syncing auth state from server data');
+			console.log('[LAYOUT] Server has user data:', {
+				serverUser: userData,
+				localAuthState: currentAuthState,
+				userPreferences: $page.data.userPreferences
+			});
+			
+			// If we have server auth data but user isn't authenticated locally
+			if (!currentAuthState.isAuthenticated) {
+				console.log('[LAYOUT] User not authenticated locally, syncing from server');
 				
 				// Cache current local preferences before setting auth state
-				const currentPrefs = {
+				const localPrefs = {
 					selectedLanguages: [...userStore.user.selectedLanguages],
 					translators: [...userStore.user.translators]
 				};
 				
+				console.log('[LAYOUT] Cached local preferences:', localPrefs);
+				
+				// Set auth state from server
 				userStore.setAuthState(userData);
 				
-				// Merge local preferences into server data if available
-				console.log('[LAYOUT] Checking merge conditions:', {
-					userData: !!userData,
-					userPreferences: $page.data.userPreferences,
-					pageData: $page.data
-				});
-				
-				if (userData && $page.data.userPreferences) {
-					console.log('[LAYOUT] Calling mergeLocalIntoServerData');
+				// Merge local preferences with server preferences
+				if ($page.data.userPreferences) {
+					console.log('[LAYOUT] Merging with server preferences:', $page.data.userPreferences);
 					userStore.mergeLocalIntoServerData($page.data.userPreferences);
 				} else {
-					console.log('[LAYOUT] Merge conditions not met - no userPreferences or no userData');
+					console.log('[LAYOUT] No server preferences, keeping local preferences and syncing to server');
+					// No server prefs, so sync local prefs to server
+					if (localPrefs.selectedLanguages.length > 0) {
+						userStore.user.selectedLanguages = localPrefs.selectedLanguages;
+						userStore.user.translators = localPrefs.translators;
+						userStore.syncToServer();
+					}
 				}
+			} else {
+				console.log('[LAYOUT] User already authenticated locally');
 			}
+		} else {
+			console.log('[LAYOUT] No server user data');
 		}
 	});
 	
