@@ -1,11 +1,9 @@
 <script>
-  import { getContext } from 'svelte';
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
   import { encodeBase64url, decodeBase64url } from '@oslojs/encoding';
   import { slide } from 'svelte/transition';
-  
-  const userStore = getContext('user');
+  import { userStore } from '$lib/stores/user.svelte.js';
   
   let email = $state('');
   let password = $state('');

@@ -1,9 +1,6 @@
 <script>
-  import { getContext } from 'svelte';
   import { LogOut, User } from 'lucide-svelte';
-  
-  // Get user store from context
-  const userStore = getContext('user');
+  import { userStore } from '$lib/stores/user.svelte.js';
   
   // Access userStore directly instead of destructuring to maintain reactivity
   let isLoggingOut = $state(false);

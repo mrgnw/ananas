@@ -5,14 +5,10 @@
 	import { page } from "$app/stores";
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
-	import { setContext } from "svelte";
 	import { afterNavigate } from '$app/navigation';
 	import { userStore } from '$lib/stores/user.svelte.js';
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
 	import UserNav from '$lib/components/UserNav.svelte';
-	
-	// Create context for user state that components can access
-	setContext('user', userStore);
 	
 	/** @type {{children?: import('svelte').Snippet}} */
     let allProps = $props();

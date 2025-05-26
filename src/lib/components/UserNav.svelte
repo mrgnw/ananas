@@ -1,9 +1,6 @@
 <script>
-  import { getContext } from 'svelte';
   import { page } from '$app/stores';
-  
-  // Get user store from context
-  const userStore = getContext('user');
+  import { userStore } from '$lib/stores/user.svelte.js';
   
   // Access auth state reactively with Svelte 5 syntax
   const isAuthenticated = $derived(userStore.user.auth.isAuthenticated);
