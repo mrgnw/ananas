@@ -1,7 +1,7 @@
 // src/lib/stores/user.svelte.js
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
-import { invalidateAll } from '$app/navigation';
+import { invalidateAll, invalidate } from '$app/navigation';
 
 // Using Svelte 5 state with a mutable object
 // This creates a deep reactive state that will track all property changes
@@ -157,20 +157,22 @@ function setAuthState(userData) {
     user.auth.id = userData.id;
     user.auth.email = userData.email;
     user.auth.username = userData.username || null;
+    
+    // Invalidate user-dependent data after login
+    if (browser) {
+      console.log('Auth state updated: true - invalidating user data');
+      invalidate('app:user');
+    }
   } else {
     user.auth.isAuthenticated = false;
     user.auth.id = null;
     user.auth.email = null;
     user.auth.username = null;
+    
+    console.log('Auth state updated: false');
   }
   // Save to localStorage
   save();
-  
-  // Force a microtask to ensure updates are processed
-  Promise.resolve().then(() => {
-    // This empty microtask helps ensure reactivity completes
-    console.log('Auth state updated:', user.auth.isAuthenticated);
-  });
 }
 
 async function login(email, password) {

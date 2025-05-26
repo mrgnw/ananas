@@ -3,7 +3,9 @@ import { initDB } from '$lib/server/db';
 import { getUserPreferences } from '$lib/server/user-preferences';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ request, params = {}, locals, platform }) => {
+export const load: LayoutServerLoad = async ({ request, params = {}, locals, platform, depends }) => {
+  // Make this load function depend on user auth state
+  depends('app:user');
   // Get Cloudflare data
   const cloudflareData = getCloudflareData(request);
   
