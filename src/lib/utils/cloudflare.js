@@ -53,16 +53,19 @@ export function getRpId(platform, url = null) {
     // Log available environment variables for debugging
     console.log('[WEBAUTHN DEBUG] Environment variables:');
     console.log('- platform?.env?.WEBAUTHN_RP_ID:', platform?.env?.WEBAUTHN_RP_ID);
-    console.log('- process.env.WEBAUTHN_RP_ID:', process.env.WEBAUTHN_RP_ID);
     console.log('- platform?.env?.CF_PAGES_BRANCH:', platform?.env?.CF_PAGES_BRANCH);
     
     // First priority: explicitly set WEBAUTHN_RP_ID environment variable
-    const envRpId = platform?.env?.WEBAUTHN_RP_ID || 
-                   process.env.WEBAUTHN_RP_ID;
+    const envRpId = platform?.env?.WEBAUTHN_RP_ID;
                 
     if (envRpId) {
-        console.log('[WEBAUTHN DEBUG] Using WEBAUTHN_RP_ID from env:', envRpId);
-        return envRpId;
+        // Remove any path component - RPID must be a domain only
+        let cleanRpId = envRpId;
+        if (cleanRpId.includes('/')) {
+            cleanRpId = cleanRpId.split('/')[0];
+        }
+        console.log('[WEBAUTHN DEBUG] Using WEBAUTHN_RP_ID from env (cleaned):', cleanRpId);
+        return cleanRpId;
     }
     
     // Get hostname from URL if available
