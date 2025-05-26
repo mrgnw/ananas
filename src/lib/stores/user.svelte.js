@@ -62,50 +62,37 @@ async function syncToServer() {
   }
 }
 
-// Initialize and merge user preferences from server data
-function initializeFromServerData(serverPreferences) {
-  if (serverPreferences) {
-    // Get current preferences before overwriting
-    const currentLanguages = [...user.selectedLanguages];
-    const currentTranslators = [...user.translators];
-    
-    // Get server preferences
-    const serverLanguages = serverPreferences.selected_languages || [];
-    const serverTranslators = serverPreferences.translators || ['deepl'];
-    
-    console.log('Merging preferences:', {
-      currentLanguages,
-      serverLanguages,
-      currentTranslators,
-      serverTranslators
-    });
-    
-    // Merge languages (unique values from both sources)
-    const mergedLanguages = [...new Set([...currentLanguages, ...serverLanguages])];
-    
-    // Merge translators (unique values from both sources)
-    const mergedTranslators = [...new Set([...currentTranslators, ...serverTranslators])];
-    
-    console.log('Merged result:', {
-      mergedLanguages,
-      mergedTranslators
-    });
-    
-    // Update store with merged data
-    user.selectedLanguages = mergedLanguages;
-    user.translators = mergedTranslators;
-    
-    // Save to localStorage
-    save();
-    
-    // If merging resulted in changes (new items added), sync back to server
-    const languagesChanged = mergedLanguages.length > serverLanguages.length;
-    const translatorsChanged = mergedTranslators.length > serverTranslators.length;
-    
-    if ((languagesChanged || translatorsChanged) && user.auth.isAuthenticated) {
-      console.log('Merged preferences differ from server, syncing back to server');
-      syncToServer();
+// Merge local preferences into server data (only adds, never removes)
+function mergeLocalIntoServerData(serverPreferences) {
+  if (!serverPreferences) return;
+  
+  // Start with server data as base
+  const serverLanguages = serverPreferences.selected_languages || [];
+  const serverTranslators = serverPreferences.translators || ['deepl'];
+  
+  // Add any local languages that aren't already in server data
+  user.selectedLanguages.forEach(lang => {
+    if (!serverLanguages.includes(lang)) {
+      serverLanguages.push(lang);
     }
+  });
+  
+  // Add any local translators that aren't already in server data  
+  user.translators.forEach(translator => {
+    if (!serverTranslators.includes(translator)) {
+      serverTranslators.push(translator);
+    }
+  });
+  
+  // Update user with merged data
+  user.selectedLanguages = serverLanguages;
+  user.translators = serverTranslators;
+  save();
+  
+  // Sync back to server if we added anything
+  if (serverLanguages.length > (serverPreferences.selected_languages || []).length ||
+      serverTranslators.length > (serverPreferences.translators || []).length) {
+    syncToServer();
   }
 }
 
@@ -208,16 +195,11 @@ async function login(email, password) {
     console.log('Login: server preferences data:', data.preferences);
     console.log('Login: cached current preferences:', currentPrefs);
     
-    // Initialize preferences from server response if available
+    // Merge local preferences into server data if available
     if (data.preferences) {
-      initializeFromServerData(data.preferences);
+      mergeLocalIntoServerData(data.preferences);
     } else {
-      // Fallback: sync current local preferences to server
-      console.log('No server preferences, restoring local preferences');
-      user.selectedLanguages = currentPrefs.selectedLanguages;
-      user.translators = currentPrefs.translators;
-      save();
-      
+      // No server preferences, sync current local preferences to server
       if (currentPrefs.selectedLanguages.length || currentPrefs.translators.length) {
         await syncToServer();
       }
@@ -328,6 +310,6 @@ export const userStore = {
   logout,
   signup,
   // Server sync
-  initializeFromServerData,
+  mergeLocalIntoServerData,
   syncToServer
 };

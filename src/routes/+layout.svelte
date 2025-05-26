@@ -73,18 +73,9 @@
 				
 				userStore.setAuthState(userData);
 				
-				// Initialize user preferences from server data if available
+				// Merge local preferences into server data if available
 				if (userData && $page.data.userPreferences) {
-					console.log('[LAYOUT] Merging server preferences with local:', {
-						local: currentPrefs,
-						server: $page.data.userPreferences
-					});
-					userStore.initializeFromServerData($page.data.userPreferences);
-				} else if (currentPrefs.selectedLanguages.length || currentPrefs.translators.length) {
-					// No server preferences, restore local preferences
-					console.log('[LAYOUT] No server preferences, restoring local preferences');
-					userStore.user.selectedLanguages = currentPrefs.selectedLanguages;
-					userStore.user.translators = currentPrefs.translators;
+					userStore.mergeLocalIntoServerData($page.data.userPreferences);
 				}
 			}
 		}
