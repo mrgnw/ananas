@@ -6,8 +6,16 @@
 	import { page } from "$app/stores";
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
+	import { setContext } from "svelte";
+	import { afterNavigate } from '$app/navigation';
+	import { invalidateAll } from '$app/navigation';
 	import { initializeFromStorage } from '$lib/stores/translationStore';
+	import { userStore } from '$lib/stores/user.svelte.js';
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
+	import UserNav from '$lib/components/UserNav.svelte';
+	
+	// Create context for user state that components can access
+	setContext('user', userStore);
 	
 	/** @type {{children?: import('svelte').Snippet}} */
     let allProps = $props();
@@ -26,6 +34,16 @@
 		if (browser) {
 			console.log('[CLIENT] Detected country:', countryCode || 'None detected');
 			console.log('[CLIENT] Country info from Wikidata:', countryInfo);
+			
+			// Initialize user authentication state from server data
+			if ($page.data.user) {
+				userStore.setAuthState($page.data.user);
+				
+				// Initialize user preferences from server data if available
+				if ($page.data.userPreferences) {
+					userStore.initializeFromServerData($page.data.userPreferences);
+				}
+			}
 		}
 	});
 
@@ -33,6 +51,54 @@
 	if (browser) {
 		initializeFromStorage();
 	}
+	
+	// Function to sync server data
+	function syncServerData() {
+		console.log('[LAYOUT] Syncing server data');
+		console.log('[LAYOUT] Full $page.data:', $page.data);
+		console.log('[LAYOUT] $page.data.user:', $page.data?.user);
+		console.log('[LAYOUT] $page.data.userPreferences:', $page.data?.userPreferences);
+		
+		if ($page.data?.user) {
+			const userData = $page.data.user;
+			const currentAuthState = userStore.user.auth;
+			
+			console.log('[LAYOUT] Server has user data:', {
+				serverUser: userData,
+				localAuthState: currentAuthState,
+				userPreferences: $page.data.userPreferences
+			});
+			
+			// Always sync auth state from server
+			console.log('[LAYOUT] Setting auth state from server');
+			userStore.setAuthState(userData);
+			
+			// Always load server preferences if they exist
+			if ($page.data.userPreferences) {
+				console.log('[LAYOUT] Loading server preferences:', $page.data.userPreferences);
+				userStore.loadServerPreferences($page.data.userPreferences);
+			} else {
+				console.log('[LAYOUT] No server preferences found');
+			}
+		} else {
+			console.log('[LAYOUT] No server user data - $page.data.user is:', $page.data?.user);
+		}
+	}
+
+	// Load server data on mount
+	onMount(() => {
+		console.log('[LAYOUT] onMount - initial sync');
+		syncServerData();
+	});
+
+	// Also sync after navigation (includes login redirects and data fetches)
+	afterNavigate(() => {
+		console.log('[LAYOUT] afterNavigate - syncing server data');
+		syncServerData();
+	});
+
+	
+	// Access auth state directly from userStore - Svelte 5 will track reactivity automatically
 </script>
 
 <svelte:head>
@@ -46,8 +112,8 @@
   <ul class="navbar-list">
     <li><a href="/" class:active={$page.url.pathname === '/'}>Translate</a></li>
     <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
-    <!-- <li><a href="/user" class:active={$page.url.pathname.startsWith('/user')}>User</a></li> -->
     <li><a href="/history" class:active={$page.url.pathname.startsWith('/history')}>History</a></li>
+    <UserNav />
   </ul>
 </nav>
 
@@ -112,6 +178,7 @@
   color: #fff;
   box-shadow: 0 2px 8px 0 rgba(55,48,163,0.13);
 }
+
 @media (max-width: 600px) {
   .navbar-list {
     gap: 0.5rem;

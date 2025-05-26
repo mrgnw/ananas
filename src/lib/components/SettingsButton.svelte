@@ -5,12 +5,14 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { userStore } from '$lib/stores/user.svelte.js';
   import { defaultLanguages } from '$lib/utils/languages.js';
-  import Prism from 'prismjs';
-  import 'prismjs/components/prism-json.js';
-  import 'prismjs/themes/prism-tomorrow.css'; // or another Prism theme
 
   let props = $props();
   let showProps = $state(false);
+
+  let highlightedJson = $derived.by(() => {
+    // Just return clean JSON without highlighting
+    return JSON.stringify(props.data ?? props, null, 2);
+  });
 
   function clearCache() {
     try {
@@ -46,11 +48,7 @@
   }
 
   function getHighlightedJson() {
-    return Prism.highlight(
-      JSON.stringify(props.data ?? props, null, 2),
-      Prism.languages.json,
-      'json'
-    );
+    return highlightedJson;
   }
 </script>
 

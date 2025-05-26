@@ -1,16 +1,38 @@
 <script>
+  import { onMount } from 'svelte';
   import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
+  import { userStore } from '$lib/stores/user.svelte.js';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
+  
   let history = translationHistoryStore.history;
+  
+  onMount(() => {
+    // If the user is authenticated, load translations from the database
+    if (userStore.user.auth.isAuthenticated) {
+      translationHistoryStore.loadFromDatabase();
+    }
+  });
+  
+  function handleDelete(item, index) {
+    translationHistoryStore.removeTranslation(index);
+  }
 </script>
 
-{#if history.translations.length === 0}
+{#if history.loading}
+  <div class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading translation history...</p>
+  </div>
+{:else if history.translations.length === 0}
   <p>No translations yet.</p>
 {:else}
   <ul class="history-list">
-    {#each history.translations.slice(0, 8) as item, i}
+    {#each history.translations.slice(0, 20) as item, i}
       <li class="history-card group">
-        <MultiLangCard translation={{ translations: item.output }} />
+        <MultiLangCard 
+          translation={{ translations: item.output }} 
+          onDelete={() => handleDelete(item, i)}
+        />
         <div class="history-meta-float">
           <span class="history-input-integral">
             <span class="history-input-preview">{item.input.length > 60 ? item.input.slice(0, 60) + '…' : item.input}</span>
@@ -21,7 +43,7 @@
             <span class="history-time">{new Date(item.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
           </span>
         </div>
-        {#if i < history.translations.slice(0, 8).length - 1}
+        {#if i < history.translations.slice(0, 20).length - 1}
           <div class="history-separator" aria-hidden="true"></div>
         {/if}
       </li>
@@ -30,6 +52,28 @@
 {/if}
 
 <style>
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(55, 48, 163, 0.3);
+  border-radius: 50%;
+  border-top-color: #3730a3;
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .history-list {
   display: flex;
   flex-direction: column;

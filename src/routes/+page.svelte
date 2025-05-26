@@ -3,24 +3,31 @@
   import TranslationInput from '$jibs/TranslationInput.svelte';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
   import { getEnglishName } from '$lib/utils/languages.js';
+  import LanguageSuggestions from '$lib/components/LanguageSuggestions.svelte';
 
 let result = $state(null); // Add result state to hold translation result
 let { data } = $props();
+
+let userLanguages = $derived(userStore.user.selectedLanguages);
 </script>
 
+  <!-- <pre><code>{JSON.stringify(allSuggestions, null, 2)}</code></pre>
+  •
+  <pre><code>{JSON.stringify(suggestionsToShow, null, 2)}</code></pre> -->
   <main class="translate-main">
       <TranslationInput
           bind:result
       />
       <div class="target-langs-list">
-      {#if userStore.user.selectedLanguages.length}
-        {#each userStore.user.selectedLanguages as code, i}
-          <span >{getEnglishName(code)}</span>{#if i < userStore.user.selectedLanguages.length - 1}<span class="lang-sep">·</span>{/if}
+      {#if userLanguages.length}
+        {#each userLanguages as code, i}
+          <span >{getEnglishName(code)}</span>{#if i < userLanguages.length - 1}<span class="lang-sep">·</span>{/if}
         {/each}
-      {:else}
-        <span class="lang-badge empty">No target languages selected</span>
       {/if}
     </div>
+    
+
+    <LanguageSuggestions countryCode={data.ip_country} />
       {#if result}
       <div class="result centered-result">
         <MultiLangCard translation={{ translations: result }} />
@@ -47,11 +54,13 @@ let { data } = $props();
     margin-bottom: 0.5em;
     font-size: 0.8em;
     color: rgba(0, 0, 0, 0.4);
-    max-width: 400px;
+    max-width: 500px;
     flex-wrap: wrap;
     word-break: break-word;
     margin-left: auto;
     margin-right: auto;
   }
+
+
 
   </style>

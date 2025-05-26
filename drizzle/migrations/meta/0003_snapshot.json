@@ -1,0 +1,13 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1730000000000,
+      "tag": "0003_add_passkey_support",
+      "breakpoints": true
+    }
+  ]
+}
