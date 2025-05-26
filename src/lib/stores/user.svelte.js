@@ -73,11 +73,23 @@ function initializeFromServerData(serverPreferences) {
     const serverLanguages = serverPreferences.selected_languages || [];
     const serverTranslators = serverPreferences.translators || ['deepl'];
     
+    console.log('Merging preferences:', {
+      currentLanguages,
+      serverLanguages,
+      currentTranslators,
+      serverTranslators
+    });
+    
     // Merge languages (unique values from both sources)
     const mergedLanguages = [...new Set([...currentLanguages, ...serverLanguages])];
     
     // Merge translators (unique values from both sources)
     const mergedTranslators = [...new Set([...currentTranslators, ...serverTranslators])];
+    
+    console.log('Merged result:', {
+      mergedLanguages,
+      mergedTranslators
+    });
     
     // Update store with merged data
     user.selectedLanguages = mergedLanguages;
@@ -193,15 +205,20 @@ async function login(email, password) {
       setAuthState(data.user);
     }
     
+    console.log('Login: server preferences data:', data.preferences);
+    console.log('Login: cached current preferences:', currentPrefs);
+    
     // Initialize preferences from server response if available
     if (data.preferences) {
       initializeFromServerData(data.preferences);
     } else {
       // Fallback: sync current local preferences to server
+      console.log('No server preferences, restoring local preferences');
+      user.selectedLanguages = currentPrefs.selectedLanguages;
+      user.translators = currentPrefs.translators;
+      save();
+      
       if (currentPrefs.selectedLanguages.length || currentPrefs.translators.length) {
-        user.selectedLanguages = currentPrefs.selectedLanguages;
-        user.translators = currentPrefs.translators;
-        save();
         await syncToServer();
       }
     }
