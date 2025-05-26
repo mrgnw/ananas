@@ -3,14 +3,20 @@
   import TranslationInput from '$jibs/TranslationInput.svelte';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
   import { getEnglishName } from '$lib/utils/languages.js';
+  import { onMount } from 'svelte';
 
 let result = $state(null); // Add result state to hold translation result
 let { data } = $props();
 
-// Update suggestions when country data is available
-$effect(() => {
+// Load suggestions on component mount
+onMount(() => {
+  console.log('onMount running with data.ip_country:', data.ip_country);
   if (data.ip_country) {
+    console.log('Calling loadLanguageSuggestions with:', data.ip_country);
     userStore.loadLanguageSuggestions(data.ip_country);
+  } else {
+    console.log('No ip_country available, calling loadLanguageSuggestions without country');
+    userStore.loadLanguageSuggestions();
   }
 });
 

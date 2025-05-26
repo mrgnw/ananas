@@ -38,17 +38,27 @@ function save() {
 
 // Load language suggestions (doesn't auto-select them)
 function loadLanguageSuggestions(countryCode) {
-  if (!browser) return;
+  if (!browser) {
+    console.log('loadLanguageSuggestions: Not in browser, skipping');
+    return;
+  }
   
+  console.log('loadLanguageSuggestions called with:', countryCode);
   const suggestions = getLanguageSuggestions(countryCode);
   
   console.log('Language suggestions loaded:', {
     countryCode,
     suggestions,
-    browserLanguages: navigator.languages || [navigator.language]
+    browserLanguages: navigator.languages || [navigator.language],
+    userBefore: { ...user },
+    suggestionsLength: suggestions.length
   });
   
   user.suggestedLanguages = suggestions;
+  console.log('User after setting suggestions:', { ...user });
+  
+  // Save suggestions to localStorage so they persist
+  save();
   // Note: We DON'T automatically add these to selectedLanguages anymore
 }
 
