@@ -26,38 +26,28 @@
 		: null);
 	const countryFlag = $derived(countryInfo?.flag || '');
 	
-	onMount(() => {
-		if (browser && $page.data.user) {
-			userStore.setAuthState($page.data.user);
-			
-			// Initialize user preferences from server data if available
-			if ($page.data.userPreferences) {
-				userStore.initializeFromServerData($page.data.userPreferences);
-			}
-		}
-	});
-	
-	// Function to sync server data
+	// Simplified server data sync function
 	function syncServerData() {
 		if ($page.data?.user) {
-			const userData = $page.data.user;
+			userStore.setAuthState($page.data.user);
 			
-			// Always sync auth state from server
-			userStore.setAuthState(userData);
-			
-			// Always load server preferences if they exist
+			// Load server preferences if they exist
 			if ($page.data.userPreferences) {
 				userStore.loadServerPreferences($page.data.userPreferences);
 			}
+		} else if ($page.data?.user === null) {
+			// Explicitly handle logout case
+			userStore.setAuthState(null);
 		}
 	}
 
-	// Load server data on mount
+	// Sync on mount and after navigation
 	onMount(() => {
-		syncServerData();
+		if (browser) {
+			syncServerData();
+		}
 	});
 
-	// Also sync after navigation (includes login redirects and data fetches)
 	afterNavigate(() => {
 		syncServerData();
 	});
