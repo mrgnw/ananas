@@ -29,20 +29,13 @@
 		: null);
 	const countryFlag = $derived(countryInfo?.flag || '');
 	
-	// Log data to console for debugging
 	onMount(() => {
-		if (browser) {
-			console.log('[CLIENT] Detected country:', countryCode || 'None detected');
-			console.log('[CLIENT] Country info from Wikidata:', countryInfo);
+		if (browser && $page.data.user) {
+			userStore.setAuthState($page.data.user);
 			
-			// Initialize user authentication state from server data
-			if ($page.data.user) {
-				userStore.setAuthState($page.data.user);
-				
-				// Initialize user preferences from server data if available
-				if ($page.data.userPreferences) {
-					userStore.initializeFromServerData($page.data.userPreferences);
-				}
+			// Initialize user preferences from server data if available
+			if ($page.data.userPreferences) {
+				userStore.initializeFromServerData($page.data.userPreferences);
 			}
 		}
 	});
@@ -54,46 +47,26 @@
 	
 	// Function to sync server data
 	function syncServerData() {
-		console.log('[LAYOUT] Syncing server data');
-		console.log('[LAYOUT] Full $page.data:', $page.data);
-		console.log('[LAYOUT] $page.data.user:', $page.data?.user);
-		console.log('[LAYOUT] $page.data.userPreferences:', $page.data?.userPreferences);
-		
 		if ($page.data?.user) {
 			const userData = $page.data.user;
-			const currentAuthState = userStore.user.auth;
-			
-			console.log('[LAYOUT] Server has user data:', {
-				serverUser: userData,
-				localAuthState: currentAuthState,
-				userPreferences: $page.data.userPreferences
-			});
 			
 			// Always sync auth state from server
-			console.log('[LAYOUT] Setting auth state from server');
 			userStore.setAuthState(userData);
 			
 			// Always load server preferences if they exist
 			if ($page.data.userPreferences) {
-				console.log('[LAYOUT] Loading server preferences:', $page.data.userPreferences);
 				userStore.loadServerPreferences($page.data.userPreferences);
-			} else {
-				console.log('[LAYOUT] No server preferences found');
 			}
-		} else {
-			console.log('[LAYOUT] No server user data - $page.data.user is:', $page.data?.user);
 		}
 	}
 
 	// Load server data on mount
 	onMount(() => {
-		console.log('[LAYOUT] onMount - initial sync');
 		syncServerData();
 	});
 
 	// Also sync after navigation (includes login redirects and data fetches)
 	afterNavigate(() => {
-		console.log('[LAYOUT] afterNavigate - syncing server data');
 		syncServerData();
 	});
 

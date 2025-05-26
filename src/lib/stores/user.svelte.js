@@ -34,16 +34,7 @@ function save() {
 
 // Save preferences to server if user is authenticated
 async function syncToServer() {
-  console.log('🔄 syncToServer called with auth state:', {
-    isAuthenticated: user.auth.isAuthenticated,
-    userId: user.auth.id,
-    syncing: user.syncing,
-    selectedLanguages: user.selectedLanguages,
-    translators: user.translators
-  });
-  
   if (!user.auth.isAuthenticated || !user.auth.id || user.syncing) {
-    console.log('❌ syncToServer: Skipping sync - auth check failed');
     return;
   }
   
@@ -55,26 +46,16 @@ async function syncToServer() {
       translators: user.translators
     };
     
-    console.log('📤 syncToServer: Sending request to /api/user/preferences', requestData);
-    
     const response = await fetch('/api/user/preferences', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestData)
     });
     
-    console.log('📥 syncToServer: Response status:', response.status, response.statusText);
-    
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ syncToServer: Server error response:', errorText);
       throw new Error(`Failed to save preferences: ${response.status} ${errorText}`);
     }
-    
-    const responseData = await response.json();
-    console.log('✅ syncToServer: Success response:', responseData);
-    
-    console.log('✅ User preferences synced to server successfully');
   } catch (error) {
     console.error('❌ Error syncing preferences to server:', error);
   } finally {
@@ -82,24 +63,15 @@ async function syncToServer() {
   }
 }
 
-// Simply load server preferences and save them to user store
+// Load server preferences and save them to user store
 function loadServerPreferences(serverPreferences) {
   if (!serverPreferences) {
-    console.log('No server preferences to load');
     return;
   }
   
-  console.log('Loading server preferences:', serverPreferences);
-  
-  // Simply set the server data directly - server is source of truth
   user.selectedLanguages = serverPreferences.selected_languages || [];
   user.translators = serverPreferences.translators || ['deepl'];
   save();
-  
-  console.log('Loaded preferences into user store:', {
-    selectedLanguages: user.selectedLanguages,
-    translators: user.translators
-  });
 }
 
 // Language management
@@ -160,7 +132,6 @@ async function setAuthState(userData) {
     
     // Invalidate user-dependent data after login and wait for it
     if (browser) {
-      console.log('Auth state updated: true - invalidating user data');
       await invalidate('app:user');
     }
   } else {
@@ -168,8 +139,6 @@ async function setAuthState(userData) {
     user.auth.id = null;
     user.auth.email = null;
     user.auth.username = null;
-    
-    console.log('Auth state updated: false');
   }
   // Save to localStorage
   save();

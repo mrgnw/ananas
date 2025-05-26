@@ -12,12 +12,11 @@
   let errorMessage = $state('');
   let isLoading = $state(false);
   let isCheckingEmail = $state(false);
-  let emailExists = $state(null); // null = unknown, true = exists, false = new user
+  let emailExists = $state(null);
   let showPasswordField = $state(false);
   const supportsWebAuthn = browser && navigator.credentials?.create && navigator.credentials?.get;
   const isLogin = $derived(emailExists === true);
   
-  // Debounced email checking
   let emailCheckTimeout;
   
   function handleEmailInput(event) {
@@ -99,7 +98,6 @@
       
       if (response.ok && result.success) {
         await userStore.setAuthState(result.user);
-        // Use SvelteKit navigation
         goto('/', { replaceState: true });
       } else {
         errorMessage = result.message || 'Authentication failed. Please check your credentials.';
