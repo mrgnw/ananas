@@ -98,11 +98,9 @@
       const result = await response.json();
       
       if (response.ok && result.success) {
-        userStore.setAuthState(result.user);
-        await Promise.resolve();
-        setTimeout(() => {
-          goto('/', { replaceState: true });
-        }, 50);
+        await userStore.setAuthState(result.user);
+        // Use SvelteKit navigation
+        goto('/', { replaceState: true });
       } else {
         errorMessage = result.message || 'Authentication failed. Please check your credentials.';
       }
@@ -222,7 +220,7 @@
     
     if (verifyResponse.ok && verifyResult.success) {
       if (verifyResult.user) {
-        userStore.setAuthState(verifyResult.user);
+        await userStore.setAuthState(verifyResult.user);
       }
       goto('/', { replaceState: true });
     } else {
@@ -287,7 +285,7 @@
     
     if (verifyResponse.ok && verifyResult.success) {
       if (verifyResult.user) {
-        userStore.setAuthState(verifyResult.user);
+        await userStore.setAuthState(verifyResult.user);
       }
       goto('/', { replaceState: true });
     } else {

@@ -149,8 +149,8 @@ function removeTranslator(translator) {
   }
 }
 
-// Authentication management
-function setAuthState(userData) {
+// Authentication management  
+async function setAuthState(userData) {
   if (userData) {
     // In Svelte 5, we can directly assign to object properties for reactivity
     user.auth.isAuthenticated = true;
@@ -158,10 +158,10 @@ function setAuthState(userData) {
     user.auth.email = userData.email;
     user.auth.username = userData.username || null;
     
-    // Invalidate user-dependent data after login
+    // Invalidate user-dependent data after login and wait for it
     if (browser) {
       console.log('Auth state updated: true - invalidating user data');
-      invalidate('app:user');
+      await invalidate('app:user');
     }
   } else {
     user.auth.isAuthenticated = false;
