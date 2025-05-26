@@ -11,10 +11,10 @@ export async function POST({ request, platform }) {
     }
     
     // Determine RP_ID with proper fallback chain
-    const projectName = 'ananas-8ek';
+    const projectDomain = 'ananas-8ek.pages.dev';
     const rpId = platform?.env?.WEBAUTHN_RP_ID || 
                  process.env.WEBAUTHN_RP_ID || 
-                 (platform?.env?.CF_PAGES_BRANCH ? `${platform.env.CF_PAGES_BRANCH}.${projectName}.pages.dev` : null) ||
+                 (platform?.env?.CF_PAGES_BRANCH && platform.env.CF_PAGES_BRANCH !== 'main' ? `${platform.env.CF_PAGES_BRANCH}.${projectDomain}` : projectDomain) ||
                  'localhost';
     
     const db = initDB(platform?.env?.DB || process.env.DB);
