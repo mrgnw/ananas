@@ -2,7 +2,7 @@
   import { userStore } from '$lib/stores/user.svelte.js';
   import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
   import { onMount } from 'svelte';
-  import { slide } from 'svelte/transition';
+  import { blur } from 'svelte/transition';
 
   let { countryCode } = $props();
 
@@ -46,7 +46,7 @@
 </script>
 
 {#if suggestionsToShow.length > 0}
-  <div class="language-suggestions" transition:slide={{ duration: 300 }}>
+  <div class="language-suggestions" transition:blur={{ duration: 300 }}>
     <p class="suggestions-prompt">
       {#if userLanguages.length === 0}
         Get started with these languages:
@@ -69,7 +69,7 @@
           {/if}
         </button>
       {/each}
-      <a href="/languages" class="browse-all-link">browse all →</a>
+      <a href="/languages" class="browse-all-link">see more →</a>
     </div>
   </div>
 {/if}
