@@ -10,24 +10,8 @@
   let showProps = $state(false);
 
   let highlightedJson = $derived.by(() => {
-    // Check if highlightedPropsJson exists in props
-    if (props.highlightedPropsJson && typeof props.highlightedPropsJson === 'string' && props.highlightedPropsJson.length > 0) {
-      return props.highlightedPropsJson;
-    }
-    
-    // Fallback to simple formatting (no Prism dependency)
-    const rawJson = JSON.stringify(props.data ?? props, null, 2);
-    
-    // Simple syntax highlighting with regex (no Prism dependency)
-    return rawJson
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
-      .replace(/"([^"]*)"/g, '<span class="json-string">"$1"</span>')
-      .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>')
-      .replace(/\b(null)\b/g, '<span class="json-null">$1</span>')
-      .replace(/\b(\d+\.?\d*)\b/g, '<span class="json-number">$1</span>');
+    // Just return clean JSON without highlighting
+    return JSON.stringify(props.data ?? props, null, 2);
   });
 
   function clearCache() {
