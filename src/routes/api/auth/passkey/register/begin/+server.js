@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { initDB } from '$lib/server/db';
 import { beginPasskeyRegistration } from '$lib/server/passkey-auth';
+import { getRpId } from '$lib/utils/cloudflare';
 
 export async function POST({ request, platform }) {
   try {
@@ -10,12 +11,8 @@ export async function POST({ request, platform }) {
       return json({ success: false, message: 'Email is required' }, { status: 400 });
     }
     
-    // Determine RP_ID with proper fallback chain
-    const projectDomain = 'ananas-8ek.pages.dev';
-    const rpId = platform?.env?.WEBAUTHN_RP_ID || 
-                 process.env.WEBAUTHN_RP_ID || 
-                 (platform?.env?.CF_PAGES_BRANCH && platform.env.CF_PAGES_BRANCH !== 'main' ? `${platform.env.CF_PAGES_BRANCH}.${projectDomain}` : projectDomain) ||
-                 'localhost';
+    // Get the Relying Party ID for WebAuthn
+    const rpId = getRpId(platform);
     
     const db = initDB(platform?.env?.DB || process.env.DB);
     
