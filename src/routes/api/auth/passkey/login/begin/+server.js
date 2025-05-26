@@ -3,7 +3,7 @@ import { initDB } from '$lib/server/db';
 import { beginPasskeyAuthentication } from '$lib/server/passkey-auth';
 import { getRpId } from '$lib/utils/cloudflare';
 
-export async function POST({ request, platform }) {
+export async function POST({ request, platform, url }) {
   try {
     const { email } = await request.json();
     
@@ -12,7 +12,16 @@ export async function POST({ request, platform }) {
     }
     
     // Get the Relying Party ID for WebAuthn
-    const rpId = getRpId(platform);
+    const rpId = getRpId(platform, url);
+    
+    // Log origin and RPID for debugging
+    const origin = url.origin;
+    const hostname = url.hostname;
+    console.log('[WEBAUTHN DEBUG] Client request information:');
+    console.log('- Request origin:', origin);
+    console.log('- Request hostname:', hostname);
+    console.log('- Using RPID:', rpId);
+    console.log('- Origin matches RPID as suffix:', hostname.endsWith(rpId));
     
     const db = initDB(platform?.env?.DB || process.env.DB);
     
