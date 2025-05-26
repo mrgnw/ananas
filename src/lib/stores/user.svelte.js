@@ -82,69 +82,24 @@ async function syncToServer() {
   }
 }
 
-// Merge local preferences into server data (only adds, never removes)
-function mergeLocalIntoServerData(serverPreferences) {
-  if (!serverPreferences) return;
+// Simply load server preferences and save them to user store
+function loadServerPreferences(serverPreferences) {
+  if (!serverPreferences) {
+    console.log('No server preferences to load');
+    return;
+  }
   
-  // Create copies to avoid mutating original server data
-  const serverLanguages = [...(serverPreferences.selected_languages || [])];
-  const serverTranslators = [...(serverPreferences.translators || ['deepl'])];
-  const originalServerLanguageCount = serverLanguages.length;
-  const originalServerTranslatorCount = serverTranslators.length;
+  console.log('Loading server preferences:', serverPreferences);
   
-  console.log('Merging preferences:', {
-    serverLanguages,
-    localLanguages: user.selectedLanguages,
-    serverTranslators,
-    localTranslators: user.translators
-  });
-  
-  // Add any local languages that aren't already in server data
-  user.selectedLanguages.forEach(lang => {
-    if (!serverLanguages.includes(lang)) {
-      serverLanguages.push(lang);
-      console.log(`Added local language "${lang}" to server data`);
-    }
-  });
-  
-  // Add any local translators that aren't already in server data  
-  user.translators.forEach(translator => {
-    if (!serverTranslators.includes(translator)) {
-      serverTranslators.push(translator);
-      console.log(`Added local translator "${translator}" to server data`);
-    }
-  });
-  
-  // Update user with merged data
-  user.selectedLanguages = serverLanguages;
-  user.translators = serverTranslators;
+  // Simply set the server data directly - server is source of truth
+  user.selectedLanguages = serverPreferences.selected_languages || [];
+  user.translators = serverPreferences.translators || ['deepl'];
   save();
   
-  console.log('Final merged result:', {
+  console.log('Loaded preferences into user store:', {
     selectedLanguages: user.selectedLanguages,
     translators: user.translators
   });
-  
-  // Sync back to server if we added anything
-  const languageChanges = serverLanguages.length > originalServerLanguageCount;
-  const translatorChanges = serverTranslators.length > originalServerTranslatorCount;
-  
-  console.log('🔍 Checking if sync needed:', {
-    serverLanguagesLength: serverLanguages.length,
-    originalServerLanguageCount,
-    languageChanges,
-    serverTranslatorsLength: serverTranslators.length,
-    originalServerTranslatorCount,
-    translatorChanges,
-    shouldSync: languageChanges || translatorChanges
-  });
-  
-  if (languageChanges || translatorChanges) {
-    console.log('🚀 Changes detected, calling syncToServer');
-    syncToServer();
-  } else {
-    console.log('🟡 No changes detected, skipping sync');
-  }
 }
 
 // Language management
@@ -361,6 +316,7 @@ export const userStore = {
   logout,
   signup,
   // Server sync
-  mergeLocalIntoServerData,
+  loadServerPreferences,
+  initializeFromServerData: loadServerPreferences, // Legacy alias
   syncToServer
 };

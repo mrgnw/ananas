@@ -79,18 +79,12 @@
 				// Set auth state from server
 				userStore.setAuthState(userData);
 				
-				// Merge local preferences with server preferences
+				// Load server preferences directly (server is source of truth)
 				if ($page.data.userPreferences) {
-					console.log('[LAYOUT] Merging with server preferences:', $page.data.userPreferences);
-					userStore.mergeLocalIntoServerData($page.data.userPreferences);
+					console.log('[LAYOUT] Loading server preferences:', $page.data.userPreferences);
+					userStore.loadServerPreferences($page.data.userPreferences);
 				} else {
-					console.log('[LAYOUT] No server preferences, keeping local preferences and syncing to server');
-					// No server prefs, so sync local prefs to server
-					if (localPrefs.selectedLanguages.length > 0) {
-						userStore.user.selectedLanguages = localPrefs.selectedLanguages;
-						userStore.user.translators = localPrefs.translators;
-						userStore.syncToServer();
-					}
+					console.log('[LAYOUT] No server preferences found');
 				}
 			} else {
 				console.log('[LAYOUT] User already authenticated locally');
