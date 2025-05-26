@@ -50,9 +50,9 @@
 		initializeFromStorage();
 	}
 	
-	// Sync with server data on mount
+	// Load server data on mount
 	onMount(() => {
-		console.log('[LAYOUT] onMount - checking for server auth data');
+		console.log('[LAYOUT] onMount - checking server data');
 		
 		if ($page.data?.user) {
 			const userData = $page.data.user;
@@ -64,30 +64,16 @@
 				userPreferences: $page.data.userPreferences
 			});
 			
-			// If we have server auth data but user isn't authenticated locally
-			if (!currentAuthState.isAuthenticated) {
-				console.log('[LAYOUT] User not authenticated locally, syncing from server');
-				
-				// Cache current local preferences before setting auth state
-				const localPrefs = {
-					selectedLanguages: [...userStore.user.selectedLanguages],
-					translators: [...userStore.user.translators]
-				};
-				
-				console.log('[LAYOUT] Cached local preferences:', localPrefs);
-				
-				// Set auth state from server
-				userStore.setAuthState(userData);
-				
-				// Load server preferences directly (server is source of truth)
-				if ($page.data.userPreferences) {
-					console.log('[LAYOUT] Loading server preferences:', $page.data.userPreferences);
-					userStore.loadServerPreferences($page.data.userPreferences);
-				} else {
-					console.log('[LAYOUT] No server preferences found');
-				}
+			// Always sync auth state from server
+			console.log('[LAYOUT] Setting auth state from server');
+			userStore.setAuthState(userData);
+			
+			// Always load server preferences if they exist
+			if ($page.data.userPreferences) {
+				console.log('[LAYOUT] Loading server preferences:', $page.data.userPreferences);
+				userStore.loadServerPreferences($page.data.userPreferences);
 			} else {
-				console.log('[LAYOUT] User already authenticated locally');
+				console.log('[LAYOUT] No server preferences found');
 			}
 		} else {
 			console.log('[LAYOUT] No server user data');
