@@ -7,6 +7,7 @@
 	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
 	import { setContext } from "svelte";
+	import { afterNavigate } from '$app/navigation';
 	import { initializeFromStorage } from '$lib/stores/translationStore';
 	import { userStore } from '$lib/stores/user.svelte.js';
 	import wikidataCountries from '$lib/data/wikidata-countries.json';
@@ -50,9 +51,9 @@
 		initializeFromStorage();
 	}
 	
-	// Load server data on mount
-	onMount(() => {
-		console.log('[LAYOUT] onMount - checking server data');
+	// Function to sync server data
+	function syncServerData() {
+		console.log('[LAYOUT] Syncing server data');
 		
 		if ($page.data?.user) {
 			const userData = $page.data.user;
@@ -78,6 +79,18 @@
 		} else {
 			console.log('[LAYOUT] No server user data');
 		}
+	}
+
+	// Load server data on mount
+	onMount(() => {
+		console.log('[LAYOUT] onMount - initial sync');
+		syncServerData();
+	});
+
+	// Also sync after navigation (includes login redirects and data fetches)
+	afterNavigate(() => {
+		console.log('[LAYOUT] afterNavigate - syncing server data');
+		syncServerData();
 	});
 	
 	// Access auth state directly from userStore - Svelte 5 will track reactivity automatically
