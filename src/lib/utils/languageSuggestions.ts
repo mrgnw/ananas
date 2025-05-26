@@ -88,22 +88,14 @@ export function suggestLanguagesFromBrowser(): Array<{
     confidence: number;
   }> = [];
   
-  console.log('Browser language detection:', {
-    browserLangs,
-    navigatorLanguages: browser ? navigator.languages : 'not in browser',
-    navigatorLanguage: browser ? navigator.language : 'not in browser'
-  });
-  
   const seenCodes = new Set<string>();
   
   // Primary suggestions from browser preferences
   browserLangs.forEach((browserLang, index) => {
     const iso3 = browserLangToIso3(browserLang);
-    console.log(`Processing browser lang: ${browserLang} -> ${iso3}`);
     
     if (iso3 && !seenCodes.has(iso3)) {
       const langInfo = getLanguageInfo(iso3);
-      console.log(`Language info for ${iso3}:`, langInfo);
       
       if (langInfo) {
         suggestions.push({
@@ -132,7 +124,6 @@ export function suggestLanguagesFromBrowser(): Array<{
     }
   }
   
-  console.log('Final browser suggestions:', suggestions);
   return suggestions.slice(0, 5); // Limit to top 5 suggestions
 }
 
@@ -186,18 +177,10 @@ export function getLanguageSuggestions(countryCode?: string): Array<{
   reason: 'primary' | 'secondary' | 'fallback' | 'country_primary' | 'country_secondary';
   confidence: number;
 }> {
-  console.log('getLanguageSuggestions called with countryCode:', countryCode);
   
   const browserSuggestions = suggestLanguagesFromBrowser();
   const countrySuggestions = countryCode ? suggestLanguagesFromCountry(countryCode) : [];
-  
-  console.log('getLanguageSuggestions debug:', {
-    countryCode,
-    browserSuggestions,
-    countrySuggestions,
-    browserSuggestionsLength: browserSuggestions.length,
-    countrySuggestionsLength: countrySuggestions.length
-  });
+
   
   // Merge and deduplicate, prioritizing browser preferences
   const combined = [...browserSuggestions];
@@ -213,31 +196,5 @@ export function getLanguageSuggestions(countryCode?: string): Array<{
   // Sort by confidence (highest first)
   const result = combined.sort((a, b) => b.confidence - a.confidence).slice(0, 6);
   
-  console.log('getLanguageSuggestions final result:', result);
   return result;
-}
-
-/**
- * Gets automatic language suggestions for new users (DEPRECATED)
- * Use getLanguageSuggestions() instead and let the UI handle selection
- * @deprecated Use getLanguageSuggestions() for suggestions only
- */
-export function getAutoLanguageSelection(countryCode?: string): string[] {
-  console.warn('getAutoLanguageSelection is deprecated. Use getLanguageSuggestions() instead.');
-  
-  const suggestions = getLanguageSuggestions(countryCode);
-  
-  console.log('Auto language selection debug:', {
-    countryCode,
-    allSuggestions: suggestions,
-    browserLanguages: browser ? (navigator.languages || [navigator.language]) : [],
-    highConfidence: suggestions.filter(s => s.confidence > 0.7),
-    mediumConfidence: suggestions.filter(s => s.confidence > 0.5)
-  });
-  
-  // For backward compatibility, return just the highest confidence suggestions
-  return suggestions
-    .filter(s => s.confidence > 0.6)
-    .slice(0, 3)
-    .map(s => s.code);
 }

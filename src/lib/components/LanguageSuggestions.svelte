@@ -6,24 +6,13 @@
 
   let { countryCode } = $props();
 
-  // Simple reactive state for suggestions
   let allSuggestions = $state([]);
-
-  // Load suggestions on component mount
   onMount(() => {
     allSuggestions = getLanguageSuggestions(countryCode);
   });
 
-  // Derive user languages
   let userLanguages = $derived(userStore.user.selectedLanguages);
-
-  // Derive suggestions to show (excluding already selected languages)
   let suggestionsToShow = $derived.by(() => {
-      allSuggestions,
-      allSuggestionsLength: allSuggestions.length,
-      userLanguages,
-      userLanguagesLength: userLanguages.length
-    });
     
     if (allSuggestions.length === 0) {
       return [];
