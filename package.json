@@ -36,6 +36,7 @@
     "update-data": "bun scripts/fetch-wikidata-language-data.js && bun scripts/fetch-wikidata-country-data.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply ananas-auth-dev --remote",
+    "db:migrate:prod": "wrangler d1 migrations apply ananas-auth --remote",
     "db:local": "wrangler d1 migrations apply ananas-auth-dev"
   },
   "type": "module",
