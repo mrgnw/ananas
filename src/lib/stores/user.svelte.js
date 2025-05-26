@@ -126,10 +126,24 @@ function mergeLocalIntoServerData(serverPreferences) {
   });
   
   // Sync back to server if we added anything
-  if (serverLanguages.length > originalServerLanguageCount ||
-      serverTranslators.length > originalServerTranslatorCount) {
-    console.log('Changes detected, syncing to server');
+  const languageChanges = serverLanguages.length > originalServerLanguageCount;
+  const translatorChanges = serverTranslators.length > originalServerTranslatorCount;
+  
+  console.log('🔍 Checking if sync needed:', {
+    serverLanguagesLength: serverLanguages.length,
+    originalServerLanguageCount,
+    languageChanges,
+    serverTranslatorsLength: serverTranslators.length,
+    originalServerTranslatorCount,
+    translatorChanges,
+    shouldSync: languageChanges || translatorChanges
+  });
+  
+  if (languageChanges || translatorChanges) {
+    console.log('🚀 Changes detected, calling syncToServer');
     syncToServer();
+  } else {
+    console.log('🟡 No changes detected, skipping sync');
   }
 }
 
