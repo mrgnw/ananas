@@ -15,6 +15,12 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals, pla
   const testQueryResult = { fruit: 'banana' };
   
   // Get authentication state from locals
+  console.log('[LAYOUT SERVER] Auth check:', {
+    localsUser: locals.user ? 'EXISTS' : 'NULL',
+    userId: locals.user?.id,
+    userEmail: locals.user?.email
+  });
+  
   const user = locals.user ? {
     id: locals.user.id,
     email: locals.user.email,
@@ -27,9 +33,16 @@ export const load: LayoutServerLoad = async ({ request, params = {}, locals, pla
     try {
       const db = initDB(platform.env.DB);
       userPreferences = await getUserPreferences(db, user.id);
+      console.log('[LAYOUT SERVER] Loaded user preferences:', {
+        userId: user.id,
+        selectedLanguages: userPreferences?.selected_languages,
+        translators: userPreferences?.translators
+      });
     } catch (error) {
       console.error('[LAYOUT SERVER] Error loading user preferences:', error);
     }
+  } else {
+    console.log('[LAYOUT SERVER] No user or DB available for preferences');
   }
   
   // Format JSON without Prism
