@@ -3,41 +3,33 @@
   import TranslationInput from '$jibs/TranslationInput.svelte';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
   import { getEnglishName } from '$lib/utils/languages.js';
+  import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
   import { onMount } from 'svelte';
 
 let result = $state(null); // Add result state to hold translation result
 let { data } = $props();
 
+let allSuggestions = $state([]);
+
 // Load suggestions on component mount
 onMount(() => {
   console.log('onMount running with data.ip_country:', data.ip_country);
-  if (data.ip_country) {
-    console.log('Calling loadLanguageSuggestions with:', data.ip_country);
-    userStore.loadLanguageSuggestions(data.ip_country);
-  } else {
-    console.log('No ip_country available, calling loadLanguageSuggestions without country');
-    userStore.loadLanguageSuggestions();
-  }
+  const countryCode = data.ip_country || undefined;
+  allSuggestions = getLanguageSuggestions(countryCode);
+  console.log('Loaded suggestions:', allSuggestions);
 });
 
-// Get language suggestions from the user store
-let suggestions = $derived(() => {
-  const hasLanguages = userStore.user?.selectedLanguages?.length > 0;
-  const suggestedLanguages = userStore.user?.suggestedLanguages || [];
-  
-  console.log('Suggestions debug:', {
-    hasLanguages,
-    selectedLanguages: userStore.user?.selectedLanguages,
-    ip_country: data.ip_country,
-    suggestedLanguages,
-    userStoreUser: userStore.user
+let userLanguages = $derived(userStore.user.selectedLanguages);
+
+let suggestionsToShow = $derived(() => {
+  const filtered = allSuggestions.filter(s => !userLanguages.includes(s.code));
+  console.log('Suggestions to show:', {
+    allSuggestions: allSuggestions.length,
+    userLanguages,
+    filtered: filtered.length,
+    filteredSuggestions: filtered
   });
-  
-  // Show suggestions if user has no languages or has suggestions that aren't already selected
-  if (hasLanguages) {
-    return suggestedLanguages.filter(s => !userStore.user.selectedLanguages.includes(s.code));
-  }
-  return suggestedLanguages.slice(0, 4);
+  return filtered.slice(0, 4);
 });
 </script>
 
@@ -46,20 +38,20 @@ let suggestions = $derived(() => {
           bind:result
       />
       <div class="target-langs-list">
-      {#if userStore.user.selectedLanguages.length}
-        {#each userStore.user.selectedLanguages as code, i}
-          <span >{getEnglishName(code)}</span>{#if i < userStore.user.selectedLanguages.length - 1}<span class="lang-sep">·</span>{/if}
+      {#if userLanguages.length}
+        {#each userLanguages as code, i}
+          <span >{getEnglishName(code)}</span>{#if i < userLanguages.length - 1}<span class="lang-sep">·</span>{/if}
         {/each}
-      {:else if suggestions.length > 0 || true}
+      {:else if suggestionsToShow.length > 0 || true}
         <div class="language-suggestions">
           <div class="suggestions-header">
             <span class="suggestions-title">Get started with these languages:</span>
           </div>
           <div class="suggestions-buttons">
-            {#if suggestions.length === 0}
-              <p>Debug: No suggestions found. User has {userStore.user?.selectedLanguages?.length || 0} languages. Country: {data.ip_country || 'none'}</p>
+            {#if suggestionsToShow.length === 0}
+              <p>Debug: No suggestions found. User has {userLanguages.length} languages. Country: {data.ip_country || 'none'}</p>
             {/if}
-            {#each suggestions as suggestion}
+            {#each suggestionsToShow as suggestion}
               <button 
                 class="suggestion-btn"
                 onclick={() => userStore.addLanguage(suggestion.code)}
