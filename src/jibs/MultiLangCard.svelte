@@ -228,7 +228,7 @@
             <div 
               class="language-label"
             >
-              {languageName}{#if isOriginalMatch} • original{/if}{#if isDifferentFromOriginal} • differs from original{/if}
+              {languageName}{#if isOriginalMatch} • original{/if}
             </div>
             <div 
               class="translation-text {truncate_lines ? 'line-clamp-3' : ''} break-words"
