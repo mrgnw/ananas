@@ -2,6 +2,7 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import { getColorByIndex } from '$lib/colors';
+	import { getEnglishName } from '$lib/utils/languages.js';
 	import { Copy, MoreHorizontal, Trash2, Clock } from 'lucide-svelte';
 	import { userStore } from '$lib/stores/user.svelte.js';
 	import { slide } from 'svelte/transition';
@@ -209,6 +210,7 @@
         {@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
         {@const isSourceLang = lang === sourceLang}
         {@const isOriginalMatch = originalMatchesTranslation() === lang}
+        {@const languageName = getEnglishName(lang)}
         <div 
           class="translation-row" 
           class:is-source={isSourceLang} 
@@ -218,9 +220,9 @@
             <div class="language-bar" class:source-bar={isSourceLang} class:original-bar={isOriginalMatch}></div>
           </div>
           <div class="translation-content">
-            {#if isOriginalMatch}
-              <div class="original-label">Original</div>
-            {/if}
+            <div class="language-label">
+              {languageName}{#if isOriginalMatch} • original{/if}
+            </div>
             <div class="translation-text {truncate_lines ? 'line-clamp-3' : ''} break-words">
               {translation.translations[lang]}
             </div>
@@ -343,6 +345,30 @@
     max-height: 1.5rem;
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .language-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.125rem;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    transition: max-height 0.2s ease, opacity 0.2s ease, transform 0.2s ease, margin-bottom 0.2s ease;
+  }
+
+  .translation-row:hover .language-label {
+    max-height: 1.5rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .translation-row.is-original .language-label {
+    color: #0369a1;
   }
 
   .original-text {
@@ -591,6 +617,13 @@
 
     /* Always show original label on touch devices */
     .translation-row.is-original .original-label {
+      max-height: 1.5rem;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Always show language labels on touch devices */
+    .translation-row .language-label {
       max-height: 1.5rem;
       opacity: 1;
       transform: translateY(0);
