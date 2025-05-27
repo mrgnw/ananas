@@ -104,13 +104,13 @@
 </script>
 
 <!-- Search and Filter Header -->
-<div class="review-header">
+<div class="history-header">
   <div class="search-container">
     <div class="search-input-wrapper">
       <Search class="search-icon" size={16} />
       <input
         type="text"
-        placeholder="Search your translations to review..."
+        placeholder="Search translations..."
         bind:value={searchQuery}
         class="search-input"
       />
@@ -160,7 +160,7 @@
 {#if translationHistoryStore.history.loading}
   <div class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Loading your translations for review...</p>
+    <p>Loading translation history...</p>
   </div>
 {:else if filteredTranslations().length === 0}
   <div class="empty-state">
@@ -168,7 +168,7 @@
       <p>No translations found for "{searchQuery}"</p>
       <button class="clear-search-btn" onclick={clearSearch}>Clear search</button>
     {:else}
-      <p>No translations yet. Start translating to build your review collection!</p>
+      <p>No translations yet. Start translating to build your history!</p>
     {/if}
   </div>
 {:else}
@@ -195,6 +195,16 @@
                 timestamp={item.timestamp}
               />
             </div>
+            
+            <!-- Metadata -->
+            <div class="item-metadata">
+              <span class="timestamp">
+                {new Date(item.timestamp).toLocaleTimeString(undefined, { 
+                  hour: '2-digit', 
+                  minute: '2-digit' 
+                })}
+              </span>
+            </div>
           </div>
         {/each}
       </div>
@@ -213,7 +223,7 @@
 
 <style>
 /* Header and Search */
-.review-header {
+.history-header {
   display: flex;
   gap: 0.75rem;
   margin-bottom: 1rem;
@@ -430,6 +440,18 @@
   margin-bottom: 0.75rem;
 }
 
+.item-metadata {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
 /* Load More */
 .load-more-container {
   text-align: center;
@@ -453,7 +475,7 @@
 
 /* Responsive Design */
 @media (min-width: 640px) {
-  .review-header {
+  .history-header {
     padding: 0 1rem;
   }
   
@@ -483,7 +505,7 @@
 }
 
 @media (min-width: 1024px) {
-  .review-header {
+  .history-header {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;

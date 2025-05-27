@@ -107,24 +107,26 @@ Transform the review page from a "management dashboard" to a "review and learnin
 
 ---
 
-### Phase 5: Add Metadata to Menu ⚠️ MEDIUM RISK
+### Phase 5: Add Metadata to Menu ✅ COMPLETE
 **Goal**: Move timestamps and metadata to contextual menu
 **Risk**: Medium - requires prop changes
 
-**Changes**:
+**Changes**: ✅ DONE
 - Add `timestamp` prop to `MultiLangCard`
-- Display timestamp in contextual menu
+- Display timestamp in contextual menu with smart formatting
 - Remove timestamp from review page template
-- Add other metadata as needed
+- Add Clock icon and proper styling for metadata
 
-**Files to Modify**:
+**Files Modified**:
 - `/src/jibs/MultiLangCard.svelte`
 - `/src/routes/review/+page.svelte`
+- `/src/routes/history/+page.svelte`
 
-**Testing**:
+**Testing**: ✅ PASSED
 - Verify timestamp display in menu
-- Test with different date formats
+- Test with different date formats (Today, Yesterday, Older)
 - Ensure metadata is accessible
+- Confirm visual hierarchy improvements
 
 ---
 

@@ -2,10 +2,10 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import { getColorByIndex } from '$lib/colors';
-	import { Copy, MoreHorizontal, Trash2 } from 'lucide-svelte';
+	import { Copy, MoreHorizontal, Trash2, Clock } from 'lucide-svelte';
 	import { userStore } from '$lib/stores/user.svelte.js';
 
-	let { translation, show_langs, truncate_lines, onDelete = null, ...props } = $props();
+	let { translation, show_langs, truncate_lines, onDelete = null, timestamp = null, ...props } = $props();
 
 	// Menu state
 	let showContextMenu = $state(false);
@@ -22,6 +22,28 @@
 
 	const closeContextMenu = () => {
 		showContextMenu = false;
+	};
+
+	// Format timestamp for display
+	const formatTimestamp = (timestamp) => {
+		if (!timestamp) return '';
+		const date = new Date(timestamp);
+		const now = new Date();
+		const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+		const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+		
+		if (date >= today) {
+			return `Today at ${date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+		} else if (date >= yesterday) {
+			return `Yesterday at ${date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
+		} else {
+			return date.toLocaleDateString(undefined, { 
+				month: 'short', 
+				day: 'numeric',
+				hour: '2-digit', 
+				minute: '2-digit' 
+			});
+		}
 	};
 
 	// Handle click outside to close menu
@@ -86,6 +108,14 @@
       <!-- Dropdown menu -->
       {#if showContextMenu}
         <div class="context-dropdown">
+          {#if timestamp}
+            <div class="dropdown-item metadata-item">
+              <Clock class="dropdown-icon" />
+              <span>{formatTimestamp(timestamp)}</span>
+            </div>
+            <div class="dropdown-separator"></div>
+          {/if}
+          
           <button
             class="dropdown-item delete-item"
             onclick={() => { deleteTranslation(); closeContextMenu(); }}
@@ -333,6 +363,23 @@
   .dropdown-item.delete-item:hover {
     background-color: #fef2f2;
     color: #ef4444;
+  }
+
+  .dropdown-item.metadata-item {
+    color: #6b7280;
+    font-size: 0.8125rem;
+    cursor: default;
+  }
+
+  .dropdown-item.metadata-item:hover {
+    background-color: transparent;
+    color: #6b7280;
+  }
+
+  .dropdown-separator {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 0.25rem 0;
   }
 
   .dropdown-icon {
