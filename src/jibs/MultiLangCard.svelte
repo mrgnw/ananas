@@ -43,39 +43,229 @@
 	};
 </script>
 
-<div class="group mx-auto max-w-xl min-w-[320px]">
-  <div class="relative">
-    <div class="p-2 sm:p-3">
-      <div class="relative">
-        {#each userStore.user.selectedLanguages as lang, i}
-          {#if translation.translations[lang]}
-            {@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
-            {@const isSourceLang = lang === sourceLang}
-            <div class="relative group mb-1 last:mb-0">
-              <div class="absolute left-0 top-0 bottom-0 w-0.5 {isSourceLang ? 'bg-blue-300' : 'bg-gray-100'} group-hover:bg-blue-200 transition-colors"></div>
-              <div class="pl-4 text-sm {getColorByIndex(i, true)} {truncate_lines ? 'line-clamp-3' : ''} break-words">
-                {translation.translations[lang]}
-              </div>
-              <button
-                class="absolute left-0.5 top-0.5 text-gray-400 opacity-0 transition-opacity hover:text-blue-500 group-hover:opacity-100"
-                aria-label="Copy translation"
-                onclick={() => copyToClipboard(translation.translations[lang])}
-              >
-                <Copy class="h-2.5 w-2.5" />
-              </button>
+<div class="translation-card">
+  <div class="translations-container">
+    {#each userStore.user.selectedLanguages as lang, i}
+      {#if translation.translations[lang]}
+        {@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
+        {@const isSourceLang = lang === sourceLang}
+        <div class="translation-row" class:is-source={isSourceLang}>
+          <div class="language-indicator {getColorByIndex(i, true)}">
+            <div class="language-bar" class:source-bar={isSourceLang}></div>
+          </div>
+          <div class="translation-content">
+            <div class="translation-text {truncate_lines ? 'line-clamp-3' : ''} break-words">
+              {translation.translations[lang]}
             </div>
-          {/if}
-        {/each}
-      </div>
-    </div>
-    <div class="absolute bottom-1 right-1 z-10 opacity-0 transition-opacity group-hover:opacity-100">
+          </div>
+          <button
+            class="copy-button"
+            aria-label="Copy translation"
+            onclick={() => copyToClipboard(translation.translations[lang])}
+          >
+            <Copy class="copy-icon" />
+          </button>
+        </div>
+      {/if}
+    {/each}
+  </div>
+  
+  {#if onDelete}
+    <div class="actions-container">
       <button
-        class="icon-button rounded-full border border-gray-100 bg-white p-1 text-gray-400 shadow-md hover:text-red-500"
+        class="delete-button"
         aria-label="Delete translation"
         onclick={deleteTranslation}
       >
-        <Trash2 class="h-2.5 w-2.5" />
+        <Trash2 class="delete-icon" />
       </button>
     </div>
-  </div>
+  {/if}
 </div>
+
+<style>
+  .translation-card {
+    position: relative;
+    width: 100%;
+  }
+
+  .translations-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .translation-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s ease;
+    position: relative;
+    min-height: 2.5rem;
+  }
+
+  .translation-row:hover {
+    background-color: #f8fafc;
+  }
+
+  .translation-row.is-source {
+    background-color: #eff6ff;
+  }
+
+  .translation-row.is-source:hover {
+    background-color: #dbeafe;
+  }
+
+  .language-indicator {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding-top: 0.125rem;
+  }
+
+  .language-bar {
+    width: 3px;
+    height: 1.5rem;
+    border-radius: 1.5px;
+    background-color: #e5e7eb;
+    transition: background-color 0.15s ease;
+  }
+
+  .source-bar {
+    background-color: #3b82f6;
+  }
+
+  .translation-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .translation-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #374151;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .copy-button {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: none;
+    color: #9ca3af;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    transition: all 0.15s ease;
+    opacity: 0;
+  }
+
+  .translation-row:hover .copy-button {
+    opacity: 1;
+  }
+
+  .copy-button:hover {
+    background-color: #f3f4f6;
+    color: #3b82f6;
+  }
+
+  .copy-button:active {
+    transform: scale(0.95);
+  }
+
+  .copy-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .actions-container {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .translation-card:hover .actions-container {
+    opacity: 1;
+  }
+
+  .delete-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #9ca3af;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .delete-button:hover {
+    color: #ef4444;
+    border-color: #fecaca;
+    background-color: #fef2f2;
+  }
+
+  .delete-button:active {
+    transform: scale(0.95);
+  }
+
+  .delete-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .translation-row {
+      gap: 0.5rem;
+      padding: 0.375rem;
+    }
+
+    .copy-button {
+      opacity: 1; /* Always show on mobile since hover doesn't work */
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+
+    .actions-container {
+      opacity: 1; /* Always show on mobile */
+    }
+
+    .delete-button {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+
+    .translation-text {
+      font-size: 0.8125rem;
+    }
+  }
+
+  /* Touch device optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    .copy-button,
+    .actions-container {
+      opacity: 1;
+    }
+  }
+</style>

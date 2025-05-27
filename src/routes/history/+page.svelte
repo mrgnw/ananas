@@ -3,8 +3,85 @@
   import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
   import { userStore } from '$lib/stores/user.svelte.js';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
+  import { Search, Calendar, Filter } from 'lucide-svelte';
   
-  let history = translationHistoryStore.history;
+  let searchQuery = $state('');
+  let showFilters = $state(false);
+  let selectedDateFilter = $state('all');
+  let itemsToShow = $state(20);
+  
+  // Filter and search logic
+  let filteredTranslations = $derived(() => {
+    if (!translationHistoryStore.history.translations) return [];
+    
+    let filtered = translationHistoryStore.history.translations;
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(item => 
+        item.input.toLowerCase().includes(query) ||
+        Object.values(item.output).some(translation => 
+          translation.toLowerCase().includes(query)
+        )
+      );
+    }
+    
+    // Apply date filter
+    if (selectedDateFilter !== 'all') {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+      const thisWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      
+      filtered = filtered.filter(item => {
+        const itemDate = new Date(item.timestamp);
+        switch (selectedDateFilter) {
+          case 'today':
+            return itemDate >= today;
+          case 'yesterday':
+            return itemDate >= yesterday && itemDate < today;
+          case 'week':
+            return itemDate >= thisWeek;
+          default:
+            return true;
+        }
+      });
+    }
+    
+    return filtered.slice(0, itemsToShow);
+  });
+  
+  // Group translations by date for better organization
+  let groupedTranslations = $derived(() => {
+    const groups = new Map();
+    
+    filteredTranslations().forEach(item => {
+      const date = new Date(item.timestamp);
+      const today = new Date();
+      const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+      
+      let groupKey;
+      if (date.toDateString() === today.toDateString()) {
+        groupKey = 'Today';
+      } else if (date.toDateString() === yesterday.toDateString()) {
+        groupKey = 'Yesterday';
+      } else {
+        groupKey = date.toLocaleDateString(undefined, { 
+          weekday: 'long', 
+          month: 'short', 
+          day: 'numeric' 
+        });
+      }
+      
+      if (!groups.has(groupKey)) {
+        groups.set(groupKey, []);
+      }
+      groups.get(groupKey).push(item);
+    });
+    
+    return groups;
+  });
   
   onMount(() => {
     // If the user is authenticated, load translations from the database
@@ -16,48 +93,256 @@
   function handleDelete(item, index) {
     translationHistoryStore.removeTranslation(index);
   }
+  
+  function loadMore() {
+    itemsToShow += 20;
+  }
+  
+  function clearSearch() {
+    searchQuery = '';
+  }
 </script>
 
-{#if history.loading}
+<!-- Search and Filter Header -->
+<div class="history-header">
+  <div class="search-container">
+    <div class="search-input-wrapper">
+      <Search class="search-icon" size={16} />
+      <input
+        type="text"
+        placeholder="Search translations..."
+        bind:value={searchQuery}
+        class="search-input"
+      />
+      {#if searchQuery}
+        <button class="clear-search" onclick={clearSearch}>×</button>
+      {/if}
+    </div>
+  </div>
+  
+  <button 
+    class="filter-toggle"
+    class:active={showFilters}
+    onclick={() => showFilters = !showFilters}
+  >
+    <Filter size={16} />
+  </button>
+</div>
+
+<!-- Debug info (remove in production) -->
+{#if import.meta.env.DEV}
+  <div style="background: #f0f0f0; padding: 1rem; margin: 1rem; border-radius: 4px; font-family: monospace; font-size: 12px;">
+    <p>Debug Info:</p>
+    <p>Total translations: {translationHistoryStore.history.translations?.length || 0}</p>
+    <p>Filtered translations: {filteredTranslations().length}</p>
+    <p>Loading: {translationHistoryStore.history.loading}</p>
+    <p>User authenticated: {userStore.user.auth.isAuthenticated}</p>
+    {#if translationHistoryStore.history.translations?.length > 0}
+      <p>First translation: {JSON.stringify(translationHistoryStore.history.translations[0], null, 2)}</p>
+    {/if}
+  </div>
+{/if}
+
+{#if showFilters}
+  <div class="filters-panel">            <div class="filter-group">
+              <span class="filter-label">Time period:</span>
+              <div class="filter-options">
+        <button class="filter-option" class:active={selectedDateFilter === 'all'} onclick={() => selectedDateFilter = 'all'}>All</button>
+        <button class="filter-option" class:active={selectedDateFilter === 'today'} onclick={() => selectedDateFilter = 'today'}>Today</button>
+        <button class="filter-option" class:active={selectedDateFilter === 'yesterday'} onclick={() => selectedDateFilter = 'yesterday'}>Yesterday</button>
+        <button class="filter-option" class:active={selectedDateFilter === 'week'} onclick={() => selectedDateFilter = 'week'}>This week</button>
+      </div>
+    </div>
+  </div>
+{/if}
+
+<!-- Translation History Content -->
+{#if translationHistoryStore.history.loading}
   <div class="loading-container">
     <div class="loading-spinner"></div>
     <p>Loading translation history...</p>
   </div>
-{:else if history.translations.length === 0}
-  <p>No translations yet.</p>
+{:else if filteredTranslations().length === 0}
+  <div class="empty-state">
+    {#if searchQuery}
+      <p>No translations found for "{searchQuery}"</p>
+      <button class="clear-search-btn" onclick={clearSearch}>Clear search</button>
+    {:else}
+      <p>No translations yet. Start translating to build your history!</p>
+    {/if}
+  </div>
 {:else}
-  <ul class="history-list">
-    {#each history.translations.slice(0, 20) as item, i}
-      <li class="history-card group">
-        <MultiLangCard 
-          translation={{ translations: item.output }} 
-          onDelete={() => handleDelete(item, i)}
-        />
-        <div class="history-meta-float">
-          <span class="history-input-integral">
-            <span class="history-input-preview">{item.input.length > 60 ? item.input.slice(0, 60) + '…' : item.input}</span>
-            <span class="history-input-full">{item.input}</span>
-          </span>
-          <span class="history-time-integral">
-            <span class="history-date">{new Date(item.timestamp).toLocaleDateString(undefined, { month: 'short', day: '2-digit' })}</span>
-            <span class="history-time">{new Date(item.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
-          </span>
-        </div>
-        {#if i < history.translations.slice(0, 20).length - 1}
-          <div class="history-separator" aria-hidden="true"></div>
-        {/if}
-      </li>
-    {/each}
-  </ul>
+  <!-- Grouped translations -->
+  {#each [...groupedTranslations().entries()] as [groupKey, groupItems]}
+    <div class="date-group">
+      <h3 class="date-group-header">{groupKey}</h3>
+      <div class="translations-grid">
+        {#each groupItems as item, i}
+          <div class="translation-item">
+            <!-- Source text always visible -->
+            <div class="source-text">
+              <span class="source-label">Original:</span>
+              <span class="source-content">{item.input}</span>
+            </div>
+            
+            <!-- Translation card -->
+            <div class="translation-card-wrapper">
+              <MultiLangCard 
+                translation={{ translations: item.output }} 
+                show_langs={true}
+                onDelete={() => handleDelete(item, i)}
+                truncate_lines={true}
+              />
+            </div>
+            
+            <!-- Metadata -->
+            <div class="item-metadata">
+              <span class="timestamp">
+                {new Date(item.timestamp).toLocaleTimeString(undefined, { 
+                  hour: '2-digit', 
+                  minute: '2-digit' 
+                })}
+              </span>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </div>
+  {/each}
+  
+  <!-- Load more button -->
+  {#if translationHistoryStore.history.translations.length > itemsToShow}
+    <div class="load-more-container">
+      <button class="load-more-btn" onclick={loadMore}>
+        Load more translations
+      </button>
+    </div>
+  {/if}
 {/if}
 
 <style>
+/* Header and Search */
+.history-header {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+}
+
+.search-container {
+  flex: 1;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #6b7280;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  background: white;
+  transition: border-color 0.15s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3730a3;
+  box-shadow: 0 0 0 3px rgba(55, 48, 163, 0.1);
+}
+
+.clear-search {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.filter-toggle {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: white;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-toggle:hover,
+.filter-toggle.active {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Filters Panel */
+.filters-panel {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin: 0 0.5rem 1rem;
+}
+
+.filter-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.filter-options {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-option {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background: white;
+  color: #6b7280;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-option:hover {
+  background: #f3f4f6;
+}
+
+.filter-option.active {
+  background: #3730a3;
+  color: white;
+  border-color: #3730a3;
+}
+
+/* Loading and Empty States */
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 2rem 0;
+  margin: 3rem 0;
+  color: #6b7280;
 }
 
 .loading-spinner {
@@ -67,111 +352,180 @@
   border-radius: 50%;
   border-top-color: #3730a3;
   animation: spin 1s ease-in-out infinite;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-.history-list {
+.empty-state {
+  text-align: center;
+  margin: 3rem 1rem;
+  color: #6b7280;
+}
+
+.clear-search-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #3730a3;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+/* Date Groups */
+.date-group {
+  margin-bottom: 2rem;
+}
+
+.date-group-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 1rem 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.translations-grid {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: 1rem;
 }
-.history-card {
-  border: none;
-  border-radius: 0;
-  padding: 0.5em 0 0.5em 0;
-  background: none;
-  position: relative;
-  transition: none;
-  box-shadow: none;
-  overflow: visible;
-  min-height: 2.2em;
+
+/* Translation Items */
+.translation-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 0 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.15s ease;
 }
-.history-separator {
-  height: 1px;
-  background: #ececec;
-  margin: 0.5em 0 0 0;
-  width: 100%;
+
+.translation-item:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.history-meta-float {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 1em;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0.3em 0.2em;
-  background: linear-gradient(0deg, rgba(255,255,255,0.97) 80%, rgba(255,255,255,0.2) 100%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s;
-  min-height: 1.2em;
+
+.source-text {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
 }
-.group:hover .history-meta-float,
-.group:focus-within .history-meta-float {
-  opacity: 1;
-  pointer-events: auto;
-}
-.history-input-integral {
-  max-width: 60%;
-  font-size: 0.98em;
-  color: #232323;
-  user-select: text;
-  font-family: inherit;
+
+.source-label {
   display: inline-block;
-  vertical-align: bottom;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
 }
-.history-input-preview {
-  display: inline;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  opacity: 0.7;
-  transition: opacity 0.18s;
-}
-.group:hover .history-input-preview,
-.group:focus-within .history-input-preview {
-  display: none;
-}
-.history-input-full {
-  display: none;
-  background: none;
-  color: inherit;
-  font-size: inherit;
+
+.source-content {
+  display: block;
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.4;
   word-break: break-word;
-  user-select: text;
 }
-.group:hover .history-input-full,
-.group:focus-within .history-input-full {
-  display: inline;
+
+.translation-card-wrapper {
+  margin-bottom: 0.75rem;
 }
-.history-time-integral {
-  font-size: 0.92em;
-  color: #bdbdbd;
+
+.item-metadata {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #9ca3af;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  display: inline-block;
-  vertical-align: bottom;
 }
-.history-date {
-  display: inline;
+
+/* Load More */
+.load-more-container {
+  text-align: center;
+  margin: 2rem 0;
 }
-.history-time {
-  display: none;
+
+.load-more-btn {
+  padding: 0.75rem 1.5rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
 }
-.group:hover .history-time,
-.group:focus-within .history-time {
-  display: inline;
+
+.load-more-btn:hover {
+  background: #e5e7eb;
 }
-.group:hover .history-date,
-.group:focus-within .history-date {
-  display: none;
+
+/* Responsive Design */
+@media (min-width: 640px) {
+  .history-header {
+    padding: 0 1rem;
+  }
+  
+  .filters-panel {
+    margin: 0 1rem 1rem;
+  }
+  
+  .translation-item {
+    margin: 0 1rem;
+  }
+  
+  .date-group-header {
+    margin-left: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .translations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .translation-item {
+    margin: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .history-header {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .filters-panel {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1rem;
+  }
+  
+  .date-group {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+  }
+  
+  .date-group-header {
+    margin-left: 0;
+  }
 }
 </style>
