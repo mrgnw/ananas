@@ -104,13 +104,13 @@
 </script>
 
 <!-- Search and Filter Header -->
-<div class="history-header">
+<div class="review-header">
   <div class="search-container">
     <div class="search-input-wrapper">
       <Search class="search-icon" size={16} />
       <input
         type="text"
-        placeholder="Search translations..."
+        placeholder="Search your translations to review..."
         bind:value={searchQuery}
         class="search-input"
       />
@@ -160,7 +160,7 @@
 {#if translationHistoryStore.history.loading}
   <div class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Loading translation history...</p>
+    <p>Loading your translations for review...</p>
   </div>
 {:else if filteredTranslations().length === 0}
   <div class="empty-state">
@@ -168,7 +168,7 @@
       <p>No translations found for "{searchQuery}"</p>
       <button class="clear-search-btn" onclick={clearSearch}>Clear search</button>
     {:else}
-      <p>No translations yet. Start translating to build your history!</p>
+      <p>No translations yet. Start translating to build your review collection!</p>
     {/if}
   </div>
 {:else}
@@ -222,7 +222,7 @@
 
 <style>
 /* Header and Search */
-.history-header {
+.review-header {
   display: flex;
   gap: 0.75rem;
   margin-bottom: 1rem;
@@ -474,7 +474,7 @@
 
 /* Responsive Design */
 @media (min-width: 640px) {
-  .history-header {
+  .review-header {
     padding: 0 1rem;
   }
   
@@ -504,7 +504,7 @@
 }
 
 @media (min-width: 1024px) {
-  .history-header {
+  .review-header {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
