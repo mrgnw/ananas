@@ -2,7 +2,7 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import { getColorByIndex } from '$lib/colors';
-	import { Copy, Trash2 } from 'lucide-svelte';
+	import { Copy } from 'lucide-svelte';
 	import { userStore } from '$lib/stores/user.svelte.js';
 
 	let { translation, show_langs, truncate_lines, onDelete = null, ...props } = $props();
@@ -69,30 +69,22 @@
       {/if}
     {/each}
   </div>
-  
-  {#if onDelete}
-    <div class="actions-container">
-      <button
-        class="delete-button"
-        aria-label="Delete translation"
-        onclick={deleteTranslation}
-      >
-        <Trash2 class="delete-icon" />
-      </button>
-    </div>
-  {/if}
 </div>
 
 <style>
   .translation-card {
     position: relative;
     width: 100%;
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
   }
 
   .translations-container {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 0.5rem 0;
   }
 
   .translation-row {
@@ -192,48 +184,6 @@
     height: 0.875rem;
   }
 
-  .actions-container {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-  }
-
-  .translation-card:hover .actions-container {
-    opacity: 1;
-  }
-
-  .delete-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border: 1px solid #e5e7eb;
-    background: white;
-    color: #9ca3af;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: all 0.15s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .delete-button:hover {
-    color: #ef4444;
-    border-color: #fecaca;
-    background-color: #fef2f2;
-  }
-
-  .delete-button:active {
-    transform: scale(0.95);
-  }
-
-  .delete-icon {
-    width: 0.875rem;
-    height: 0.875rem;
-  }
-
   /* Mobile optimizations */
   @media (max-width: 640px) {
     .translation-row {
@@ -247,15 +197,6 @@
       height: 1.75rem;
     }
 
-    .actions-container {
-      opacity: 1; /* Always show on mobile */
-    }
-
-    .delete-button {
-      width: 1.75rem;
-      height: 1.75rem;
-    }
-
     .translation-text {
       font-size: 0.8125rem;
     }
@@ -263,8 +204,7 @@
 
   /* Touch device optimizations */
   @media (hover: none) and (pointer: coarse) {
-    .copy-button,
-    .actions-container {
+    .copy-button {
       opacity: 1;
     }
   }
