@@ -383,7 +383,7 @@
   .original-label {
     position: absolute;
     top: 0.25rem;
-    left: 0.75rem;
+    right: 3rem;
     font-size: 0.75rem;
     font-weight: 600;
     color: #0369a1;
@@ -409,7 +409,7 @@
   .language-label {
     position: absolute;
     top: 0.25rem;
-    left: 0.75rem;
+    right: 3rem;
     font-size: 0.75rem;
     font-weight: 600;
     color: #6b7280;
