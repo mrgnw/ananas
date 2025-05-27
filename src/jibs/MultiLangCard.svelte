@@ -2,13 +2,35 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import { getColorByIndex } from '$lib/colors';
-	import { Copy, MoreHorizontal, Trash2, Clock, FileText } from 'lucide-svelte';
+	import { Copy, MoreHorizontal, Trash2, Clock } from 'lucide-svelte';
 	import { userStore } from '$lib/stores/user.svelte.js';
+	import { slide } from 'svelte/transition';
 
 	let { translation, show_langs, truncate_lines, onDelete = null, timestamp = null, originalText = null, ...props } = $props();
 
 	// Menu state
 	let showContextMenu = $state(false);
+	
+	// Original text hover state
+	let showOriginal = $state(false);
+	let cardContainer = $state();
+
+	// Check if original text matches any translation
+	const originalMatchesTranslation = $derived(() => {
+		if (!originalText) return null;
+		
+		for (const lang of userStore.user.selectedLanguages) {
+			if (translation.translations[lang] && translation.translations[lang].trim() === originalText.trim()) {
+				return lang;
+			}
+		}
+		return null;
+	});
+
+	// Only show separate original row if it doesn't match any existing translation
+	const shouldShowSeparateOriginal = $derived(
+		originalText && !originalMatchesTranslation && showOriginal
+	);
 
 	const deleteTranslation = () => {
 		if (onDelete) {
@@ -25,6 +47,9 @@
 	};
 
 	// Format timestamp for display
+	/**
+	 * @param {number | null} timestamp
+	 */
 	const formatTimestamp = (timestamp) => {
 		if (!timestamp) return '';
 		const date = new Date(timestamp);
@@ -48,7 +73,8 @@
 
 	// Handle click outside to close menu
 	const handleClickOutside = (/** @type {MouseEvent} */ event) => {
-		if (showContextMenu && !event.target.closest('.context-menu-container')) {
+		// @ts-ignore - We know event.target exists and has closest method when it's an Element
+		if (showContextMenu && event.target && event.target.closest && !event.target.closest('.context-menu-container')) {
 			closeContextMenu();
 		}
 	};
@@ -57,6 +83,23 @@
 	const handleKeydown = (/** @type {KeyboardEvent} */ event) => {
 		if (event.key === 'Escape' && showContextMenu) {
 			closeContextMenu();
+		}
+	};
+
+	// Original text visibility handlers
+	const handleMouseEnter = () => {
+		if (originalText) {
+			showOriginal = true;
+		}
+	};
+
+	const handleMouseLeave = () => {
+		showOriginal = false;
+	};
+
+	const handleTouchStart = () => {
+		if (originalText) {
+			showOriginal = !showOriginal;
 		}
 	};
 
@@ -93,7 +136,13 @@
 <!-- Add global event listeners for click outside and escape key -->
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
-<div class="translation-card">
+<div 
+  class="translation-card"
+  bind:this={cardContainer}
+  onmouseenter={handleMouseEnter}
+  onmouseleave={handleMouseLeave}
+  ontouchstart={handleTouchStart}
+>
   <!-- Contextual menu button -->
   {#if onDelete}
     <div class="context-menu-container">
@@ -108,24 +157,11 @@
       <!-- Dropdown menu -->
       {#if showContextMenu}
         <div class="context-dropdown">
-          {#if originalText}
-            <div class="dropdown-item metadata-item original-text-item">
-              <FileText class="dropdown-icon" />
-              <div class="original-text-content">
-                <span class="original-label">Original:</span>
-                <span class="original-text">{originalText}</span>
-              </div>
-            </div>
-          {/if}
-          
           {#if timestamp}
             <div class="dropdown-item metadata-item">
               <Clock class="dropdown-icon" />
               <span>{formatTimestamp(timestamp)}</span>
             </div>
-          {/if}
-          
-          {#if originalText || timestamp}
             <div class="dropdown-separator"></div>
           {/if}
           
@@ -142,15 +178,45 @@
   {/if}
   
   <div class="translations-container">
+    <!-- Original text (shown on hover/tap only if it doesn't match any translation) -->
+    {#if shouldShowSeparateOriginal}
+      <div 
+        class="translation-row original-row" 
+        transition:slide={{ duration: 200, axis: 'y' }}
+      >
+        <div class="language-indicator original-indicator">
+          <div class="language-bar original-bar"></div>
+        </div>
+        <div class="translation-content">
+          <div class="original-label">Original</div>
+          <div class="translation-text original-text">
+            {originalText}
+          </div>
+        </div>
+        <button
+          class="copy-button"
+          aria-label="Copy original text"
+          onclick={() => copyToClipboard(originalText)}
+        >
+          <Copy class="copy-icon" />
+        </button>
+      </div>
+    {/if}
+
+    <!-- Translation rows -->
     {#each userStore.user.selectedLanguages as lang, i}
       {#if translation.translations[lang]}
         {@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
         {@const isSourceLang = lang === sourceLang}
-        <div class="translation-row" class:is-source={isSourceLang}>
+        {@const isOriginalMatch = originalMatchesTranslation() === lang}
+        <div class="translation-row" class:is-source={isSourceLang} class:is-original={isOriginalMatch}>
           <div class="language-indicator {getColorByIndex(i, true)}">
-            <div class="language-bar" class:source-bar={isSourceLang}></div>
+            <div class="language-bar" class:source-bar={isSourceLang} class:original-bar={isOriginalMatch}></div>
           </div>
           <div class="translation-content">
+            {#if isOriginalMatch}
+              <div class="original-label">Original</div>
+            {/if}
             <div class="translation-text {truncate_lines ? 'line-clamp-3' : ''} break-words">
               {translation.translations[lang]}
             </div>
@@ -175,6 +241,12 @@
     background: white;
     border-radius: 0.5rem;
     overflow: visible; /* Changed from hidden to allow dropdown to show */
+    cursor: pointer; /* Hint that it's interactive */
+    transition: transform 0.15s ease;
+  }
+
+  .translation-card:active {
+    transform: scale(0.98);
   }
 
   .context-menu-container {
@@ -214,6 +286,60 @@
     background-color: #dbeafe;
   }
 
+  .translation-row.is-original {
+    background-color: #f0f9ff;
+    border: 1px solid #0ea5e9;
+    border-radius: 0.5rem;
+  }
+
+  .translation-row.is-original:hover {
+    background-color: #e0f2fe;
+  }
+
+  .original-row {
+    background-color: #f0f9ff;
+    border: 1px solid #0ea5e9;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .original-row:hover {
+    background-color: #e0f2fe;
+  }
+
+  .original-indicator {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding-top: 0.125rem;
+  }
+
+  .original-bar {
+    width: 3px;
+    height: 1.5rem;
+    border-radius: 1.5px;
+    background-color: #0ea5e9;
+  }
+
+  .original-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0369a1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.125rem;
+  }
+
+  .original-text {
+    color: #0c4a6e;
+    font-weight: 500;
+  }
+
+  .translation-row.is-original .translation-text {
+    color: #0c4a6e;
+    font-weight: 500;
+  }
+
   .language-indicator {
     flex-shrink: 0;
     display: flex;
@@ -231,6 +357,10 @@
 
   .source-bar {
     background-color: #3b82f6;
+  }
+
+  .original-bar {
+    background-color: #0ea5e9;
   }
 
   .translation-content {
@@ -395,32 +525,6 @@
     margin: 0.25rem 0;
   }
 
-  .original-text-item {
-    align-items: flex-start;
-    padding: 0.75rem;
-    max-width: 20rem;
-  }
-
-  .original-text-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    min-width: 0;
-  }
-
-  .original-label {
-    font-size: 0.75rem;
-    color: #9ca3af;
-    font-weight: 500;
-  }
-
-  .original-text {
-    font-size: 0.8125rem;
-    color: #374151;
-    line-height: 1.4;
-    word-break: break-word;
-  }
-
   .dropdown-icon {
     width: 0.875rem;
     height: 0.875rem;
@@ -464,6 +568,10 @@
 
     .context-menu-button {
       opacity: 1;
+    }
+
+    .translation-card {
+      cursor: default;
     }
   }
 </style>
