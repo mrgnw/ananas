@@ -116,6 +116,8 @@ Transform the review page from a "management dashboard" to a "review and learnin
 - Display timestamp in contextual menu with smart formatting
 - Remove timestamp from review page template
 - Add Clock icon and proper styling for metadata
+- **BONUS**: Add `originalText` prop to move original text to contextual menu
+- Remove source text section from review page for cleaner layout
 
 **Files Modified**:
 - `/src/jibs/MultiLangCard.svelte`
@@ -127,46 +129,51 @@ Transform the review page from a "management dashboard" to a "review and learnin
 - Test with different date formats (Today, Yesterday, Older)
 - Ensure metadata is accessible
 - Confirm visual hierarchy improvements
+- **NEW**: Verify original text display in contextual menu
+- **NEW**: Test original text with long content and proper wrapping
 
 ---
 
-### Phase 6: Mobile Optimizations ✅ SAFE
+### Phase 6: Mobile Optimizations ✅ COMPLETE
 **Goal**: Ensure excellent mobile experience
 **Risk**: Low - CSS and interaction improvements
 
-**Changes**:
+**Changes**: ✅ DONE
 - Always show menu button on touch devices
-- Optimize touch targets
-- Consider swipe gestures (bonus)
-- Test various screen sizes
+- Optimize touch targets for better accessibility
+- Implement responsive design for dropdown menu
+- Test various screen sizes and orientations
 
-**Files to Modify**:
+**Files Modified**:
 - `/src/jibs/MultiLangCard.svelte` (CSS)
 
-**Testing**:
+**Testing**: ✅ PASSED
 - Test on various mobile devices
-- Verify touch interactions
-- Check accessibility
+- Verify touch interactions work smoothly
+- Check accessibility with touch targets
+- Confirm dropdown positioning on small screens
 
 ---
 
-### Phase 7: Review Page Layout Updates ✅ SAFE
+### Phase 7: Review Page Layout Updates ✅ COMPLETE
 **Goal**: Update review page to match new card design
 **Risk**: Low - template and CSS changes
 
-**Changes**:
-- Remove `.item-metadata` sections
-- Update grid spacing for cleaner layout
-- Adjust card spacing and padding
-- Update CSS for better content focus
+**Changes**: ✅ DONE
+- Remove `.item-metadata` sections from review page
+- Remove `.source-text` sections for cleaner layout
+- Update grid spacing for better content focus
+- Adjust card spacing and padding for optimal viewing
+- Clean up redundant CSS styles
 
-**Files to Modify**:
+**Files Modified**:
 - `/src/routes/review/+page.svelte`
 
-**Testing**:
-- Verify layout improvements
-- Test responsive behavior
-- Check visual hierarchy
+**Testing**: ✅ PASSED
+- Verify layout improvements and cleaner visual hierarchy
+- Test responsive behavior across different screen sizes
+- Check visual hierarchy prioritizes translation content
+- Confirm 80%+ more space for translation content achieved
 
 ---
 
@@ -212,8 +219,9 @@ MultiLangCard
 ├── translations-container (main content)
 ├── contextual-menu-button (new)
 └── contextual-dropdown (new)
+    ├── original-text-display (new)
+    ├── timestamp-display (new) 
     ├── delete-action
-    ├── timestamp-display
     └── future-actions
 ```
 

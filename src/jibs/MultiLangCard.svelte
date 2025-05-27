@@ -2,10 +2,10 @@
 	import { toast } from 'svelte-sonner';
 	import { browser } from '$app/environment';
 	import { getColorByIndex } from '$lib/colors';
-	import { Copy, MoreHorizontal, Trash2, Clock } from 'lucide-svelte';
+	import { Copy, MoreHorizontal, Trash2, Clock, FileText } from 'lucide-svelte';
 	import { userStore } from '$lib/stores/user.svelte.js';
 
-	let { translation, show_langs, truncate_lines, onDelete = null, timestamp = null, ...props } = $props();
+	let { translation, show_langs, truncate_lines, onDelete = null, timestamp = null, originalText = null, ...props } = $props();
 
 	// Menu state
 	let showContextMenu = $state(false);
@@ -108,11 +108,24 @@
       <!-- Dropdown menu -->
       {#if showContextMenu}
         <div class="context-dropdown">
+          {#if originalText}
+            <div class="dropdown-item metadata-item original-text-item">
+              <FileText class="dropdown-icon" />
+              <div class="original-text-content">
+                <span class="original-label">Original:</span>
+                <span class="original-text">{originalText}</span>
+              </div>
+            </div>
+          {/if}
+          
           {#if timestamp}
             <div class="dropdown-item metadata-item">
               <Clock class="dropdown-icon" />
               <span>{formatTimestamp(timestamp)}</span>
             </div>
+          {/if}
+          
+          {#if originalText || timestamp}
             <div class="dropdown-separator"></div>
           {/if}
           
@@ -380,6 +393,32 @@
     height: 1px;
     background-color: #e5e7eb;
     margin: 0.25rem 0;
+  }
+
+  .original-text-item {
+    align-items: flex-start;
+    padding: 0.75rem;
+    max-width: 20rem;
+  }
+
+  .original-text-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .original-label {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-weight: 500;
+  }
+
+  .original-text {
+    font-size: 0.8125rem;
+    color: #374151;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
   .dropdown-icon {

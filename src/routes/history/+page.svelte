@@ -193,6 +193,7 @@
                 onDelete={() => handleDelete(item, i)}
                 truncate_lines={true}
                 timestamp={item.timestamp}
+                originalText={item.input}
               />
             </div>
             

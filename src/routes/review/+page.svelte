@@ -179,12 +179,6 @@
       <div class="translations-grid">
         {#each groupItems as item, i}
           <div class="translation-item">
-            <!-- Source text always visible -->
-            <div class="source-text">
-              <span class="source-label">Original:</span>
-              <span class="source-content">{item.input}</span>
-            </div>
-            
             <!-- Translation card -->
             <div class="translation-card-wrapper">
               <MultiLangCard 
@@ -193,6 +187,7 @@
                 onDelete={() => handleDelete(item, i)}
                 truncate_lines={true}
                 timestamp={item.timestamp}
+                originalText={item.input}
               />
             </div>
           </div>
@@ -400,30 +395,6 @@
 
 .translation-item:hover {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.source-text {
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.source-label {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
-}
-
-.source-content {
-  display: block;
-  font-size: 0.9rem;
-  color: #374151;
-  line-height: 1.4;
-  word-break: break-word;
 }
 
 .translation-card-wrapper {
