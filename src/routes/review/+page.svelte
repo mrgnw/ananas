@@ -103,32 +103,6 @@
   }
 </script>
 
-<!-- Search and Filter Header -->
-<div class="review-header">
-  <div class="search-container">
-    <div class="search-input-wrapper">
-      <Search class="search-icon" size={16} />
-      <input
-        type="text"
-        placeholder="Search your translations to review..."
-        bind:value={searchQuery}
-        class="search-input"
-      />
-      {#if searchQuery}
-        <button class="clear-search" onclick={clearSearch}>×</button>
-      {/if}
-    </div>
-  </div>
-  
-  <button 
-    class="filter-toggle"
-    class:active={showFilters}
-    onclick={() => showFilters = !showFilters}
-  >
-    <Filter size={16} />
-  </button>
-</div>
-
 <!-- Debug info (remove in production) -->
 {#if import.meta.env.DEV}
   <div style="background: #f0f0f0; padding: 1rem; margin: 1rem; border-radius: 4px; font-family: monospace; font-size: 12px;">
@@ -143,18 +117,6 @@
   </div>
 {/if}
 
-{#if showFilters}
-  <div class="filters-panel">            <div class="filter-group">
-              <span class="filter-label">Time period:</span>
-              <div class="filter-options">
-        <button class="filter-option" class:active={selectedDateFilter === 'all'} onclick={() => selectedDateFilter = 'all'}>All</button>
-        <button class="filter-option" class:active={selectedDateFilter === 'today'} onclick={() => selectedDateFilter = 'today'}>Today</button>
-        <button class="filter-option" class:active={selectedDateFilter === 'yesterday'} onclick={() => selectedDateFilter = 'yesterday'}>Yesterday</button>
-        <button class="filter-option" class:active={selectedDateFilter === 'week'} onclick={() => selectedDateFilter = 'week'}>This week</button>
-      </div>
-    </div>
-  </div>
-{/if}
 
 <!-- Translation History Content -->
 {#if translationHistoryStore.history.loading}
@@ -379,7 +341,7 @@
 .translations-grid {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 /* Translation Items */
@@ -387,10 +349,11 @@
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0rem;
   margin: 0 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.15s ease;
+  overflow: visible;
 }
 
 .translation-item:hover {
