@@ -27,14 +27,63 @@
 
 	// Check if original text differs from target in the same language
 	const originalDiffersFromTarget = $derived(() => {
-		if (!originalText || !translation.translations.metadata?.src_lang) return null;
+		if (!originalText) return null;
 		
-		const sourceLang = translation.translations.metadata.src_lang;
-		const targetTranslation = translation.translations[sourceLang];
+		// First, try to get the source language from metadata
+		let detectedSourceLang = translation.translations.metadata?.src_lang;
 		
-		if (targetTranslation && targetTranslation.trim() !== originalText.trim()) {
-			return sourceLang;
+		// If src_lang is null, we need to intelligently detect the source language
+		if (!detectedSourceLang && translation.translations.source) {
+			const sourceText = translation.translations.source.trim();
+			const inputText = originalText.trim();
+			
+			// Only proceed if source matches input (confirming this is the original text)
+			if (sourceText === inputText) {
+				// Strategy: Find a target language that has been "corrected"
+				// Look for languages where the output differs from input but in the same language family
+				
+				// First, check if any target language has a very similar but different output
+				// This would indicate it's the same language but "improved"
+				for (const lang of userStore.user.selectedLanguages) {
+					const langTranslation = translation.translations[lang];
+					if (langTranslation && langTranslation.trim() !== inputText) {
+						// Check if this could be a "correction" in the same language
+						// For now, we'll use a simple heuristic: if the translation
+						// contains similar words or structure, it might be a correction
+						
+						// Simple word overlap check (this could be improved)
+						const inputWords = inputText.toLowerCase().split(/\s+/);
+						const translationWords = langTranslation.toLowerCase().split(/\s+/);
+						
+						let commonWords = 0;
+						for (const word of inputWords) {
+							if (translationWords.includes(word)) {
+								commonWords++;
+							}
+						}
+						
+						// If there's significant word overlap, this might be a correction
+						const overlapRatio = commonWords / Math.max(inputWords.length, 1);
+						if (overlapRatio > 0.3) { // 30% word overlap threshold
+							detectedSourceLang = lang;
+							break;
+						}
+					}
+				}
+				
+				// Fallback: if no clear correction found, don't highlight anything
+				// This is more conservative but avoids false positives
+			}
 		}
+		
+		// Only return the source language if we're confident it was corrected
+		if (detectedSourceLang) {
+			const sourceTranslation = translation.translations[detectedSourceLang];
+			if (sourceTranslation && sourceTranslation.trim() !== originalText.trim()) {
+				return detectedSourceLang;
+			}
+		}
+		
 		return null;
 	});
 
@@ -56,6 +105,10 @@
 
 	// State for tracking which language row is being hovered
 	let hoveredLanguage = $state(null);
+	
+	// State for original text popover
+	let showOriginalPopover = $state(false);
+	let popoverLanguage = $state(null);
 
 	const deleteTranslation = () => {
 		if (onDelete) {
@@ -88,11 +141,9 @@
 		}
 	};
 
-	// Handle escape key to close menu
+	// Handle escape key to close modal
 	const handleKeydown = (/** @type {KeyboardEvent} */ event) => {
-		if (event.key === 'Escape') {
-			// Handle escape for any future modal/popup functionality
-		}
+		// Reserved for future modal functionality
 	};
 
 	// Original text visibility handlers
@@ -174,11 +225,32 @@
             <div class="language-bar" class:source-bar={isSourceLang} class:original-bar={isOriginalMatch} class:different-bar={isDifferentFromOriginal}></div>
           </div>
           <div class="translation-content">
-            <div class="language-label">
+            <div 
+              class="language-label"
+            >
               {languageName}{#if isOriginalMatch} • original{/if}{#if isDifferentFromOriginal} • differs from original{/if}
             </div>
-            <div class="translation-text {truncate_lines ? 'line-clamp-3' : ''} break-words">
+            <div 
+              class="translation-text {truncate_lines ? 'line-clamp-3' : ''} break-words"
+              onmouseenter={() => {
+                if (isDifferentFromOriginal) {
+                  showOriginalPopover = true;
+                  popoverLanguage = lang;
+                }
+              }}
+              onmouseleave={() => {
+                showOriginalPopover = false;
+                popoverLanguage = null;
+              }}
+            >
               {translation.translations[lang]}
+              
+              <!-- Original text popover for different translations -->
+              {#if showOriginalPopover && popoverLanguage === lang && isDifferentFromOriginal && originalText}
+                <div class="original-popover">
+                  {originalText}
+                </div>
+              {/if}
             </div>
           </div>
           <button
@@ -539,6 +611,38 @@
   .copy-icon {
     width: 0.875rem;
     height: 0.875rem;
+  }
+
+  /* Original text popover */
+  .original-popover {
+    position: absolute;
+    top: -0.5rem;
+    left: 0;
+    right: 0;
+    background: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    transform: translateY(-100%);
+    animation: popover-appear 0.15s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  @keyframes popover-appear {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-100% + 0.25rem));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-100%);
+    }
   }
 
   /* Mobile optimizations */
