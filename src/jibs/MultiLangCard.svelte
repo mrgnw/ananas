@@ -28,9 +28,9 @@
 	});
 
 	// Only show separate original row if it doesn't match any existing translation
-	const shouldShowSeparateOriginal = $derived(
-		originalText && !originalMatchesTranslation && showOriginal
-	);
+	const shouldShowSeparateOriginal = $derived(() => {
+		return originalText && !originalMatchesTranslation() && showOriginal;
+	});
 
 	const deleteTranslation = () => {
 		if (onDelete) {
@@ -179,7 +179,7 @@
   
   <div class="translations-container">
     <!-- Original text (shown on hover/tap only if it doesn't match any translation) -->
-    {#if shouldShowSeparateOriginal}
+    {#if shouldShowSeparateOriginal()}
       <div 
         class="translation-row original-row" 
         transition:slide={{ duration: 200, axis: 'y' }}
@@ -209,7 +209,11 @@
         {@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
         {@const isSourceLang = lang === sourceLang}
         {@const isOriginalMatch = originalMatchesTranslation() === lang}
-        <div class="translation-row" class:is-source={isSourceLang} class:is-original={isOriginalMatch}>
+        <div 
+          class="translation-row" 
+          class:is-source={isSourceLang} 
+          class:is-original={isOriginalMatch}
+        >
           <div class="language-indicator {getColorByIndex(i, true)}">
             <div class="language-bar" class:source-bar={isSourceLang} class:original-bar={isOriginalMatch}></div>
           </div>
@@ -328,6 +332,17 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 0.125rem;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    transition: max-height 0.2s ease, opacity 0.2s ease, transform 0.2s ease, margin-bottom 0.2s ease;
+  }
+
+  .translation-row.is-original:hover .original-label {
+    max-height: 1.5rem;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .original-text {
@@ -572,6 +587,13 @@
 
     .translation-card {
       cursor: default;
+    }
+
+    /* Always show original label on touch devices */
+    .translation-row.is-original .original-label {
+      max-height: 1.5rem;
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 </style>
