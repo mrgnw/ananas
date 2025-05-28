@@ -16,8 +16,9 @@
 	// Check if original text matches any translation
 	const originalMatchesTranslation = $derived(() => {
 		if (!originalText) return null;
+		const selectedLanguages = userStore.user.selectedLanguages || [];
 		
-		for (const lang of userStore.user.selectedLanguages) {
+		for (const lang of selectedLanguages) {
 			if (translation.translations[lang] && translation.translations[lang].trim() === originalText.trim()) {
 				return lang;
 			}
@@ -29,55 +30,13 @@
 	const originalDiffersFromTarget = $derived(() => {
 		if (!originalText) return null;
 		
-		// First, try to get the source language from metadata
-		let detectedSourceLang = translation.translations.metadata?.src_lang;
+		// Only use src_lang from metadata if it exists and is in our selected languages
+		const detectedSourceLang = translation.translations.metadata?.src_lang;
+		const selectedLanguages = userStore.user.selectedLanguages || [];
 		
-		// If src_lang is null, we need to intelligently detect the source language
-		if (!detectedSourceLang && translation.translations.source) {
-			const sourceText = translation.translations.source.trim();
-			const inputText = originalText.trim();
-			
-			// Only proceed if source matches input (confirming this is the original text)
-			if (sourceText === inputText) {
-				// Strategy: Find a target language that has been "corrected"
-				// Look for languages where the output differs from input but in the same language family
-				
-				// First, check if any target language has a very similar but different output
-				// This would indicate it's the same language but "improved"
-				for (const lang of userStore.user.selectedLanguages) {
-					const langTranslation = translation.translations[lang];
-					if (langTranslation && langTranslation.trim() !== inputText) {
-						// Check if this could be a "correction" in the same language
-						// For now, we'll use a simple heuristic: if the translation
-						// contains similar words or structure, it might be a correction
-						
-						// Simple word overlap check (this could be improved)
-						const inputWords = inputText.toLowerCase().split(/\s+/);
-						const translationWords = langTranslation.toLowerCase().split(/\s+/);
-						
-						let commonWords = 0;
-						for (const word of inputWords) {
-							if (translationWords.includes(word)) {
-								commonWords++;
-							}
-						}
-						
-						// If there's significant word overlap, this might be a correction
-						const overlapRatio = commonWords / Math.max(inputWords.length, 1);
-						if (overlapRatio > 0.3) { // 30% word overlap threshold
-							detectedSourceLang = lang;
-							break;
-						}
-					}
-				}
-				
-				// Fallback: if no clear correction found, don't highlight anything
-				// This is more conservative but avoids false positives
-			}
-		}
-		
-		// Only return the source language if we're confident it was corrected
-		if (detectedSourceLang) {
+		// Only highlight if the detected source language is in our selected languages
+		// and the translation differs from the original text
+		if (detectedSourceLang && selectedLanguages.includes(detectedSourceLang)) {
 			const sourceTranslation = translation.translations[detectedSourceLang];
 			if (sourceTranslation && sourceTranslation.trim() !== originalText.trim()) {
 				return detectedSourceLang;
@@ -85,6 +44,16 @@
 		}
 		
 		return null;
+	});
+
+	// Check if there's a detection discrepancy (detected language not in selected languages)
+	const hasDetectionDiscrepancy = $derived(() => {
+		const detectedLang = translation.translations.metadata?.detected_source_language;
+		const selectedLanguages = userStore.user.selectedLanguages || [];
+		if (!detectedLang) return false;
+		
+		// Return true if detected language is not in selected languages
+		return !selectedLanguages.includes(detectedLang);
 	});
 
 	// Only show separate original row if it doesn't match any existing translation OR when hovering source language that differs
@@ -206,7 +175,7 @@
 
   <div class="translations-container">
     <!-- Translation rows -->
-    {#each userStore.user.selectedLanguages as lang, i}
+    {#each (userStore.user.selectedLanguages || []) as lang, i}
       {#if translation.translations[lang]}
         {@const sourceLang = translation.translations.metadata?.src_lang || 'eng'}
         {@const isSourceLang = lang === sourceLang}
@@ -263,6 +232,32 @@
         </div>
       {/if}
     {/each}
+
+    <!-- Show original text row when there's a detection discrepancy -->
+    {#if hasDetectionDiscrepancy() && originalText}
+      {@const detectedLang = translation.translations.metadata?.detected_source_language}
+      {@const detectedLanguageName = getEnglishName(detectedLang) || detectedLang}
+      <div class="translation-row original-discrepancy-row">
+        <div class="language-indicator detection-discrepancy">
+          <div class="language-bar discrepancy-bar"></div>
+        </div>
+        <div class="translation-content">
+          <div class="language-label">
+            {detectedLanguageName}?
+          </div>
+          <div class="translation-text break-words">
+            {originalText}
+          </div>
+        </div>
+        <button
+          class="copy-button"
+          aria-label="Copy original text"
+          onclick={() => copyToClipboard(originalText)}
+        >
+          <Copy class="copy-icon" />
+        </button>
+      </div>
+    {/if}
   </div>
 
   <!-- Card footer with metadata (shown on hover) -->
@@ -556,6 +551,35 @@
 
   .different-bar {
     background-color: #f97316;
+  }
+
+  .original-discrepancy-row {
+    background-color: #fff7ed;
+    border: 1px solid #f97316;
+    border-radius: 0.5rem;
+  }
+
+  .original-discrepancy-row:hover {
+    background-color: #fed7ca;
+  }
+
+  .detection-discrepancy .language-bar {
+    background-color: #f97316;
+  }
+
+  .discrepancy-bar {
+    background-color: #f97316;
+  }
+
+  .original-discrepancy-row .language-label {
+    color: #c2410c;
+    background: rgba(255, 247, 237, 0.95);
+    border-color: rgba(249, 115, 22, 0.2);
+  }
+
+  .original-discrepancy-row .translation-text {
+    color: #9a3412;
+    font-weight: 500;
   }
 
   .translation-content {
