@@ -9,6 +9,7 @@
   let itemsToShow = $state(20);
   let isLoadingInBackground = $state(false);
   let newItemsCount = $state(0);
+  let visibleItems = $state(new Set());
   
   let translationsToShow = $derived(() => {
     if (!translationHistoryStore.history.translations) return [];
@@ -62,6 +63,20 @@
         }, 3000);
       }
     }
+    
+    // Start showing items with staggered timing
+    const startAnimations = () => {
+      const allItems = translationsToShow();
+      allItems.forEach((item, index) => {
+        setTimeout(() => {
+          visibleItems.add(item.timestamp);
+          visibleItems = new Set(visibleItems); // Trigger reactivity
+        }, index * 60);
+      });
+    };
+
+    // Start animations after initial delay
+    setTimeout(startAnimations, 200);
 
     // Debug info in console (development only)
     if (import.meta.env.DEV) {
@@ -111,11 +126,10 @@
     <div class="date-group" animate:flip={{ duration: 400 }}>
       <h3 class="date-group-header">{groupKey}</h3>
       <div class="translations-grid">
-        {#each groupItems as item, i (item.timestamp)}
+        {#each groupItems.filter(item => visibleItems.has(item.timestamp)) as item, i (item.timestamp)}
           <div 
             class="translation-item" 
-            animate:flip={{ duration: 400 }}
-            in:fade={{ duration: 300, delay: i * 50 }}
+            in:fade={{ duration: 400 }}
           >
             <!-- Translation card -->
             <div class="translation-card-wrapper">

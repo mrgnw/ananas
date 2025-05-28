@@ -11,6 +11,7 @@
 
 let result = $state(null); // Add result state to hold translation result
 let { data } = $props();
+let visibleItems = $state(new Set());
 
 let userLanguages = $derived(userStore.user.selectedLanguages);
 
@@ -19,11 +20,34 @@ let recentTranslations = $derived(() => {
   return (translationHistoryStore.history.translations || []).slice(0, 3);
 });
 
+// Watch for new translations and make them visible immediately
+$effect(() => {
+  const currentTranslations = recentTranslations();
+  currentTranslations.forEach(translation => {
+    if (!visibleItems.has(translation.timestamp)) {
+      // New translation detected, add it to visible items immediately
+      visibleItems.add(translation.timestamp);
+      visibleItems = new Set(visibleItems); // Trigger reactivity
+    }
+  });
+});
+
 onMount(async () => {
   // Load from database in background if user is authenticated
   if (userStore.user.auth.isAuthenticated) {
     await translationHistoryStore.loadFromDatabaseInBackground();
   }
+  
+  // Start showing recent translations with staggered timing
+  setTimeout(() => {
+    const recentItems = (translationHistoryStore.history.translations || []).slice(0, 3);
+    recentItems.forEach((item, index) => {
+      setTimeout(() => {
+        visibleItems.add(item.timestamp);
+        visibleItems = new Set(visibleItems); // Trigger reactivity
+      }, index * 120);
+    });
+  }, 300);
 });
 </script>
 
@@ -49,11 +73,11 @@ onMount(async () => {
     {#if translationHistoryStore.history.translations && translationHistoryStore.history.translations.length > 0}
       <div class="recent-translations-section">
         <div class="recent-translations-grid">
-          {#each translationHistoryStore.history.translations.slice(0, 3) as translation, index (translation.timestamp)}
+          {#each translationHistoryStore.history.translations.slice(0, 3).filter(translation => visibleItems.has(translation.timestamp)) as translation, index (translation.timestamp)}
             <div 
               class="recent-translation-item" 
               animate:flip={{ duration: 400 }}
-              in:fade={{ duration: 300, delay: index * 50 }}
+              in:fade={{ duration: 400 }}
             >
               <MultiLangCard 
                 translation={{ translations: translation.output }} 
@@ -66,9 +90,11 @@ onMount(async () => {
             </div>
           {/each}
         </div>
-        <div class="view-all-link">
-          <a href="/review" class="view-all-btn">View All Translations →</a>
-        </div>
+        {#if visibleItems.size > 0}
+          <div class="view-all-link">
+            <a href="/review" class="view-all-btn">View All Translations →</a>
+          </div>
+        {/if}
       </div>
     {/if}
 
