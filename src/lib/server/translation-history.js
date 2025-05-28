@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { translationHistory } from './schema/translations';
 import { nanoid } from 'nanoid';
 
@@ -48,7 +48,7 @@ export async function getUserTranslationHistory(db, userId, limit = 20) {
       .select()
       .from(translationHistory)
       .where(eq(translationHistory.user_id, userId))
-      .orderBy(translationHistory.created_at, 'desc')
+      .orderBy(desc(translationHistory.created_at))
       .limit(limit);
     
     return records.map(record => ({

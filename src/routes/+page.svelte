@@ -1,5 +1,7 @@
 <script>
   import { onMount } from 'svelte';
+  import { flip } from 'svelte/animate';
+  import { fade } from 'svelte/transition';
   import { userStore } from '$lib/stores/user.svelte.js';
   import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
   import TranslationInput from '$jibs/TranslationInput.svelte';
@@ -43,18 +45,16 @@ onMount(async () => {
 
     <LanguageSuggestions countryCode={data.ip_country} />
       
-      {#if result}
-      <div class="result centered-result">
-        <MultiLangCard translation={{ translations: result }} />
-      </div>
-      {/if}
-
-    <!-- Recent Translations Section -->
+    <!-- Recent Translations -->
     {#if translationHistoryStore.history.translations && translationHistoryStore.history.translations.length > 0}
       <div class="recent-translations-section">
         <div class="recent-translations-grid">
           {#each translationHistoryStore.history.translations.slice(0, 3) as translation, index (translation.timestamp)}
-            <div class="recent-translation-item">
+            <div 
+              class="recent-translation-item" 
+              animate:flip={{ duration: 400 }}
+              in:fade={{ duration: 300, delay: index * 50 }}
+            >
               <MultiLangCard 
                 translation={{ translations: translation.output }} 
                 show_langs={true}
