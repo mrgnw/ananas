@@ -17,7 +17,7 @@ let userLanguages = $derived(userStore.user.selectedLanguages);
 
 // Get last 3 translations from history - access the store directly
 let recentTranslations = $derived(() => {
-  return (translationHistoryStore.history.translations || []).slice(0, 3);
+  return (translationHistoryStore.history.translations || []).slice(0, 6);
 });
 
 onMount(async () => {
@@ -75,11 +75,6 @@ onMount(async () => {
             </div>
           {/each}
         </div>
-        {#if recentTranslations().length > 0}
-          <div class="view-all-link">
-            <a href="/review" class="view-all-btn">View All Translations →</a>
-          </div>
-        {/if}
       </div>
     {/if}
 

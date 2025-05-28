@@ -84,8 +84,8 @@
 <nav class="main-navbar">
   <ul class="navbar-list">
     <li><a href="/" class:active={$page.url.pathname === '/'}>Translate</a></li>
-    <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
     <li><a href="/review" class:active={$page.url.pathname.startsWith('/review')}>Review</a></li>
+    <li><a href="/languages" class:active={$page.url.pathname.startsWith('/languages')} title="Languages"><Languages size={20}/></a></li>
     <UserNav />
   </ul>
 </nav>
