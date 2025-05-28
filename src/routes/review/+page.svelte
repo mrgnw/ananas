@@ -326,22 +326,22 @@
 
 /* Date Groups */
 .date-group {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .date-group-header {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #374151;
-  margin: 0 0 1rem 0.5rem;
-  padding-bottom: 0.25rem;
+  margin: 0 0 0.5rem 0.25rem;
+  padding-bottom: 0.1875rem;
   border-bottom: 2px solid #e5e7eb;
 }
 
 .translations-grid {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.75rem;
 }
 
 /* Translation Items */
@@ -350,7 +350,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   padding: 0rem;
-  margin: 0 0.5rem;
+  margin: 0 0.25rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.15s ease;
   overflow: visible;
@@ -361,7 +361,7 @@
 }
 
 .translation-card-wrapper {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
 }
 
 /* Load More */

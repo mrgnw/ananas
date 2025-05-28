@@ -293,6 +293,7 @@
     overflow: visible;
     cursor: pointer; /* Hint that it's interactive */
     transition: transform 0.15s ease;
+    padding: 0.375rem;
   }
 
   .translation-card:active {
@@ -318,8 +319,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem;
-    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    gap: 0.25rem;
     margin: 0;
     background: rgba(248, 250, 252, 0.95);
     backdrop-filter: blur(8px);
@@ -375,19 +376,19 @@
   .translations-container {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.125rem;
     padding: 0;
   }
 
   .translation-row {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.5rem;
-    border-radius: 0.375rem;
+    gap: 0.375rem;
+    padding: 0.25rem 0.375rem;
+    border-radius: 0.25rem;
     transition: background-color 0.15s ease;
     position: relative;
-    min-height: 2.5rem;
+    min-height: 1.75rem;
   }
 
   .translation-row:hover {
@@ -449,9 +450,9 @@
 
   .original-label {
     position: absolute;
-    top: 0.25rem;
-    right: 3rem;
-    font-size: 0.75rem;
+    top: 0.125rem;
+    right: 2rem;
+    font-size: 0.6875rem;
     font-weight: 600;
     color: #0369a1;
     text-transform: uppercase;
@@ -460,8 +461,8 @@
     transform: translateY(-0.125rem);
     transition: opacity 0.2s ease, transform 0.2s ease;
     background: rgba(240, 249, 255, 0.95);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
+    padding: 0.0625rem 0.25rem;
+    border-radius: 0.1875rem;
     backdrop-filter: blur(4px);
     border: 1px solid rgba(14, 165, 233, 0.2);
     z-index: 10;
@@ -475,9 +476,9 @@
 
   .language-label {
     position: absolute;
-    top: 0.25rem;
-    right: 3rem;
-    font-size: 0.75rem;
+    top: 0.125rem;
+    right: 2rem;
+    font-size: 0.6875rem;
     font-weight: 600;
     color: #6b7280;
     text-transform: uppercase;
@@ -486,8 +487,8 @@
     transform: translateY(-0.125rem);
     transition: opacity 0.2s ease, transform 0.2s ease;
     background: rgba(248, 250, 252, 0.95);
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
+    padding: 0.0625rem 0.25rem;
+    border-radius: 0.1875rem;
     backdrop-filter: blur(4px);
     border: 1px solid rgba(0, 0, 0, 0.05);
     z-index: 10;
@@ -535,7 +536,7 @@
 
   .language-bar {
     width: 3px;
-    height: 1.5rem;
+    height: 1rem;
     border-radius: 1.5px;
     background-color: #e5e7eb;
     transition: background-color 0.15s ease;
@@ -588,8 +589,8 @@
   }
 
   .translation-text {
-    font-size: 0.875rem;
-    line-height: 1.5;
+    font-size: 0.8125rem;
+    line-height: 1.3;
     color: #374151;
     word-break: break-word;
     hyphens: auto;
@@ -608,13 +609,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border: none;
     background: none;
     color: #9ca3af;
     cursor: pointer;
-    border-radius: 0.375rem;
+    border-radius: 0.25rem;
     transition: all 0.15s ease;
     opacity: 0;
   }
