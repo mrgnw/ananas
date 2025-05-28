@@ -88,6 +88,19 @@
     if (userStore.user.auth.isAuthenticated) {
       translationHistoryStore.loadFromDatabase();
     }
+
+    // Debug info in console (development only)
+    if (import.meta.env.DEV) {
+      console.group('🔍 Review Page Debug Info');
+      console.log('Total translations:', translationHistoryStore.history.translations?.length || 0);
+      console.log('Filtered translations:', filteredTranslations().length);
+      console.log('Loading:', translationHistoryStore.history.loading);
+      console.log('User authenticated:', userStore.user.auth.isAuthenticated);
+      if (translationHistoryStore.history.translations?.length > 0) {
+        console.log('First translation:', translationHistoryStore.history.translations[0]);
+      }
+      console.groupEnd();
+    }
   });
   
   function handleDelete(item, index) {
@@ -102,21 +115,6 @@
     searchQuery = '';
   }
 </script>
-
-<!-- Debug info (remove in production) -->
-{#if import.meta.env.DEV}
-  <div style="background: #f0f0f0; padding: 1rem; margin: 1rem; border-radius: 4px; font-family: monospace; font-size: 12px;">
-    <p>Debug Info:</p>
-    <p>Total translations: {translationHistoryStore.history.translations?.length || 0}</p>
-    <p>Filtered translations: {filteredTranslations().length}</p>
-    <p>Loading: {translationHistoryStore.history.loading}</p>
-    <p>User authenticated: {userStore.user.auth.isAuthenticated}</p>
-    {#if translationHistoryStore.history.translations?.length > 0}
-      <p>First translation: {JSON.stringify(translationHistoryStore.history.translations[0], null, 2)}</p>
-    {/if}
-  </div>
-{/if}
-
 
 <!-- Translation History Content -->
 {#if translationHistoryStore.history.loading}
