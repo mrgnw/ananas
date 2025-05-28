@@ -1,5 +1,7 @@
 <script>
   import { onMount } from 'svelte';
+  import { flip } from 'svelte/animate';
+  import { fade } from 'svelte/transition';
   import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
   import { userStore } from '$lib/stores/user.svelte.js';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
@@ -9,6 +11,8 @@
   let showFilters = $state(false);
   let selectedDateFilter = $state('all');
   let itemsToShow = $state(20);
+  let isLoadingInBackground = $state(false);
+  let newItemsCount = $state(0);
   
   // Filter and search logic
   let filteredTranslations = $derived(() => {
@@ -83,10 +87,20 @@
     return groups;
   });
   
-  onMount(() => {
-    // If the user is authenticated, load translations from the database
+  onMount(async () => {
+    // If the user is authenticated, load translations from the database in background
     if (userStore.user.auth.isAuthenticated) {
-      translationHistoryStore.loadFromDatabase();
+      isLoadingInBackground = true;
+      const result = await translationHistoryStore.loadFromDatabaseInBackground();
+      isLoadingInBackground = false;
+      
+      if (result.hasUpdates) {
+        newItemsCount = result.newItems.length;
+        // Reset count after 3 seconds
+        setTimeout(() => {
+          newItemsCount = 0;
+        }, 3000);
+      }
     }
 
     // Debug info in console (development only)
@@ -94,7 +108,7 @@
       console.group('🔍 Review Page Debug Info');
       console.log('Total translations:', translationHistoryStore.history.translations?.length || 0);
       console.log('Filtered translations:', filteredTranslations().length);
-      console.log('Loading:', translationHistoryStore.history.loading);
+      console.log('Loading in background:', isLoadingInBackground);
       console.log('User authenticated:', userStore.user.auth.isAuthenticated);
       if (translationHistoryStore.history.translations?.length > 0) {
         console.log('First translation:', translationHistoryStore.history.translations[0]);
@@ -116,13 +130,89 @@
   }
 </script>
 
-<!-- Translation History Content -->
-{#if translationHistoryStore.history.loading}
-  <div class="loading-container">
-    <div class="loading-spinner"></div>
-    <p>Loading your translations for review...</p>
+<!-- Page Header with Search and Filters -->
+<div class="review-header">
+  <div class="search-container">
+    <div class="search-input-wrapper">
+      <Search class="search-icon" size={16} />
+      <input 
+        type="text" 
+        placeholder="Search translations..." 
+        class="search-input"
+        bind:value={searchQuery}
+      />
+      {#if searchQuery}
+        <button class="clear-search" onclick={clearSearch}>×</button>
+      {/if}
+    </div>
   </div>
-{:else if filteredTranslations().length === 0}
+  
+  <button 
+    class="filter-toggle" 
+    class:active={showFilters}
+    onclick={() => showFilters = !showFilters}
+    title="Filter translations"
+  >
+    <Filter size={16} />
+  </button>
+</div>
+
+<!-- Filters Panel -->
+{#if showFilters}
+  <div class="filters-panel" transition:fade={{ duration: 200 }}>
+    <label class="filter-label">
+      <Calendar size={14} style="display: inline; margin-right: 0.25rem;" />
+      Date Range
+    </label>
+    <div class="filter-options">
+      <button 
+        class="filter-option" 
+        class:active={selectedDateFilter === 'all'}
+        onclick={() => selectedDateFilter = 'all'}
+      >
+        All Time
+      </button>
+      <button 
+        class="filter-option" 
+        class:active={selectedDateFilter === 'today'}
+        onclick={() => selectedDateFilter = 'today'}
+      >
+        Today
+      </button>
+      <button 
+        class="filter-option" 
+        class:active={selectedDateFilter === 'yesterday'}
+        onclick={() => selectedDateFilter = 'yesterday'}
+      >
+        Yesterday
+      </button>
+      <button 
+        class="filter-option" 
+        class:active={selectedDateFilter === 'week'}
+        onclick={() => selectedDateFilter = 'week'}
+      >
+        This Week
+      </button>
+    </div>
+  </div>
+{/if}
+
+<!-- Background loading indicator (subtle) -->
+{#if isLoadingInBackground}
+  <div class="background-loading-indicator" transition:fade={{ duration: 200 }}>
+    <div class="background-spinner"></div>
+    <span>Checking for updates...</span>
+  </div>
+{/if}
+
+<!-- New items notification -->
+{#if newItemsCount > 0}
+  <div class="new-items-notification" transition:fade={{ duration: 300 }}>
+    <span>✨ {newItemsCount} new translation{newItemsCount > 1 ? 's' : ''} added</span>
+  </div>
+{/if}
+
+{#if filteredTranslations().length === 0 && !translationHistoryStore.history.loading}
   <div class="empty-state">
     {#if searchQuery}
       <p>No translations found for "{searchQuery}"</p>
@@ -133,12 +223,16 @@
   </div>
 {:else}
   <!-- Grouped translations -->
-  {#each [...groupedTranslations().entries()] as [groupKey, groupItems]}
-    <div class="date-group">
+  {#each [...groupedTranslations().entries()] as [groupKey, groupItems] (groupKey)}
+    <div class="date-group" animate:flip={{ duration: 400 }}>
       <h3 class="date-group-header">{groupKey}</h3>
       <div class="translations-grid">
-        {#each groupItems as item, i}
-          <div class="translation-item">
+        {#each groupItems as item, i (item.timestamp)}
+          <div 
+            class="translation-item" 
+            animate:flip={{ duration: 400 }}
+            in:fade={{ duration: 300, delay: i * 50 }}
+          >
             <!-- Translation card -->
             <div class="translation-card-wrapper">
               <MultiLangCard 
@@ -282,6 +376,48 @@
 }
 
 /* Loading and Empty States */
+.background-loading-indicator {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  color: #64748b;
+  z-index: 50;
+}
+
+.background-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(55, 48, 163, 0.2);
+  border-radius: 50%;
+  border-top-color: #3730a3;
+  animation: spin 1s linear infinite;
+}
+
+.new-items-notification {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 50;
+}
+
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -384,6 +520,23 @@
 }
 
 /* Responsive Design */
+@media (max-width: 640px) {
+  .background-loading-indicator {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+  
+  .new-items-notification {
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    transform: none;
+    text-align: center;
+  }
+}
+
 @media (min-width: 640px) {
   .review-header {
     padding: 0 1rem;
