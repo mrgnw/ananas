@@ -87,6 +87,40 @@ async function loadFromDatabase() {
   }
 }
 
+// Loads translations from database in background without showing loading state
+async function loadFromDatabaseInBackground() {
+  if (!userStore.user.auth.isAuthenticated) {
+    return { newItems: [], hasUpdates: false };
+  }
+
+  try {
+    const response = await fetch('/api/translate/history');
+    
+    if (!response.ok) {
+      throw new Error('Failed to load translations');
+    }
+    
+    const data = await response.json();
+    const serverTranslations = data.translations;
+    
+    // Find new translations that aren't in our local history
+    const localTimestamps = new Set(history.translations.map(t => t.timestamp));
+    const newTranslations = serverTranslations.filter(t => !localTimestamps.has(t.timestamp));
+    
+    if (newTranslations.length > 0) {
+      // Add new translations to the front of our local history
+      history.translations = [...newTranslations, ...history.translations];
+      save();
+      return { newItems: newTranslations, hasUpdates: true };
+    }
+    
+    return { newItems: [], hasUpdates: false };
+  } catch (error) {
+    console.error('Error loading translations from database in background:', error);
+    return { newItems: [], hasUpdates: false };
+  }
+}
+
 // Merge local translations with database (used on login)
 async function mergeWithDatabase() {
   if (!userStore.user.auth.isAuthenticated || history.translations.length === 0) {
@@ -119,5 +153,6 @@ export const translationHistoryStore = {
   removeTranslation,
   clearHistory,
   loadFromDatabase,
+  loadFromDatabaseInBackground,
   mergeWithDatabase
 };

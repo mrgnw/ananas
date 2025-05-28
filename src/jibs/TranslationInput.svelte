@@ -36,6 +36,8 @@
         targetLang: userStore.user.selectedLanguages,
         timestamp: Date.now()
       });
+      
+      text = '';
     } catch (e) {
       error = e.message || 'Unknown error';
     } finally {
