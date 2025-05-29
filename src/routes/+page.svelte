@@ -36,19 +36,23 @@ onMount(async () => {
   <!-- <pre><code>{JSON.stringify(allSuggestions, null, 2)}</code></pre>
   •
   <pre><code>{JSON.stringify(suggestionsToShow, null, 2)}</code></pre> -->
-  <main class="translate-main">
-      <TranslationInput
-          bind:result
-      />
-      <div class="target-langs-list">
+  
+  <!-- Input section - shows at top on desktop, bottom on mobile -->
+  <div class="input-section">
+    <div class="target-langs-list">
       {#if userLanguages.length}
         {#each userLanguages as code, i}
-          <span >{getEnglishName(code)}</span>{#if i < userLanguages.length - 1}<span class="lang-sep">·</span>{/if}
+          <span>{getEnglishName(code)}</span>{#if i < userLanguages.length - 1}<span class="lang-sep">·</span>{/if}
         {/each}
       {/if}
     </div>
-    
+    <div class="input-container">
+      <TranslationInput bind:result />
+    </div>
+  </div>
 
+  <!-- Scrollable content -->
+  <main class="page-content">
     <LanguageSuggestions countryCode={data.ip_country} />
       
     <!-- Recent Translations -->
@@ -75,27 +79,34 @@ onMount(async () => {
             </div>
           {/each}
         </div>
+        {#if recentTranslations().length > 0}
+          <div class="view-all-link">
+            <a href="/review" class="view-all-btn">View All Translations →</a>
+          </div>
+        {/if}
       </div>
     {/if}
-
   </main>
 
   <style>
-  .centered-result {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  /* Input section - responsive positioning */
+  .input-section {
+    max-width: 520px;
+    margin: 2rem auto 1rem auto;
+    padding: 0 1rem;
+  }
+
+  .input-container {
     width: 100%;
   }
+
   .target-langs-list {
     font-family: sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.5em;
-    margin-top: 0.3em;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.75em;
     font-size: 0.8em;
     color: rgba(0, 0, 0, 0.4);
     max-width: 500px;
@@ -105,13 +116,25 @@ onMount(async () => {
     margin-right: auto;
   }
 
+  /* Main page layout */
+  .page-content {
+    padding: 0 1rem 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .centered-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+  }
+
   /* Recent Translations Section */
   .recent-translations-section {
-    margin-top: 3rem;
-    padding: 0 1rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 2rem;
+    padding: 0;
   }
 
   .recent-translations-title {
@@ -146,6 +169,7 @@ onMount(async () => {
   .view-all-link {
     text-align: center;
     margin-top: 1rem;
+    margin-bottom: 2rem;
   }
 
   .view-all-btn {
@@ -168,18 +192,61 @@ onMount(async () => {
     text-decoration: none;
   }
 
-  /* Responsive Design */
+  /* Desktop layout */
   @media (min-width: 768px) {
     .recent-translations-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1rem;
     }
+
+    .page-content {
+      padding: 0 2rem 2rem 2rem;
+    }
+
+    .input-section {
+      padding: 0 2rem;
+    }
   }
 
+  /* Large desktop */
   @media (min-width: 1024px) {
+    .page-content {
+      padding: 0 3rem 2rem 3rem;
+    }
+
+    .input-section {
+      padding: 0 3rem;
+    }
+  }
+
+  /* Mobile layout - input at bottom */
+  @media (max-width: 767px) {
+    .input-section {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #f1f5f9;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 50;
+      padding: 1rem 0.75rem;
+      margin: 0;
+      max-width: none;
+    }
+
+    .page-content {
+      padding: 1rem 0.75rem 12rem 0.75rem; /* Extra bottom padding for fixed input */
+    }
+
+    .target-langs-list {
+      font-size: 0.75em;
+      margin-bottom: 0.5em;
+    }
+
     .recent-translations-section {
-      padding: 0 2rem;
+      margin-top: 1rem;
     }
   }
   </style>

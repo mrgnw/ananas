@@ -84,8 +84,8 @@
 <style>
 .translate-main {
   max-width: 520px;
-  margin: 4.5rem auto 0 auto;
-  padding: 0 1.5em;
+  margin: 0 auto;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
