@@ -37,9 +37,9 @@ onMount(async () => {
   •
   <pre><code>{JSON.stringify(suggestionsToShow, null, 2)}</code></pre> -->
   
-  <div class="mobile-container">
-    <!-- Input section - shows at top on desktop, bottom on mobile -->
-    <div class="input-section">
+  <div class="layout-grid">
+    <!-- Input section -->
+    <section class="input-section">
       <div class="target-langs-list">
         {#if userLanguages.length}
           {#each userLanguages as code, i}
@@ -50,10 +50,10 @@ onMount(async () => {
       <div class="input-container">
         <TranslationInput bind:result />
       </div>
-    </div>
+    </section>
 
-    <!-- Scrollable content -->
-    <main class="page-content">
+    <!-- Content section -->
+    <main class="content-section">
       <LanguageSuggestions countryCode={data.ip_country} />
         
       <!-- Recent Translations -->
@@ -91,11 +91,21 @@ onMount(async () => {
   </div>
 
   <style>
-  /* Input section - responsive positioning */
+  /* Root Grid Layout */
+  .layout-grid {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Input Section */
   .input-section {
+    padding: 1rem;
     max-width: 520px;
-    margin: 2rem auto 1rem auto;
-    padding: 0 1rem;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .input-container {
@@ -111,24 +121,19 @@ onMount(async () => {
     margin-bottom: 0.75em;
     font-size: 0.8em;
     color: rgba(0, 0, 0, 0.4);
-    max-width: 500px;
     flex-wrap: wrap;
     word-break: break-word;
-    margin-left: auto;
-    margin-right: auto;
   }
 
-  /* Main page layout */
-  .page-content {
-    padding: 0 1rem 2rem 1rem;
-    max-width: 1200px;
-    margin: 0 auto;
+  /* Content Section */
+  .content-section {
+    padding: 0 1rem 1rem 1rem;
+    overflow-y: auto;
   }
 
-  /* Recent Translations Section */
+  /* Recent Translations */
   .recent-translations-section {
-    margin-top: 2rem;
-    padding: 0;
+    margin-top: 1rem;
   }
 
   .recent-translations-grid {
@@ -178,41 +183,61 @@ onMount(async () => {
     text-decoration: none;
   }
 
-  /* Desktop layout */
+  /* Desktop Layout - Top to Bottom Flow */
   @media (min-width: 768px) {
+    .layout-grid {
+      grid-template-rows: auto 1fr;
+      gap: 1rem;
+    }
+
+    .input-section {
+      padding: 2rem 2rem 1rem 2rem;
+      margin-top: 1rem;
+    }
+
+    .content-section {
+      padding: 0 2rem 2rem 2rem;
+    }
+
     .recent-translations-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1rem;
     }
-
-    .page-content {
-      padding: 0 2rem 2rem 2rem;
-    }
-
-    .input-section {
-      padding: 0 2rem;
-    }
   }
 
-  /* Large desktop */
+  /* Large Desktop */
   @media (min-width: 1024px) {
-    .page-content {
+    .input-section {
+      padding: 2rem 3rem 1rem 3rem;
+    }
+
+    .content-section {
       padding: 0 3rem 2rem 3rem;
     }
-
-    .input-section {
-      padding: 0 3rem;
-    }
   }
 
-  /* Mobile layout - input fixed at bottom */
+  /* Mobile Layout - Bottom to Top Flow */
   @media (max-width: 767px) {
-    .input-section {
+    .layout-grid {
       position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
       right: 0;
+      bottom: 0;
+      grid-template-rows: 1fr auto;
+      gap: 0;
+      touch-action: manipulation;
+      /* Prevent mobile zoom and scroll issues */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      overscroll-behavior: contain;
+    }
+
+    .input-section {
+      order: 2; /* Input at bottom */
       background: white;
       border-top: 1px solid #f1f5f9;
       box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
@@ -221,11 +246,25 @@ onMount(async () => {
       margin: 0;
       max-width: none;
       touch-action: manipulation;
+      /* Prevent zoom on input area */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
-    .page-content {
-      padding: 1rem 0.75rem 9rem 0.75rem; /* Increased bottom padding to prevent overlap */
+    .content-section {
+      order: 1; /* Content at top */
+      padding: 1rem 0.75rem 0.5rem 0.75rem;
       touch-action: manipulation;
+      overflow-y: auto;
+      /* Prevent zoom and selection on content area */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      overscroll-behavior: contain;
     }
 
     .target-langs-list {
@@ -234,19 +273,43 @@ onMount(async () => {
     }
 
     .recent-translations-section {
-      margin-top: 1rem;
-      margin-bottom: 0;
+      margin-top: 0.5rem;
     }
 
-    /* Reverse translation order on mobile - newest first (closest to input) */
+    /* Reverse order - newest first (closest to input) */
     .recent-translations-grid {
       display: flex;
       flex-direction: column-reverse;
       gap: 0.75rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
+      /* Prevent zoom on translation cards */
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
-    /* Create visual connection between newest translation and input */
+    .recent-translation-item {
+      /* Prevent double-tap zoom on translation cards */
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Allow text selection inside translation content */
+    .recent-translation-item .translation-text,
+    .recent-translation-item [contenteditable] {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+
+    /* Visual connection between newest translation and input */
     .recent-translation-item:last-child {
       position: relative;
     }
@@ -254,16 +317,16 @@ onMount(async () => {
     .recent-translation-item:last-child::after {
       content: '';
       position: absolute;
-      bottom: -0.5rem;
+      bottom: -0.25rem;
       left: 50%;
       transform: translateX(-50%);
-      width: 3rem;
-      height: 2px;
+      width: 2rem;
+      height: 1px;
       background: linear-gradient(to right, transparent, #cbd5e1, transparent);
-      opacity: 0.5;
+      opacity: 0.4;
     }
 
-    /* Hide View All button on mobile */
+    /* Hide View All on mobile */
     .view-all-link {
       display: none;
     }
