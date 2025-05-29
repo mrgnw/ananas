@@ -191,15 +191,17 @@
   onmouseleave={handleMouseLeave}
   ontouchstart={handleTouchStart}
 >
-  <!-- Simple delete button - always visible but subtle -->
+  <!-- Delete tab - slides out from bottom center -->
   {#if onDelete}
-    <button
-      class="delete-btn"
-      aria-label="Delete translation"
-      onclick={handleDeleteClick}
-    >
-      <Trash2 size={16} />
-    </button>
+    <div class="delete-tab">
+      <button
+        class="delete-btn"
+        aria-label="Delete translation"
+        onclick={handleDeleteClick}
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
   {/if}
 
   <div class="translations-container">
@@ -289,14 +291,12 @@
     {/if}
   </div>
 
-  <!-- Card footer with metadata (shown on hover for desktop) -->
+  <!-- Timestamp tab - slides out from bottom-left -->
   {#if timestamp}
-    <div class="card-footer">
-      <div class="card-metadata">
-        <div class="metadata-item">
-          <Clock class="metadata-icon" size={14} />
-          <span class="metadata-text">{formatTimestamp(timestamp)}</span>
-        </div>
+    <div class="timestamp-tab">
+      <div class="timestamp-content">
+        <Clock class="timestamp-icon" size={14} />
+        <span class="timestamp-text">{formatTimestamp(timestamp)}</span>
       </div>
     </div>
   {/if}
@@ -339,90 +339,100 @@
     transform: scale(0.98);
   }
 
-  /* Delete button positioned outside the card - appears on hover */
-  .delete-btn {
+  /* Delete tab - slides out from bottom center */
+  .delete-tab {
     position: absolute;
-    top: 0.5rem;
-    right: -1rem; /* Outside the card boundary */
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .translation-card:hover .delete-tab,
+  .translation-card:focus-within .delete-tab {
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .delete-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border: none;
-    background: rgba(248, 250, 252, 0.95);
-    color: #94a3b8;
+    background: rgba(254, 242, 242, 0.95);
+    color: #ef4444;
     cursor: pointer;
-    border-radius: 50%;
+    border-radius: 0.5rem 0.5rem 0 0;
     transition: all 0.15s ease;
-    opacity: 0;
-    transform: scale(0.8);
     backdrop-filter: blur(8px);
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-  }
-
-  .translation-card:hover .delete-btn {
-    opacity: 1;
-    transform: scale(1);
+    box-shadow: 0 -2px 8px rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-bottom: none;
   }
 
   .delete-btn:hover {
-    background: rgba(254, 242, 242, 0.95);
-    color: #ef4444;
-    opacity: 1;
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    background: rgba(254, 226, 226, 0.95);
+    transform: scale(1.05);
+    box-shadow: 0 -4px 12px rgba(239, 68, 68, 0.3);
   }
 
   .delete-btn:active {
     transform: scale(0.95);
   }
 
-  .card-footer {
+  /* Timestamp tab - slides out from bottom-left corner */
+  .timestamp-tab {
     position: absolute;
-    top: 100%;
+    bottom: 0;
     left: 0;
-    right: 0;
-    height: 0;
-    overflow: hidden;
-    transition: height 0.2s ease;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease, opacity 0.2s ease;
     z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
   }
 
-  .translation-card:hover .card-footer {
-    height: auto;
+  .translation-card:hover .timestamp-tab,
+  .translation-card:focus-within .timestamp-tab {
+    transform: translateX(0);
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
   }
 
-  .card-metadata {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem;
-    background: rgba(248, 250, 252, 0.95);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-top: none;
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-
-  .metadata-item {
+  .timestamp-content {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(248, 250, 252, 0.95);
     color: #64748b;
     font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 0 0.5rem 0.5rem 0;
+    backdrop-filter: blur(8px);
+    box-shadow: 2px -2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-left: none;
+    border-bottom: none;
+    min-height: 36px;
   }
 
-  .metadata-icon {
+  .timestamp-icon {
     flex-shrink: 0;
   }
 
-  .metadata-text {
-    font-weight: 500;
+  .timestamp-text {
+    white-space: nowrap;
   }
 
   /* Delete confirmation modal */
@@ -846,24 +856,19 @@
       font-size: 0.8125rem;
     }
 
-    .card-metadata {
-      padding: 0.5rem;
-    }
-
-    .metadata-text {
-      font-size: 0.75rem;
-    }
-
     .delete-btn {
-      opacity: 1; /* Always visible on mobile since hover doesn't work reliably */
-      transform: scale(1);
-      width: 36px;
-      height: 36px;
-      right: -0.75rem; /* Adjust for mobile */
+      width: 40px;
+      height: 40px;
+    }
+
+    .timestamp-content {
+      font-size: 0.6875rem;
+      padding: 0.375rem 0.625rem;
+      min-height: 36px;
     }
   }
 
-  /* Touch device optimizations */
+  /* Touch device optimizations - tabs appear on tap */
   @media (hover: none) and (pointer: coarse) {
     .copy-button {
       opacity: 1;
@@ -872,15 +877,48 @@
     }
 
     .delete-btn {
-      opacity: 1; /* Always visible on touch devices */
-      transform: scale(1);
       min-height: 44px;
       min-width: 44px;
-      right: -0.75rem; /* Position outside card boundary */
+    }
+
+    .timestamp-content {
+      min-height: 44px;
     }
 
     .translation-card {
       cursor: default;
+    }
+
+    /* Show tabs on active state (tap) */
+    .translation-card:active .delete-tab,
+    .translation-card:focus-within .delete-tab {
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .translation-card:active .timestamp-tab,
+    .translation-card:focus-within .timestamp-tab {
+      transform: translateX(0);
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Keep tabs visible briefly after touch */
+    .translation-card:focus .delete-tab {
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .translation-card:focus .timestamp-tab {
+      transform: translateX(0);
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
     }
   }
 </style>
