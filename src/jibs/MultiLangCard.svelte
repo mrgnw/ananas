@@ -373,12 +373,11 @@
     background: rgba(254, 242, 242, 0.95);
     color: #ef4444;
     cursor: pointer;
-    border-radius: 0.5rem 0.5rem 0 0;
+    border-radius: 50%;
     transition: all 0.15s ease;
     backdrop-filter: blur(8px);
     box-shadow: 0 -2px 8px rgba(239, 68, 68, 0.2);
     border: 1px solid rgba(239, 68, 68, 0.2);
-    border-bottom: none;
   }
 
   .delete-btn:hover {
