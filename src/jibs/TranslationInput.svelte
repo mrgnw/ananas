@@ -37,6 +37,17 @@
         timestamp: Date.now()
       });
       
+      // IMMEDIATELY scroll to show new translation on mobile
+      if (window.innerWidth <= 767) {
+        setTimeout(() => {
+          const historyEl = document.querySelector('.translation-history');
+          if (historyEl) {
+            console.log('SCROLLING TO SHOW NEW TRANSLATION');
+            historyEl.scrollTop = historyEl.scrollHeight;
+          }
+        }, 100);
+      }
+      
       text = '';
     } catch (e) {
       error = e.message || 'Unknown error';

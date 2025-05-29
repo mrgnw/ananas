@@ -1,72 +1,20 @@
 <script>
   import { flip } from 'svelte/animate';
   import { fade } from 'svelte/transition';
-  import { tick } from 'svelte';
   import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
   import TranslationCard from './TranslationCard.svelte';
 
   let { hasLoadedInitialAnimations = $bindable(false) } = $props();
 
-  let gridContainer = $state();
-  let previousTranslationCount = $state(0);
-
   // Get last 6 translations from history
   let recentTranslations = $derived(() => {
     return (translationHistoryStore.history.translations || []).slice(0, 6);
-  });
-
-  // Watch for new translations and scroll to show the newest one
-  $effect(() => {
-    const currentCount = recentTranslations().length;
-    
-    // If we have a new translation (count increased) and we're past initial load
-    if (currentCount > previousTranslationCount && previousTranslationCount > 0 && gridContainer) {
-      // Wait for DOM update and flip animation to start
-      tick().then(() => {
-        // Multiple attempts to ensure we scroll after content is fully rendered
-        const scrollToNewItem = () => {
-          const scrollContainer = gridContainer.closest('.translation-history');
-          console.log('Scroll container found:', scrollContainer);
-          console.log('Current scrollHeight:', scrollContainer?.scrollHeight);
-          console.log('Current scrollTop:', scrollContainer?.scrollTop);
-          console.log('Window width:', window.innerWidth);
-          
-          if (scrollContainer) {
-            if (window.innerWidth <= 767) {
-              // On mobile: FORCE scroll to bottom since newest items appear at bottom due to column-reverse
-              const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-              console.log('Forcing scroll to:', maxScroll);
-              
-              // Try both methods
-              scrollContainer.scrollTop = maxScroll;
-              scrollContainer.scrollTo({
-                top: maxScroll,
-                behavior: 'smooth'
-              });
-            } else {
-              // On desktop: scroll to top since newest items appear at top
-              scrollContainer.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-              });
-            }
-          }
-        };
-
-        // Try immediately, then again after animation delay
-        scrollToNewItem();
-        setTimeout(scrollToNewItem, 100);
-        setTimeout(scrollToNewItem, 200);
-      });
-    }
-    
-    previousTranslationCount = currentCount;
   });
 </script>
 
 {#if translationHistoryStore.history.translations && translationHistoryStore.history.translations.length > 0}
   <div class="recent-translations-section">
-    <div class="recent-translations-grid" bind:this={gridContainer}>
+    <div class="recent-translations-grid">
       {#each recentTranslations() as translation, index (translation.timestamp)}
         <div 
           class="recent-translation-item" 
