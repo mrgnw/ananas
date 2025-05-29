@@ -90,6 +90,21 @@ body {
   user-select: none;
   /* Allow scrolling in containers */
   overscroll-behavior: auto;
+  /* Prevent any horizontal overflow */
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Account for fixed navbar */
+body {
+  padding-top: 60px; /* Navbar height */
+}
+
+/* Prevent horizontal overflow on all elements */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Allow scrolling in page content areas */

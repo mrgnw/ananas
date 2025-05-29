@@ -50,11 +50,8 @@
     flex-direction: column;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    touch-action: pan-y; /* Allow vertical scrolling */
+    pointer-events: auto;
   }
 
   .recent-translation-item {
@@ -65,12 +62,9 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.15s ease;
     overflow: visible;
-    touch-action: manipulation;
+    touch-action: pan-y; /* Allow vertical scrolling through cards */
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    pointer-events: auto; /* Ensure touch events work properly */
   }
 
   .recent-translation-item:hover {

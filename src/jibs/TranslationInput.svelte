@@ -89,6 +89,9 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  /* Prevent horizontal overflow */
+  overflow-x: hidden;
+  width: 100%;
 }
 .input-form {
   width: 100%;
@@ -103,6 +106,11 @@
   padding: 0.25em 0.5em 0.25em 1.2em;
   transition: border-color 0.18s, box-shadow 0.18s;
   position: relative;
+  /* Prevent horizontal overflow and scrolling */
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  touch-action: manipulation; /* Prevent unwanted touch gestures */
 }
 .input-container.focused {
   border-color: #3730a3;

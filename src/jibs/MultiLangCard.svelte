@@ -331,8 +331,9 @@
     padding: 0.75rem 0.75rem 0 0.75rem;
     display: flex;
     flex-direction: column;
-    touch-action: manipulation; /* Prevent zoom on touch */
+    touch-action: pan-y; /* Allow vertical scrolling */
     -webkit-touch-callout: none;
+    pointer-events: auto;
   }
 
   .translation-card:hover {
@@ -563,7 +564,8 @@
     transition: background-color 0.15s ease;
     position: relative;
     min-height: 1.75rem;
-    touch-action: manipulation; /* Prevent zoom on touch */
+    touch-action: pan-y; /* Allow vertical scrolling */
+    pointer-events: auto;
   }
 
   .translation-row:hover {

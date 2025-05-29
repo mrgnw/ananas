@@ -8,7 +8,7 @@
 
 <style>
   .page-wrapper {
-    height: calc(100vh - 60px); /* Fixed height instead of min-height */
+    height: calc(100vh - 120px); /* Account for fixed navbar (60px) + body padding (60px) */
     overflow-y: auto;
     overflow-x: hidden;
     padding: 1rem;
@@ -39,7 +39,7 @@
   /* Mobile - force scrolling to work */
   @media (max-width: 767px) {
     .page-wrapper {
-      height: calc(100vh - 60px);
+      height: calc(100vh - 120px); /* Account for fixed navbar + body padding */
       overflow-y: scroll; /* Force scroll instead of auto */
       padding: 1rem 0.75rem;
       /* Override global CSS restrictions */

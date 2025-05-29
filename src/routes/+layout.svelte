@@ -115,9 +115,18 @@
   border-bottom: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.03);
   padding: 0.5rem 0;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 40;
+  /* Prevent any movement on mobile */
+  touch-action: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .navbar-list {
   display: flex;
