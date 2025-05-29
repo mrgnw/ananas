@@ -1,8 +1,31 @@
 <script>
+  import { onMount, setContext } from 'svelte';
+  
   let { children } = $props();
+  let historyContainer = $state();
+
+  // Provide scroll container to children
+  setContext('scrollContainer', historyContainer);
+
+  // On mobile, scroll to bottom by default since newest items appear there
+  onMount(() => {
+    if (historyContainer && window.innerWidth <= 767) {
+      // Small delay to ensure content is rendered
+      setTimeout(() => {
+        historyContainer.scrollTop = historyContainer.scrollHeight;
+      }, 100);
+    }
+  });
+
+  // Export function to scroll to bottom
+  export function scrollToBottom() {
+    if (historyContainer) {
+      historyContainer.scrollTop = historyContainer.scrollHeight;
+    }
+  }
 </script>
 
-<main class="translation-history">
+<main class="translation-history" bind:this={historyContainer}>
   {@render children()}
 </main>
 
