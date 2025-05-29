@@ -5,6 +5,7 @@
   import { translationHistoryStore } from '$lib/stores/translationHistory.svelte.js';
   import { userStore } from '$lib/stores/user.svelte.js';
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
+  import PageWrapper from '$lib/components/layout/PageWrapper.svelte';
   
   let itemsToShow = $state(20);
   let isLoadingInBackground = $state(false);
@@ -116,47 +117,49 @@
   </div>
 {/if}
 
-{#if translationsToShow().length === 0 && !translationHistoryStore.history.loading}
-  <div class="empty-state">
-    <p>No translations yet. Start translating to build your review collection!</p>
-  </div>
-{:else}
-  <!-- Grouped translations -->
-  {#each [...groupedTranslations().entries()] as [groupKey, groupItems] (groupKey)}
-    <div class="date-group" animate:flip={{ duration: 400 }}>
-      <h3 class="date-group-header">{groupKey}</h3>
-      <div class="translations-grid">
-        {#each groupItems.filter(item => visibleItems.has(item.timestamp)) as item, i (item.timestamp)}
-          <div 
-            class="translation-item" 
-            in:fade={{ duration: 400 }}
-          >
-            <!-- Translation card -->
-            <div class="translation-card-wrapper">
-              <MultiLangCard 
-                translation={{ translations: item.output }} 
-                show_langs={true}
-                onDelete={() => handleDelete(item, i)}
-                truncate_lines={true}
-                timestamp={item.timestamp}
-                originalText={item.input}
-              />
+<PageWrapper>
+  {#if translationsToShow().length === 0 && !translationHistoryStore.history.loading}
+    <div class="empty-state">
+      <p>No translations yet. Start translating to build your review collection!</p>
+    </div>
+  {:else}
+    <!-- Grouped translations -->
+    {#each [...groupedTranslations().entries()] as [groupKey, groupItems] (groupKey)}
+      <div class="date-group" animate:flip={{ duration: 400 }}>
+        <h3 class="date-group-header">{groupKey}</h3>
+        <div class="translations-grid">
+          {#each groupItems.filter(item => visibleItems.has(item.timestamp)) as item, i (item.timestamp)}
+            <div 
+              class="translation-item" 
+              in:fade={{ duration: 400 }}
+            >
+              <!-- Translation card -->
+              <div class="translation-card-wrapper">
+                <MultiLangCard 
+                  translation={{ translations: item.output }} 
+                  show_langs={true}
+                  onDelete={() => handleDelete(item, i)}
+                  truncate_lines={true}
+                  timestamp={item.timestamp}
+                  originalText={item.input}
+                />
+              </div>
             </div>
-          </div>
-        {/each}
+          {/each}
+        </div>
       </div>
-    </div>
-  {/each}
-  
-  <!-- Load more button -->
-  {#if translationHistoryStore.history.translations.length > itemsToShow}
-    <div class="load-more-container">
-      <button class="load-more-btn" onclick={loadMore}>
-        Load more translations
-      </button>
-    </div>
+    {/each}
+    
+    <!-- Load more button -->
+    {#if translationHistoryStore.history.translations.length > itemsToShow}
+      <div class="load-more-container">
+        <button class="load-more-btn" onclick={loadMore}>
+          Load more translations
+        </button>
+      </div>
+    {/if}
   {/if}
-{/if}
+</PageWrapper>
 
 <style>
 /* Loading and Empty States */
@@ -221,7 +224,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: #374151;
-  margin: 0 0 1rem 0.25rem;
+  margin: 0 0 1rem 0;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #e5e7eb;
 }
@@ -238,7 +241,6 @@
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   padding: 0rem;
-  margin: 0 0.25rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.15s ease;
   overflow: visible;
@@ -280,10 +282,6 @@
 
 /* Responsive Design */
 @media (max-width: 640px) {
-  body, .page-container {
-    touch-action: manipulation; /* Prevent double-tap zoom */
-  }
-  
   .background-loading-indicator {
     top: 0.5rem;
     right: 0.5rem;
@@ -300,38 +298,11 @@
   }
 }
 
-@media (min-width: 640px) {
-  .translation-item {
-    margin: 0 1rem;
-  }
-  
-  .date-group-header {
-    margin-left: 1rem;
-  }
-}
-
 @media (min-width: 768px) {
   .translations-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
-  }
-  
-  .translation-item {
-    margin: 0;
-  }
-}
-
-@media (min-width: 1024px) {
-  .date-group {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2rem;
-  }
-  
-  .date-group-header {
-    margin-left: 0;
   }
 }
 </style>

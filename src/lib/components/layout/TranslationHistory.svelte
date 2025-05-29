@@ -10,12 +10,16 @@
   .translation-history {
     padding: 0 1rem 1rem 1rem;
     overflow-y: auto;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    overscroll-behavior: contain;
+    height: 100%;
+    /* Fix scrolling */
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: auto;
+    /* Allow text selection */
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 
   /* Desktop Layout */
@@ -37,6 +41,10 @@
     .translation-history {
       order: 1;
       padding: 1rem 0.75rem 0.5rem 0.75rem;
+      overflow-y: scroll !important;
+      touch-action: pan-y !important;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: auto !important;
     }
   }
 

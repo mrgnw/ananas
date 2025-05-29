@@ -3,6 +3,7 @@
 	import { getAllLanguages, filterLanguages } from '$lib/utils/languages.js';
 	import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
 	import { flip } from 'svelte/animate';
+	import PageWrapper from '$lib/components/layout/PageWrapper.svelte';
 
 	let filter = $state('');
 	let { data } = $props();
@@ -31,84 +32,86 @@
 	}
 </script>
 
-<div class="filter-bar">
-	<input
-		class="language-filter-input"
-		type="text"
-		placeholder="Filter languages..."
-		bind:value={filter}
-		autocomplete="off"
-	/>
-</div>
-
-{#if suggestions.length > 0}
-	<div class="suggestions-section">
-		<h3>Suggested for you</h3>
-		<div class="suggestions-list">
-			{#each suggestions as suggestion}
-				<button 
-					class="suggestion-item" 
-					onclick={() => {
-						userStore.addLanguage(suggestion.code);
-						showSuggestions = false;
-					}}
-				>
-					<span class="suggestion-name">{suggestion.name}</span>
-					{#if suggestion.nativeName !== suggestion.name}
-						<span class="suggestion-native">{suggestion.nativeName}</span>
-					{/if}
-					<span class="suggestion-reason">{suggestion.reason === 'primary' ? 'Browser language' : suggestion.reason === 'country_primary' ? 'Local language' : 'Suggested'}</span>
-				</button>
-			{/each}
-		</div>
-		<button class="dismiss-suggestions" onclick={() => showSuggestions = false}>
-			× Dismiss suggestions
-		</button>
+<PageWrapper>
+	<div class="filter-bar">
+		<input
+			class="language-filter-input"
+			type="text"
+			placeholder="Filter languages..."
+			bind:value={filter}
+			autocomplete="off"
+		/>
 	</div>
-{/if}
 
-<ul class="languages-list">
-	{#each userLanguages as lang (lang.code)}
-		<li
-			class="language-item selected"
-			animate:flip={{ duration: 222 }}
-			onclick={() => userStore.removeLanguage(lang.code)}
-			tabindex="0"
-			aria-label={`Remove ${lang.name}`}
-		>
-			<span class="lang-action">–</span>
-			<span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
-			<span class="lang-label">{lang.name}</span>
-			{#if lang.nativeName && lang.nativeName !== lang.name}
-				<span class="lang-native">{lang.nativeName}</span>
-			{/if}
-		</li>
-	{/each}
-
-	{#if userLanguages.length && filterLanguages(otherLanguages, filter).length}
-		<li
-			class="language-separator"
-			style="margin: 0.5em 0; border-bottom: 1px solid #eee; list-style: none;"
-		></li>
+	{#if suggestions.length > 0}
+		<div class="suggestions-section">
+			<h3>Suggested for you</h3>
+			<div class="suggestions-list">
+				{#each suggestions as suggestion}
+					<button 
+						class="suggestion-item" 
+						onclick={() => {
+							userStore.addLanguage(suggestion.code);
+							showSuggestions = false;
+						}}
+					>
+						<span class="suggestion-name">{suggestion.name}</span>
+						{#if suggestion.nativeName !== suggestion.name}
+							<span class="suggestion-native">{suggestion.nativeName}</span>
+						{/if}
+						<span class="suggestion-reason">{suggestion.reason === 'primary' ? 'Browser language' : suggestion.reason === 'country_primary' ? 'Local language' : 'Suggested'}</span>
+					</button>
+				{/each}
+			</div>
+			<button class="dismiss-suggestions" onclick={() => showSuggestions = false}>
+				× Dismiss suggestions
+			</button>
+		</div>
 	{/if}
 
-	{#each filterLanguages(otherLanguages, filter) as lang (lang.code)}
-		<li
-			class="language-item"
-			animate:flip={{ duration: 222 }}
-			onclick={() => userStore.addLanguage(lang.code)}
-			tabindex="0"
-			aria-label={`Add ${lang.name}`}
-		>
-			<span class="lang-action">+</span>
-			<span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
-			<span class="lang-label">{lang.name}</span>
-			{#if lang.nativeName && lang.nativeName !== lang.name}
-				<span class="lang-native">{lang.nativeName}</span>
-			{/if}
-		</li>
-	{/each}
-</ul>
+	<ul class="languages-list">
+		{#each userLanguages as lang (lang.code)}
+			<li
+				class="language-item selected"
+				animate:flip={{ duration: 222 }}
+				onclick={() => userStore.removeLanguage(lang.code)}
+				tabindex="0"
+				aria-label={`Remove ${lang.name}`}
+			>
+				<span class="lang-action">–</span>
+				<span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
+				<span class="lang-label">{lang.name}</span>
+				{#if lang.nativeName && lang.nativeName !== lang.name}
+					<span class="lang-native">{lang.nativeName}</span>
+				{/if}
+			</li>
+		{/each}
+
+		{#if userLanguages.length && filterLanguages(otherLanguages, filter).length}
+			<li
+				class="language-separator"
+				style="margin: 0.5em 0; border-bottom: 1px solid #eee; list-style: none;"
+			></li>
+		{/if}
+
+		{#each filterLanguages(otherLanguages, filter) as lang (lang.code)}
+			<li
+				class="language-item"
+				animate:flip={{ duration: 222 }}
+				onclick={() => userStore.addLanguage(lang.code)}
+				tabindex="0"
+				aria-label={`Add ${lang.name}`}
+			>
+				<span class="lang-action">+</span>
+				<span class="lang-speakers">{formatSpeakers(lang.speakers)}</span>
+				<span class="lang-label">{lang.name}</span>
+				{#if lang.nativeName && lang.nativeName !== lang.name}
+					<span class="lang-native">{lang.nativeName}</span>
+				{/if}
+			</li>
+		{/each}
+	</ul>
+</PageWrapper>
 
 <style>
 	.suggestions-section {
