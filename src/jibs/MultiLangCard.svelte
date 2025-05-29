@@ -323,11 +323,14 @@
   .translation-card {
     position: relative;
     width: 100%;
+    height: 100%;
     background: white;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-    padding: 0.75rem;
+    padding: 0.75rem 0.75rem 0 0.75rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .translation-card:hover {
@@ -545,8 +548,9 @@
   .translations-container {
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
+    gap: 0;
     padding: 0;
+    flex: 1;
   }
 
   .translation-row {

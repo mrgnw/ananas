@@ -242,6 +242,8 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.15s ease;
   overflow: visible;
+  display: flex;
+  flex-direction: column;
 }
 
 .translation-item:hover {
@@ -250,6 +252,9 @@
 
 .translation-card-wrapper {
   margin-bottom: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Load More */
