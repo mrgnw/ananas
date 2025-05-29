@@ -93,7 +93,7 @@
 {@render children?.()}
 
 {#if browser}
-<div class="fixed bottom-4 right-4 flex gap-2 z-50 bg-white/50 p-2 rounded-lg">
+<div class="debug-controls">
 	<!-- Future feature: country detection / language suggestion -->
     <!-- {#if hasCountryCode && countryFlag}
 		<Button
@@ -159,6 +159,25 @@
   .navbar-list a {
     padding: 0.5em 0.7em;
     font-size: 0.98em;
+  }
+}
+
+.debug-controls {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 60;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+/* Hide debug controls on mobile to prevent input overlap */
+@media (max-width: 767px) {
+  .debug-controls {
+    display: none;
   }
 }
 </style>

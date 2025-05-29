@@ -280,6 +280,10 @@
 
 /* Responsive Design */
 @media (max-width: 640px) {
+  body, .page-container {
+    touch-action: manipulation; /* Prevent double-tap zoom */
+  }
+  
   .background-loading-indicator {
     top: 0.5rem;
     right: 0.5rem;

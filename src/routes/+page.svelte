@@ -234,10 +234,12 @@ onMount(async () => {
       padding: 1rem 0.75rem;
       margin: 0;
       max-width: none;
+      touch-action: manipulation; /* Prevent double-tap zoom */
     }
 
     .page-content {
       padding: 1rem 0.75rem 12rem 0.75rem; /* Extra bottom padding for fixed input */
+      touch-action: manipulation; /* Prevent double-tap zoom */
     }
 
     .target-langs-list {
@@ -247,6 +249,18 @@ onMount(async () => {
 
     .recent-translations-section {
       margin-top: 1rem;
+    }
+
+    /* Reverse translation order on mobile - newest first (closest to input) */
+    .recent-translations-grid {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 0.75rem;
+    }
+
+    /* Hide View All button on mobile to focus on recent translations */
+    .view-all-link {
+      display: none;
     }
   }
   </style>
