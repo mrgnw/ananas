@@ -347,7 +347,7 @@
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%) translateY(100%);
+    transform: translateX(-50%) translateY(150%);
     transition: transform 0.2s ease, opacity 0.2s ease;
     z-index: 20;
     pointer-events: none;
@@ -357,7 +357,7 @@
 
   .translation-card:hover .delete-tab,
   .translation-card:focus-within .delete-tab {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(50%);
     pointer-events: auto;
     opacity: 1;
     visibility: visible;
@@ -895,7 +895,7 @@
     /* Show tabs on active state (tap) */
     .translation-card:active .delete-tab,
     .translation-card:focus-within .delete-tab {
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(-50%) translateY(50%);
       pointer-events: auto;
       opacity: 1;
       visibility: visible;
@@ -911,7 +911,7 @@
 
     /* Keep tabs visible briefly after touch */
     .translation-card:focus .delete-tab {
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(-50%) translateY(50%);
       pointer-events: auto;
       opacity: 1;
       visibility: visible;
