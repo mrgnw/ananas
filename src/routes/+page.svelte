@@ -37,56 +37,58 @@ onMount(async () => {
   •
   <pre><code>{JSON.stringify(suggestionsToShow, null, 2)}</code></pre> -->
   
-  <!-- Input section - shows at top on desktop, bottom on mobile -->
-  <div class="input-section">
-    <div class="target-langs-list">
-      {#if userLanguages.length}
-        {#each userLanguages as code, i}
-          <span>{getEnglishName(code)}</span>{#if i < userLanguages.length - 1}<span class="lang-sep">·</span>{/if}
-        {/each}
-      {/if}
-    </div>
-    <div class="input-container">
-      <TranslationInput bind:result />
-    </div>
-  </div>
-
-  <!-- Scrollable content -->
-  <main class="page-content">
-    <LanguageSuggestions countryCode={data.ip_country} />
-      
-    <!-- Recent Translations -->
-    {#if translationHistoryStore.history.translations && translationHistoryStore.history.translations.length > 0}
-      <div class="recent-translations-section">
-        <div class="recent-translations-grid">
-          {#each recentTranslations() as translation, index (translation.timestamp)}
-            <div 
-              class="recent-translation-item" 
-              animate:flip={{ duration: 400 }}
-              in:fade={{ 
-                duration: hasLoadedInitialAnimations ? 300 : 400, 
-                delay: hasLoadedInitialAnimations ? 0 : index * 120 
-              }}
-            >
-              <MultiLangCard 
-                translation={{ translations: translation.output }} 
-                show_langs={true}
-                onDelete={() => translationHistoryStore.removeTranslation(index)}
-                truncate_lines={true}
-                timestamp={translation.timestamp}
-                originalText={translation.input}
-              />
-            </div>
+  <div class="mobile-container">
+    <!-- Input section - shows at top on desktop, bottom on mobile -->
+    <div class="input-section">
+      <div class="target-langs-list">
+        {#if userLanguages.length}
+          {#each userLanguages as code, i}
+            <span>{getEnglishName(code)}</span>{#if i < userLanguages.length - 1}<span class="lang-sep">·</span>{/if}
           {/each}
-        </div>
-        {#if recentTranslations().length > 0}
-          <div class="view-all-link">
-            <a href="/review" class="view-all-btn">View All Translations →</a>
-          </div>
         {/if}
       </div>
-    {/if}
-  </main>
+      <div class="input-container">
+        <TranslationInput bind:result />
+      </div>
+    </div>
+
+    <!-- Scrollable content -->
+    <main class="page-content">
+      <LanguageSuggestions countryCode={data.ip_country} />
+        
+      <!-- Recent Translations -->
+      {#if translationHistoryStore.history.translations && translationHistoryStore.history.translations.length > 0}
+        <div class="recent-translations-section">
+          <div class="recent-translations-grid">
+            {#each recentTranslations() as translation, index (translation.timestamp)}
+              <div 
+                class="recent-translation-item" 
+                animate:flip={{ duration: 400 }}
+                in:fade={{ 
+                  duration: hasLoadedInitialAnimations ? 300 : 400, 
+                  delay: hasLoadedInitialAnimations ? 0 : index * 120 
+                }}
+              >
+                <MultiLangCard 
+                  translation={{ translations: translation.output }} 
+                  show_langs={true}
+                  onDelete={() => translationHistoryStore.removeTranslation(index)}
+                  truncate_lines={true}
+                  timestamp={translation.timestamp}
+                  originalText={translation.input}
+                />
+              </div>
+            {/each}
+          </div>
+          {#if recentTranslations().length > 0}
+            <div class="view-all-link">
+              <a href="/review" class="view-all-btn">View All Translations →</a>
+            </div>
+          {/if}
+        </div>
+      {/if}
+    </main>
+  </div>
 
   <style>
   /* Input section - responsive positioning */
@@ -123,26 +125,10 @@ onMount(async () => {
     margin: 0 auto;
   }
 
-  .centered-result {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-  }
-
   /* Recent Translations Section */
   .recent-translations-section {
     margin-top: 2rem;
     padding: 0;
-  }
-
-  .recent-translations-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 1rem;
-    text-align: center;
   }
 
   .recent-translations-grid {
@@ -220,7 +206,7 @@ onMount(async () => {
     }
   }
 
-  /* Mobile layout - input at bottom */
+  /* Mobile layout - input fixed at bottom */
   @media (max-width: 767px) {
     .input-section {
       position: fixed;
@@ -234,12 +220,12 @@ onMount(async () => {
       padding: 1rem 0.75rem;
       margin: 0;
       max-width: none;
-      touch-action: manipulation; /* Prevent double-tap zoom */
+      touch-action: manipulation;
     }
 
     .page-content {
-      padding: 1rem 0.75rem 12rem 0.75rem; /* Extra bottom padding for fixed input */
-      touch-action: manipulation; /* Prevent double-tap zoom */
+      padding: 1rem 0.75rem 9rem 0.75rem; /* Increased bottom padding to prevent overlap */
+      touch-action: manipulation;
     }
 
     .target-langs-list {
@@ -249,6 +235,7 @@ onMount(async () => {
 
     .recent-translations-section {
       margin-top: 1rem;
+      margin-bottom: 0;
     }
 
     /* Reverse translation order on mobile - newest first (closest to input) */
@@ -256,9 +243,27 @@ onMount(async () => {
       display: flex;
       flex-direction: column-reverse;
       gap: 0.75rem;
+      margin-bottom: 1rem;
     }
 
-    /* Hide View All button on mobile to focus on recent translations */
+    /* Create visual connection between newest translation and input */
+    .recent-translation-item:last-child {
+      position: relative;
+    }
+
+    .recent-translation-item:last-child::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3rem;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #cbd5e1, transparent);
+      opacity: 0.5;
+    }
+
+    /* Hide View All button on mobile */
     .view-all-link {
       display: none;
     }
