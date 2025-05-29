@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { getColorByIndex } from '$lib/colors';
 	import { getEnglishName } from '$lib/utils/languages.js';
-	import { Copy, Trash2, Clock } from 'lucide-svelte';
+	import { Copy, Trash2, Clock, MoreVertical } from 'lucide-svelte';
 	import { userStore } from '$lib/stores/user.svelte.js';
 	import { slide } from 'svelte/transition';
 
@@ -12,6 +12,9 @@
 	// Original text hover state
 	let showOriginal = $state(false);
 	let cardContainer = $state();
+	
+	// Delete confirmation state
+	let showDeleteConfirm = $state(false);
 
 	// Check if original text matches any translation
 	const originalMatchesTranslation = $derived(() => {
@@ -126,10 +129,26 @@
 		showOriginal = false;
 	};
 
-	const handleTouchStart = () => {
+	const handleTouchStart = (/** @type {TouchEvent} */ event) => {
 		if (originalText) {
 			showOriginal = !showOriginal;
 		}
+	};
+
+	// Delete handlers
+	const handleDeleteClick = () => {
+		showDeleteConfirm = true;
+	};
+
+	const confirmDelete = () => {
+		showDeleteConfirm = false;
+		if (onDelete) {
+			onDelete();
+		}
+	};
+
+	const cancelDelete = () => {
+		showDeleteConfirm = false;
 	};
 
 	/**
@@ -172,6 +191,16 @@
   onmouseleave={handleMouseLeave}
   ontouchstart={handleTouchStart}
 >
+  <!-- Simple delete button - always visible but subtle -->
+  {#if onDelete}
+    <button
+      class="delete-btn"
+      aria-label="Delete translation"
+      onclick={handleDeleteClick}
+    >
+      <Trash2 size={16} />
+    </button>
+  {/if}
 
   <div class="translations-container">
     <!-- Translation rows -->
@@ -260,29 +289,35 @@
     {/if}
   </div>
 
-  <!-- Card footer with metadata (shown on hover) -->
-  {#if onDelete || timestamp}
+  <!-- Card footer with metadata (shown on hover for desktop) -->
+  {#if timestamp}
     <div class="card-footer">
       <div class="card-metadata">
-        {#if timestamp}
-          <div class="metadata-item">
-            <Clock class="metadata-icon" size={14} />
-            <span class="metadata-text">{formatTimestamp(timestamp)}</span>
-          </div>
-        {/if}
-        {#if onDelete}
-          <button
-            class="delete-button"
-            aria-label="Delete translation"
-            onclick={deleteTranslation}
-          >
-            <Trash2 class="delete-icon" size={14} />
-          </button>
-        {/if}
+        <div class="metadata-item">
+          <Clock class="metadata-icon" size={14} />
+          <span class="metadata-text">{formatTimestamp(timestamp)}</span>
+        </div>
       </div>
     </div>
   {/if}
 </div>
+
+<!-- Delete confirmation modal -->
+{#if showDeleteConfirm}
+  <div class="delete-modal-overlay" onclick={cancelDelete}>
+    <div class="delete-modal" onclick={(e) => e.stopPropagation()}>
+      <div class="delete-modal-header">
+        <Trash2 size={24} />
+        <h3>Delete Translation</h3>
+      </div>
+      <p>Are you sure you want to delete this translation? This action cannot be undone.</p>
+      <div class="delete-modal-actions">
+        <button class="cancel-button" onclick={cancelDelete}>Cancel</button>
+        <button class="confirm-delete-button" onclick={confirmDelete}>Delete</button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <style>
   .translation-card {
@@ -290,14 +325,59 @@
     width: 100%;
     background: white;
     border-radius: 0.5rem;
-    overflow: visible;
-    cursor: pointer; /* Hint that it's interactive */
-    transition: transform 0.15s ease;
-    padding: 0.375rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    padding: 0.75rem;
+  }
+
+  .translation-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .translation-card:active {
     transform: scale(0.98);
+  }
+
+  /* Delete button positioned outside the card - appears on hover */
+  .delete-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: -1rem; /* Outside the card boundary */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(248, 250, 252, 0.95);
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s ease;
+    opacity: 0;
+    transform: scale(0.8);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .translation-card:hover .delete-btn {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .delete-btn:hover {
+    background: rgba(254, 242, 242, 0.95);
+    color: #ef4444;
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+
+  .delete-btn:active {
+    transform: scale(0.95);
   }
 
   .card-footer {
@@ -319,16 +399,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.25rem 0.5rem;
-    gap: 0.25rem;
-    margin: 0;
+    padding: 0.5rem;
     background: rgba(248, 250, 252, 0.95);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(226, 232, 240, 0.8);
     border-top: none;
     border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
   .metadata-item {
@@ -347,31 +425,112 @@
     font-weight: 500;
   }
 
-  .delete-button {
+  /* Delete confirmation modal */
+  .delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem;
-    border: none;
-    background: transparent;
-    color: #94a3b8;
-    cursor: pointer;
-    border-radius: 0.25rem;
-    transition: all 0.15s ease;
+    z-index: 1000;
+    animation: fade-in 0.15s ease-out;
   }
 
-  .delete-button:hover {
-    background: #f1f5f9;
+  .delete-modal {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 400px;
+    width: calc(100% - 2rem);
+    margin: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: modal-appear 0.15s ease-out;
+  }
+
+  .delete-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
     color: #ef4444;
   }
 
-  .delete-button:active {
-    transform: scale(0.95);
+  .delete-modal-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
   }
 
-  .delete-icon {
-    flex-shrink: 0;
+  .delete-modal p {
+    margin: 0 0 1.5rem 0;
+    color: #6b7280;
+    line-height: 1.5;
   }
+
+  .delete-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  .cancel-button, .confirm-delete-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 44px;
+    min-width: 80px;
+  }
+
+  .cancel-button {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+  }
+
+  .cancel-button:hover {
+    background: #e5e7eb;
+  }
+
+  .confirm-delete-button {
+    background: #ef4444;
+    color: white;
+    border: 1px solid #ef4444;
+  }
+
+  .confirm-delete-button:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+  }
+
+  .confirm-delete-button:active {
+    transform: scale(0.98);
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes modal-appear {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+
 
   .translations-container {
     display: flex;
@@ -688,15 +847,19 @@
     }
 
     .card-metadata {
-      padding: 0.375rem 0.5rem;
+      padding: 0.5rem;
     }
 
     .metadata-text {
       font-size: 0.75rem;
     }
 
-    .delete-button {
-      padding: 0.25rem;
+    .delete-btn {
+      opacity: 1; /* Always visible on mobile since hover doesn't work reliably */
+      transform: scale(1);
+      width: 36px;
+      height: 36px;
+      right: -0.75rem; /* Adjust for mobile */
     }
   }
 
@@ -704,28 +867,20 @@
   @media (hover: none) and (pointer: coarse) {
     .copy-button {
       opacity: 1;
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    .delete-btn {
+      opacity: 1; /* Always visible on touch devices */
+      transform: scale(1);
+      min-height: 44px;
+      min-width: 44px;
+      right: -0.75rem; /* Position outside card boundary */
     }
 
     .translation-card {
       cursor: default;
-    }
-
-    /* Always show card footer on touch devices */
-    .card-footer {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Language labels on touch devices - show only on tap/focus */
-    .translation-row .language-label {
-      opacity: 0;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-
-    .translation-row:active .language-label,
-    .translation-row:focus .language-label {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 </style>
