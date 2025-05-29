@@ -395,7 +395,7 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    transform: translateX(100%);
+    transform: translateX(100%) translateY(50%);
     transition: transform 0.2s ease, opacity 0.2s ease;
     z-index: 20;
     pointer-events: none;
@@ -405,7 +405,7 @@
 
   .translation-card:hover .timestamp-tab,
   .translation-card:focus-within .timestamp-tab {
-    transform: translateX(0);
+    transform: translateX(0) translateY(50%);
     pointer-events: auto;
     opacity: 1;
     visibility: visible;
@@ -903,7 +903,7 @@
 
     .translation-card:active .timestamp-tab,
     .translation-card:focus-within .timestamp-tab {
-      transform: translateX(0);
+      transform: translateX(0) translateY(50%);
       pointer-events: auto;
       opacity: 1;
       visibility: visible;
@@ -918,7 +918,7 @@
     }
 
     .translation-card:focus .timestamp-tab {
-      transform: translateX(0);
+      transform: translateX(0) translateY(50%);
       pointer-events: auto;
       opacity: 1;
       visibility: visible;
