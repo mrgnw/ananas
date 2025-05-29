@@ -291,7 +291,7 @@
     {/if}
   </div>
 
-  <!-- Timestamp tab - slides out from bottom-left -->
+  <!-- Timestamp tab - slides out from bottom-right -->
   {#if timestamp}
     <div class="timestamp-tab">
       <div class="timestamp-content">
@@ -388,12 +388,12 @@
     transform: scale(0.95);
   }
 
-  /* Timestamp tab - slides out from bottom-left corner */
+  /* Timestamp tab - slides out from bottom-right corner */
   .timestamp-tab {
     position: absolute;
     bottom: 0;
-    left: 0;
-    transform: translateX(-100%);
+    right: 0;
+    transform: translateX(100%);
     transition: transform 0.2s ease, opacity 0.2s ease;
     z-index: 20;
     pointer-events: none;
