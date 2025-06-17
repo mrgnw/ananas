@@ -1,6 +1,5 @@
 <script>
 	import "../app.pcss";
-	import SettingsButton from "$lib/components/SettingsButton.svelte";
     import { Languages } from 'lucide-svelte';
 	import { Button } from "$lib/components/ui/button";
 	import { page } from "$app/stores";
@@ -92,22 +91,6 @@
 
 {@render children?.()}
 
-{#if browser}
-<div class="debug-controls">
-	<!-- Future feature: country detection / language suggestion -->
-    <!-- {#if hasCountryCode && countryFlag}
-		<Button
-			variant="outline"
-			size="icon"
-			class="rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
-			title={countryInfo?.name || countryCode}
-		>
-			<span class="text-lg">{countryFlag}</span>
-		</Button>
-	{/if} -->
-	<SettingsButton {...allProps}  />
-</div>
-{/if}
 
 <style>
 .main-navbar {
@@ -171,22 +154,4 @@
   }
 }
 
-.debug-controls {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  z-index: 60;
-  background: rgba(255, 255, 255, 0.5);
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-}
-
-/* Hide debug controls on mobile to prevent input overlap */
-@media (max-width: 767px) {
-  .debug-controls {
-    display: none;
-  }
-}
 </style>
