@@ -72,17 +72,9 @@
   line-height: 1.5;
 }
 
-.actions {
-  margin-bottom: 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
 .actions a {
   color: #3730a3;
   text-decoration: none;
-  padding: 0.25rem 0;
   border-bottom: 1px solid transparent;
 }
 
@@ -91,12 +83,7 @@
 }
 
 .info {
-  margin-bottom: 2rem;
   color: #666;
-}
-
-.info div {
-  margin-bottom: 0.5rem;
 }
 
 .props-container {
