@@ -4,7 +4,8 @@ import { userStore } from './user.svelte.js';
 
 let history = $state({
   translations: [], // Each item: { input, output, sourceLang, targetLang, timestamp }
-  loading: false
+  loading: false,
+  deletingIds: new Set() // Track IDs being deleted to prevent race conditions
 });
 
 // Load from localStorage on module load
@@ -53,6 +54,7 @@ async function removeTranslation(id) {
   if (index === -1) return;
   
   const translation = history.translations[index];
+  history.deletingIds.add(id);
   history.translations.splice(index, 1);
   save();
   
@@ -64,7 +66,12 @@ async function removeTranslation(id) {
       });
     } catch (error) {
       console.error('Error deleting translation from database:', error);
+    } finally {
+      history.deletingIds.delete(id);
     }
+  } else {
+    // For local-only translations, immediately remove from deleting set
+    history.deletingIds.delete(id);
   }
 }
 
@@ -97,9 +104,10 @@ async function loadFromDatabase() {
     }
     
     const data = await response.json();
-    // Keep any local-only translations and merge with server data
+    // Keep any local-only translations and merge with server data, excluding deleting items
     const localOnlyTranslations = history.translations.filter(t => t.id && t.id.startsWith('local_'));
-    history.translations = [...localOnlyTranslations, ...data.translations];
+    const serverTranslations = data.translations.filter(t => !history.deletingIds.has(t.id));
+    history.translations = [...localOnlyTranslations, ...serverTranslations];
     save();
   } catch (error) {
     console.error('Error loading translations from database:', error);
@@ -124,9 +132,9 @@ async function loadFromDatabaseInBackground() {
     const data = await response.json();
     const serverTranslations = data.translations;
     
-    // Find new translations that aren't in our local history by ID
+    // Find new translations that aren't in our local history by ID and aren't being deleted
     const localIds = new Set(history.translations.map(t => t.id));
-    const newTranslations = serverTranslations.filter(t => !localIds.has(t.id));
+    const newTranslations = serverTranslations.filter(t => !localIds.has(t.id) && !history.deletingIds.has(t.id));
     
     if (newTranslations.length > 0) {
       // Add new translations to the front of our local history
