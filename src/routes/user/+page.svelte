@@ -1,9 +1,6 @@
 <script>
   import { getContext } from 'svelte';
-  import { LogOut, User, Settings } from 'lucide-svelte';
-  import { Button } from "$lib/components/ui/button";
-  import { toast } from "svelte-sonner";
-  import { defaultLanguages } from '$lib/utils/languages.js';
+  import { LogOut, User } from 'lucide-svelte';
   
   // Get user store from context
   const userStore = getContext('user');
@@ -29,33 +26,6 @@
     }
   }
 
-  // Settings functions moved from SettingsButton
-  function clearCache() {
-    try {
-      localStorage.clear();
-      toast.success("Cache cleared successfully");
-      window.location.reload();
-    } catch (error) {
-      toast.error("Failed to clear cache");
-      console.error("Error clearing cache:", error);
-    }
-  }
-
-  function addDefaultLanguages() {
-    Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
-    toast.success("Added default languages");
-  }
-
-  function resetLanguages() {
-    userStore.user.selectedLanguages.slice().forEach(code => userStore.removeLanguage(code));
-    Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
-    toast.success("Reset to default languages");
-  }
-
-  function clearAllLanguages() {
-    userStore.user.selectedLanguages.slice().forEach(code => userStore.removeLanguage(code));
-    toast.success("Cleared all languages");
-  }
 </script>
 
 <section class="user-info">
@@ -99,34 +69,6 @@
     {/if}
   </div>
 
-  <div class="settings-section">
-    <h3><Settings size={20} style="display: inline; margin-right: 0.5rem;" />Settings & Tools</h3>
-    
-    <div class="settings-group">
-      <h4>Language Management</h4>
-      <div class="settings-buttons">
-        <Button variant="outline" onclick={addDefaultLanguages}>
-          Add Default Languages
-        </Button>
-        <Button variant="outline" onclick={resetLanguages}>
-          Reset to Defaults
-        </Button>
-        <Button variant="destructive" onclick={clearAllLanguages}>
-          Clear All Languages
-        </Button>
-      </div>
-    </div>
-
-    <div class="settings-group">
-      <h4>System</h4>
-      <div class="settings-buttons">
-        <Button variant="destructive" onclick={clearCache}>
-          Clear Cache
-        </Button>
-      </div>
-    </div>
-
-  </div>
 </section>
 
 
@@ -287,41 +229,4 @@
   }
 }
 
-.settings-section {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.settings-section h3 {
-  margin-bottom: 1.5rem;
-  font-size: 1.3rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-}
-
-.settings-group {
-  margin-bottom: 1.5rem;
-}
-
-.settings-group h4 {
-  margin: 0 0 0.75rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #4b5563;
-}
-
-.settings-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-
-@media (max-width: 600px) {
-  .settings-buttons {
-    flex-direction: column;
-  }
-}
 </style>

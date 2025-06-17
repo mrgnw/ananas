@@ -1,7 +1,13 @@
 <script>
+  import { getContext } from 'svelte';
   import { page } from '$app/stores';
   import { Button } from "$lib/components/ui/button";
-  import { Bug, Code } from 'lucide-svelte';
+  import { Bug, Code, Settings, Languages, Trash2 } from 'lucide-svelte';
+  import { toast } from "svelte-sonner";
+  import { defaultLanguages } from '$lib/utils/languages.js';
+
+  // Get user store from context
+  const userStore = getContext('user');
 
   // Get props from page data for debug functionality
   let props = $props();
@@ -17,6 +23,34 @@
 
   function copyToClipboard() {
     navigator.clipboard.writeText(highlightedJson);
+  }
+
+  // Settings functions moved from user page
+  function clearCache() {
+    try {
+      localStorage.clear();
+      toast.success("Cache cleared successfully");
+      window.location.reload();
+    } catch (error) {
+      toast.error("Failed to clear cache");
+      console.error("Error clearing cache:", error);
+    }
+  }
+
+  function addDefaultLanguages() {
+    Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
+    toast.success("Added default languages");
+  }
+
+  function resetLanguages() {
+    userStore.user.selectedLanguages.slice().forEach(code => userStore.removeLanguage(code));
+    Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
+    toast.success("Reset to default languages");
+  }
+
+  function clearAllLanguages() {
+    userStore.user.selectedLanguages.slice().forEach(code => userStore.removeLanguage(code));
+    toast.success("Cleared all languages");
   }
 </script>
 
@@ -49,6 +83,34 @@
   </div>
 
   <div class="debug-section">
+    <h2><Settings size={20} style="display: inline; margin-right: 0.5rem;" />Development Settings</h2>
+    
+    <div class="settings-subsection">
+      <h3><Languages size={18} style="display: inline; margin-right: 0.5rem;" />Language Management</h3>
+      <div class="settings-buttons">
+        <Button variant="outline" onclick={addDefaultLanguages}>
+          Add Default Languages
+        </Button>
+        <Button variant="outline" onclick={resetLanguages}>
+          Reset to Defaults
+        </Button>
+        <Button variant="destructive" onclick={clearAllLanguages}>
+          Clear All Languages
+        </Button>
+      </div>
+    </div>
+
+    <div class="settings-subsection">
+      <h3><Trash2 size={18} style="display: inline; margin-right: 0.5rem;" />System</h3>
+      <div class="settings-buttons">
+        <Button variant="destructive" onclick={clearCache}>
+          Clear Cache & Reload
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <div class="debug-section">
     <h2>Page Information</h2>
     <div class="info-grid">
       <div class="info-item">
@@ -62,6 +124,10 @@
       <div class="info-item">
         <strong>Search Params:</strong>
         <span>{$page.url.search || 'None'}</span>
+      </div>
+      <div class="info-item">
+        <strong>Selected Languages:</strong>
+        <span>{userStore.user.selectedLanguages?.join(', ') || 'None'}</span>
       </div>
     </div>
   </div>
@@ -163,13 +229,33 @@
   font-size: 0.9rem;
 }
 
+.settings-subsection {
+  margin-bottom: 1.5rem;
+}
+
+.settings-subsection h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  align-items: center;
+}
+
+.settings-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 @media (max-width: 600px) {
   .debug-page {
     margin: 1rem;
     padding: 1rem;
   }
   
-  .debug-controls {
+  .debug-controls,
+  .settings-buttons {
     flex-direction: column;
   }
   
