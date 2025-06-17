@@ -25,6 +25,7 @@
       isLoggingOut = false;
     }
   }
+
 </script>
 
 <section class="user-info">
@@ -67,7 +68,9 @@
       <p class="empty">No languages selected.</p>
     {/if}
   </div>
+
 </section>
+
 
 <style>
 .user-info {
@@ -225,4 +228,5 @@
     padding: 1em 0.5em 1em 0.5em;
   }
 }
+
 </style>
