@@ -2,6 +2,7 @@
   import { getContext } from 'svelte';
   import { toast } from "svelte-sonner";
   import { defaultLanguages } from '$lib/utils/languages.js';
+  import { getLanguageSuggestions } from '$lib/utils/languageSuggestions.ts';
   import { Copy } from 'lucide-svelte';
 
   const userStore = getContext('user');
@@ -24,15 +25,15 @@
     window.location.reload();
   }
 
-  function addDefaultLanguages() {
-    Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
-    toast.success("Added default languages");
+  function addSuggested() {
+    const suggestions = getLanguageSuggestions(data.ip_country);
+    suggestions.forEach(suggestion => userStore.addLanguage(suggestion.code));
+    toast.success("Added suggested");
   }
 
-  function resetLanguages() {
-    userStore.user.selectedLanguages.slice().forEach(code => userStore.removeLanguage(code));
+  function addExamples() {
     Object.keys(defaultLanguages).forEach(code => userStore.addLanguage(code));
-    toast.success("Reset languages");
+    toast.success("Added examples");
   }
 
   function clearAllLanguages() {
@@ -51,7 +52,7 @@
   </div>
 
   <div class="actions">
-    <a href="#" onclick={addDefaultLanguages}>+defaults</a> <a href="#" onclick={resetLanguages}>reset</a> <a href="#" onclick={clearAllLanguages}>clear</a>
++ <a href="#" onclick={addSuggested}>suggested</a> <a href="#" onclick={addExamples}>examples</a> <a href="#" onclick={clearAllLanguages}>clear</a>
     <br>
     <a href="#" onclick={clearCache}>clear cache</a>
   </div>
