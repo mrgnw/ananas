@@ -291,15 +291,6 @@
     {/if}
   </div>
 
-  <!-- ID tab - slides out from top-left -->
-  {#if translationId}
-    <div class="id-tab">
-      <div class="id-content">
-        <span class="id-text">ID: {translationId}</span>
-      </div>
-    </div>
-  {/if}
-
   <!-- Timestamp tab - slides out from bottom-right -->
   {#if timestamp}
     <div class="timestamp-tab">
@@ -449,47 +440,6 @@
     white-space: nowrap;
   }
 
-  /* ID tab - slides out from top-left */
-  .id-tab {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateX(-100%) translateY(-50%);
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    z-index: 20;
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  .translation-card:hover .id-tab,
-  .translation-card:focus-within .id-tab {
-    transform: translateX(0) translateY(-50%);
-    pointer-events: auto;
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .id-content {
-    display: flex;
-    align-items: center;
-    padding: 0.375rem 0.5rem;
-    background: rgba(248, 250, 252, 0.95);
-    color: #9ca3af;
-    font-size: 0.6875rem;
-    font-weight: 400;
-    border-radius: 0.375rem 0 0 0.375rem;
-    backdrop-filter: blur(8px);
-    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-right: none;
-    border-top: none;
-    min-height: 28px;
-  }
-
-  .id-text {
-    white-space: nowrap;
-  }
 
   /* Delete confirmation modal */
   .delete-modal-overlay {
@@ -926,11 +876,6 @@
       min-height: 36px;
     }
 
-    .id-content {
-      font-size: 0.625rem;
-      padding: 0.25rem 0.375rem;
-      min-height: 32px;
-    }
   }
 
   /* Touch device optimizations - tabs appear on tap */
@@ -950,9 +895,6 @@
       min-height: 44px;
     }
 
-    .id-content {
-      min-height: 40px;
-    }
 
     .translation-card {
       cursor: default;
@@ -975,13 +917,6 @@
       visibility: visible;
     }
 
-    .translation-card:active .id-tab,
-    .translation-card:focus-within .id-tab {
-      transform: translateX(0) translateY(-50%);
-      pointer-events: auto;
-      opacity: 1;
-      visibility: visible;
-    }
 
     /* Keep tabs visible briefly after touch */
     .translation-card:focus .delete-tab {
@@ -998,11 +933,5 @@
       visibility: visible;
     }
 
-    .translation-card:focus .id-tab {
-      transform: translateX(0) translateY(-50%);
-      pointer-events: auto;
-      opacity: 1;
-      visibility: visible;
-    }
   }
 </style>
