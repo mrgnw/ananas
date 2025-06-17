@@ -1,7 +1,7 @@
 <script>
   import MultiLangCard from '$jibs/MultiLangCard.svelte';
 
-  let { translation, index, onDelete } = $props();
+  let { translation, index, onDelete, translationId } = $props();
 </script>
 
 <MultiLangCard 
@@ -11,4 +11,5 @@
   truncate_lines={true}
   timestamp={translation.timestamp}
   originalText={translation.input}
+  {translationId}
 />

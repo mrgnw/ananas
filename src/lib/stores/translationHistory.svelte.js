@@ -4,7 +4,8 @@ import { userStore } from './user.svelte.js';
 
 let history = $state({
   translations: [], // Each item: { input, output, sourceLang, targetLang, timestamp }
-  loading: false
+  loading: false,
+  deletingIds: new Set() // Track IDs being deleted to prevent race conditions
 });
 
 // Load from localStorage on module load
@@ -23,6 +24,10 @@ function save() {
 
 async function addTranslation(translation) {
   // translation: { input, output, sourceLang, targetLang, timestamp }
+  // Ensure translation has an ID for local operations
+  if (!translation.id) {
+    translation.id = `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
   history.translations.unshift(translation); // newest first
   save();
 
@@ -44,9 +49,30 @@ async function addTranslation(translation) {
   }
 }
 
-function removeTranslation(index) {
+async function removeTranslation(id) {
+  const index = history.translations.findIndex(t => t.id === id);
+  if (index === -1) return;
+  
+  const translation = history.translations[index];
+  history.deletingIds.add(id);
   history.translations.splice(index, 1);
   save();
+  
+  // If user is authenticated and translation exists in database, delete from server
+  if (userStore.user.auth.isAuthenticated && translation.id && !translation.id.startsWith('local_')) {
+    try {
+      await fetch(`/api/translate/history/${translation.id}`, {
+        method: 'DELETE'
+      });
+    } catch (error) {
+      console.error('Error deleting translation from database:', error);
+    } finally {
+      history.deletingIds.delete(id);
+    }
+  } else {
+    // For local-only translations, immediately remove from deleting set
+    history.deletingIds.delete(id);
+  }
 }
 
 function clearHistory() {
@@ -78,7 +104,10 @@ async function loadFromDatabase() {
     }
     
     const data = await response.json();
-    history.translations = data.translations;
+    // Keep any local-only translations and merge with server data, excluding deleting items
+    const localOnlyTranslations = history.translations.filter(t => t.id && t.id.startsWith('local_'));
+    const serverTranslations = data.translations.filter(t => !history.deletingIds.has(t.id));
+    history.translations = [...localOnlyTranslations, ...serverTranslations];
     save();
   } catch (error) {
     console.error('Error loading translations from database:', error);
@@ -103,9 +132,9 @@ async function loadFromDatabaseInBackground() {
     const data = await response.json();
     const serverTranslations = data.translations;
     
-    // Find new translations that aren't in our local history
-    const localTimestamps = new Set(history.translations.map(t => t.timestamp));
-    const newTranslations = serverTranslations.filter(t => !localTimestamps.has(t.timestamp));
+    // Find new translations that aren't in our local history by ID and aren't being deleted
+    const localIds = new Set(history.translations.map(t => t.id));
+    const newTranslations = serverTranslations.filter(t => !localIds.has(t.id) && !history.deletingIds.has(t.id));
     
     if (newTranslations.length > 0) {
       // Add new translations to the front of our local history

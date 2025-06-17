@@ -4,7 +4,8 @@ import { initDB, isD1Available } from '$lib/server/db';
 import { 
   saveTranslation, 
   getUserTranslationHistory, 
-  clearUserTranslationHistory 
+  clearUserTranslationHistory,
+  deleteTranslation 
 } from '$lib/server/translation-history';
 
 /**

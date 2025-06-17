@@ -94,7 +94,7 @@
   });
   
   function handleDelete(item, index) {
-    translationHistoryStore.removeTranslation(index);
+    translationHistoryStore.removeTranslation(item.id);
   }
   
   function loadMore() {
@@ -142,6 +142,7 @@
                   truncate_lines={true}
                   timestamp={item.timestamp}
                   originalText={item.input}
+                  translationId={item.id}
                 />
               </div>
             </div>
