@@ -45,22 +45,21 @@
 </svelte:head>
 
 <div class="debug">
+  <div class="info">
+    <div>languages: {userStore.user.selectedLanguages?.join(' ') || 'none'}</div>
+  </div>
+
   <div class="actions">
-    languages: <a href="#" onclick={addDefaultLanguages}>+defaults</a> <a href="#" onclick={resetLanguages}>reset</a> <a href="#" onclick={clearAllLanguages}>clear</a>
+    <a href="#" onclick={addDefaultLanguages}>+defaults</a> <a href="#" onclick={resetLanguages}>reset</a> <a href="#" onclick={clearAllLanguages}>clear</a>
     <br>
     <a href="#" onclick={clearCache}>clear cache</a>
   </div>
 
-  <div class="info">
-    <div>route: {$page.route.id || 'unknown'}</div>
-    <div>url: {$page.url.pathname}</div>
-    <div>params: {$page.url.search || 'none'}</div>
-    <div>languages: {userStore.user.selectedLanguages?.join(', ') || 'none'}</div>
-  </div>
-
   <div class="props-container">
     <pre class="props">{highlightedJson}</pre>
-    <button class="copy-btn" onclick={copyToClipboard} title="Copy">📋</button>
+    <button class="copy-btn" onclick={copyToClipboard} title="Copy">
+      <Copy size={16} />
+    </button>
   </div>
 </div>
 
@@ -120,10 +119,13 @@
   right: 0.5rem;
   background: none;
   border: none;
-  font-size: 1rem;
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
 }
 
 .copy-btn:hover {
