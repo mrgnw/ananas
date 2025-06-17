@@ -15,12 +15,12 @@ export const load: PageServerLoad = async ({ url, request, locals, params }) => 
     userPreferences: locals.userPreferences || null
   };
 
-  // Highlight the JSON
+  // Highlight the JSON with Catppuccin Latte
   const highlightedPropsJson = await codeToHtml(
     JSON.stringify(props, null, 2),
     {
       lang: 'json',
-      theme: 'github-light'
+      theme: 'catppuccin-latte'
     }
   );
 
