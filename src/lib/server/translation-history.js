@@ -103,6 +103,27 @@ export async function mergeLocalTranslations(db, userId, localTranslations) {
 }
 
 /**
+ * Delete a specific translation by ID
+ * 
+ * @param {Object} db - Drizzle database instance
+ * @param {string} translationId - Translation ID to delete
+ * @param {string} userId - User ID (for security)
+ * @returns {Promise<boolean>} Whether the operation was successful
+ */
+export async function deleteTranslation(db, translationId, userId) {
+  try {
+    await db
+      .delete(translationHistory)
+      .where(eq(translationHistory.id, translationId));
+    
+    return true;
+  } catch (error) {
+    console.error('[translation-history] Error deleting translation:', error);
+    return false;
+  }
+}
+
+/**
  * Delete all translations for a user
  * 
  * @param {Object} db - Drizzle database instance

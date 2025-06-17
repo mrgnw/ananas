@@ -94,7 +94,7 @@
   });
   
   function handleDelete(item, index) {
-    translationHistoryStore.removeTranslation(index);
+    translationHistoryStore.removeTranslation(item.id);
   }
   
   function loadMore() {

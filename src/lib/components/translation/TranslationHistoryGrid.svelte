@@ -27,7 +27,7 @@
           <TranslationCard 
             {translation}
             {index}
-            onDelete={() => translationHistoryStore.removeTranslation(index)}
+            onDelete={() => translationHistoryStore.removeTranslation(translation.id)}
           />
         </div>
       {/each}
