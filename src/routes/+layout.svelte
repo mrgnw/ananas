@@ -93,7 +93,7 @@
 {@render children?.()}
 
 {#if browser}
-<div class="fixed bottom-4 right-4 flex gap-2 z-50 bg-white/50 p-2 rounded-lg">
+<div class="debug-controls">
 	<!-- Future feature: country detection / language suggestion -->
     <!-- {#if hasCountryCode && countryFlag}
 		<Button
@@ -115,9 +115,18 @@
   border-bottom: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.03);
   padding: 0.5rem 0;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 40;
+  /* Prevent any movement on mobile */
+  touch-action: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .navbar-list {
   display: flex;
@@ -159,6 +168,25 @@
   .navbar-list a {
     padding: 0.5em 0.7em;
     font-size: 0.98em;
+  }
+}
+
+.debug-controls {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 60;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+/* Hide debug controls on mobile to prevent input overlap */
+@media (max-width: 767px) {
+  .debug-controls {
+    display: none;
   }
 }
 </style>

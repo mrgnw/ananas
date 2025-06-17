@@ -37,6 +37,17 @@
         timestamp: Date.now()
       });
       
+      // IMMEDIATELY scroll to show new translation on mobile
+      if (window.innerWidth <= 767) {
+        setTimeout(() => {
+          const historyEl = document.querySelector('.translation-history');
+          if (historyEl) {
+            console.log('SCROLLING TO SHOW NEW TRANSLATION');
+            historyEl.scrollTop = historyEl.scrollHeight;
+          }
+        }, 100);
+      }
+      
       text = '';
     } catch (e) {
       error = e.message || 'Unknown error';
@@ -84,11 +95,14 @@
 <style>
 .translate-main {
   max-width: 520px;
-  margin: 4.5rem auto 0 auto;
-  padding: 0 1.5em;
+  margin: 0 auto;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  /* Prevent horizontal overflow */
+  overflow-x: hidden;
+  width: 100%;
 }
 .input-form {
   width: 100%;
@@ -103,6 +117,11 @@
   padding: 0.25em 0.5em 0.25em 1.2em;
   transition: border-color 0.18s, box-shadow 0.18s;
   position: relative;
+  /* Prevent horizontal overflow and scrolling */
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  touch-action: manipulation; /* Prevent unwanted touch gestures */
 }
 .input-container.focused {
   border-color: #3730a3;
