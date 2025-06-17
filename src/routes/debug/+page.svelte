@@ -1,19 +1,20 @@
 <script>
   import { getContext } from 'svelte';
-  import { page } from '$app/stores';
   import { toast } from "svelte-sonner";
   import { defaultLanguages } from '$lib/utils/languages.js';
   import { Copy } from 'lucide-svelte';
 
   const userStore = getContext('user');
-  let props = $props();
+  let { data } = $props();
 
-  let highlightedJson = $derived.by(() => {
-    return JSON.stringify(props.data ?? props, null, 2);
+  // Raw JSON for copying
+  let rawJson = $derived.by(() => {
+    const { highlightedPropsJson, ...propsData } = data;
+    return JSON.stringify(propsData, null, 2);
   });
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(highlightedJson);
+    navigator.clipboard.writeText(rawJson);
     toast.success("Props copied");
   }
 
@@ -46,7 +47,7 @@
 
 <div class="debug">
   <div class="info">
-    <div>languages: {userStore.user.selectedLanguages?.join(' ') || 'none'}</div>
+    <div><b>languages</b> {data.user?.selectedLanguages?.join(' ') || userStore.user.selectedLanguages?.join(' ') || 'none'}</div>
   </div>
 
   <div class="actions">
@@ -56,7 +57,7 @@
   </div>
 
   <div class="props-container">
-    <pre class="props">{highlightedJson}</pre>
+    <div class="props">{@html data.highlightedPropsJson}</div>
     <button class="copy-btn" onclick={copyToClipboard} title="Copy">
       <Copy size={16} />
     </button>
@@ -91,9 +92,12 @@
 }
 
 .props {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
   border-radius: 4px;
+  overflow-x: auto;
+}
+
+.props :global(pre) {
+  margin: 0;
   padding: 1rem;
   font-size: 0.875rem;
   overflow-x: auto;
