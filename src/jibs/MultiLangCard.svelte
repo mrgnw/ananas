@@ -7,7 +7,7 @@
 	import { userStore } from '$lib/stores/user.svelte.js';
 	import { slide } from 'svelte/transition';
 
-	let { translation, show_langs, truncate_lines, onDelete = null, timestamp = null, originalText = null, ...props } = $props();
+	let { translation, show_langs, truncate_lines, onDelete = null, timestamp = null, originalText = null, translationId = null, ...props } = $props();
 
 	// Original text hover state
 	let showOriginal = $state(false);
@@ -438,6 +438,14 @@
 
   .timestamp-text {
     white-space: nowrap;
+  }
+
+  .id-text {
+    white-space: nowrap;
+    font-size: 0.6875rem;
+    color: #9ca3af;
+    margin-left: 0.25rem;
+    font-weight: 400;
   }
 
   /* Delete confirmation modal */

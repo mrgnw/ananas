@@ -28,6 +28,7 @@
             {translation}
             {index}
             onDelete={() => translationHistoryStore.removeTranslation(translation.id)}
+            translationId={translation.id}
           />
         </div>
       {/each}
