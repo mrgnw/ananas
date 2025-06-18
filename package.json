@@ -39,7 +39,7 @@
     "db:migrate:prod": "wrangler d1 migrations apply ananas-auth --remote",
     "db:local": "wrangler d1 migrations apply ananas-auth-dev",
     "deploy": "bun run build && echo '_worker.js\n_worker.js.map\nindex.js' > .svelte-kit/cloudflare/.assetsignore && echo 'export { default } from \"./_worker.js\";' > .svelte-kit/cloudflare/index.js && wrangler deploy",
-    "deploy:prod": "bun run build && echo '_worker.js\n_worker.js.map' > .svelte-kit/cloudflare/.assetsignore && wrangler deploy --env production",
+    "deploy:prod": "bun run build && echo '_worker.js\n_worker.js.map\nindex.js' > .svelte-kit/cloudflare/.assetsignore && echo 'export { default } from \"./_worker.js\";' > .svelte-kit/cloudflare/index.js && wrangler deploy --config wrangler.production.jsonc",
     "deploy:preview": "bun run build && wrangler deploy --dry-run",
     "cf:dev": "wrangler dev"
   },
