@@ -41,12 +41,24 @@
       }
       
       if (!groups.has(groupKey)) {
-        groups.set(groupKey, []);
+        groups.set(groupKey, { items: [], date: date });
       }
-      groups.get(groupKey).push(item);
+      groups.get(groupKey).items.push(item);
     });
     
-    return groups;
+    // Sort groups by date (newest first)
+    return new Map([...groups.entries()].sort(([, a], [, b]) => {
+      // Special handling for "Today" and "Yesterday"
+      if (a.date.toDateString() === new Date().toDateString()) return -1;
+      if (b.date.toDateString() === new Date().toDateString()) return 1;
+      
+      const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+      if (a.date.toDateString() === yesterday.toDateString()) return -1;
+      if (b.date.toDateString() === yesterday.toDateString()) return 1;
+      
+      // Sort other dates newest first
+      return b.date.getTime() - a.date.getTime();
+    }));
   });
   
   onMount(async () => {
@@ -128,7 +140,7 @@
       <div class="date-group" animate:flip={{ duration: 400 }}>
         <h3 class="date-group-header">{groupKey}</h3>
         <div class="translations-grid">
-          {#each groupItems.filter(item => visibleItems.has(item.timestamp)) as item, i (item.timestamp)}
+          {#each groupItems.items.filter(item => visibleItems.has(item.timestamp)) as item, i (item.timestamp)}
             <div 
               class="translation-item" 
               in:fade={{ duration: 400 }}
