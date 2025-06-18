@@ -37,7 +37,10 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply ananas-auth-dev --remote",
     "db:migrate:prod": "wrangler d1 migrations apply ananas-auth --remote",
-    "db:local": "wrangler d1 migrations apply ananas-auth-dev"
+    "db:local": "wrangler d1 migrations apply ananas-auth-dev",
+    "deploy": "bun run build && wrangler deploy",
+    "deploy:preview": "bun run build && wrangler deploy --dry-run",
+    "cf:dev": "wrangler dev"
   },
   "type": "module",
   "dependencies": {
