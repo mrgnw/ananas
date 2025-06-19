@@ -53,6 +53,9 @@
     margin-bottom: 1.5rem;
     touch-action: pan-y; /* Allow vertical scrolling */
     pointer-events: auto;
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+    contain: layout style;
   }
 
   .recent-translation-item {
@@ -62,10 +65,12 @@
     padding: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.15s ease;
-    overflow: visible;
+    overflow: hidden; /* Prevent horizontal overflow from tabs */
     touch-action: pan-y; /* Allow vertical scrolling through cards */
     -webkit-touch-callout: none;
     pointer-events: auto; /* Ensure touch events work properly */
+    position: relative;
+    contain: layout style;
   }
 
   .recent-translation-item:hover {

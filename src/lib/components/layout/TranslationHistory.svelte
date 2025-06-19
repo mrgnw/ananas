@@ -33,16 +33,20 @@
   .translation-history {
     padding: 0 1rem 1rem 1rem;
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll */
     height: 100%;
     /* Fix scrolling */
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: auto;
+    overscroll-behavior-x: none; /* Prevent horizontal overscroll */
+    overscroll-behavior-y: auto; /* Allow vertical overscroll */
     /* Allow text selection */
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
+    /* Containment to prevent layout shifts */
+    contain: layout style;
   }
 
   /* Desktop Layout */
@@ -65,9 +69,15 @@
       order: 1;
       padding: 1rem 0.75rem 0.5rem 0.75rem;
       overflow-y: scroll !important;
+      overflow-x: hidden !important; /* Force prevent horizontal scroll */
       touch-action: pan-y !important;
       -webkit-overflow-scrolling: touch;
-      overscroll-behavior: auto !important;
+      overscroll-behavior-x: none !important; /* Block horizontal overscroll */
+      overscroll-behavior-y: auto !important; /* Allow vertical overscroll */
+      /* Additional safeguards for mobile */
+      width: 100%;
+      max-width: 100%;
+      contain: layout style;
     }
   }
 

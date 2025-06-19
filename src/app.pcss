@@ -107,6 +107,20 @@ body {
   box-sizing: border-box;
 }
 
+/* Ensure viewport never scrolls horizontally */
+@media (max-width: 767px) {
+  html {
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none !important;
+  }
+  
+  body {
+    overflow-x: hidden !important;
+    overscroll-behavior-x: none !important;
+    position: relative; /* Ensure proper stacking context */
+  }
+}
+
 /* Allow scrolling in page content areas */
 .page-wrapper,
 .translation-history {

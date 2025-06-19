@@ -414,6 +414,21 @@
     visibility: visible;
   }
 
+  /* Mobile: prevent timestamp tab from causing horizontal overflow */
+  @media (max-width: 767px) {
+    .timestamp-tab {
+      /* Position inside the card instead of extending outside */
+      right: 0.5rem;
+      transform: translateX(0) translateY(150%);
+    }
+
+    .translation-card:hover .timestamp-tab,
+    .translation-card:focus-within .timestamp-tab,
+    .translation-card:active .timestamp-tab {
+      transform: translateX(0) translateY(50%);
+    }
+  }
+
   .timestamp-content {
     display: flex;
     align-items: center;
