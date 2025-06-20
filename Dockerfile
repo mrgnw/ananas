@@ -8,6 +8,7 @@ COPY package*.json ./
 RUN bun install
 
 COPY . .
+RUN bun install --force
 
 ENV NODE_ENV=development
 ENV HOST=0.0.0.0
