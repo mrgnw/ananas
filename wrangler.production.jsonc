@@ -6,6 +6,14 @@
     "compatibility_flags": [
         "nodejs_compat"
     ],
+    "workers_dev": true,
+
+    // Observability configuration
+    "observability": {
+        "logs": {
+            "enabled": true
+        }
+    },
 
     // Assets configuration
     "assets": {
