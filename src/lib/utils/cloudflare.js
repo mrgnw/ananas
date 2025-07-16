@@ -42,12 +42,12 @@ export function getCloudflareData(request) {
  * @returns {string} - The RPID to use for WebAuthn
  */
 export function getRpId(platform, url = null) {
-    const projectDomain = 'ananas-8ek.pages.dev';
+    const projectDomain = 'ananas-dev.xces.workers.dev';
     
     // Priority order:
     // 1. WEBAUTHN_RP_ID environment variable (always takes precedence)
-    // 2. For non-main branches: CF_PAGES_BRANCH specific preview URL
-    // 3. For main branch: base project domain
+    // 2. For Workers: preview URLs or custom domains
+    // 3. For main deployment: workers.dev subdomain
     // 4. Localhost fallback for local development
     
     // Log available environment variables for debugging
@@ -77,20 +77,20 @@ export function getRpId(platform, url = null) {
         return 'localhost';
     }
     
-    // For Cloudflare Pages deployments
-    if (hostname && hostname.endsWith('.pages.dev')) {
-        // Extract the base domain (e.g., "ananas-8ek.pages.dev" from "branch.ananas-8ek.pages.dev")
+    // For Cloudflare Workers deployments
+    if (hostname && (hostname.endsWith('.workers.dev') || hostname.endsWith('.pages.dev'))) {
+        // Extract the base domain (e.g., "ananas.workers.dev" from "branch.ananas.workers.dev")
         const parts = hostname.split('.');
         
         if (parts.length >= 3) {
-            // This is a subdomain like branch.ananas-8ek.pages.dev
-            // We'll use the registrable domain (ananas-8ek.pages.dev) as RPID
+            // This is a subdomain like branch.ananas.workers.dev
+            // We'll use the registrable domain (ananas.workers.dev) as RPID
             // This ensures compatibility with WebAuthn's domain rules
             const registrableDomain = parts.slice(parts.length - 3).join('.');
             console.log('[WEBAUTHN DEBUG] Using registrable domain as RPID:', registrableDomain);
             return registrableDomain;
         } else {
-            // This is already the base domain like ananas-8ek.pages.dev
+            // This is already the base domain like ananas.workers.dev
             console.log('[WEBAUTHN DEBUG] Using hostname as RPID:', hostname);
             return hostname;
         }
