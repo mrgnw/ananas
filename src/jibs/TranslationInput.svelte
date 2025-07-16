@@ -22,15 +22,24 @@
       // Simple logic: authenticated users get m2m+openai, unauthenticated get deepl+google
       const translators = userStore.user.auth.isAuthenticated ? ['m2m', 'openai'] : ['deepl', 'google'];
       
+      const requestData = {
+        text,
+        tgt_langs: userStore.user.selectedLanguages,
+        userId: userStore.user.auth.id,
+        translators: translators
+      };
+      
+      console.log('🔍 Translation request:', {
+        isAuthenticated: userStore.user.auth.isAuthenticated,
+        userId: userStore.user.auth.id,
+        translators: translators,
+        requestData
+      });
+      
       const res = await fetch('/api/translate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text,
-          tgt_langs: userStore.user.selectedLanguages,
-          userId: userStore.user.auth.id,
-          translators: translators
-        })
+        body: JSON.stringify(requestData)
       });
       if (!res.ok) throw new Error('API error');
       result = await res.json();
