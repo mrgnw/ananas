@@ -1,0 +1,33 @@
+{
+    // Production configuration
+    "name": "anani",
+    "main": "./.svelte-kit/cloudflare/index.js",
+    "compatibility_date": "2024-09-26",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "workers_dev": true,
+
+    // Observability configuration
+    "observability": {
+        "logs": {
+            "enabled": true
+        }
+    },
+
+    // Assets configuration
+    "assets": {
+        "binding": "ASSETS",
+        "directory": "./.svelte-kit/cloudflare"
+    },
+
+    // Production database bindings
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "ananas-auth",
+            "database_id": "YOUR_PROD_DB_ID_HERE",
+            "migrations_dir": "drizzle/migrations"
+        }
+    ]
+}
